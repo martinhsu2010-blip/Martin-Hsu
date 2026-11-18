@@ -53,6 +53,9 @@ Debug handle: `window.__VH` exposes internals (SAVE, STUNT, DELIVERY, CAR_MODELS
 - Keep draw calls low: static meshes are merged, trees/houses are InstancedMesh, far Ferrari uses a simplified LOD.
 - Mobile performance matters most; check any added feature on the PHONE_* presets.
 
+## Working agreement
+See `COLLAB.md` (v3) and `AGENTS.md`. Code changes arrive as Pull Requests from Codex and are reviewed/integrated/released by Claude.
+
 ## Release process (how updates are shipped)
 1. Edit `index.html` (and assets if needed).
 2. Bump `CACHE` in `sw.js`.

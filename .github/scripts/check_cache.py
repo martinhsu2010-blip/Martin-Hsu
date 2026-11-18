@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Fail if a cached game file changed but sw.js CACHE did not.
-Usage: check_cache.py <base_sha> <head_sha>
+Usage: check_cache.py <base_sha> <head_sha> [--warn-only]
+--warn-only: used on pull requests (the maintainer bumps CACHE when integrating).
 Docs-only changes (*.md, tools/, .github/, ...) never need a version bump."""
 import re, subprocess, sys
 
@@ -8,6 +9,7 @@ def git(*a):
     return subprocess.run(["git", *a], capture_output=True, text=True, check=True).stdout
 
 base, head = sys.argv[1], sys.argv[2]
+warn_only = "--warn-only" in sys.argv
 if set(base) <= {"0"}:           # first push of a branch: nothing to compare
     print("no base commit, skipping"); sys.exit(0)
 
@@ -30,5 +32,7 @@ if not hit:
 b, h = cache_of(base), cache_of(head)
 print(f"CACHE: {b} -> {h}")
 if b == h:
+    if warn_only:
+        print("::warning::cached files changed; CACHE will be bumped by the maintainer at integration"); sys.exit(0)
     print("ERROR: cached files changed but sw.js CACHE was not bumped"); sys.exit(1)
 print("OK"); sys.exit(0)

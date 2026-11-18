@@ -1,9 +1,10 @@
-name: PWA cache version check
+name: Game checks (cache version + syntax)
 on:
   push:
     branches: [main]
     paths-ignore: ['**.md', 'tools/**', '.github/**']
   pull_request:
+    paths-ignore: ['**.md']
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -14,7 +15,14 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE=${{ github.event.pull_request.base.sha }}; HEAD=${{ github.event.pull_request.head.sha }}
+            EXTRA=--warn-only
           else
             BASE=${{ github.event.before }}; HEAD=${{ github.sha }}
           fi
-          python3 .github/scripts/check_cache.py "$BASE" "$HEAD"
+          python3 .github/scripts/check_cache.py "$BASE" "$HEAD" $EXTRA
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax check index.html scripts and PRECACHE files
+        run: python3 tools/test/syntax_check.py

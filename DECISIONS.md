@@ -38,3 +38,15 @@ D-009 | 2026-11-18 | implemented | .github/workflows/pwa-cache-check.yml
 ## D-010 Division of labour: ChatGPT (GPT-6 Astra) writes code as diffs; Claude reviews, brainstorms, tests, and releases (supersedes the builder/designer split in D-007)
 D-010 | 2026-11-18 | agreed | by Martin
 D-010 | 2026-11-18 | implemented | COLLAB.md roles and feature flow updated
+
+## D-011 COLLAB v3: ChatGPT designs/specs, Codex implements via GitHub PRs, Claude reviews/integrates/releases (supersedes D-010)
+D-011 | 2026-11-18 | agreed | by Martin
+D-011 | 2026-11-18 | implemented | COLLAB v3, AGENTS.md, PR template, CI updated
+D-010 | 2026-11-18 | dropped | superseded by D-011
+
+## D-012 Only one active code PR at a time; Codex never merges, never edits sw.js CACHE or docs; Claude bumps CACHE at integration
+D-012 | 2026-11-18 | agreed | by Martin
+D-012 | 2026-11-18 | implemented | AGENTS.md and CI (PR = warning, main = failure)
+
+## D-013 Protect `main` on GitHub (require PR, no force push)
+D-013 | 2026-11-18 | proposed | Martin to enable in repo settings; Claude does not change repo settings
