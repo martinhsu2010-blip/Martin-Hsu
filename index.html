@@ -320,7 +320,7 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true" class=""><rect x="2" y="7" width="14" height="10" rx="2"/><path d="m16 11 6-3.5v9L16 13"/></svg><span>視角</span>
             </button>
             <button id="pill-sky" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-orange)">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>天氣</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="pill-sky-label">天氣</span>
             </button>
             <button id="pill-settings" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-slate)">
                 <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><span>設定</span>
@@ -602,17 +602,17 @@
             // pixelRatio: 最高像素比 | shadow: 陰影貼圖解析度 | bloom / ssao / smaa: 後製開關
             // fog: 霧氣濃度 (越小看越遠) | npcs / traffic: 行人與車流數量 | props: 物理道具數量倍率
             presets: {
-                PHONE_LOW:     { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 4, props: 0.5 },
-                PHONE_MED:     { pixelRatio: 1.5,  shadow: 1024, bloom: true,  ssao: false, smaa: false, fog: 0.0014, npcs: 10, traffic: 5, props: 0.75 },
-                TABLET_LOW:    { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 5, props: 0.5 },
-                TABLET_MED:    { pixelRatio: 1.5,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 7, props: 0.75 },
-                TABLET_HIGH:   { pixelRatio: 1.75, shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0011, npcs: 14, traffic: 8, props: 1.0 },
-                DESKTOP_MED:   { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0011, npcs: 16, traffic: 9, props: 1.0 },
-                DESKTOP_HIGH:  { pixelRatio: 2.0,  shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0010, npcs: 16, traffic: 12, props: 1.0 },
-                DESKTOP_ULTRA: { pixelRatio: 2.0,  shadow: 4096, bloom: true,  ssao: true,  smaa: true,  fog: 0.0006, npcs: 24, traffic: 14, props: 1.0 },
-                IGPU_LOW:      { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0016, npcs: 8,  traffic: 5, props: 0.6 },
-                IGPU_MED:      { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 7, props: 0.8 },
-                IGPU_HIGH:     { pixelRatio: 1.25, shadow: 2048, bloom: true,  ssao: false, smaa: true,  fog: 0.0011, npcs: 14, traffic: 8, props: 1.0 }
+                PHONE_LOW:     { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 6, props: 0.5 },
+                PHONE_MED:     { pixelRatio: 1.5,  shadow: 1024, bloom: true,  ssao: false, smaa: false, fog: 0.0014, npcs: 10, traffic: 8, props: 0.75 },
+                TABLET_LOW:    { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 8, props: 0.5 },
+                TABLET_MED:    { pixelRatio: 1.5,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 11, props: 0.75 },
+                TABLET_HIGH:   { pixelRatio: 1.75, shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0011, npcs: 14, traffic: 13, props: 1.0 },
+                DESKTOP_MED:   { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0011, npcs: 16, traffic: 14, props: 1.0 },
+                DESKTOP_HIGH:  { pixelRatio: 2.0,  shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0010, npcs: 16, traffic: 18, props: 1.0 },
+                DESKTOP_ULTRA: { pixelRatio: 2.0,  shadow: 4096, bloom: true,  ssao: true,  smaa: true,  fog: 0.0006, npcs: 24, traffic: 24, props: 1.0 },
+                IGPU_LOW:      { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0016, npcs: 8,  traffic: 8, props: 0.6 },
+                IGPU_MED:      { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 10, props: 0.8 },
+                IGPU_HIGH:     { pixelRatio: 1.25, shadow: 2048, bloom: true,  ssao: false, smaa: true,  fog: 0.0011, npcs: 14, traffic: 12, props: 1.0 }
             },
             // 陰影範圍 (公尺) 與行人顯示距離：等級越低越近，省下大量繪製
             shadowRange: { LOW: 60, MED: 85, HIGH: 110, ULTRA: 130 },
@@ -693,6 +693,8 @@
             evadeTimer: 0,
             cameraMode: 0,
             skyPreset: 0,
+            dayCycle: true,
+            timeOfDay: 17.6,
             time: 0,
             cratesCollected: 0,
             totalCrates: 15,
@@ -1106,7 +1108,9 @@
         };
 
         function applySkyPreset(index) {
-            const p = SKY_PRESETS[index % SKY_PRESETS.length];
+            applySkyParams(SKY_PRESETS[index % SKY_PRESETS.length], true);
+        }
+        function applySkyParams(p, regenEnv = true) {
             const phi = THREE.MathUtils.degToRad(90 - p.elevation);
             const theta = THREE.MathUtils.degToRad(p.azimuth);
             sunVector.setFromSphericalCoords(1, phi, theta);
@@ -1121,9 +1125,11 @@
             });
 
             // 由真實 Sky 產生 PMREM 環境貼圖，讓車漆與玻璃反射真實天空色彩
-            if (currentEnvRT) currentEnvRT.dispose();
-            currentEnvRT = pmremGenerator.fromScene(skyEnvScene, 0.04);
-            scene.environment = currentEnvRT.texture;
+            if (regenEnv) {
+                if (currentEnvRT) currentEnvRT.dispose();
+                currentEnvRT = pmremGenerator.fromScene(skyEnvScene, 0.04);
+                scene.environment = currentEnvRT.texture;
+            }
 
             scene.fog.color.setHex(p.fogColor);
             sunLight.color.setHex(p.sunColor);
@@ -1157,6 +1163,67 @@
                 WORLD.nightWinMat.opacity = p.nightWindows;
                 WORLD.nightWinMat.visible = p.nightWindows > 0.01 && !WORLD.windowShaderMat;
             }
+        }
+
+
+        // ==================== 晝夜循環：依時間在各個天空設定之間平滑過渡 (1 遊戲小時 = 40 秒，一天約 16 分鐘) ====================
+        const DAY = { acc: 0, lastEnvElev: -999, lastEnvTime: -99, hourSeconds: 40 };
+        const DAY_KEYS = (() => {
+            const P = SKY_PRESETS;
+            const k = (t, base, o) => ({ t, p: Object.assign({}, base, o || {}) });
+            return [
+                k(0, P[3], { elevation: -12, azimuth: 300, nightWindows: 1 }),
+                k(4.8, P[3], { elevation: -8, azimuth: 70, nightWindows: 1 }),
+                k(5.8, P[2], { turbidity: 6, rayleigh: 2.2, elevation: -1.5, azimuth: 80, fogColor: 0x3b2f4a, sunColor: 0xfb923c, sunIntensity: 1.2, hemiSky: 0x7c5f8f, hemiGround: 0x111827, exposure: 0.85, nightWindows: 0.85 }),
+                k(6.6, P[2], { elevation: 3, azimuth: 88, nightWindows: 0.5 }),
+                k(8.5, P[0], { elevation: 20, azimuth: 115, fogColor: 0xe8b9a0, sunColor: 0xffd2b0, sunIntensity: 3.0, nightWindows: 0.05 }),
+                k(12.5, P[1], { elevation: 62, azimuth: 180 }),
+                k(16.3, P[1], { elevation: 32, azimuth: 240, turbidity: 4, fogColor: 0xd7e3ea, sunColor: 0xffe9c7, exposure: 1.0 }),
+                k(18.2, P[0], { azimuth: 262 }),
+                k(19.1, P[2], { azimuth: 272, elevation: 0.5 }),
+                k(20.2, P[3], { elevation: -7, azimuth: 290 }),
+                k(24, P[3], { elevation: -12, azimuth: 300, nightWindows: 1 })
+            ];
+        })();
+        function lerpSky(a, b, t) {
+            const o = { name: '' };
+            ['turbidity', 'rayleigh', 'mieCoefficient', 'mieDirectionalG', 'elevation', 'sunIntensity', 'exposure', 'nightWindows'].forEach(key => { o[key] = a[key] + (b[key] - a[key]) * t; });
+            const dAz = ((b.azimuth - a.azimuth + 540) % 360) - 180;
+            o.azimuth = a.azimuth + dAz * t;
+            ['fogColor', 'sunColor', 'hemiSky', 'hemiGround'].forEach(key => { o[key] = new THREE.Color(a[key]).lerp(new THREE.Color(b[key]), t).getHex(); });
+            return o;
+        }
+        function skyAtHour(h) {
+            for (let i = 0; i < DAY_KEYS.length - 1; i++) {
+                const a = DAY_KEYS[i], b = DAY_KEYS[i + 1];
+                if (h >= a.t && h <= b.t) {
+                    const t = (h - a.t) / (b.t - a.t);
+                    return lerpSky(a.p, b.p, t * t * (3 - 2 * t));
+                }
+            }
+            return DAY_KEYS[0].p;
+        }
+        const SKY_SHORT = ['夕陽', '正午', '黃昏', '午夜', '風暴'];
+        function updateSkyLabel() {
+            const el = document.getElementById('pill-sky-label');
+            if (!el) return;
+            if (STATE.dayCycle) {
+                const h = Math.floor(STATE.timeOfDay), m = Math.floor((STATE.timeOfDay - h) * 60);
+                el.textContent = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+            } else el.textContent = SKY_SHORT[STATE.skyPreset] || '天氣';
+        }
+        function updateDayCycle(dt) {
+            if (!STATE.dayCycle) return;
+            STATE.timeOfDay = (STATE.timeOfDay + dt / DAY.hourSeconds) % 24;
+            DAY.acc += dt;
+            if (DAY.acc < 0.25) return;
+            DAY.acc = 0;
+            const p = skyAtHour(STATE.timeOfDay);
+            // 天空、霧、陽光每 0.25 秒更新；反射環境貼圖比較貴，太陽角度變化夠大或每 6 秒才重算
+            const regen = Math.abs(p.elevation - DAY.lastEnvElev) > 2.5 || (STATE.time - DAY.lastEnvTime) > 6;
+            applySkyParams(p, regen);
+            if (regen) { DAY.lastEnvElev = p.elevation; DAY.lastEnvTime = STATE.time; }
+            updateSkyLabel();
         }
 
         // 後製管線：RenderPass + SSAOPass + UnrealBloomPass + OutputPass
@@ -1541,8 +1608,8 @@
 
         // ==================== 道路網：擴大城市格網、曲線海岸公路、斜向大道、圓環、奇利亞德山盤山公路 ====================
         const ROAD_NET = {
-            avenuesX: [-600, -420, -240, -120, 0, 110], avenueHalf: 12, avenueZ: 950, hillAveZ: 300,
-            crossZ: [-720, -600, -480, -360, -240, -120, 0, 120, 240, 360, 480, 600, 720], crossHalf: 11, crossX0: -640, crossX1: 232,
+            avenuesX: [-600, -420, -240, -120, 0, 110], avenueHalf: 12, avenueZ: 892, hillAveZ: 300,
+            crossZ: [-880, -720, -600, -480, -360, -240, -120, 0, 120, 240, 360, 480, 600, 720, 880], crossHalf: 11, crossX0: -640, crossX1: 232,
             ribbons: [],       // 平面曲線道路 { name, pts, half, lanes }
             roundabouts: [{ x: -240, z: 0, rIn: 16, rOut: 28, island: 14 }],
             hill: { cx: -620, cz: 560, rx: 280, rz: 240, h: 115, x0: -910, x1: -330, z0: 310, z1: 810, es: 10 },
@@ -1660,10 +1727,10 @@
                 half: 8.5,
                 lanes: 2,
                 ctrl: [
-                    [220, -780], [225, -700], [242, -610], [255, -520], [236, -430],
+                    [221, -890], [220, -780], [225, -700], [242, -610], [255, -520], [236, -430],
                     [222, -340], [220, -250], [220, -140], [220, 0], [220, 140],
                     [220, 250], [224, 340], [242, 430], [256, 520], [240, 610],
-                    [225, 700], [220, 780]
+                    [225, 700], [220, 780], [221, 890]
                 ]
             },
             {
@@ -1865,11 +1932,14 @@
         }
         ROAD_NET.terrainRoads = [ROAD_NET.hillRoad];
         ROAD_NET.suburbRoads = [
-            buildTerrainRoad('SUBURB MAIN', [[-790, -240], [-880, -250], [-1000, -232], [-1120, -262], [-1250, -240], [-1400, -220], [-1530, -258]], 6.5, { startH: 0 }),
-            buildTerrainRoad('MAPLE AVE', [[-650, -480], [-760, -500], [-900, -470], [-1000, -420], [-1062, -332], [-1118, -268]], 6.5, { startH: 0 }),
+            buildTerrainRoad('SUBURB MAIN', [[-642, -240], [-720, -241], [-800, -244], [-880, -250], [-1000, -232], [-1120, -262], [-1250, -240], [-1400, -221]], 6.5, { startH: 0 }),
+            buildTerrainRoad('MAPLE AVE', [[-642, -480], [-760, -500], [-900, -470], [-1000, -420], [-1062, -332], [-1118, -268]], 6.5, { startH: 0 }),
             buildTerrainRoad('HILLCREST LOOP', [[-1000, -238], [-1022, -120], [-1100, -20], [-1220, 40], [-1340, 0], [-1402, -100], [-1400, -222]], 6.5),
             buildTerrainRoad('VALLEY LOOP', [[-1250, -246], [-1262, -380], [-1320, -520], [-1200, -650], [-1050, -628], [-1004, -428]], 6.5)
         ];
+        // 第 -420、-600 大道北端原本是死路：接到奇利亞德盤山公路
+        buildTerrainRoad('CHILIAD LINK A', [[-420, 290], [-421, 330], [-420, 368]], 6.5, { startH: 0 });
+        buildTerrainRoad('CHILIAD LINK B', [[-600, 290], [-601, 340], [-600, 392]], 6.5, { startH: 0 });
 
         function roadHeightOn(tr, x, z) {
             const nr = nearestOnPolyline(x, z, tr.pts);
@@ -1928,18 +1998,59 @@
             const ringPts = sampleCurve(rr(-600, 110, -600, 240, 48), 4, true);
             ringPts.forEach(p => { p.y = H; });
             ROAD_NET.ring = { pts: ringPts, half: 9, closed: true, bbox: polyBBox(ringPts) };
-            const spur = (name, a, b, flat) => {
-                const pts = sampleCurve([a, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], b], 4);
-                const L = pts[pts.length - 1].s;
-                pts.forEach(p => { p.y = H * (1 - THREE.MathUtils.smoothstep(p.s, flat, L)); });
-                return { name, pts, half: 5.5, bbox: polyBBox(pts) };
+            // 環線參數 s → 位置 / 切線 (閉合)
+            const L = ringPts[ringPts.length - 1].s + Math.hypot(ringPts[0].x - ringPts[ringPts.length - 1].x, ringPts[0].z - ringPts[ringPts.length - 1].z);
+            ROAD_NET.ring.length = L;
+            const ringAt = (sv) => {
+                sv = ((sv % L) + L) % L;
+                let lo = 0, hi = ringPts.length - 1;
+                while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (ringPts[mid].s <= sv) lo = mid; else hi = mid - 1; }
+                const p = ringPts[lo], q = ringPts[(lo + 1) % ringPts.length];
+                const segL = (lo + 1 < ringPts.length ? q.s : L) - p.s || 1;
+                const t = (sv - p.s) / segL;
+                const tx = p.tx + (q.tx - p.tx) * t, tz = p.tz + (q.tz - p.tz) * t, tl = Math.hypot(tx, tz) || 1;
+                return { x: p.x + (q.x - p.x) * t, z: p.z + (q.z - p.z) * t, tx: tx / tl, tz: tz / tl };
             };
-            ROAD_NET.spurs = [
-                spur('COAST RAMP', [110, -360], [232, -360], 18),
-                spur('SUBURB RAMP', [-600, -240], [-790, -240], 18),
-                spur('MIDTOWN RAMP', [0, 240], [0, 425], 18),
-                spur('OLD TOWN RAMP', [-240, -600], [-240, -805], 18)
-            ];
+            ROAD_NET.ringAt = ringAt;
+            // 單向匝道：從內 / 外側車道以小角度分出，先在高架旁平行，下降到 7 m 以下再收進高架正下方的地面車道
+            // side = +1 給順環線方向 (逆時針) 的車、-1 給反方向；kind = off (下高架) / on (上高架)
+            const RH = 3.8, laneLat = 5.2, elevLat = 9 + RH + 0.3, groundLat = 6.0;
+            const ramp = (name, sc, side, kind) => {
+                const len = 210;
+                // 行進方向沿 s 增加 (side +1) 或減少 (side -1)；off 匝道在路口前落地，on 匝道在路口後匯入
+                const sStart = side > 0 ? (kind === 'off' ? sc - 40 - len : sc + 40) : (kind === 'off' ? sc + 40 + len : sc - 40);
+                const sEnd = side > 0 ? sStart + len : sStart - len;
+                const n = Math.ceil(len / 3);
+                const pts = [];
+                for (let k = 0; k <= n; k++) {
+                    const t = k / n;
+                    const sv = sStart + (sEnd - sStart) * t;
+                    const r = ringAt(sv);
+                    const dRing = (kind === 'off' ? t : 1 - t) * len; // 離高架接口的距離
+                    const y = H * (1 - THREE.MathUtils.smoothstep(dRing, 50, len));
+                    let lat = laneLat + (elevLat - laneLat) * THREE.MathUtils.smoothstep(dRing, 0, 55);
+                    lat = lat + (groundLat - lat) * THREE.MathUtils.smoothstep(7 - y, 0, 5);
+                    const ls = side * lat;
+                    pts.push({ x: r.x - r.tz * ls, z: r.z + r.tx * ls, y, lat, ringS: sv });
+                }
+                let acc = 0;
+                pts.forEach((p, i) => {
+                    const a = pts[Math.max(0, i - 1)], c = pts[Math.min(pts.length - 1, i + 1)];
+                    const tx = c.x - a.x, tz = c.z - a.z, tl = Math.hypot(tx, tz) || 1;
+                    p.tx = tx / tl; p.tz = tz / tl;
+                    if (i > 0) acc += Math.hypot(p.x - pts[i - 1].x, p.z - pts[i - 1].z);
+                    p.s = acc;
+                });
+                const taper = pts.filter(p => p.lat - RH < 9.4);
+                return { name, pts, half: RH, side, kind, bbox: polyBBox(pts), taperS: [Math.min(...taper.map(p => p.ringS)), Math.max(...taper.map(p => p.ringS))] };
+            };
+            // 交流道位置 (s 參數)：北側在第 -240 大道路口、西側在 z -120 路口、南側在第 -240 大道路口
+            const sAtPoint = (x, z) => { let best = 0, bd = Infinity; ringPts.forEach(p => { const d = (p.x - x) ** 2 + (p.z - z) ** 2; if (d < bd) { bd = d; best = p.s; } }); return best; };
+            ROAD_NET.spurs = [];
+            [['NORTH', -240, 240], ['WEST', -600, -120], ['SOUTH', -240, -600]].forEach(([nm, x, z]) => {
+                const sc = sAtPoint(x, z);
+                ROAD_NET.spurs.push(ramp(nm + ' OFF +', sc, 1, 'off'), ramp(nm + ' ON +', sc, 1, 'on'), ramp(nm + ' OFF -', sc, -1, 'off'), ramp(nm + ' ON -', sc, -1, 'on'));
+            });
         })();
         // 建築不可壓到高架 (含 4 m 餘裕)
         function rectHitsElevated(cx, cz, w, d, margin) {
@@ -1971,6 +2082,19 @@
             ROAD_NET.routes.push(laneRoute(ring, 5.2, true));
             const rev = ring.slice().reverse().map(p => ({ x: p.x, z: p.z, tx: -p.tx, tz: -p.tz, y: p.y, s: p.s }));
             ROAD_NET.routes.push(laneRoute(rev, 5.2, true));
+            // 北區環線 (第 -120 大道 → z 880 → 第 110 大道 → z 480) 與南區環線 (第 0 大道 → z -880 → 第 -420 大道 → z -480)
+            ROAD_NET.routes.push(buildRoute([
+                { pts: denseLine([-120, 480], [-120, 880], 20), offset: 4.5 },
+                { pts: denseLine([-120, 880], [110, 880], 20), offset: 4.5 },
+                { pts: denseLine([110, 880], [110, 480], 20), offset: 4.5 },
+                { pts: denseLine([110, 480], [-120, 480], 20), offset: 4.5 }
+            ]));
+            ROAD_NET.routes.push(buildRoute([
+                { pts: denseLine([0, -480], [0, -880], 20), offset: 4.5 },
+                { pts: denseLine([0, -880], [-420, -880], 20), offset: 4.5 },
+                { pts: denseLine([-420, -880], [-420, -480], 20), offset: 4.5 },
+                { pts: denseLine([-420, -480], [0, -480], 20), offset: 4.5 }
+            ]));
             // 郊區：主幹道 + 山丘環線來回
             const sm = ROAD_NET.suburbRoads[0].pts.filter(p => p.x <= -1000 && p.x >= -1400);
             const hl = ROAD_NET.suburbRoads[2].pts;
@@ -2151,14 +2275,7 @@
                 // 花台上的棕櫚樹
                 for (let k = 0; k < 4; k++) {
                     const a = k * Math.PI / 2 + 0.6;
-                    const tr = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.4, 7, 8), new THREE.MeshStandardMaterial({ color: 0x6b4423, roughness: 0.9 }));
-                    tr.position.set(rb.x + Math.cos(a) * 9.5, 4.5, rb.z + Math.sin(a) * 9.5);
-                    tr.castShadow = true;
-                    scene.add(tr);
-                    const cr = new THREE.Mesh(new THREE.ConeGeometry(3.0, 2.4, 7), new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.75 }));
-                    cr.position.set(tr.position.x, 8.6, tr.position.z);
-                    cr.castShadow = true;
-                    scene.add(cr);
+                    addTree('palm', rb.x + Math.cos(a) * 9.5, 1.0, rb.z + Math.sin(a) * 9.5, 0.8, a);
                 }
             });
 
@@ -2256,7 +2373,7 @@
             makeTerrain(ROAD_NET.terrainRegions[0], 6);
             makeTerrain(ROAD_NET.terrainRegions[1], PROFILE === 'DESKTOP' ? 8 : 10);
             // 郊區道路 (沿地形起伏)
-            ROAD_NET.suburbRoads.forEach(tr => {
+            ROAD_NET.terrainRoads.filter(tr => tr !== ROAD_NET.hillRoad).forEach(tr => {
                 const m = new THREE.Mesh(ribbonGeometry(tr.pts, tr.half, (i) => tr.pts[i].y + 0.12, 30), ribbonMats[2]);
                 m.receiveShadow = true;
                 scene.add(m);
@@ -2291,21 +2408,6 @@
             scene.add(posts);
 
             // 山區森林：三層松針 + 樹幹的松樹 (頂點色) 與散落的岩石，InstancedMesh 一次畫完
-            const pineParts = [];
-            const addPart = (geo, color, y) => {
-                geo.translate(0, y, 0);
-                const c = new THREE.Color(color), n = geo.attributes.position.count, col = new Float32Array(n * 3);
-                for (let k = 0; k < n; k++) { col[k * 3] = c.r; col[k * 3 + 1] = c.g; col[k * 3 + 2] = c.b; }
-                geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
-                pineParts.push(geo.index ? geo.toNonIndexed() : geo);
-            };
-            addPart(new THREE.CylinderGeometry(0.22, 0.34, 3.2, 6), 0x5b3a24, 1.6);
-            addPart(new THREE.ConeGeometry(2.6, 3.6, 8), 0x2f5d34, 3.6);
-            addPart(new THREE.ConeGeometry(2.0, 3.2, 8), 0x356b3a, 5.4);
-            addPart(new THREE.ConeGeometry(1.3, 2.8, 8), 0x3c7a42, 7.1);
-            pineParts.forEach(g => { g.deleteAttribute('uv'); });
-            const pineGeo = mergeGeometries(pineParts);
-            pineGeo.computeVertexNormals();
             const pineLimit = PROFILE === 'DESKTOP' ? 420 : 220;
             const treeMatrices = [], treeColors = [];
             const rockMatrices = [];
@@ -2329,20 +2431,10 @@
                     }
                     continue;
                 }
-                dmy.position.set(x, th - 0.2, z);
-                dmy.rotation.set(0, k * 2.4, 0);
-                const s = 0.75 + ((k * 7) % 10) * 0.07;
-                dmy.scale.set(s, s * (0.9 + (k % 4) * 0.08), s);
-                dmy.updateMatrix();
-                treeMatrices.push(dmy.matrix.clone());
-                treeColors.push(tc.setHSL(0.3 + (k % 7) * 0.008, 0.35 + (k % 3) * 0.08, 0.85 + (k % 5) * 0.05).clone());
+                addTree(th > 45 || k % 4 ? 'pine' : 'broad', x, th - 0.25, z, 0.75 + ((k * 7) % 10) * 0.06, k * 2.4);
+                treeMatrices.push(1);
             }
             dmy.scale.setScalar(1);
-            const pines = new THREE.InstancedMesh(pineGeo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.85, flatShading: true }), treeMatrices.length);
-            treeMatrices.forEach((m, i) => { pines.setMatrixAt(i, m); pines.setColorAt(i, treeColors[i]); });
-            pines.castShadow = true;
-            pines.receiveShadow = true;
-            scene.add(pines);
             const rockGeo = new THREE.IcosahedronGeometry(1.2, 0);
             const rp = rockGeo.attributes.position;
             for (let k = 0; k < rp.count; k++) rp.setXYZ(k, rp.getX(k) * (0.8 + ((k * 13) % 5) * 0.1), rp.getY(k) * (0.7 + ((k * 7) % 4) * 0.12), rp.getZ(k));
@@ -2419,14 +2511,7 @@
                     lawn.position.set(x, 0.05, z);
                     lawn.receiveShadow = true;
                     scene.add(lawn);
-                    const t = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.32, 3.2, 8), trunkMat);
-                    t.position.set(x, 1.6, z);
-                    t.castShadow = true;
-                    scene.add(t);
-                    const c = new THREE.Mesh(new THREE.SphereGeometry(2.1, 10, 8), leafMat);
-                    c.position.set(x, 4.2, z);
-                    c.castShadow = true;
-                    scene.add(c);
+                    addTree('broad', x, 0.05, z, 0.8 + (Math.abs(Math.round(x * 3 + z)) % 4) * 0.07, x * 0.3 + z);
                 }
             }
         }
@@ -3097,6 +3182,213 @@
             return geo;
         }
 
+        // ==================== 樹木系統：程式產生的寫實樹 (樹幹 + 分枝 + 透明葉片叢 / 松針層)，全部用 InstancedMesh，葉子會隨風擺動 ====================
+        const TREES = { list: [], uTime: { value: 0 } };
+        function addTree(type, x, y, z, scale = 1, rot = 0, tint = null) { TREES.list.push({ type, x, y, z, scale, rot, tint }); }
+
+        function makeLeafTexture(kind) {
+            const c = document.createElement('canvas');
+            c.width = 256; c.height = 256;
+            const g = c.getContext('2d');
+            let seed = kind === 'pine' ? 7 : 3;
+            const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+            if (kind === 'pine') {
+                // 松枝：中間一根枝條，兩側密集的針葉，越往外越細
+                g.translate(0, 128);
+                g.strokeStyle = '#4a3420'; g.lineWidth = 5;
+                g.beginPath(); g.moveTo(0, 0); g.quadraticCurveTo(128, 6, 252, 18); g.stroke();
+                for (let i = 0; i < 900; i++) {
+                    const t = rnd(), x = t * 246, yb = (6 + 12 * t * t) * (x / 252);
+                    const len = (58 - t * 40) * (0.5 + rnd() * 0.6);
+                    const side = rnd() < 0.5 ? -1 : 1;
+                    const ang = side * (0.5 + rnd() * 0.7);
+                    const l = 22 + rnd() * 30;
+                    g.strokeStyle = `hsl(${105 + rnd() * 25}, ${35 + rnd() * 25}%, ${16 + rnd() * 16 + (side < 0 ? 6 : 0)}%)`;
+                    g.lineWidth = 1.6 + rnd();
+                    g.beginPath(); g.moveTo(x, yb); g.lineTo(x + Math.cos(ang) * len * 0.5, yb + Math.sin(ang) * len * (l / 40)); g.stroke();
+                }
+            } else {
+                // 闊葉叢：上百片橢圓葉子，下方較暗、上方受光較亮
+                for (let i = 0; i < 520; i++) {
+                    const a = rnd() * Math.PI * 2, r = Math.sqrt(rnd()) * 112;
+                    const x = 128 + Math.cos(a) * r, y = 128 + Math.sin(a) * r * 0.92;
+                    const light = 0.35 + (1 - y / 256) * 0.4 + rnd() * 0.2;
+                    g.save(); g.translate(x, y); g.rotate(rnd() * Math.PI * 2);
+                    g.fillStyle = `hsl(${85 + rnd() * 35}, ${40 + rnd() * 25}%, ${Math.round(light * 38)}%)`;
+                    g.beginPath(); g.ellipse(0, 0, 9 + rnd() * 6, 4 + rnd() * 3, 0, 0, Math.PI * 2); g.fill();
+                    g.strokeStyle = 'rgba(0,0,0,0.18)'; g.lineWidth = 1; g.beginPath(); g.moveTo(-8, 0); g.lineTo(8, 0); g.stroke();
+                    g.restore();
+                }
+            }
+            const t = new THREE.CanvasTexture(c);
+            t.colorSpace = THREE.SRGBColorSpace;
+            t.anisotropy = 4;
+            return t;
+        }
+        function makeBarkTexture() {
+            const c = document.createElement('canvas');
+            c.width = 64; c.height = 256;
+            const g = c.getContext('2d');
+            g.fillStyle = '#5a4130'; g.fillRect(0, 0, 64, 256);
+            for (let i = 0; i < 260; i++) {
+                const x = (i * 37) % 64, w = 2 + (i % 4);
+                g.fillStyle = i % 3 ? 'rgba(25,15,8,0.45)' : 'rgba(150,120,90,0.25)';
+                g.fillRect(x, (i * 53) % 256, w, 12 + (i % 7) * 6);
+            }
+            const t = new THREE.CanvasTexture(c);
+            t.wrapS = t.wrapT = THREE.RepeatWrapping;
+            t.colorSpace = THREE.SRGBColorSpace;
+            return t;
+        }
+
+        // 葉片卡片：一片四邊形 (雙面各一份)，法線朝「樹冠中心往外」→ 光影柔和像真的樹冠
+        function pushCard(arr, c, ux, uy, crown, flipU) {
+            const [cx, cy, cz] = c;
+            const P = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => [cx + ux[0] * a + uy[0] * b, cy + ux[1] * a + uy[1] * b, cz + ux[2] * a + uy[2] * b]);
+            const U = [[0, 0], [1, 0], [1, 1], [0, 1]].map(([u, v]) => [flipU ? 1 - u : u, v]);
+            const N = P.map(p => { const v = new THREE.Vector3(p[0] - crown[0], (p[1] - crown[1]) * 0.7 + 0.6, p[2] - crown[2]).normalize(); return [v.x, v.y, v.z]; });
+            const tri = [[0, 1, 2], [0, 2, 3], [0, 2, 1], [0, 3, 2]];
+            tri.forEach(t => t.forEach(k => { arr.pos.push(...P[k]); arr.uv.push(...U[k]); arr.nor.push(...N[k]); }));
+        }
+        function cardGeometry(arr) {
+            const g = new THREE.BufferGeometry();
+            g.setAttribute('position', new THREE.Float32BufferAttribute(arr.pos, 3));
+            g.setAttribute('normal', new THREE.Float32BufferAttribute(arr.nor, 3));
+            g.setAttribute('uv', new THREE.Float32BufferAttribute(arr.uv, 2));
+            return g;
+        }
+        // 樹幹：略彎的錐形圓柱 + 幾根主枝
+        function woodGeometry(h, r0, r1, bend, branches) {
+            const parts = [];
+            const trunk = new THREE.CylinderGeometry(r1, r0, h, 7, 6, true);
+            const tp = trunk.attributes.position;
+            for (let i = 0; i < tp.count; i++) { const y = tp.getY(i) + h / 2; tp.setX(i, tp.getX(i) + Math.sin(y / h * 2.2) * bend); tp.setY(i, y); }
+            trunk.computeVertexNormals();
+            const uv = trunk.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setY(i, uv.getY(i) * h / 2);
+            parts.push(trunk);
+            branches.forEach(([y, ang, tilt, len, r]) => {
+                const b = new THREE.CylinderGeometry(r * 0.5, r, len, 5, 1, true);
+                b.translate(0, len / 2, 0);
+                b.rotateZ(-tilt); b.rotateY(ang);
+                b.translate(Math.sin(y / h * 2.2) * bend, y, 0);
+                parts.push(b);
+            });
+            const g = mergeGeometries(parts.map(p => p.toNonIndexed()), false);
+            g.computeVertexNormals();
+            return g;
+        }
+        function broadleafVariant(seed, big) {
+            let sd = seed;
+            const rnd = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
+            const h = big ? 4.2 : 3.4, cy = h + (big ? 2.6 : 2.0), R = big ? 3.4 : 2.6;
+            const branches = [];
+            for (let k = 0; k < 4; k++) branches.push([h * (0.7 + rnd() * 0.25), k * 1.57 + rnd() * 0.6, 0.6 + rnd() * 0.4, R * (0.7 + rnd() * 0.3), 0.14]);
+            const wood = woodGeometry(h + 1.2, big ? 0.36 : 0.28, 0.16, 0.25 + rnd() * 0.2, branches);
+            const arr = { pos: [], nor: [], uv: [] };
+            const crown = [0, cy, 0];
+            const n = big ? 22 : 16;
+            for (let k = 0; k < n; k++) {
+                // 葉叢分佈在橢球表面附近
+                const a = rnd() * Math.PI * 2, e = (rnd() - 0.35) * 1.4;
+                const r = R * (0.55 + rnd() * 0.45);
+                const c = [Math.cos(a) * Math.cos(e) * r, cy + Math.sin(e) * R * 0.75, Math.sin(a) * Math.cos(e) * r];
+                const sz = (big ? 1.7 : 1.4) * (0.8 + rnd() * 0.4);
+                // 兩片交叉卡片
+                const yaw = rnd() * Math.PI;
+                pushCard(arr, c, [Math.cos(yaw) * sz, 0, Math.sin(yaw) * sz], [0, sz, 0], crown, false);
+                pushCard(arr, c, [-Math.sin(yaw) * sz, 0, Math.cos(yaw) * sz], [0, sz * 0.9, 0], crown, true);
+                // 一片接近水平的卡片，從上往下看也有樹冠
+                pushCard(arr, [c[0], c[1] + 0.2, c[2]], [sz, 0, 0], [0, 0.35 * sz, sz], crown, false);
+            }
+            return { wood, leaves: cardGeometry(arr) };
+        }
+        function pineVariant(seed, tall) {
+            let sd = seed;
+            const rnd = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
+            const H = tall ? 11 : 8;
+            const wood = woodGeometry(H * 0.95, tall ? 0.34 : 0.26, 0.06, 0.05, []);
+            const arr = { pos: [], nor: [], uv: [] };
+            const tiers = tall ? 9 : 7;
+            for (let t = 0; t < tiers; t++) {
+                const f = t / (tiers - 1);
+                const y = H * (0.22 + f * 0.72);
+                const r = (tall ? 3.1 : 2.6) * (1 - f * 0.82) + 0.35;
+                const count = Math.max(4, Math.round(7 - f * 3));
+                for (let k = 0; k < count; k++) {
+                    const a = (k / count) * Math.PI * 2 + t * 0.7 + rnd() * 0.3;
+                    const dx = Math.cos(a), dz = Math.sin(a);
+                    const droop = 0.35 + f * 0.1;
+                    // 一片沿著枝條方向往外下垂的松枝卡片 (從樹幹到外緣)
+                    const c = [dx * r * 0.5, y - r * droop * 0.5, dz * r * 0.5];
+                    const ux = [dx * r * 0.5, -r * droop * 0.5, dz * r * 0.5];
+                    const w = 0.55 + (1 - f) * 0.45;
+                    pushCard(arr, c, ux, [-dz * w, 0.25 * w, dx * w], [0, y + 1.2, 0], false);
+                }
+            }
+            return { wood, leaves: cardGeometry(arr) };
+        }
+
+        function buildTrees() {
+            if (!TREES.list.length) return;
+            const barkMat = new THREE.MeshStandardMaterial({ map: makeBarkTexture(), roughness: 0.95 });
+            const sway = (mat, amp) => {
+                mat.onBeforeCompile = sh => {
+                    sh.uniforms.uTime = TREES.uTime;
+                    sh.vertexShader = sh.vertexShader
+                        .replace('#include <common>', '#include <common>\nuniform float uTime;')
+                        .replace('#include <begin_vertex>', `#include <begin_vertex>
+                        #ifdef USE_INSTANCING
+                            float ph = instanceMatrix[3].x * 0.07 + instanceMatrix[3].z * 0.05;
+                        #else
+                            float ph = 0.0;
+                        #endif
+                        float hw = max(0.0, position.y - 2.0);
+                        transformed.x += sin(uTime * 1.6 + ph) * ${amp} * hw;
+                        transformed.z += cos(uTime * 1.3 + ph * 1.7) * ${amp * 0.7} * hw;`);
+                };
+                mat.customProgramCacheKey = () => 'vh-tree-sway-' + amp;
+            };
+            const leafMat = new THREE.MeshStandardMaterial({ map: makeLeafTexture('broad'), alphaTest: 0.42, roughness: 0.8, metalness: 0 });
+            const pineMat = new THREE.MeshStandardMaterial({ map: makeLeafTexture('pine'), alphaTest: 0.38, roughness: 0.85, metalness: 0 });
+            sway(leafMat, 0.012);
+            sway(pineMat, 0.006);
+            const V = {
+                broadA: broadleafVariant(11, false), broadB: broadleafVariant(29, true),
+                pineA: pineVariant(5, false), pineB: pineVariant(17, true)
+            };
+            const groups = { broadA: [], broadB: [], pineA: [], pineB: [], palm: [] };
+            TREES.list.forEach((t, i) => {
+                if (t.type === 'palm') groups.palm.push(t);
+                else if (t.type === 'pine') groups[i % 3 === 0 ? 'pineB' : 'pineA'].push(t);
+                else groups[i % 2 === 0 ? 'broadB' : 'broadA'].push(t);
+            });
+            const dm = new THREE.Object3D(), col = new THREE.Color();
+            const inst = (geo, mat, list, tinted) => {
+                if (!list.length) return;
+                const m = new THREE.InstancedMesh(geo, mat, list.length);
+                list.forEach((t, i) => {
+                    dm.position.set(t.x, t.y, t.z); dm.rotation.set(0, t.rot, 0); dm.scale.setScalar(t.scale); dm.updateMatrix();
+                    m.setMatrixAt(i, dm.matrix);
+                    if (tinted) m.setColorAt(i, t.tint || col.setHSL(0.27 + ((i * 7) % 11) * 0.008, 0.25 + ((i * 3) % 5) * 0.05, 0.62 + ((i * 5) % 7) * 0.05));
+                });
+                m.castShadow = PROFILE === 'DESKTOP'; // 手機與內顯不投射樹影 (省一半三角形)
+                m.receiveShadow = true;
+                m.layers.set(DETAIL_LAYER);
+                scene.add(m);
+            };
+            ['broadA', 'broadB', 'pineA', 'pineB'].forEach(k => {
+                inst(V[k].wood, barkMat, groups[k], false);
+                inst(V[k].leaves, k.startsWith('pine') ? pineMat : leafMat, groups[k], true);
+            });
+            if (groups.palm.length) {
+                const palm = buildPalmAssets();
+                sway(palm.frondMat, 0.006);
+                inst(palm.trunkGeo, palm.trunkMat, groups.palm, false);
+                inst(palm.frondGeo, palm.frondMat, groups.palm, false);
+            }
+            console.log('[VH] 樹木：', TREES.list.length, '棵', Object.fromEntries(Object.entries(groups).map(([k, v]) => [k, v.length])));
+        }
+
         // ==================== 郊區住宅：沿著郊區道路兩側蓋獨棟房子 (牆、斜屋頂、地基都用 InstancedMesh) ====================
         function buildSuburbs() {
             const dmy = new THREE.Object3D();
@@ -3205,32 +3497,17 @@
 
             // 行道樹與庭院樹 (闊葉樹)
             const treeMax = PROFILE === 'DESKTOP' ? 520 : 260;
-            const trunkG = new THREE.CylinderGeometry(0.25, 0.38, 3.2, 6); trunkG.translate(0, 1.6, 0);
-            const crownG = new THREE.IcosahedronGeometry(2.6, 1); crownG.translate(0, 4.6, 0);
-            const cp = crownG.attributes.position;
-            for (let k = 0; k < cp.count; k++) cp.setY(k, 4.6 + (cp.getY(k) - 4.6) * 0.82);
-            crownG.computeVertexNormals();
-            const tm = [], tc = [];
-            for (let k = 0; k < 9000 && tm.length < treeMax; k++) {
+            let nTrees = 0;
+            for (let k = 0; k < 9000 && nTrees < treeMax; k++) {
                 const x = S.x0 + 20 + ((k * 0.618034) % 1) * (S.x1 - S.x0 - 140);
                 const z = S.z0 + 20 + ((k * 0.754877 + 0.13) % 1) * (S.z1 - S.z0 - 40);
                 const rd = nearestTerrainRoadDist(x, z);
                 if (rd < 3.5 || rd > 60) continue;
                 if (tooClose(x, z, 9)) continue;
-                const y = terrainHeight(x, z);
-                dmy.position.set(x, y - 0.1, z);
-                dmy.rotation.set(0, k, 0);
-                const sc = 0.75 + (k % 7) * 0.08;
-                dmy.scale.set(sc, sc * (0.9 + (k % 3) * 0.1), sc);
-                dmy.updateMatrix();
-                tm.push(dmy.matrix.clone());
-                tc.push(new THREE.Color().setHSL(0.24 + (k % 9) * 0.012, 0.45, 0.28 + (k % 5) * 0.03));
+                addTree(k % 9 === 0 ? 'pine' : 'broad', x, terrainHeight(x, z) - 0.15, z, 0.8 + (k % 7) * 0.07, k * 2.399);
+                nTrees++;
             }
-            const trunks = new THREE.InstancedMesh(trunkG, new THREE.MeshStandardMaterial({ color: 0x5b3a24, roughness: 0.9 }), tm.length);
-            const crowns = new THREE.InstancedMesh(crownG, new THREE.MeshStandardMaterial({ roughness: 0.85, flatShading: true }), tm.length);
-            tm.forEach((m, i) => { trunks.setMatrixAt(i, m); crowns.setMatrixAt(i, m); crowns.setColorAt(i, tc[i]); });
-            [trunks, crowns].forEach(m => { m.castShadow = true; m.receiveShadow = true; scene.add(m); });
-            console.log('[VH] 郊區：', houses.length, '棟房子、', tm.length, '棵樹');
+            console.log('[VH] 郊區：', houses.length, '棟房子、', nTrees, '棵樹');
         }
 
         // ==================== 環狀高架快速道路 (柏油貼圖、紐澤西護欄、中央分隔、橋墩、4 條匝道) ====================
@@ -3252,7 +3529,9 @@
             const dashed = (x) => { g.fillStyle = '#e5e7eb'; for (let y = 0; y < 1024; y += 300) g.fillRect(x - 3, y, 6, 110); };
             solid(W * 0.055, '#f1f5f9');
             solid(W * 0.945, '#f1f5f9');
-            if (divided) {
+            if (divided === 'single') {
+                // 單向匝道：只有兩側白邊線
+            } else if (divided) {
                 solid(W * 0.445, '#f59e0b', 6);
                 solid(W * 0.555, '#f59e0b', 6);
                 for (let k = 1; k < lanes; k++) { dashed(W * 0.055 + laneW * k); dashed(W * 0.945 - laneW * k); }
@@ -3305,7 +3584,7 @@
         function buildElevatedRoads() {
             const H = ROAD_NET.elevH;
             const ringTex = createHighwayTexture(2, true);
-            const spurTex = createHighwayTexture(1, false);
+            const spurTex = createHighwayTexture(1, 'single');
             const asphaltRing = new THREE.MeshStandardMaterial({ map: ringTex, roughness: 0.86, metalness: 0.0 });
             const asphaltSpur = new THREE.MeshStandardMaterial({ map: spurTex, roughness: 0.86, metalness: 0.0 });
             WORLD.roadMaterials.push(asphaltRing, asphaltSpur);
@@ -3314,18 +3593,18 @@
             const barrierMat = new THREE.MeshStandardMaterial({ color: 0xd4d7dc, roughness: 0.7, side: THREE.DoubleSide });
             const ring = ROAD_NET.ring;
             const rp = ring.pts;
-            // 匝道接在環線外側：匝道路面從環線外緣開始；環線外側護欄在接口處留缺口
-            const spurs = ROAD_NET.spurs.map(sp => ({ ...sp, pts: sp.pts.filter(p => p.s >= ring.half - 0.6) }));
-            const outerMask = rp.map(() => true);
-            const innerMask = rp.map(() => true);
-            ROAD_NET.spurs.forEach(sp => {
-                const s0 = sp.pts[0], o = { x: sp.pts[3].x - s0.x, z: sp.pts[3].z - s0.z };
+            // 匝道：與高架平行分出 / 匯入。接口處 (斜接段) 環線那一側的護欄要開口，匝道靠環線那側的護欄也不建
+            const spurs = ROAD_NET.spurs;
+            const outerMask = rp.map(() => true);   // +lat 側護欄
+            const innerMask = rp.map(() => true);   // -lat 側護欄
+            const inRange = (sv, a, b) => { const L = ring.length; const d = ((sv - a) % L + L) % L; return d <= ((b - a) % L + L) % L; };
+            spurs.forEach(sp => {
+                const [a, b] = sp.taperS;
                 rp.forEach((p, i) => {
-                    if (Math.hypot(p.x - s0.x, p.z - s0.z) > sp.half + 1.5) return;
-                    // 右側法向量 (-tz, tx) 與匝道方向同向 → 右側護欄開口，否則左側
-                    const dot = (-p.tz) * o.x + p.tx * o.z;
-                    if (dot > 0) outerMask[i] = false; else innerMask[i] = false;
+                    if (!inRange(p.s, a - 2, b + 2)) return;
+                    if (sp.side > 0) outerMask[i] = false; else innerMask[i] = false;
                 });
+                sp.leftMask = sp.pts.map(p => p.lat - sp.half > ring.half + 0.4 || p.y < ROAD_NET.elevH - 2.5);
             });
             const addMesh = (geo, mats, shadow = true) => {
                 const m = new THREE.Mesh(geo, mats);
@@ -3343,12 +3622,29 @@
                 extrudeStrip(rp, -ring.half, -ring.half + 0.5, 1.0, 1.0, 30, true, innerMask),
                 extrudeStrip(rp, -0.3, 0.3, 0.9, 0.9, 30, true)
             ];
+            const spurDeckGeos = [];
             spurs.forEach(sp => {
-                const deck = addMesh(extrudeStrip(sp.pts, -sp.half, sp.half, 0.02, 0.9, 30, false), [asphaltSpur, concrete]);
-                WORLD.cameraBlockers.push(deck);
+                const g = extrudeStrip(sp.pts, -sp.half, sp.half, 0.02, 0.9, 30, false);
+                spurDeckGeos.push(g);
                 barrierGeos.push(extrudeStrip(sp.pts, sp.half - 0.5, sp.half, 1.0, 1.0, 30, false));
-                barrierGeos.push(extrudeStrip(sp.pts, -sp.half, -sp.half + 0.5, 1.0, 1.0, 30, false));
+                barrierGeos.push(extrudeStrip(sp.pts, -sp.half, -sp.half + 0.5, 1.0, 1.0, 30, false, sp.leftMask));
             });
+            // 12 條匝道路面合成一個網格 (群組：柏油頂面 / 混凝土側面)
+            if (spurDeckGeos.length) {
+                const tops = [], sides = [];
+                spurDeckGeos.forEach(g => {
+                    const pos = g.attributes.position.array, uv = g.attributes.uv.array, nor = g.attributes.normal.array;
+                    const gr = g.groups;
+                    const cut = (start, count) => { const p = new THREE.BufferGeometry(); p.setAttribute('position', new THREE.Float32BufferAttribute(pos.slice(start * 3, (start + count) * 3), 3)); p.setAttribute('uv', new THREE.Float32BufferAttribute(uv.slice(start * 2, (start + count) * 2), 2)); p.setAttribute('normal', new THREE.Float32BufferAttribute(nor.slice(start * 3, (start + count) * 3), 3)); return p; };
+                    tops.push(cut(gr[0].start, gr[0].count));
+                    sides.push(cut(gr[1].start, gr[1].count));
+                });
+                const top = mergeGeometries(tops, false), side = mergeGeometries(sides, false);
+                const nTop = top.attributes.position.count;
+                const all = mergeGeometries([top, side], false);
+                all.clearGroups(); all.addGroup(0, nTop, 0); all.addGroup(nTop, side.attributes.position.count, 1);
+                WORLD.cameraBlockers.push(addMesh(all, [asphaltSpur, concrete]));
+            }
             barrierGeos.forEach(g => g.clearGroups());
             addMesh(mergeGeometries(barrierGeos, false), barrierMat);
 
@@ -3395,7 +3691,7 @@
                 }
             };
             segColliders(rp, ring.half, true, true, true, outerMask, innerMask);
-            spurs.forEach(sp => segColliders(sp.pts, sp.half, false, true, false));
+            spurs.forEach(sp => segColliders(sp.pts, sp.half, false, true, false, null, sp.leftMask));
 
             // ---------- 橋墩 (每 32 m，避開路口與曲線道路) ----------
             const pil = [];
@@ -3505,10 +3801,10 @@
             });
 
             aveX.forEach(x => {
-                const az1 = x < -340 ? ROAD_NET.hillAveZ : 950;
-                const r = new THREE.Mesh(new THREE.PlaneGeometry(24, az1 + 950), roadMat);
+                const AZ = ROAD_NET.avenueZ, az1 = x < -340 ? ROAD_NET.hillAveZ : AZ;
+                const r = new THREE.Mesh(new THREE.PlaneGeometry(24, az1 + AZ), roadMat);
                 r.rotation.x = -Math.PI / 2;
-                r.position.set(x, 0.06, (az1 - 950) / 2);
+                r.position.set(x, 0.06, (az1 - AZ) / 2);
                 r.receiveShadow = true;
                 scene.add(r);
 
@@ -3525,11 +3821,11 @@
                         scene.add(sw);
                         addStaticBoxCollider(sx, 0.08, cz, 2.5, 0.08, len / 2);
                     };
-                    for (let z = -760; z <= 760; z += 4) {
+                    for (let z = -876; z <= 876; z += 4) {
                         const atCross = sx > ROAD_NET.crossX0 && sx < ROAD_NET.crossX1 && ROAD_NET.crossZ.some(c => Math.abs(z - c) < ROAD_NET.crossHalf + 1.5);
                         const blocked = atCross || onCurvedRoad(sx, z, 3.0);
                         if (!blocked && segStart === null) segStart = z;
-                        if ((blocked || z === 760) && segStart !== null) { flushSeg(segStart, z); segStart = null; }
+                        if ((blocked || z === 876) && segStart !== null) { flushSeg(segStart, z); segStart = null; }
                     }
                 });
             });
@@ -3959,24 +4255,10 @@
                     palmMatrices.push(dummy.matrix.clone());
                 });
             }
-            // 寫實棕櫚樹：微彎、有環紋的樹幹 + 下垂的羽狀葉片 (透明貼圖)，取代原本的圓柱 + 圓錐
-            const palm = buildPalmAssets();
-            const trunkInst = new THREE.InstancedMesh(palm.trunkGeo, palm.trunkMat, palmMatrices.length);
-            const crownInst = new THREE.InstancedMesh(palm.frondGeo, palm.frondMat, palmMatrices.length);
             palmMatrices.forEach((m, i) => {
                 const p = new THREE.Vector3().setFromMatrixPosition(m);
-                const s = 0.85 + ((i * 37) % 10) / 30;
-                const pm = new THREE.Matrix4().compose(
-                    new THREE.Vector3(p.x, 0, p.z),
-                    new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), (i * 2.399) % (Math.PI * 2)),
-                    new THREE.Vector3(s, s, s)
-                );
-                trunkInst.setMatrixAt(i, pm);
-                crownInst.setMatrixAt(i, pm);
+                addTree('palm', p.x, 0, p.z, 0.85 + ((i * 37) % 10) / 30, (i * 2.399) % (Math.PI * 2));
             });
-            trunkInst.castShadow = true;
-            crownInst.castShadow = true;
-            scene.add(trunkInst, crownInst);
 
             const lampMatrices = [];
             [-240, -120, 0, 110, 220].forEach(ax => {
@@ -3998,6 +4280,15 @@
                 new THREE.MeshBasicMaterial({ color: 0xfef08a }),
                 lampMatrices.length
             );
+            [-240, -120, 0].forEach((ax, ai) => {
+                for (let z = -860; z <= 860; z += 30) {
+                    const x = ax + 14.5;
+                    if (ROAD_NET.crossZ.some(cz => Math.abs(z - cz) < 17)) continue;
+                    if (onCurvedRoad(x, z, 2.5) || rectHitsElevated(x, z, 3, 3, 0.5)) continue;
+                    if (PROFILE !== 'DESKTOP' && (Math.round(z / 30) % 2)) continue;
+                    addTree('broad', x, 0.18, z, 0.78 + (Math.abs(Math.round(z * 7 + ai)) % 5) * 0.06, z * 0.37);
+                }
+            });
             WORLD.lampPositions = lampMatrices.map(m => new THREE.Vector3().setFromMatrixPosition(m));
             WORLD.lampMatrices = lampMatrices;
             WORLD.poleInst = poleInst;
@@ -5919,7 +6210,14 @@
                 { name: 'Wine Roma', color: 0x7f1d1d, x: 0, z: 0, isAI: true },
                 { name: 'Silver Spider', color: 0x9ca3af, finish: 'matte', x: 0, z: 0, isAI: true },
                 { name: 'Mint Portofino', color: 0xa7f3d0, livery: 'twotone', color2: 0x0b0d12, x: 0, z: 0, isAI: true }
-            ].slice(0, DENSITY.traffic).forEach((cfg, k) => {
+            ].concat(Array.from({ length: 16 }, (_, j) => ({
+                name: 'Commuter ' + (j + 1),
+                color: [0x9ca3af, 0x1f2937, 0xe5e7eb, 0x7c2d12, 0x1e40af, 0x065f46, 0xf2b705, 0x475569][j % 8],
+                livery: j % 8 === 6 ? 'taxi' : (j % 5 === 3 ? 'stripes' : undefined),
+                color2: 0x0b0d12,
+                finish: j % 6 === 2 ? 'matte' : undefined,
+                x: 0, z: 0, isAI: true
+            }))).slice(0, DENSITY.traffic).forEach((cfg, k) => {
                 const car = new RealisticRaycastVehicle(cfg);
                 // 平均分配到各條路線上，並沿路線錯開位置
                 const nR = ROAD_NET.routes.length;
@@ -6048,9 +6346,19 @@
             far.traverse(o => {
                 if (!o.isMesh || Array.isArray(o.material)) return;
                 const mn = (o.material.name || '').toLowerCase(), n = (o.name || '').toLowerCase();
-                for (let p = o; p && p !== far; p = p.parent) if ((p.name || '').toLowerCase().startsWith('wheel')) return;
+                const lite = () => {
+                    const src = o.geometry;
+                    if (!src.index || src.index.count < 600) return;
+                    const [outI] = S.simplify(new Uint32Array(src.index.array), new Float32Array(src.attributes.position.array), 3, Math.floor(src.index.count * 0.35 / 3) * 3, 0.02, ['Permissive']);
+                    const g = new THREE.BufferGeometry();
+                    for (const k in src.attributes) g.setAttribute(k, src.attributes[k]);
+                    g.setIndex(new THREE.BufferAttribute(outI, 1));
+                    g.computeBoundingSphere();
+                    o.geometry = g;
+                };
+                for (let p = o; p && p !== far; p = p.parent) if ((p.name || '').toLowerCase().startsWith('wheel')) { lite(); return; }
                 if (/interior|leather|carpet|steering|blue/.test(mn + ' ' + n)) { drop.push(o); return; }
-                if (!(n.startsWith('body') || mn === 'body_color')) return;
+                if (!(n.startsWith('body') || mn === 'body_color')) { lite(); return; }
                 const src = o.geometry;
                 const pos = src.attributes.position.array, idx = src.index ? src.index.array : null;
                 if (!idx) return;
@@ -6665,8 +6973,8 @@
             // 直線大道與橫向街道
             ctx.fillStyle = '#334155';
             ROAD_NET.avenuesX.forEach(rx => {
-                const az1 = rx < -340 ? ROAD_NET.hillAveZ : 950;
-                ctx.fillRect((rx - pos.x - 12) * scale, (-950 - pos.z) * scale, 24 * scale, (az1 + 950) * scale);
+                const AZ = ROAD_NET.avenueZ, az1 = rx < -340 ? ROAD_NET.hillAveZ : AZ;
+                ctx.fillRect((rx - pos.x - 12) * scale, (-AZ - pos.z) * scale, 24 * scale, (az1 + AZ) * scale);
             });
             ROAD_NET.crossZ.forEach(cz => {
                 const westX = (cz >= 360) ? -340 : ROAD_NET.crossX0;
@@ -6773,8 +7081,8 @@
                 if (d < bd) { bd = d; best = { x: px, z: pz, y, h: Math.atan2(tx, tz), name }; }
             };
             ROAD_NET.avenuesX.forEach(ax => {
-                const zMax = ax < -340 ? ROAD_NET.hillAveZ : 950;
-                const cz = THREE.MathUtils.clamp(z, -940, zMax - 10);
+                const zMax = ax < -340 ? ROAD_NET.hillAveZ : ROAD_NET.avenueZ;
+                const cz = THREE.MathUtils.clamp(z, -ROAD_NET.avenueZ + 10, zMax - 10);
                 consider(ax + 5, cz, 0, 1, undefined, '大道');
             });
             ROAD_NET.crossZ.forEach(cz => {
@@ -6838,7 +7146,7 @@
             });
             (WORLD.suburbHouses || []).forEach(hs => { const [a, b] = P(hs.x, hs.z); g.fillStyle = '#d6c7a8'; g.fillRect(a - 5 * s, b - 4 * s, 10 * s, 8 * s); });
             // 道路
-            ROAD_NET.avenuesX.forEach(ax => rect(ax - 12, -950, ax + 12, ax < -340 ? ROAD_NET.hillAveZ : 950, '#5b6475'));
+            ROAD_NET.avenuesX.forEach(ax => rect(ax - 12, -ROAD_NET.avenueZ, ax + 12, ax < -340 ? ROAD_NET.hillAveZ : ROAD_NET.avenueZ, '#5b6475'));
             ROAD_NET.crossZ.forEach(cz => rect(cz >= 360 ? -340 : ROAD_NET.crossX0, cz - 11, ROAD_NET.crossX1, cz + 11, '#5b6475'));
             [...ROAD_NET.ribbons, ...ROAD_NET.terrainRoads].forEach(r => line(r.pts, r.half * 2, '#5b6475'));
             ROAD_NET.roundabouts.forEach(rb => { const [a, b] = P(rb.x, rb.z); g.strokeStyle = '#5b6475'; g.lineWidth = (rb.rOut - rb.rIn) * s; g.beginPath(); g.arc(a, b, (rb.rIn + rb.rOut) / 2 * s, 0, Math.PI * 2); g.stroke(); });
@@ -7179,11 +7487,20 @@
             });
 
             // 【升級 2】天氣按鈕同步更新 Physical Sky、PMREM 反射貼圖、霧氣與夜間窗戶
+            // 天氣按鈕：晝夜循環 → 5 種固定天氣 → 回到晝夜循環
             document.getElementById('pill-sky').addEventListener('click', () => {
-                STATE.skyPreset = (STATE.skyPreset + 1) % SKY_PRESETS.length;
-                applySkyPreset(STATE.skyPreset);
-                const p = SKY_PRESETS[STATE.skyPreset];
-                showBanner('🌤️ 天氣光影: ' + p.name, 'Physical Sky 與 PMREM 車漆環境反射已重新生成');
+                if (STATE.dayCycle) { STATE.dayCycle = false; STATE.skyPreset = 0; }
+                else if (STATE.skyPreset + 1 >= SKY_PRESETS.length) STATE.dayCycle = true;
+                else STATE.skyPreset++;
+                if (STATE.dayCycle) {
+                    DAY.lastEnvTime = -99; DAY.acc = 1;
+                    updateDayCycle(0);
+                    showBanner('🌗 晝夜循環', '時間會自動流動 (1 小時 = 40 秒)');
+                } else {
+                    applySkyPreset(STATE.skyPreset);
+                    updateSkyLabel();
+                    showBanner('🌤️ 天氣光影: ' + SKY_PRESETS[STATE.skyPreset].name, '固定天氣，再按幾次可回到晝夜循環');
+                }
             });
 
             document.querySelectorAll('.mission-select-card').forEach(btn => {
@@ -7462,6 +7779,7 @@
         scene.add(MISSION.marker);
 
         buildRealisticWorld();
+        buildTrees();
         buildCityDetails();
         batchStaticMeshes();
         // 所有 InstancedMesh (窗戶、棕櫚樹、道具、紅綠燈…) 都不進海面倒影
@@ -7561,6 +7879,8 @@
             updateCityDetails(dt);
             updateFacadeLOD(false);
             updateWaypoint();
+            TREES.uTime.value = STATE.time;
+            updateDayCycle(dt);
             drawRadar();
 
             // 3. 依據「畫質：LOW / MED / HIGH」決定使用 EffectComposer 或直接渲染
@@ -7574,7 +7894,7 @@
         requestAnimationFrame(animate);
 
         // 除錯用：在瀏覽器主控台輸入 __VH 可查看遊戲狀態
-        window.__VH = { __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
+        window.__VH = { TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
     </script>
 </body>
 </html>
