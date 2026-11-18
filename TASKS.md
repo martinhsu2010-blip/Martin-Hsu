@@ -4,13 +4,16 @@
 (none)
 
 ## Ready for Codex
+(none)
+
+## In review
 ### T-003B Third-person camera tuning
 Owner: Codex
 Reviewer: Claude
 Priority: P1
 Depends on: T-003A (approved, done)
 Base commit: latest `main` (Claude reports the SHA when this task is unlocked)
-Branch/PR: `codex/T-003B-camera` / pending
+Branch/PR: `codex/T-003B-camera` / PR #10 (squash-merged d0e97c1, released as `vh-2026-11-19-14`)
 Spec: `specs/T-003A-spec-v1.1.md` section 2 (camera), section 10 (release gates), section 11 (out of scope). The spec file is the authority; this entry only points to it.
 Output: Camera-only PR. No HUD, minimap, Hub, localization, input or physics changes.
 
@@ -29,10 +32,7 @@ Claude reviewer notes (from `index.html`, 2026-11-19):
 - The hood/bird branch currently does `new THREE.Vector3(...)` every frame inside `updateCameraAndLights`; reuse a module-level vector while touching this function (in scope: spec item "avoid per-frame allocations").
 - Existing camera collision uses `CAM.raycaster` against `WORLD.cameraBlockers`; keep it, add smoothing on the recovery side only.
 
-Verification: `designed` — spec approved, code not written.
-
-## In review
-(none)
+Verification: `code-reviewed` + headless (Chrome/SwiftShader, not a device): Claude approved PR #10. CI check+syntax pass; `camera_check.mjs` PASS. Headless full-game run: no startup errors, saves reload intact, near/far distance 7.5/10.8, FOV rest 60 and 66.9 at 216 km/h, 21 spots x 4 headings x 100 frames with 0 obstructed frames (baseline main: 4), teleport first-frame distance 7.5 (baseline 545). NOT verified: real touch, S26 Ultra / Tab S11 feel and FPS, long drives (mountain, elevated road, collisions), enter/exit-car camera transition feel (>=40-unit teleports now cut instead of easing, by design). AWAITING Martin's device acceptance; T-003C stays blocked until he accepts.
 
 ## Doing (Claude)
 (none)
@@ -47,7 +47,7 @@ Why: archives had no license text; needed before any public sharing.
 Owner: Codex
 Reviewer: Claude
 Priority: P1
-Depends on: T-003B
+Depends on: T-003B (released; waiting for Martin's device acceptance)
 Spec: `specs/T-003A-spec-v1.1.md` sections 3, 4, 8, 10. Acceptance in spec section 9: tablet landscape layout, phone compact layout, minimap 8-10 Hz, dark racing pedals, unchanged input behavior, essential HUD only, no feature functionality removed.
 Claude notes (apply when unlocked): (1) Spec removes the permanent 8-button toolbar here but the Hub arrives only in T-003D, and "no functionality removed" also applies: this task must keep every action reachable through an interim entry (e.g. tapping the minimap opens a simple panel with the existing actions) which T-003D then replaces. (2) Reuse `radar-canvas` / `drawRadar()`; the canvas backing is 140x140, enough for the 112-128 CSS px target. (3) No `safe-area` handling exists today; add it. (4) Validate the matrix in spec section 8.
 Verification: `designed`.
