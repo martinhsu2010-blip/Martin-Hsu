@@ -169,7 +169,7 @@
             </div>
 
             <div class="border-t border-white/15 pt-3">
-                <div class="text-xs font-vice font-bold text-sky-300 mb-2">✈️ 快速傳送至六大區域</div>
+                <div class="text-xs font-vice font-bold text-sky-300 mb-2">✈️ 快速傳送</div>
                 <div class="flex flex-wrap gap-1.5">
                     <button data-tp="OCEAN" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15">🌴 海濱大道</button>
                     <button data-tp="PIER" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15">🎢 聖塔克魯茲海濱樂園</button>
@@ -177,6 +177,9 @@
                     <button data-tp="CHILIAD" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-emerald-500/25 hover:bg-emerald-500/40 text-xs font-bold border border-emerald-400/50 text-emerald-200">⛰️ 奇利亞德山頂</button>
                     <button data-tp="MARINA" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15">🛥️ 遊艇碼頭</button>
                     <button data-tp="AIRPORT" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15">✈️ 特技機場</button>
+                    <button data-tp="OLDTOWN" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/35 text-xs font-bold border border-amber-400/50 text-amber-200">🏛️ 老城區</button>
+                    <button data-tp="SUBURBS" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/35 text-xs font-bold border border-emerald-400/50 text-emerald-200">🏡 郊區</button>
+                    <button data-tp="RING" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/35 text-xs font-bold border border-sky-400/50 text-sky-200">🛣️ 環狀高架</button>
                     <button id="cancel-mission-btn" type="button" class="px-3 py-1.5 rounded-xl bg-red-500/30 text-xs font-bold border border-red-400/40 ml-auto">⏹️ 取消任務</button>
                 </div>
             </div>
@@ -1101,6 +1104,7 @@
 
             // 夜晚程度 (0~1)：控制室內窗戶燈光、路燈光暈、車頭燈與看板發光
             STATE.night = p.nightWindows;
+            (WORLD.cbdGlassMats || []).forEach(m => { m.emissiveIntensity = STATE.night * 1.25; });
             if (WORLD.windowShaderMat) {
                 WORLD.windowShaderMat.uniforms.uNight.value = p.nightWindows;
                 WORLD.windowShaderMat.uniforms.uSky.value.setHex(p.hemiSky).multiplyScalar(p.exposure);
@@ -1685,31 +1689,6 @@
             ROAD_NET.hillRoad = { pts, half: 7.5, bbox: polyBBox(pts) };
         })();
 
-        function hillRoadHeight(x, z) {
-            const hr = ROAD_NET.hillRoad;
-            const nr = nearestOnPolyline(x, z, hr.pts);
-            const a = hr.pts[nr.i], b = hr.pts[Math.min(hr.pts.length - 1, nr.i + 1)];
-            const hc = a.y + (b.y - a.y) * nr.t;
-            const bank = a.bank + (b.bank - a.bank) * nr.t;
-            const lat = THREE.MathUtils.clamp(nr.lat, -hr.half, hr.half);
-            return { h: hc - lat * Math.tan(bank), d: nr.d };
-        }
-
-        // 地形最終高度：奇利亞德山體 + 盤山公路路基挖填，供視覺網格與物理 Trimesh 100% 共用
-        function terrainHeight(x, z) {
-            const base = hillBump(x, z);
-            const hr = ROAD_NET.hillRoad;
-            const bb = hr.bbox;
-            if (x < bb.x0 - 18 || x > bb.x1 + 18 || z < bb.z0 - 18 || z > bb.z1 + 18) return base;
-            const r = hillRoadHeight(x, z);
-            const inner = hr.half + 1.2, outer = hr.half + 14;
-            if (r.d <= inner) return r.h;
-            if (r.d >= outer) return base;
-            const t = (r.d - inner) / (outer - inner);
-            const s = t * t * (3 - 2 * t);
-            return r.h * (1 - s) + base * s;
-        }
-
         // 3) AI 車流路線 (每段依右側車道偏移，轉角圓滑化)
         function offsetLeg(points, offset) {
             const out = [];
@@ -1803,6 +1782,170 @@
                 { pts: denseLine([-240, 480], [0, 480], 20), offset: 4.5 }
             ]));
         })();
+        // ==================== 地圖擴張：郊區丘陵地形、地形道路、環狀高架快速道路 ====================
+        // 郊區 (城市西側)：緩坡丘陵，東側靠城市那一段逐漸變平
+        ROAD_NET.suburb = { x0: -1600, x1: -650, z0: -1020, z1: 270, fade: 220 };
+        function suburbBump(x, z) {
+            const S = ROAD_NET.suburb;
+            if (x < S.x0 || x > S.x1 || z < S.z0 || z > S.z1) return 0;
+            const e = Math.min(x - S.x0, S.x1 - x, z - S.z0, S.z1 - z);
+            const fade = THREE.MathUtils.smoothstep(e, 0, S.fade);
+            const h = 9 + 7 * Math.sin(x * 0.0062 + 1.3) * Math.cos(z * 0.0051 - 0.4) + 4 * Math.sin(x * 0.017 + z * 0.011) + 2.5 * Math.cos(x * 0.031 - z * 0.023);
+            return Math.max(0, h) * fade;
+        }
+        function baseTerrain(x, z) { return hillBump(x, z) + suburbBump(x, z); }
+
+        // 有地形的區域 (車輛地形支撐、地形網格都用這個清單)
+        ROAD_NET.terrainRegions = [
+            { name: 'hill', x0: ROAD_NET.hill.x0, x1: ROAD_NET.hill.x1, z0: ROAD_NET.hill.z0, z1: ROAD_NET.hill.z1 },
+            { name: 'suburb', x0: ROAD_NET.suburb.x0, x1: ROAD_NET.suburb.x1, z0: ROAD_NET.suburb.z0, z1: ROAD_NET.suburb.z1 }
+        ];
+        function inTerrainRegion(x, z, m = 0) {
+            for (const r of ROAD_NET.terrainRegions) if (x > r.x0 - m && x < r.x1 + m && z > r.z0 - m && z < r.z1 + m) return true;
+            return false;
+        }
+
+        // 沿地形起伏的道路：取樣地形高度 → 平滑 → 限制坡度 → 微傾角
+        function buildTerrainRoad(name, ctrl, half, opts = {}) {
+            const pts = sampleCurve(ctrl, 3);
+            let h = pts.map(p => baseTerrain(p.x, p.z));
+            for (let pass = 0; pass < 6; pass++) {
+                h = h.map((v, i) => {
+                    let sum = 0, n = 0;
+                    for (let k = -6; k <= 6; k++) { const j = i + k; if (j >= 0 && j < h.length) { sum += h[j]; n++; } }
+                    return sum / n;
+                });
+            }
+            if (opts.startH !== undefined) h[0] = opts.startH;
+            if (opts.endH !== undefined) h[h.length - 1] = opts.endH;
+            const g = opts.grade || 0.09;
+            for (let i = 1; i < h.length; i++) h[i] = Math.min(h[i], h[i - 1] + g * (pts[i].s - pts[i - 1].s));
+            for (let i = h.length - 2; i >= 0; i--) h[i] = Math.min(h[i], h[i + 1] + g * (pts[i + 1].s - pts[i].s));
+            for (let i = 1; i < h.length; i++) h[i] = Math.max(h[i], h[i - 1] - g * (pts[i].s - pts[i - 1].s));
+            pts.forEach((p, i) => { p.y = Math.max(0, h[i]); p.bank = 0; });
+            const road = { name, pts, half, bbox: polyBBox(pts), terrain: true };
+            ROAD_NET.terrainRoads.push(road);
+            return road;
+        }
+        ROAD_NET.terrainRoads = [ROAD_NET.hillRoad];
+        ROAD_NET.suburbRoads = [
+            buildTerrainRoad('SUBURB MAIN', [[-790, -240], [-880, -250], [-1000, -232], [-1120, -262], [-1250, -240], [-1400, -220], [-1530, -258]], 6.5, { startH: 0 }),
+            buildTerrainRoad('MAPLE AVE', [[-650, -480], [-760, -500], [-900, -470], [-1000, -420], [-1062, -332], [-1118, -268]], 6.5, { startH: 0 }),
+            buildTerrainRoad('HILLCREST LOOP', [[-1000, -238], [-1022, -120], [-1100, -20], [-1220, 40], [-1340, 0], [-1402, -100], [-1400, -222]], 6.5),
+            buildTerrainRoad('VALLEY LOOP', [[-1250, -246], [-1262, -380], [-1320, -520], [-1200, -650], [-1050, -628], [-1004, -428]], 6.5)
+        ];
+
+        function roadHeightOn(tr, x, z) {
+            const nr = nearestOnPolyline(x, z, tr.pts);
+            const a = tr.pts[nr.i], b = tr.pts[Math.min(tr.pts.length - 1, nr.i + 1)];
+            const hc = a.y + (b.y - a.y) * nr.t;
+            const bank = (a.bank || 0) + ((b.bank || 0) - (a.bank || 0)) * nr.t;
+            const lat = THREE.MathUtils.clamp(nr.lat, -tr.half, tr.half);
+            return { h: hc - lat * Math.tan(bank), d: nr.d };
+        }
+        function hillRoadHeight(x, z) { return roadHeightOn(ROAD_NET.hillRoad, x, z); }
+        // 離 (x, z) 最近的地形道路距離 (樹、房子、岩石避開道路用)
+        function nearestTerrainRoadDist(x, z) {
+            let best = Infinity;
+            for (const tr of ROAD_NET.terrainRoads) {
+                const bb = tr.bbox;
+                if (x < bb.x0 - 40 || x > bb.x1 + 40 || z < bb.z0 - 40 || z > bb.z1 + 40) continue;
+                best = Math.min(best, nearestOnPolyline(x, z, tr.pts).d - tr.half);
+            }
+            return best;
+        }
+        // 地形最終高度：山體 + 郊區丘陵 + 地形道路路基挖填 (視覺網格與物理 Trimesh 共用)
+        function terrainHeight(x, z) {
+            const base = baseTerrain(x, z);
+            if (!inTerrainRegion(x, z, 20)) return base;
+            let best = null, bestGap = Infinity;
+            for (const tr of ROAD_NET.terrainRoads) {
+                const bb = tr.bbox;
+                if (x < bb.x0 - 18 || x > bb.x1 + 18 || z < bb.z0 - 18 || z > bb.z1 + 18) continue;
+                const r = roadHeightOn(tr, x, z);
+                const gap = r.d - tr.half;
+                if (gap < 14 && gap < bestGap) { bestGap = gap; best = { h: r.h, d: r.d, half: tr.half }; }
+            }
+            if (!best) return base;
+            const inner = best.half + 1.2, outer = best.half + 14;
+            if (best.d <= inner) return best.h;
+            const t = (best.d - inner) / (outer - inner);
+            const s = t * t * (3 - 2 * t);
+            return best.h * (1 - s) + base * s;
+        }
+
+        // 環狀高架快速道路：架在第 110、-600 大道與 z 240、-600 橫街上方，高 10 m；4 條匝道通往海岸、郊區、北區、老城區
+        ROAD_NET.elevH = 10;
+        (function buildElevatedData() {
+            const H = ROAD_NET.elevH;
+            // 圓角矩形 (直線段密集取樣 + 真正的圓弧轉角，避免曲線外凸)
+            const rr = (x0, x1, z0, z1, r) => {
+                const out = [];
+                const arc = (cx, cz, a0, a1) => { for (let k = 0; k < 10; k++) { const a = a0 + (a1 - a0) * k / 10; out.push([cx + Math.cos(a) * r, cz + Math.sin(a) * r]); } };
+                const line = (a, b) => { const seg = denseLine(a, b, 12); seg.pop(); out.push(...seg); };
+                arc(x1 - r, z0 + r, -Math.PI / 2, 0); line([x1, z0 + r], [x1, z1 - r]);
+                arc(x1 - r, z1 - r, 0, Math.PI / 2); line([x1 - r, z1], [x0 + r, z1]);
+                arc(x0 + r, z1 - r, Math.PI / 2, Math.PI); line([x0, z1 - r], [x0, z0 + r]);
+                arc(x0 + r, z0 + r, Math.PI, Math.PI * 1.5); line([x0 + r, z0], [x1 - r, z0]);
+                return out;
+            };
+            const ringPts = sampleCurve(rr(-600, 110, -600, 240, 48), 4, true);
+            ringPts.forEach(p => { p.y = H; });
+            ROAD_NET.ring = { pts: ringPts, half: 9, closed: true, bbox: polyBBox(ringPts) };
+            const spur = (name, a, b, flat) => {
+                const pts = sampleCurve([a, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], b], 4);
+                const L = pts[pts.length - 1].s;
+                pts.forEach(p => { p.y = H * (1 - THREE.MathUtils.smoothstep(p.s, flat, L)); });
+                return { name, pts, half: 5.5, bbox: polyBBox(pts) };
+            };
+            ROAD_NET.spurs = [
+                spur('COAST RAMP', [110, -360], [232, -360], 18),
+                spur('SUBURB RAMP', [-600, -240], [-790, -240], 18),
+                spur('MIDTOWN RAMP', [0, 240], [0, 425], 18),
+                spur('OLD TOWN RAMP', [-240, -600], [-240, -805], 18)
+            ];
+        })();
+        // 建築不可壓到高架 (含 4 m 餘裕)
+        function rectHitsElevated(cx, cz, w, d, margin) {
+            const roads = [ROAD_NET.ring, ...ROAD_NET.spurs];
+            for (let x = cx - w / 2; x <= cx + w / 2 + 0.01; x += Math.min(4, w)) {
+                for (let z = cz - d / 2; z <= cz + d / 2 + 0.01; z += Math.min(4, d)) {
+                    for (const r of roads) {
+                        const bb = r.bbox;
+                        if (x < bb.x0 - r.half - margin || x > bb.x1 + r.half + margin || z < bb.z0 - r.half - margin || z > bb.z1 + r.half + margin) continue;
+                        if (nearestOnPolyline(x, z, r.pts).d < r.half + margin) return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        // 高架與郊區的 AI 車流路線 (路線點帶高度 y，AI 車直接放在高架上)
+        (function buildExtraRoutes() {
+            const laneRoute = (pts, offset, closed) => {
+                const out = pts.map(p => ({ x: p.x - p.tz * offset, z: p.z + p.tx * offset, tx: p.tx, tz: p.tz, y: p.y }));
+                if (!closed) {
+                    // 開放路線：折返成來回一圈
+                    const back = pts.slice().reverse().map(p => ({ x: p.x + p.tz * offset, z: p.z - p.tx * offset, tx: -p.tx, tz: -p.tz, y: p.y }));
+                    return out.concat(back);
+                }
+                return out;
+            };
+            const ring = ROAD_NET.ring.pts;
+            ROAD_NET.routes.push(laneRoute(ring, 5.2, true));
+            const rev = ring.slice().reverse().map(p => ({ x: p.x, z: p.z, tx: -p.tx, tz: -p.tz, y: p.y, s: p.s }));
+            ROAD_NET.routes.push(laneRoute(rev, 5.2, true));
+            // 郊區：主幹道 + 山丘環線來回
+            const sm = ROAD_NET.suburbRoads[0].pts.filter(p => p.x <= -1000 && p.x >= -1400);
+            const hl = ROAD_NET.suburbRoads[2].pts;
+            const loop = sm.slice().reverse().concat(hl.slice(1));
+            ROAD_NET.routes.push(laneRoute(loop.map((p, i) => {
+                const a = loop[Math.max(0, i - 1)], b = loop[Math.min(loop.length - 1, i + 1)];
+                const tx = b.x - a.x, tz = b.z - a.z, L = Math.hypot(tx, tz) || 1;
+                return { x: p.x, z: p.z, y: p.y, tx: tx / L, tz: tz / L };
+            }), 3.2, true));
+        })();
+
 
         // ---------- 道路視覺建模 ----------
         function createTwoLaneRoadTexture() {
@@ -1983,54 +2126,8 @@
                 }
             });
 
-            // 奇利亞德山 (Mount Chiliad)：高解析地形 + Poly Haven 真實貼圖 (草地 / 岩壁 / 積雪) 依坡度與高度混合，物理 Trimesh 與視覺完全共用
+            // 地形 (奇利亞德山 + 郊區丘陵)：高解析網格 + Poly Haven 真實貼圖 (草地 / 岩壁 / 積雪) 依坡度與高度混合，物理 Trimesh 與視覺完全共用
             const hl = ROAD_NET.hill;
-            const es = 6; // 網格間距 6 m (原本 10 m)
-            const nx = Math.round((hl.x1 - hl.x0) / es) + 1;
-            const nz = Math.round((hl.z1 - hl.z0) / es) + 1;
-            const tPos = [], tSplat = [], tIdx = [];
-            const hgt = new Float32Array(nx * nz);
-            for (let j = 0; j < nz; j++) {
-                for (let i = 0; i < nx; i++) {
-                    const x = hl.x0 + i * es, z = hl.z0 + j * es;
-                    const y = terrainHeight(x, z);
-                    hgt[j * nx + i] = y;
-                    tPos.push(x, y, z);
-                }
-            }
-            // 全部頂點都貼地 (高度 ≈ 0) 的三角形不建：避免與城市地面重疊閃爍，也省下三角形
-            for (let j = 0; j < nz - 1; j++) {
-                for (let i = 0; i < nx - 1; i++) {
-                    const a = j * nx + i, b = a + 1, c = a + nx, d = c + 1;
-                    if (Math.max(hgt[a], hgt[b], hgt[c], hgt[d]) < 0.08) continue;
-                    tIdx.push(a, c, b, b, c, d);
-                }
-            }
-            const terrainGeo = new THREE.BufferGeometry();
-            terrainGeo.setAttribute('position', new THREE.Float32BufferAttribute(tPos, 3));
-            terrainGeo.setIndex(tIdx);
-            terrainGeo.computeVertexNormals();
-            // 混合權重：r 草地、g 岩壁、b 積雪 (依坡度、高度、與山路距離，再加一點雜訊讓交界自然)
-            const nAttr = terrainGeo.attributes.normal;
-            const hrd = ROAD_NET.hillRoad;
-            for (let k = 0; k < tPos.length / 3; k++) {
-                const x = tPos[k * 3], y = tPos[k * 3 + 1], z = tPos[k * 3 + 2];
-                const slope = 1 - THREE.MathUtils.clamp(nAttr.getY(k), 0, 1);
-                const noise = 0.5 + 0.5 * Math.sin(x * 0.11 + Math.cos(z * 0.07) * 2.0) * Math.cos(z * 0.09 - x * 0.03);
-                let rock = THREE.MathUtils.smoothstep(slope + noise * 0.12, 0.16, 0.34) + THREE.MathUtils.smoothstep(y, 55, 85) * 0.45;
-                let snow = THREE.MathUtils.smoothstep(y + noise * 6, 76, 92) * (1 - THREE.MathUtils.smoothstep(slope, 0.3, 0.55));
-                if (y > 2 && Math.abs(x - hrd.pts[0].x) < 2000) {
-                    const rd = hillRoadHeight(x, z).d;
-                    if (rd < hrd.half + 4) rock = Math.max(rock, 0.55); // 路肩碎石
-                }
-                rock = THREE.MathUtils.clamp(rock, 0, 1);
-                snow = THREE.MathUtils.clamp(snow, 0, 1);
-                const grass = Math.max(0, 1 - rock - snow);
-                const sum = grass + rock + snow || 1;
-                tSplat.push(grass / sum, rock / sum, snow / sum);
-            }
-            terrainGeo.setAttribute('splat', new THREE.Float32BufferAttribute(tSplat, 3));
-
             // 貼圖先用單色，Poly Haven 貼圖載完再換上 (離線版從 ./textures/polyhaven/ 讀)
             const solidTex = hex => { const t = new THREE.DataTexture(new Uint8Array([(hex >> 16) & 255, (hex >> 8) & 255, hex & 255, 255]), 1, 1); t.colorSpace = THREE.SRGBColorSpace; t.needsUpdate = true; return t; };
             const terrainU = {
@@ -2069,14 +2166,65 @@
                     });
                 });
             })();
-            const terrain = new THREE.Mesh(terrainGeo, terrainMat);
-            terrain.receiveShadow = true;
-            terrain.castShadow = false;
-            scene.add(terrain);
-            WORLD.cameraBlockers.push(terrain);
-            const terrainBody = new CANNON.Body({ mass: 0, material: MAT_GROUND });
-            terrainBody.addShape(new CANNON.Trimesh(tPos, tIdx));
-            physicsWorld.addBody(terrainBody);
+            const makeTerrain = (rg, es) => {
+                const nx = Math.round((rg.x1 - rg.x0) / es) + 1;
+                const nz = Math.round((rg.z1 - rg.z0) / es) + 1;
+                const tPos = [], tSplat = [], tIdx = [];
+                const hgt = new Float32Array(nx * nz);
+                for (let j = 0; j < nz; j++) {
+                    for (let i = 0; i < nx; i++) {
+                        const x = rg.x0 + i * es, z = rg.z0 + j * es;
+                        const y = terrainHeight(x, z);
+                        hgt[j * nx + i] = y;
+                        tPos.push(x, y, z);
+                    }
+                }
+                // 全部頂點都貼地 (高度 ≈ 0) 的三角形不建：避免與城市地面重疊閃爍，也省下三角形
+                for (let j = 0; j < nz - 1; j++) {
+                    for (let i = 0; i < nx - 1; i++) {
+                        const a = j * nx + i, b = a + 1, c = a + nx, d = c + 1;
+                        if (Math.max(hgt[a], hgt[b], hgt[c], hgt[d]) < 0.08) continue;
+                        tIdx.push(a, c, b, b, c, d);
+                    }
+                }
+                const geo = new THREE.BufferGeometry();
+                geo.setAttribute('position', new THREE.Float32BufferAttribute(tPos, 3));
+                geo.setIndex(tIdx);
+                geo.computeVertexNormals();
+                // 混合權重：r 草地、g 岩壁、b 積雪 (依坡度、高度、與道路距離，再加一點雜訊讓交界自然)
+                const nAttr = geo.attributes.normal;
+                for (let k = 0; k < tPos.length / 3; k++) {
+                    const x = tPos[k * 3], y = tPos[k * 3 + 1], z = tPos[k * 3 + 2];
+                    const slope = 1 - THREE.MathUtils.clamp(nAttr.getY(k), 0, 1);
+                    const noise = 0.5 + 0.5 * Math.sin(x * 0.11 + Math.cos(z * 0.07) * 2.0) * Math.cos(z * 0.09 - x * 0.03);
+                    let rock = THREE.MathUtils.smoothstep(slope + noise * 0.12, 0.16, 0.34) + THREE.MathUtils.smoothstep(y, 55, 85) * 0.45;
+                    let snow = THREE.MathUtils.smoothstep(y + noise * 6, 76, 92) * (1 - THREE.MathUtils.smoothstep(slope, 0.3, 0.55));
+                    if (y > 0.5 && nearestTerrainRoadDist(x, z) < 4) rock = Math.max(rock, 0.55); // 路肩碎石
+                    rock = THREE.MathUtils.clamp(rock, 0, 1);
+                    snow = THREE.MathUtils.clamp(snow, 0, 1);
+                    const grass = Math.max(0, 1 - rock - snow);
+                    const sum = grass + rock + snow || 1;
+                    tSplat.push(grass / sum, rock / sum, snow / sum);
+                }
+                geo.setAttribute('splat', new THREE.Float32BufferAttribute(tSplat, 3));
+                const mesh = new THREE.Mesh(geo, terrainMat);
+                mesh.receiveShadow = true;
+                mesh.castShadow = false;
+                scene.add(mesh);
+                WORLD.cameraBlockers.push(mesh);
+                const body = new CANNON.Body({ mass: 0, material: MAT_GROUND });
+                body.addShape(new CANNON.Trimesh(tPos, tIdx));
+                physicsWorld.addBody(body);
+                return mesh;
+            };
+            makeTerrain(ROAD_NET.terrainRegions[0], 6);
+            makeTerrain(ROAD_NET.terrainRegions[1], PROFILE === 'DESKTOP' ? 8 : 10);
+            // 郊區道路 (沿地形起伏)
+            ROAD_NET.suburbRoads.forEach(tr => {
+                const m = new THREE.Mesh(ribbonGeometry(tr.pts, tr.half, (i) => tr.pts[i].y + 0.12, 30), ribbonMats[2]);
+                m.receiveShadow = true;
+                scene.add(m);
+            });
 
             const hr = ROAD_NET.hillRoad;
             const hillRoadMesh = new THREE.Mesh(
@@ -2820,6 +2968,430 @@
             window.__phDone = true;
         }
 
+
+        // ==================== 城市分區：CBD 摩天大樓區 / 老城區 / 中城 / 海濱飯店 ====================
+        function cityDistrict(bx, bz) {
+            if (bz <= -420 && bx <= 55) return 'OLD';
+            if (bx === 165) return 'HOTEL';
+            if (bx >= -180 && bx <= 55 && Math.abs(bz) <= 300) return 'CBD';
+            return 'MID';
+        }
+        // 每個街區要蓋的建築 (位置、尺寸、高度)
+        function blockSpecs(bx, bz, ix, iz, district) {
+            const lite = PROFILE !== 'DESKTOP';
+            const specs = [];
+            const hsh = (k) => ((ix * 73 + iz * 37 + k * 19) % 97) / 97;
+            if (district === 'CBD') {
+                // 現代摩天大樓：玻璃帷幕、退縮塔身、尖塔
+                const n = lite ? 1 : 2;
+                for (let b = 0; b < n; b++) {
+                    const w = 32 + Math.round(hsh(b) * 10), d = 32 + Math.round(hsh(b + 3) * 10);
+                    let h = 120 + Math.round(hsh(b + 7) * 110);
+                    if (lite) h = Math.round(h * 0.78);
+                    specs.push({ px: bx, pz: n === 1 ? bz : bz + (b === 0 ? -24 : 24), w, d, h, b });
+                }
+            } else if (district === 'OLD') {
+                // 老城區：低矮密集的 3~6 層樓磚造建築
+                const cols = lite ? [-22, 22] : [-29, 0, 29];
+                const rows = lite ? [0] : [-21, 21];
+                let b = 0;
+                rows.forEach(oz => cols.forEach(ox => {
+                    const w = (lite ? 34 : 24) + Math.round(hsh(b) * 3), d = (lite ? 40 : 32) + Math.round(hsh(b + 5) * 6);
+                    const h = 13 + Math.round(hsh(b + 9) * 4) * 3.5;
+                    specs.push({ px: bx + ox, pz: bz + oz, w, d, h, b });
+                    b++;
+                }));
+            } else {
+                const n = (Math.abs(bz) >= 420 || lite) ? 1 : 2;
+                for (let b = 0; b < n; b++) {
+                    const w = 28 + ((ix * 7 + iz * 3 + b * 5) % 12);
+                    const d = 28 + ((iz * 5 + ix * 3 + b * 7) % 12);
+                    const h = district === 'HOTEL' ? (26 + ((iz + b) % 4) * 8) : (34 + ((ix + iz + b) % 5) * 11);
+                    specs.push({ px: bx, pz: n === 1 ? bz : (bz + (b === 0 ? -21 : 21)), w, d, h, b });
+                }
+            }
+            return specs;
+        }
+        // 玻璃帷幕牆貼圖：深色反光玻璃 + 鋁框直條 + 樓層橫帶；夜晚自發光貼圖隨機點亮辦公室
+        function createCurtainWallTextures(tint) {
+            const make = (night) => {
+                const c = document.createElement('canvas');
+                c.width = 256; c.height = 256;
+                const g = c.getContext('2d');
+                const grad = g.createLinearGradient(0, 0, 0, 256);
+                grad.addColorStop(0, night ? '#000000' : tint[0]);
+                grad.addColorStop(1, night ? '#000000' : tint[1]);
+                g.fillStyle = grad; g.fillRect(0, 0, 256, 256);
+                for (let fy = 0; fy < 4; fy++) {
+                    for (let cx = 0; cx < 8; cx++) {
+                        const seed = (fy * 31 + cx * 17 + tint[2]) % 23;
+                        if (night) {
+                            if (seed < 9) { g.fillStyle = ['#ffe8b0', '#fff4d6', '#cfe8ff'][seed % 3]; g.fillRect(cx * 32 + 3, fy * 64 + 8, 26, 50); }
+                        } else {
+                            g.fillStyle = `rgba(255,255,255,${0.03 + (seed % 5) * 0.015})`;
+                            g.fillRect(cx * 32 + 3, fy * 64 + 8, 26, 50);
+                        }
+                    }
+                }
+                if (!night) {
+                    g.fillStyle = tint[3];
+                    for (let x = 0; x < 256; x += 32) g.fillRect(x, 0, 3, 256);
+                    for (let y = 0; y < 256; y += 64) g.fillRect(0, y, 256, 8);
+                }
+                const t = new THREE.CanvasTexture(c);
+                t.wrapS = t.wrapT = THREE.RepeatWrapping;
+                t.colorSpace = THREE.SRGBColorSpace;
+                t.anisotropy = 4;
+                return t;
+            };
+            return { map: make(false), emissiveMap: make(true) };
+        }
+        // 盒子每一面的 UV 依實際尺寸放大 (一格 16 m × 16 m = 8 欄 × 4 層)
+        function scaleBoxUV(geo, w, h, d, tile) {
+            const uv = geo.attributes.uv;
+            const faceDims = [[d, h], [d, h], [w, d], [w, d], [w, h], [w, h]];
+            for (let f = 0; f < 6; f++) {
+                const [fu, fv] = faceDims[f];
+                for (let k = 0; k < 4; k++) {
+                    const i = f * 4 + k;
+                    uv.setXY(i, uv.getX(i) * fu / tile, uv.getY(i) * fv / tile);
+                }
+            }
+            uv.needsUpdate = true;
+            return geo;
+        }
+
+        // ==================== 郊區住宅：沿著郊區道路兩側蓋獨棟房子 (牆、斜屋頂、地基都用 InstancedMesh) ====================
+        function buildSuburbs() {
+            const dmy = new THREE.Object3D();
+            const maxHouses = PROFILE === 'DESKTOP' ? 260 : 130;
+            const S = ROAD_NET.suburb;
+            const houses = [];
+            const tooClose = (x, z, r) => houses.some(h => (h.x - x) * (h.x - x) + (h.z - z) * (h.z - z) < r * r);
+            ROAD_NET.suburbRoads.forEach((tr, ri) => {
+                const pts = tr.pts;
+                for (let i = 4; i < pts.length - 4 && houses.length < maxHouses; i += 8) {
+                    const p = pts[i];
+                    for (const side of [-1, 1]) {
+                        const off = tr.half + 12;
+                        const x = p.x - p.tz * off * side, z = p.z + p.tx * off * side;
+                        if (x < S.x0 + 30 || x > S.x1 - 60 || z < S.z0 + 30 || z > S.z1 - 30) continue;
+                        if (nearestTerrainRoadDist(x, z) < 8.5) continue;
+                        if (tooClose(x, z, 17)) continue;
+                        const y0 = terrainHeight(x, z);
+                        const yMin = Math.min(terrainHeight(x + 5, z), terrainHeight(x - 5, z), terrainHeight(x, z + 5), terrainHeight(x, z - 5));
+                        if (y0 - yMin > 3.5) continue; // 太陡不蓋
+                        // 房子正面朝向道路
+                        const rot = Math.atan2(-(x - p.x), -(z - p.z));
+                        houses.push({ x, z, y: y0, rot, k: houses.length + ri * 7, big: (houses.length % 5) === 0 });
+                    }
+                }
+            });
+            if (!houses.length) return;
+
+            // 房屋外牆貼圖：米白壁板 + 窗戶 + 門 (正面)
+            const c = document.createElement('canvas');
+            c.width = 256; c.height = 128;
+            const g = c.getContext('2d');
+            g.fillStyle = '#f3efe6'; g.fillRect(0, 0, 256, 128);
+            for (let y = 0; y < 128; y += 6) { g.fillStyle = 'rgba(0,0,0,0.05)'; g.fillRect(0, y, 256, 1); }
+            const win = (x, y, w, h) => {
+                g.fillStyle = '#e2e8f0'; g.fillRect(x - 3, y - 3, w + 6, h + 6);
+                g.fillStyle = '#34506b'; g.fillRect(x, y, w, h);
+                g.fillStyle = 'rgba(255,255,255,0.35)'; g.fillRect(x + 2, y + 2, w * 0.35, h - 4);
+                g.fillStyle = '#e2e8f0'; g.fillRect(x + w / 2 - 1, y, 2, h); g.fillRect(x, y + h / 2 - 1, w, 2);
+            };
+            win(26, 34, 44, 40); win(186, 34, 44, 40);
+            g.fillStyle = '#7c2d12'; g.fillRect(112, 44, 32, 84);
+            g.fillStyle = '#fbbf24'; g.fillRect(137, 86, 4, 4);
+            const wallTex = new THREE.CanvasTexture(c);
+            wallTex.colorSpace = THREE.SRGBColorSpace;
+            wallTex.anisotropy = 4;
+
+            const wallGeo = new THREE.BoxGeometry(11, 3.6, 8.5);
+            wallGeo.translate(0, 1.8, 0);
+            const roofGeo = (() => {
+                // 三角柱斜屋頂 (屋脊沿 x 方向)，四周出簷 0.5 m
+                const w = 12, d = 9.6, h = 2.8, hw = w / 2, hd = d / 2;
+                const v = [
+                    -hw, 0, hd, hw, 0, hd, hw, h, 0, -hw, 0, hd, hw, h, 0, -hw, h, 0,
+                    hw, 0, -hd, -hw, 0, -hd, -hw, h, 0, hw, 0, -hd, -hw, h, 0, hw, h, 0,
+                    -hw, 0, -hd, -hw, 0, hd, -hw, h, 0,
+                    hw, 0, hd, hw, 0, -hd, hw, h, 0,
+                    -hw, 0, -hd, hw, 0, -hd, hw, 0, hd, -hw, 0, -hd, hw, 0, hd, -hw, 0, hd
+                ];
+                const geo = new THREE.BufferGeometry();
+                geo.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
+                geo.computeVertexNormals();
+                geo.translate(0, 3.6, 0);
+                return geo;
+            })();
+            const baseGeo = new THREE.BoxGeometry(11.6, 3.0, 9.1);
+            baseGeo.translate(0, -1.3, 0);
+            const n = houses.length;
+            const walls = new THREE.InstancedMesh(wallGeo, new THREE.MeshStandardMaterial({ map: wallTex, roughness: 0.85 }), n);
+            const roofs = new THREE.InstancedMesh(roofGeo, new THREE.MeshStandardMaterial({ roughness: 0.75 }), n);
+            const bases = new THREE.InstancedMesh(baseGeo, new THREE.MeshStandardMaterial({ color: 0x9ca3af, roughness: 0.9 }), n);
+            const wallTints = [0xffffff, 0xfde7c8, 0xd9f0e3, 0xdbe7f5, 0xf6d6d6, 0xeee6ff];
+            const roofTints = [0x9a3412, 0x374151, 0x7c2d12, 0x1e3a5f, 0x57534e, 0x7f1d1d];
+            const col = new THREE.Color();
+            const bodies = [];
+            let cur = null;
+            houses.forEach((h, i) => {
+                const s = h.big ? 1.25 : 1;
+                dmy.position.set(h.x, h.y, h.z);
+                dmy.rotation.set(0, h.rot, 0);
+                dmy.scale.set(s, h.big ? 1.6 : 1, s);
+                dmy.updateMatrix();
+                walls.setMatrixAt(i, dmy.matrix);
+                walls.setColorAt(i, col.setHex(wallTints[(h.k * 7) % wallTints.length]));
+                roofs.setMatrixAt(i, dmy.matrix);
+                roofs.setColorAt(i, col.setHex(roofTints[(h.k * 5) % roofTints.length]));
+                dmy.scale.set(s, 1, s);
+                dmy.updateMatrix();
+                bases.setMatrixAt(i, dmy.matrix);
+                // 碰撞體：每 16 棟合成一個剛體
+                if (!cur || cur.shapes.length >= 16) {
+                    cur = new CANNON.Body({ mass: 0, material: MAT_GROUND });
+                    cur.position.set(h.x, h.y, h.z);
+                    bodies.push(cur);
+                }
+                const q = new CANNON.Quaternion();
+                q.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), h.rot);
+                const hh = (h.big ? 2.9 : 1.8) + 1.0;
+                cur.addShape(new CANNON.Box(new CANNON.Vec3(5.5 * s, hh, 4.25 * s)), new CANNON.Vec3(h.x - cur.position.x, hh - 1.0, h.z - cur.position.z), q);
+            });
+            bodies.forEach(b => physicsWorld.addBody(b));
+            [walls, roofs, bases].forEach(m => { m.castShadow = true; m.receiveShadow = true; scene.add(m); });
+            walls.instanceColor.needsUpdate = true;
+            roofs.instanceColor.needsUpdate = true;
+
+            // 行道樹與庭院樹 (闊葉樹)
+            const treeMax = PROFILE === 'DESKTOP' ? 520 : 260;
+            const trunkG = new THREE.CylinderGeometry(0.25, 0.38, 3.2, 6); trunkG.translate(0, 1.6, 0);
+            const crownG = new THREE.IcosahedronGeometry(2.6, 1); crownG.translate(0, 4.6, 0);
+            const cp = crownG.attributes.position;
+            for (let k = 0; k < cp.count; k++) cp.setY(k, 4.6 + (cp.getY(k) - 4.6) * 0.82);
+            crownG.computeVertexNormals();
+            const tm = [], tc = [];
+            for (let k = 0; k < 9000 && tm.length < treeMax; k++) {
+                const x = S.x0 + 20 + ((k * 0.618034) % 1) * (S.x1 - S.x0 - 140);
+                const z = S.z0 + 20 + ((k * 0.754877 + 0.13) % 1) * (S.z1 - S.z0 - 40);
+                const rd = nearestTerrainRoadDist(x, z);
+                if (rd < 3.5 || rd > 60) continue;
+                if (tooClose(x, z, 9)) continue;
+                const y = terrainHeight(x, z);
+                dmy.position.set(x, y - 0.1, z);
+                dmy.rotation.set(0, k, 0);
+                const sc = 0.75 + (k % 7) * 0.08;
+                dmy.scale.set(sc, sc * (0.9 + (k % 3) * 0.1), sc);
+                dmy.updateMatrix();
+                tm.push(dmy.matrix.clone());
+                tc.push(new THREE.Color().setHSL(0.24 + (k % 9) * 0.012, 0.45, 0.28 + (k % 5) * 0.03));
+            }
+            const trunks = new THREE.InstancedMesh(trunkG, new THREE.MeshStandardMaterial({ color: 0x5b3a24, roughness: 0.9 }), tm.length);
+            const crowns = new THREE.InstancedMesh(crownG, new THREE.MeshStandardMaterial({ roughness: 0.85, flatShading: true }), tm.length);
+            tm.forEach((m, i) => { trunks.setMatrixAt(i, m); crowns.setMatrixAt(i, m); crowns.setColorAt(i, tc[i]); });
+            [trunks, crowns].forEach(m => { m.castShadow = true; m.receiveShadow = true; scene.add(m); });
+            console.log('[VH] 郊區：', houses.length, '棟房子、', tm.length, '棵樹');
+        }
+
+        // ==================== 環狀高架快速道路 (柏油貼圖、紐澤西護欄、中央分隔、橋墩、4 條匝道) ====================
+        // 高速公路柏油貼圖：lanes = 每個方向車道數、divided = 中央有分隔島
+        function createHighwayTexture(lanes, divided) {
+            const c = document.createElement('canvas');
+            c.width = 512; c.height = 1024;
+            const g = c.getContext('2d');
+            g.fillStyle = '#2b2e34'; g.fillRect(0, 0, 512, 1024);
+            for (let i = 0; i < 9000; i++) {
+                const v = (i * 2654435761) >>> 0;
+                g.fillStyle = (i % 3 === 0) ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.09)';
+                g.fillRect(v % 512, (v >>> 9) % 1024, 2, 2);
+            }
+            // 輪跡較深的車道磨耗帶
+            const W = 512;
+            const laneW = divided ? (W * 0.42) / lanes : (W * 0.86) / (lanes * 2);
+            const solid = (x, color, w = 7) => { g.fillStyle = color; g.fillRect(x - w / 2, 0, w, 1024); };
+            const dashed = (x) => { g.fillStyle = '#e5e7eb'; for (let y = 0; y < 1024; y += 300) g.fillRect(x - 3, y, 6, 110); };
+            solid(W * 0.055, '#f1f5f9');
+            solid(W * 0.945, '#f1f5f9');
+            if (divided) {
+                solid(W * 0.445, '#f59e0b', 6);
+                solid(W * 0.555, '#f59e0b', 6);
+                for (let k = 1; k < lanes; k++) { dashed(W * 0.055 + laneW * k); dashed(W * 0.945 - laneW * k); }
+            } else {
+                solid(W * 0.49, '#f59e0b', 5);
+                solid(W * 0.51, '#f59e0b', 5);
+            }
+            const tex = new THREE.CanvasTexture(c);
+            tex.wrapS = THREE.ClampToEdgeWrapping;
+            tex.wrapT = THREE.RepeatWrapping;
+            tex.colorSpace = THREE.SRGBColorSpace;
+            tex.anisotropy = 8;
+            return tex;
+        }
+
+        // 沿路徑擠出長方形斷面 (路面 / 護欄 / 分隔島)：group 0 = 頂面，group 1 = 側面與底面
+        function extrudeStrip(pts, latA, latB, topOff, depth, uvLen, closed, mask) {
+            const pos = [], uv = [];
+            const n = pts.length;
+            const at = (i, lat, dy) => {
+                const p = pts[i];
+                return [p.x - p.tz * lat, p.y + topOff + dy, p.z + p.tx * lat];
+            };
+            const quad = (a, b, c, d, ua, ub, uc, ud) => { pos.push(...a, ...b, ...c, ...b, ...d, ...c); uv.push(...ua, ...ub, ...uc, ...ub, ...ud, ...uc); };
+            const top = [], side = [];
+            const segs = closed ? n : n - 1;
+            for (let i = 0; i < segs; i++) {
+                const j = (i + 1) % n;
+                if (mask && (!mask[i] || !mask[j])) continue;
+                const s0 = pts[i].s / uvLen, s1 = (closed && j === 0 ? pts[i].s + Math.hypot(pts[j].x - pts[i].x, pts[j].z - pts[i].z) : pts[j].s) / uvLen;
+                const tA0 = at(i, latA, 0), tB0 = at(i, latB, 0), tA1 = at(j, latA, 0), tB1 = at(j, latB, 0);
+                const bA0 = at(i, latA, -depth), bB0 = at(i, latB, -depth), bA1 = at(j, latA, -depth), bB1 = at(j, latB, -depth);
+                top.push([tA0, tB0, tA1, tB1, [0, s0], [1, s0], [0, s1], [1, s1]]);
+                side.push([bB0, bA0, bB1, bA1, [0, s0], [1, s0], [0, s1], [1, s1]]);
+                side.push([tA0, bA0, tA1, bA1, [s0 * 4, 1], [s0 * 4, 0], [s1 * 4, 1], [s1 * 4, 0]]);
+                side.push([bB0, tB0, bB1, tB1, [s0 * 4, 0], [s0 * 4, 1], [s1 * 4, 0], [s1 * 4, 1]]);
+            }
+            top.forEach(q => quad(...q));
+            const topCount = pos.length / 3;
+            side.forEach(q => quad(...q));
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+            geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+            geo.computeVertexNormals();
+            geo.addGroup(0, topCount, 0);
+            geo.addGroup(topCount, pos.length / 3 - topCount, 1);
+            return geo;
+        }
+
+        function buildElevatedRoads() {
+            const H = ROAD_NET.elevH;
+            const ringTex = createHighwayTexture(2, true);
+            const spurTex = createHighwayTexture(1, false);
+            const asphaltRing = new THREE.MeshStandardMaterial({ map: ringTex, roughness: 0.86, metalness: 0.0 });
+            const asphaltSpur = new THREE.MeshStandardMaterial({ map: spurTex, roughness: 0.86, metalness: 0.0 });
+            WORLD.roadMaterials.push(asphaltRing, asphaltSpur);
+            WORLD.highwayMaterials = { ringTex, spurTex };
+            const concrete = new THREE.MeshStandardMaterial({ color: 0xb8bcc2, roughness: 0.85, side: THREE.DoubleSide });
+            const barrierMat = new THREE.MeshStandardMaterial({ color: 0xd4d7dc, roughness: 0.7, side: THREE.DoubleSide });
+            const ring = ROAD_NET.ring;
+            const rp = ring.pts;
+            // 匝道接在環線外側：匝道路面從環線外緣開始；環線外側護欄在接口處留缺口
+            const spurs = ROAD_NET.spurs.map(sp => ({ ...sp, pts: sp.pts.filter(p => p.s >= ring.half - 0.6) }));
+            const outerMask = rp.map(() => true);
+            const innerMask = rp.map(() => true);
+            ROAD_NET.spurs.forEach(sp => {
+                const s0 = sp.pts[0], o = { x: sp.pts[3].x - s0.x, z: sp.pts[3].z - s0.z };
+                rp.forEach((p, i) => {
+                    if (Math.hypot(p.x - s0.x, p.z - s0.z) > sp.half + 1.5) return;
+                    // 右側法向量 (-tz, tx) 與匝道方向同向 → 右側護欄開口，否則左側
+                    const dot = (-p.tz) * o.x + p.tx * o.z;
+                    if (dot > 0) outerMask[i] = false; else innerMask[i] = false;
+                });
+            });
+            const addMesh = (geo, mats, shadow = true) => {
+                const m = new THREE.Mesh(geo, mats);
+                m.castShadow = shadow;
+                m.receiveShadow = true;
+                scene.add(m);
+                return m;
+            };
+            // 路面 (上：柏油，側 / 底：混凝土)
+            const ringDeck = addMesh(extrudeStrip(rp, -ring.half, ring.half, 0, 0.9, 30, true), [asphaltRing, concrete]);
+            WORLD.cameraBlockers.push(ringDeck);
+            // 護欄與中央分隔島全部合成一個網格 (少很多繪製次數)
+            const barrierGeos = [
+                extrudeStrip(rp, ring.half - 0.5, ring.half, 1.0, 1.0, 30, true, outerMask),
+                extrudeStrip(rp, -ring.half, -ring.half + 0.5, 1.0, 1.0, 30, true, innerMask),
+                extrudeStrip(rp, -0.3, 0.3, 0.9, 0.9, 30, true)
+            ];
+            spurs.forEach(sp => {
+                const deck = addMesh(extrudeStrip(sp.pts, -sp.half, sp.half, 0.02, 0.9, 30, false), [asphaltSpur, concrete]);
+                WORLD.cameraBlockers.push(deck);
+                barrierGeos.push(extrudeStrip(sp.pts, sp.half - 0.5, sp.half, 1.0, 1.0, 30, false));
+                barrierGeos.push(extrudeStrip(sp.pts, -sp.half, -sp.half + 0.5, 1.0, 1.0, 30, false));
+            });
+            barrierGeos.forEach(g => g.clearGroups());
+            addMesh(mergeGeometries(barrierGeos, false), barrierMat);
+
+            // ---------- 碰撞體：每 8 m 一段的薄盒子 (路面頂面剛好接在路徑上)，12 段合成一個剛體 ----------
+            const bodies = [];
+            let cur = null, curCount = 0;
+            const addShape = (cx, cy, cz, hx, hy, hz, q) => {
+                if (!cur || curCount >= 36) {
+                    cur = new CANNON.Body({ mass: 0, material: MAT_GROUND });
+                    cur.position.set(cx, cy, cz);
+                    bodies.push(cur);
+                    curCount = 0;
+                }
+                cur.addShape(new CANNON.Box(new CANNON.Vec3(hx, hy, hz)), new CANNON.Vec3(cx - cur.position.x, cy - cur.position.y, cz - cur.position.z), q);
+                curCount++;
+            };
+            const segColliders = (pts, half, closed, rails, barrier, maskR, maskL) => {
+                const n = pts.length;
+                const segs = closed ? n : n - 1;
+                for (let i = 0; i < segs; i += 2) {
+                    const j = Math.min(i + 2, closed ? i + 2 : n - 1) % n;
+                    const a = pts[i], b = pts[j];
+                    const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
+                    const hl = Math.hypot(dx, dz), len = Math.hypot(hl, dy);
+                    if (len < 0.5) continue;
+                    const yaw = Math.atan2(dx, dz), pitch = -Math.asin(dy / len);
+                    const qy = new CANNON.Quaternion(); qy.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), yaw);
+                    const qx = new CANNON.Quaternion(); qx.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), pitch);
+                    const q = qy.mult(qx);
+                    const up = q.vmult(new CANNON.Vec3(0, 1, 0));
+                    const right = q.vmult(new CANNON.Vec3(-1, 0, 0)); // 與 (-tz, tx) 同向
+                    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, mz = (a.z + b.z) / 2;
+                    const hz = len / 2 + 0.25;
+                    addShape(mx - up.x * 0.3, my - up.y * 0.3, mz - up.z * 0.3, half, 0.3, hz, q);
+                    if (rails) {
+                        for (const side of [1, -1]) {
+                            const m = side > 0 ? maskR : maskL;
+                            if (m && (!m[i] || !m[j])) continue;
+                            const off = side * (half - 0.25);
+                            addShape(mx + right.x * off + up.x * 0.55, my + right.y * off + up.y * 0.55, mz + right.z * off + up.z * 0.55, 0.25, 0.55, hz, q);
+                        }
+                    }
+                    if (barrier) addShape(mx + up.x * 0.45, my + up.y * 0.45, mz + up.z * 0.45, 0.3, 0.45, hz, q);
+                }
+            };
+            segColliders(rp, ring.half, true, true, true, outerMask, innerMask);
+            spurs.forEach(sp => segColliders(sp.pts, sp.half, false, true, false));
+
+            // ---------- 橋墩 (每 32 m，避開路口與曲線道路) ----------
+            const pil = [];
+            const inIntersection = (x, z) => ROAD_NET.avenuesX.some(ax => Math.abs(x - ax) < 14) && ROAD_NET.crossZ.some(cz => Math.abs(z - cz) < 13);
+            const placePillars = (pts, half) => {
+                let last = -1e9;
+                pts.forEach(p => {
+                    if (p.y < 4.5 || p.s - last < 32) return;
+                    if (inIntersection(p.x, p.z) || onCurvedRoad(p.x, p.z, 2)) return;
+                    last = p.s;
+                    pil.push({ x: p.x, z: p.z, top: p.y - 0.9, yaw: Math.atan2(p.tx, p.tz), half });
+                });
+            };
+            placePillars(rp, ring.half);
+            spurs.forEach(sp => placePillars(sp.pts, sp.half));
+            const colGeo = new THREE.BoxGeometry(1.8, 1, 1.8); colGeo.translate(0, 0.5, 0);
+            const capGeo = new THREE.BoxGeometry(1, 1.1, 2.4); capGeo.translate(0, -0.55, 0);
+            const cols = new THREE.InstancedMesh(colGeo, concrete, pil.length);
+            const caps = new THREE.InstancedMesh(capGeo, concrete, pil.length);
+            const dm = new THREE.Object3D();
+            pil.forEach((p, i) => {
+                dm.position.set(p.x, 0, p.z); dm.rotation.set(0, p.yaw, 0); dm.scale.set(1, p.top - 1.1, 1); dm.updateMatrix();
+                cols.setMatrixAt(i, dm.matrix);
+                dm.position.set(p.x, p.top, p.z); dm.scale.set(p.half * 1.6, 1, 1); dm.updateMatrix();
+                caps.setMatrixAt(i, dm.matrix);
+                const q = new CANNON.Quaternion(); q.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), p.yaw);
+                addShape(p.x, (p.top - 1.1) / 2, p.z, 0.9, (p.top - 1.1) / 2, 0.9, q);
+            });
+            [cols, caps].forEach(m => { m.castShadow = true; m.receiveShadow = true; scene.add(m); });
+            bodies.forEach(b => physicsWorld.addBody(b));
+            console.log('[VH] 環狀高架：', rp.length, '點、', spurs.length, '條匝道、', pil.length, '座橋墩、', bodies.length, '個剛體');
+        }
+
         function buildRealisticWorld() {
             const roadTex = createRealisticRoadTexture();
             roadTex.repeat.set(1, 62);
@@ -2973,6 +3545,8 @@
 
             // 曲線海岸公路、斜向大道、圓環與奇利亞德山盤山公路
             buildRoadNetwork(roadTex, sidewalkMat);
+            buildElevatedRoads();
+            buildSuburbs();
 
             // 4. 擴大版高密度城市天際線 (60+ 棟摩天大樓、階梯式玻璃地標、磚牆商業大樓與海濱 Art-Deco 飯店)
             const brickRed = createBrickTextures(0x8c3b32, '#cbd5e1');
@@ -3032,26 +3606,26 @@
             const hvacTransforms = [];
             const dummy = new THREE.Object3D();
 
-            const blockX = [-330, -180, -60, 55, 165];
+            const blockX = [-510, -330, -180, -60, 55, 165];
+            WORLD.cbdGlassMats = [
+                ['#1b3a55', '#0b1a2a', 3, '#8aa0b4'], ['#1f4a4a', '#0a2222', 7, '#9fb5b0'], ['#4a3a28', '#1a130c', 11, '#b8a58a'], ['#2a3346', '#0d1220', 5, '#c3cad6']
+            ].map(t => {
+                const tx = createCurtainWallTextures(t);
+                return new THREE.MeshStandardMaterial({ map: tx.map, emissiveMap: tx.emissiveMap, emissive: 0xffffff, emissiveIntensity: 0.0, metalness: 0.75, roughness: 0.14, envMapIntensity: 1.4 });
+            });
             const blockZ = [-660, -540, -420, -300, -180, -60, 60, 180, 300, 420, 540, 660];
 
             blockX.forEach((bx, ix) => {
                 blockZ.forEach((bz, iz) => {
                     if (bx === -60 && Math.abs(bz) === 60) return; // 中央廣場 (道具區)
                     if (bx <= -180 && bz >= 300) return; // 奇利亞德山脈區域不放摩天樓
-                    const buildingsPerBlock = (Math.abs(bz) >= 420 || PROFILE !== 'DESKTOP') ? 1 : 2;
-                    for (let b = 0; b < buildingsPerBlock; b++) {
-                        let w = 28 + ((ix * 7 + iz * 3 + b * 5) % 12);
-                        let d = 28 + ((iz * 5 + ix * 3 + b * 7) % 12);
-                        const isDowntownCore = (bx === -60 || bx === 55) && Math.abs(bz) <= 300;
-                        const isCoastalHotel = (bx === 165);
-                        let h = isCoastalHotel
-                            ? (26 + ((iz + b) % 4) * 8)
-                            : isDowntownCore
-                                ? (58 + ((ix * 3 + iz * 5 + b * 7) % 5) * 14)
-                                : (34 + ((ix + iz + b) % 5) * 11);
-                        let px = bx;
-                        let pz = buildingsPerBlock === 1 ? bz : (bz + (b === 0 ? -21 : 21));
+                    if (bx === -510 && bz > -300) return; // 機場區
+                    const district = cityDistrict(bx, bz);
+                    const specs = blockSpecs(bx, bz, ix, iz, district);
+                    for (let b = 0; b < specs.length; b++) {
+                        let { w, d, h, px, pz } = specs[b];
+                        // 不可壓到環狀高架
+                        if (rectHitsElevated(px, pz, w, d, 3)) continue;
                         // 建築不可壓到曲線道路或圓環
                         if (rectHitsCurvedRoad(px, pz, w, d, 3.5)) {
                             const w2 = w * 0.56, d2 = d * 0.56;
@@ -3070,8 +3644,10 @@
                         const bGroup = new THREE.Group();
                         bGroup.position.set(px, 0, pz);
 
-                        const matIdx = (ix + iz + b) % wallMaterials.length;
-                        const bodyMesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), wallMaterials[matIdx]);
+                        const matIdx = district === 'OLD' ? [0, 2, 0, 2, 1][(ix + iz + b) % 5] : (ix + iz + b) % wallMaterials.length;
+                        const bodyMesh = district === 'CBD'
+                            ? new THREE.Mesh(scaleBoxUV(new THREE.BoxGeometry(w, h, d), w, h, d, 16), WORLD.cbdGlassMats[(ix * 3 + iz + b) % WORLD.cbdGlassMats.length])
+                            : new THREE.Mesh(new THREE.BoxGeometry(w, h, d), wallMaterials[matIdx]);
                         bodyMesh.position.y = h / 2;
                         bodyMesh.castShadow = true;
                         bodyMesh.receiveShadow = true;
@@ -3090,7 +3666,32 @@
                         bGroup.add(cornice);
 
                         // 摩天大樓退縮式玻璃塔身與屋頂結構，增加城市天際線層次
-                        if (h >= 68) {
+                        if (district === 'CBD') {
+                            const gm = bodyMesh.material;
+                            const tierH = Math.round(h * 0.22);
+                            const tw = w * 0.72, td = d * 0.72;
+                            const tier = new THREE.Mesh(scaleBoxUV(new THREE.BoxGeometry(tw, tierH, td), tw, tierH, td, 16), gm);
+                            tier.position.y = h + tierH / 2;
+                            tier.castShadow = true;
+                            bGroup.add(tier);
+                            const crown = new THREE.Mesh(new THREE.BoxGeometry(tw + 0.8, 1.2, td + 0.8), trimMat);
+                            crown.position.y = h + tierH + 0.6;
+                            bGroup.add(crown);
+                            if ((ix + iz + b) % 3 === 0) {
+                                const spireH = 22 + ((ix * 5 + iz) % 4) * 6;
+                                const spire = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 1.4, spireH, 8), trimMat);
+                                spire.position.y = h + tierH + 1.2 + spireH / 2;
+                                bGroup.add(spire);
+                                const tip = new THREE.Mesh(new THREE.SphereGeometry(0.6, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff3344 }));
+                                tip.position.y = h + tierH + 1.2 + spireH;
+                                bGroup.add(tip);
+                            }
+                        } else if (district === 'OLD') {
+                            const roofBox = new THREE.Mesh(new THREE.BoxGeometry(w * 0.5, 2.6, d * 0.4), wallMaterials[(matIdx + 1) % wallMaterials.length]);
+                            roofBox.position.y = h + 1.3;
+                            roofBox.castShadow = true;
+                            bGroup.add(roofBox);
+                        } else if (h >= 68) {
                             const upperH = 16 + ((ix + iz) % 3) * 6;
                             const upperTower = new THREE.Mesh(
                                 new THREE.BoxGeometry(w * 0.68, upperH, d * 0.68),
@@ -3145,7 +3746,7 @@
                             }
                         };
 
-                        for (let f = 0; f < floors; f++) {
+                        for (let f = 0; f < (district === 'CBD' ? 0 : floors); f++) {
                             const wy = 6.2 + f * floorStep;
                             for (let c = 0; c < colsZ; c++) {
                                 const wz = pz - (d / 2 - 4) + c * colStep;
@@ -3574,7 +4175,11 @@
             // 7. 【區域 3】市中心高架橋 (Downtown Overpass) — 橋面頂部 y = 7.0
             const overpassMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.6 });
             const guardRailMat = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, roughness: 0.4, metalness: 0.6 });
-            const overpassDeck = new THREE.Mesh(new THREE.BoxGeometry(18, 1.0, 180), overpassMat);
+            const opTex = createHighwayTexture(2, false);
+            opTex.repeat.set(1, 6);
+            const overpassAsphalt = new THREE.MeshStandardMaterial({ map: opTex, roughness: 0.86 });
+            WORLD.roadMaterials.push(overpassAsphalt);
+            const overpassDeck = new THREE.Mesh(new THREE.BoxGeometry(18, 1.0, 180), [overpassMat, overpassMat, overpassAsphalt, overpassMat, overpassMat, overpassMat]);
             overpassDeck.position.set(-120, 6.5, 0);
             overpassDeck.castShadow = true;
             overpassDeck.receiveShadow = true;
@@ -3600,8 +4205,11 @@
 
             // 南北引道：平滑 S 形坡道 (入口與路面齊平、最大坡度約 11°)，視覺與物理共用同一剖面
             const overpassProfile = smoothProfile(52, 7.0, 16);
-            addProfileRamp({ x: -120, z: -142, rotY: 0, width: 18, profile: overpassProfile, mat: overpassMat, rails: true, railMat: guardRailMat });
-            addProfileRamp({ x: -120, z: 142, rotY: Math.PI, width: 18, profile: overpassProfile, mat: overpassMat, rails: true, railMat: guardRailMat });
+            const rampTex = createHighwayTexture(2, false);
+            const rampAsphalt = new THREE.MeshStandardMaterial({ map: rampTex, roughness: 0.86 });
+            WORLD.roadMaterials.push(rampAsphalt);
+            addProfileRamp({ x: -120, z: -142, rotY: 0, width: 18, profile: overpassProfile, mat: rampAsphalt, rails: true, railMat: guardRailMat });
+            addProfileRamp({ x: -120, z: 142, rotY: Math.PI, width: 18, profile: overpassProfile, mat: rampAsphalt, rails: true, railMat: guardRailMat });
 
             // 8. 【區域 4】星光遊艇碼頭 (Starlight Marina & Bobbing Luxury Yachts)
             const marinaDock = new THREE.Mesh(new THREE.BoxGeometry(90, 1.2, 30), pierMat);
@@ -4916,7 +5524,8 @@
                 const p = route[((idx % n) + n) % n];
                 this.routeId = routeId;
                 this.routeIdx = ((idx % n) + n) % n;
-                this.chassisBody.position.set(p.x, 1.0, p.z);
+                const gy = p.y !== undefined ? p.y : terrainHeight(p.x, p.z);
+                this.chassisBody.position.set(p.x, gy + 1.0, p.z);
                 this.chassisBody.velocity.set(0, 0, 0);
                 this.chassisBody.angularVelocity.set(0, 0, 0);
                 this.chassisBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.atan2(p.tx, p.tz));
@@ -4954,7 +5563,8 @@
                 let targetSpeed = THREE.MathUtils.lerp(15, 6.5, Math.min(1, Math.abs(turn) / 1.2));
 
                 const fx = Math.sin(curH), fz = Math.cos(curH);
-                const isBlocking = (ox, oz, range) => {
+                const isBlocking = (ox, oz, range, oy) => {
+                    if (oy !== undefined && Math.abs(oy - p.y) > 3) return false;
                     const dx = ox - p.x, dz = oz - p.z;
                     const along = dx * fx + dz * fz;
                     const lateral = Math.abs(-dx * fz + dz * fx);
@@ -4962,9 +5572,9 @@
                 };
                 for (const o of WORLD.vehicles) {
                     if (o === this || !o.chassisGroup.visible) continue;
-                    if (isBlocking(o.chassisBody.position.x, o.chassisBody.position.z, 11)) { targetSpeed = 0; break; }
+                    if (isBlocking(o.chassisBody.position.x, o.chassisBody.position.z, 11, o.chassisBody.position.y)) { targetSpeed = 0; break; }
                 }
-                if (STATE.mode === 'FOOT' && isBlocking(PLAYER.body.position.x, PLAYER.body.position.z, 9)) targetSpeed = 0;
+                if (STATE.mode === 'FOOT' && isBlocking(PLAYER.body.position.x, PLAYER.body.position.z, 9, PLAYER.body.position.y - 0.3)) targetSpeed = 0;
 
                 let force = 0, brakeF = 0;
                 if (forwardSpeed < targetSpeed - 0.5) force = -1900;
@@ -5000,9 +5610,8 @@
 
             // 山區地形支撐：車頭、車身中心、車尾三個點都不能低於地形 (避免衝進山坡後整台掉到山體下面)
             supportOnTerrain() {
-                const hl = ROAD_NET.hill;
                 const b = this.chassisBody, p = b.position;
-                if (p.x < hl.x0 - 5 || p.x > hl.x1 + 5 || p.z < hl.z0 - 5 || p.z > hl.z1 + 5) return;
+                if (!inTerrainRegion(p.x, p.z, 5)) return;
                 let lift = 0;
                 const tmp = new CANNON.Vec3();
                 for (const lz of [0, 1.9, -1.9]) {
@@ -5973,9 +6582,14 @@
                 document.getElementById('hud-nitro-bar').style.width = car.nitro + '%';
             }
 
-            let zone = 'DOWNTOWN';
-            const hlz = ROAD_NET.hill;
-            if (pos.x > hlz.x0 && pos.x < hlz.x1 && pos.z > hlz.z0 && pos.z < hlz.z1) zone = 'MT. CHILIAD';
+            let zone = 'MIDTOWN';
+            const hlz = ROAD_NET.hill, sbz = ROAD_NET.suburb;
+            const onElev = pos.y > 6 && [ROAD_NET.ring, ...ROAD_NET.spurs].some(r => nearestOnPolyline(pos.x, pos.z, r.pts).d < r.half + 2);
+            if (onElev) zone = 'RING EXPRESSWAY';
+            else if (pos.x > hlz.x0 && pos.x < hlz.x1 && pos.z > hlz.z0 && pos.z < hlz.z1) zone = 'MT. CHILIAD';
+            else if (pos.x > sbz.x0 && pos.x < sbz.x1 && pos.z > sbz.z0 && pos.z < sbz.z1) zone = 'VICE SUBURBS';
+            else if (pos.z < -420 && pos.x > -650 && pos.x < 100) zone = 'OLD TOWN';
+            else if (Math.abs(pos.z) <= 330 && pos.x > -250 && pos.x < 90) zone = 'DOWNTOWN CBD';
             else if (Math.hypot(pos.x - ROAD_NET.roundabouts[0].x, pos.z - ROAD_NET.roundabouts[0].z) < 40) zone = 'VICE CIRCLE';
             else if (pos.x > 235 && pos.z > 240) zone = 'STARLIGHT MARINA';
             else if (pos.x > 235) zone = 'SANTA CRUZ BOARDWALK';
@@ -6007,6 +6621,10 @@
             ctx.beginPath();
             ctx.ellipse((hl.cx - pos.x) * scale, (hl.cz - pos.z) * scale, hl.rx * scale, hl.rz * scale, 0, 0, Math.PI * 2);
             ctx.fill();
+            // 郊區丘陵
+            const sbr = ROAD_NET.suburb;
+            ctx.fillStyle = '#3d5a2e';
+            ctx.fillRect((sbr.x0 - pos.x) * scale, (sbr.z0 - pos.z) * scale, (sbr.x1 - sbr.x0) * scale, (sbr.z1 - sbr.z0) * scale);
             // 直線大道與橫向街道
             ctx.fillStyle = '#334155';
             ROAD_NET.avenuesX.forEach(rx => {
@@ -6021,7 +6639,7 @@
             ctx.strokeStyle = '#475569';
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            [...ROAD_NET.ribbons, ROAD_NET.hillRoad].forEach(r => {
+            [...ROAD_NET.ribbons, ...ROAD_NET.terrainRoads].forEach(r => {
                 ctx.lineWidth = r.half * 2 * scale;
                 ctx.beginPath();
                 r.pts.forEach((q, i) => {
@@ -6031,6 +6649,20 @@
                 });
                 ctx.stroke();
             });
+            // 環狀高架與匝道 (淺色、加外框)
+            [ROAD_NET.ring, ...ROAD_NET.spurs].forEach((r, ri) => {
+                ctx.strokeStyle = '#cbd5e1';
+                ctx.lineWidth = r.half * 2 * scale + 1.5;
+                ctx.beginPath();
+                r.pts.forEach((q, i) => {
+                    if (i % 3 !== 0 && i !== r.pts.length - 1) return;
+                    const mx = (q.x - pos.x) * scale, mz = (q.z - pos.z) * scale;
+                    if (i === 0) ctx.moveTo(mx, mz); else ctx.lineTo(mx, mz);
+                });
+                if (ri === 0) ctx.closePath();
+                ctx.stroke();
+            });
+            ctx.strokeStyle = '#475569';
             ROAD_NET.roundabouts.forEach(rb => {
                 ctx.lineWidth = (rb.rOut - rb.rIn) * scale;
                 ctx.beginPath();
@@ -6228,7 +6860,10 @@
                         DOWNTOWN: [-60, 0, 0],
                         CHILIAD: [-605, 555, THREE.MathUtils.degToRad(145), chiliadY],
                         MARINA: [220, 340, 0],
-                        AIRPORT: [-420, -200, 0]
+                        AIRPORT: [-420, -200, 0],
+                        OLDTOWN: [-120, -540, 0],
+                        SUBURBS: [-1060, -238, -Math.PI / 2],
+                        RING: [104.8, -100, 0, ROAD_NET.elevH + 1.8]
                     };
                     const c = coords[tp] || [110, 20, 0];
                     teleportTo(c[0], c[1], c[2] || 0, c[3]);
@@ -6390,6 +7025,7 @@
                 if (!m || Array.isArray(m) || m.transparent || m.isShaderMaterial) return;
                 const g = o.geometry;
                 if (!g || !g.attributes.position || (g.morphAttributes && g.morphAttributes.position)) return;
+                if (o.userData.noBatch || g.attributes.splat) return; // 地形有自訂的貼圖混合權重，不能合併
                 const key = m.uuid + '|' + o.castShadow + '|' + o.receiveShadow;
                 if (!groups.has(key)) groups.set(key, []);
                 groups.get(key).push(o);
