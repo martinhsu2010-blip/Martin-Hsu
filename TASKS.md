@@ -4,9 +4,70 @@
 (none)
 
 ## Ready for Codex
-(none)
+### T-003C Responsive HUD, radar optimization and pedals
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-003B (done, accepted by Martin 2026-11-19)
+Base commit: latest `main` (Claude reports the SHA when this is unlocked)
+Branch/PR: `codex/T-003C-hud` / pending
+Spec: `specs/T-003A-spec-v1.1.md` sections 3 (HUD, tablet landscape, compact fallback, pedal design), 4 (minimap rules), 8 (layout matrix), 10 (release gates), 11 (out of scope). The spec file is the authority; this entry points to it and adds Claude's clarifications.
+Output: HUD and visual-controls PR only. No camera, Game Hub, localization, economy, physics or input-logic changes.
+
+Acceptance (from spec sections 3, 4, 8, 9, 10):
+1. Default gameplay HUD shows only: minimap/Hub entry, cash, speed and gear, wanted level when active, essential mission progress when active, touch steering and driving controls, contextual enter/exit, short reward/warning notices. At least 55% of viewport width stays clear in the centre.
+2. Tablet landscape (viewport >= 960 x 560 CSS px) uses the spec's component placement and sizes (minimap 112-128 px top-left, cash+speed 160-196 px top-right, steering 72-88 px bottom-left, gas 64x118 and brake 64x100 bottom-right, nitro/handbrake 48-56 px, horn/enter-exit >= 44x44). Safe-area insets plus 12-20 px padding, no overlaps, no horizontal scroll.
+3. Compact fallback below 960 x 560 and the extra-short mode below 430 px height as specified; every touch target >= 44x44 CSS px; steering and gas/brake stay multitouch-capable.
+4. Validate the matrix in spec section 8 (1280x800, 1024x768, 960x540, 844x390, 800x360, resized/multi-window) with no overlap, no unreachable buttons, readable text, and no stuck steering/gas after rotate or resize.
+5. Pedals: graphite/metal CSS look (palette in spec 3.4), GAS taller and narrower with vertical grooves, BRAKE shorter and wider with horizontal grooves, slight press movement. Look and position only: `INPUT.forward/backward/left/right`, nitro (shift) and handbrake (space) bindings and behavior unchanged. No analog throttle.
+6. Minimap reuses the existing `radar-canvas` and `drawRadar()`: ~10 Hz normally, 8 Hz allowed on LOW quality, no second minimap, no extra Three.js renderer or 3D camera, no continuous redraw while hidden, keep waypoint/police/delivery/mission icons, no growth of canvas backing resolution.
+7. No feature functionality removed (see Claude clarification 1). Saves, missions, offline play unchanged.
+8. `python3 tools/test/syntax_check.py` passes; `sw.js` CACHE untouched; PR reports phone/tablet performance impact honestly. Headless numbers are labelled `measured (headless)`; real-device FPS is Martin's.
+
+Claude clarifications (reviewer notes, 2026-11-19):
+1. The spec removes the permanent 8-button toolbar here but the Game Hub arrives only in T-003D. This task must keep every existing action reachable through an interim entry (for example tapping the minimap opens a simple panel with the existing actions: quality, mission, garage, cop chase, radio, camera, sky, settings). T-003D replaces that panel with the full Hub. Do not delete the underlying handlers or element IDs.
+2. `radar-canvas` is 140x140 backing pixels, enough for the 112-128 CSS px target; do not enlarge it.
+3. No `safe-area` handling exists in `index.html` today; add it.
+4. Existing HUD element IDs used by code and tests (`hud-cash`, `hud-speed`, `hud-gear`, `hud-stars`, `hud-crates`, `mission-panel`, `pursuit-hud-panel`) should stay so game logic keeps working.
+5. Verified existing behavior to keep: `touch-action`/pointer handling on `touch-controls` (steering and gas/brake simultaneously), `bindHold('btn-drive-gas','forward')`, `bindHold('btn-drive-brake','backward')`.
+6. Real-device S26 Ultra / Tab S11 FPS and layout acceptance belong to Martin after release.
+
+Verification: `designed`.
 
 ## In review
+(none)
+
+## Doing (Claude)
+(none)
+
+## Blocked
+### T-002 Verify licenses of the Porsche / Lexus / Ford Sketchfab models
+Owner: Martin
+Priority: P2
+Why: archives had no license text; needed before any public sharing.
+
+### T-003D Minimap-driven Game Hub
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-003C
+Spec: `specs/T-003A-spec-v1.1.md` sections 5, 8, 10. All existing toolbar actions through the Hub; mission/garage/map/settings preserved; correct modal and input handling; `closeModals` flow and the delivery fast-travel block preserved.
+Claude note: spec lists an "airport stunt" mission; no such name exists in code today. Map it to the existing STUNT mission and do not add a new one.
+Verification: `designed`.
+
+### T-003E Bilingual interface (English / Traditional Chinese)
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-003D
+Spec: `specs/T-003A-spec-v1.1.md` sections 6, 8, 10. String table, language selector in SETTINGS, `vh_save.language` (new field, default-safe), complete player-visible translation, CI check for leftover CJK, live panel refresh, old saves keep working.
+Claude notes: (1) Default policy needs "new player vs existing save": decide by whether `vh_save` existed before this load (no key = new = English; key without `language` = existing = zh-TW). (2) Dynamic strings (e.g. `showBanner` calls, delivery/mission text, reward messages from T-001B) must go through the table. (3) Existing `vh_settings` holds other settings; keep language in `vh_save` as specified.
+Verification: `designed`.
+
+## Inbox
+(none)
+
+## Done
 ### T-003B Third-person camera tuning
 Owner: Codex
 Reviewer: Claude
@@ -32,48 +93,8 @@ Claude reviewer notes (from `index.html`, 2026-11-19):
 - The hood/bird branch currently does `new THREE.Vector3(...)` every frame inside `updateCameraAndLights`; reuse a module-level vector while touching this function (in scope: spec item "avoid per-frame allocations").
 - Existing camera collision uses `CAM.raycaster` against `WORLD.cameraBlockers`; keep it, add smoothing on the recovery side only.
 
-Verification: `code-reviewed` + headless (Chrome/SwiftShader, not a device): Claude approved PR #10. CI check+syntax pass; `camera_check.mjs` PASS. Headless full-game run: no startup errors, saves reload intact, near/far distance 7.5/10.8, FOV rest 60 and 66.9 at 216 km/h, 21 spots x 4 headings x 100 frames with 0 obstructed frames (baseline main: 4), teleport first-frame distance 7.5 (baseline 545). NOT verified: real touch, S26 Ultra / Tab S11 feel and FPS, long drives (mountain, elevated road, collisions), enter/exit-car camera transition feel (>=40-unit teleports now cut instead of easing, by design). AWAITING Martin's device acceptance; T-003C stays blocked until he accepts.
+Verification: `code-reviewed` + headless (Chrome/SwiftShader, not a device): Claude approved PR #10. CI check+syntax pass; `camera_check.mjs` PASS. Headless full-game run: no startup errors, saves reload intact, near/far distance 7.5/10.8, FOV rest 60 and 66.9 at 216 km/h, 21 spots x 4 headings x 100 frames with 0 obstructed frames (baseline main: 4), teleport first-frame distance 7.5 (baseline 545). NOT verified: real touch, S26 Ultra / Tab S11 feel and FPS, long drives (mountain, elevated road, collisions), enter/exit-car camera transition feel (>=40-unit teleports now cut instead of easing, by design). Martin accepted T-003B by hand on his devices on 2026-11-19 (verdict only; no FPS numbers reported, so nothing is `measured`).
 
-## Doing (Claude)
-(none)
-
-## Blocked
-### T-002 Verify licenses of the Porsche / Lexus / Ford Sketchfab models
-Owner: Martin
-Priority: P2
-Why: archives had no license text; needed before any public sharing.
-
-### T-003C Responsive HUD, radar optimization and pedals
-Owner: Codex
-Reviewer: Claude
-Priority: P1
-Depends on: T-003B (released; waiting for Martin's device acceptance)
-Spec: `specs/T-003A-spec-v1.1.md` sections 3, 4, 8, 10. Acceptance in spec section 9: tablet landscape layout, phone compact layout, minimap 8-10 Hz, dark racing pedals, unchanged input behavior, essential HUD only, no feature functionality removed.
-Claude notes (apply when unlocked): (1) Spec removes the permanent 8-button toolbar here but the Hub arrives only in T-003D, and "no functionality removed" also applies: this task must keep every action reachable through an interim entry (e.g. tapping the minimap opens a simple panel with the existing actions) which T-003D then replaces. (2) Reuse `radar-canvas` / `drawRadar()`; the canvas backing is 140x140, enough for the 112-128 CSS px target. (3) No `safe-area` handling exists today; add it. (4) Validate the matrix in spec section 8.
-Verification: `designed`.
-
-### T-003D Minimap-driven Game Hub
-Owner: Codex
-Reviewer: Claude
-Priority: P1
-Depends on: T-003C
-Spec: `specs/T-003A-spec-v1.1.md` sections 5, 8, 10. All existing toolbar actions through the Hub; mission/garage/map/settings preserved; correct modal and input handling; `closeModals` flow and the delivery fast-travel block preserved.
-Claude note: spec lists an "airport stunt" mission; no such name exists in code today. Map it to the existing STUNT mission and do not add a new one.
-Verification: `designed`.
-
-### T-003E Bilingual interface (English / Traditional Chinese)
-Owner: Codex
-Reviewer: Claude
-Priority: P1
-Depends on: T-003D
-Spec: `specs/T-003A-spec-v1.1.md` sections 6, 8, 10. String table, language selector in SETTINGS, `vh_save.language` (new field, default-safe), complete player-visible translation, CI check for leftover CJK, live panel refresh, old saves keep working.
-Claude notes: (1) Default policy needs "new player vs existing save": decide by whether `vh_save` existed before this load (no key = new = English; key without `language` = existing = zh-TW). (2) Dynamic strings (e.g. `showBanner` calls, delivery/mission text, reward messages from T-001B) must go through the table. (3) Existing `vh_settings` holds other settings; keep language in `vh_save` as specified.
-Verification: `designed`.
-
-## Inbox
-(none)
-
-## Done
 ### T-003A Immersive Gameplay UX Specification v1.1
 Owner: ChatGPT
 Reviewer: Claude
