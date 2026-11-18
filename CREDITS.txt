@@ -4,5 +4,7 @@ VICE HORIZON VI — 第三方資源
 - 3D 模型 Soldier.glb、Xbot.glb、Michelle.glb、ferrari.glb 與 waternormals.jpg 取自 three.js 官方範例 (examples/models, examples/textures)，版權與授權依原作者，請保留此說明
 - 牆面 / 柏油貼圖：Poly Haven (CC0) — red_brick_03、concrete_wall_008、asphalt_02 — https://polyhaven.com
 - 3D 模型：Poly Haven (CC0) — street_lamp_01、painted_wooden_bench、covered_car、barrel_03、water_manhole_cover、modular_urban_apartments_facade；地形貼圖 aerial_grass_rock、rock_face、snow_02
+- 交通車：Kenney Car Kit 3.1 (CC0) — https://kenney.nl
+- Porsche 911 Carrera 4S、Lexus LC 500 Convertible、Ford Shelby GT500 Patrol 車模型由玩家提供 (Sketchfab 下載)，版權與授權依原作者
 - meshoptimizer (MIT) — https://github.com/zeux/meshoptimizer
 - 字型：Orbitron、Rajdhani (SIL Open Font License) — Fontsource

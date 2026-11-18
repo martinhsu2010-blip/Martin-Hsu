@@ -150,6 +150,11 @@
                 <button id="close-missions-btn" type="button" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 font-bold text-lg flex items-center justify-center">✕</button>
             </div>
 
+            <button data-mode="DELIVERY" type="button" class="mission-select-card w-full mb-2.5 p-3 rounded-2xl bg-gradient-to-br from-yellow-500/30 to-slate-900/60 border border-yellow-400/60 text-left">
+                <div class="font-vice font-black text-xs text-yellow-300">📦 配送工作 (隨時可接)</div>
+                <div class="text-[11px] font-bold text-white mt-0.5">每單 $700 ~ $2,300，超快送達再 +30%</div>
+                <p class="text-[11px] text-gray-300 mt-1">開車到地圖上的 📦 配送站接單，把貨送到隨機目的地 (綠色光柱) 停車卸貨。另外每座 🚀 特技跳台第一次飛越 +$1,500，之後每次也有獎金。</p>
+            </button>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-left mb-3">
                 <button data-mode="RACE" type="button" class="mission-select-card p-3 rounded-2xl bg-gradient-to-br from-rose-600/30 to-slate-900/60 border border-rose-400/60 text-left">
                     <div class="font-vice font-black text-xs text-rose-300">🏁 街頭競速賽</div>
@@ -192,14 +197,14 @@
             <div class="flex items-center justify-between border-b border-white/15 pb-2.5 mb-3">
                 <div>
                     <h2 class="font-vice text-lg sm:text-xl font-black text-sky-300">🔧 PBR 寫實改裝車庫</h2>
-                    <p class="text-xs text-gray-300">調整 1200kg Ferrari RaycastVehicle 車型、金屬清漆烤漆與 6 速變速箱動力。</p>
+                    <p class="text-xs text-gray-300">選車、用遊戲幣買新車 (送貨與特技跳台都能賺錢)、烤漆與動力升級。</p>
                 </div>
                 <button id="close-garage-btn" type="button" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 font-bold text-lg flex items-center justify-center">✕</button>
             </div>
 
             <div class="mb-3">
                 <div class="text-xs font-vice font-bold text-sky-300 mb-1.5">1. 選擇車體底盤設定</div>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                     <button data-car="SUPER" type="button" class="car-archetype-btn p-2 rounded-xl bg-rose-500/30 border border-rose-400 text-left">
                         <div class="font-vice font-bold text-xs text-white">Ferrari GT</div>
                         <div class="text-[10px] text-rose-200">0-100 4.0s 超跑</div>
@@ -212,9 +217,19 @@
                         <div class="font-vice font-bold text-xs text-white">Apex 4x4</div>
                         <div class="text-[10px] text-emerald-300">高行程越野懸吊</div>
                     </button>
-                    <button data-car="POLICE" type="button" class="car-archetype-btn p-2 rounded-xl bg-white/5 border border-white/15 text-left">
-                        <div class="font-vice font-bold text-xs text-white">Interceptor</div>
+                    <button data-car="POLICE" data-model="fordcop" type="button" class="car-archetype-btn p-2 rounded-xl bg-white/5 border border-white/15 text-left">
+                        <div class="font-vice font-bold text-xs text-white">Shelby GT500</div>
                         <div class="text-[10px] text-sky-300">VCPD 警用巡邏車</div>
+                    </button>
+                    <button data-car="SUPER" data-model="porsche911" type="button" class="car-archetype-btn p-2 rounded-xl bg-white/5 border border-white/15 text-left">
+                        <div class="font-vice font-bold text-xs text-white">Porsche 911</div>
+                        <div class="text-[10px] text-violet-300">Carrera 4S 四驅</div>
+                        <div class="car-price text-[10px] font-black mt-0.5"></div>
+                    </button>
+                    <button data-car="SUPER" data-model="lexuslc500" type="button" class="car-archetype-btn p-2 rounded-xl bg-white/5 border border-white/15 text-left">
+                        <div class="font-vice font-bold text-xs text-white">Lexus LC 500</div>
+                        <div class="text-[10px] text-amber-200">V8 敞篷 GT</div>
+                        <div class="car-price text-[10px] font-black mt-0.5"></div>
                     </button>
                 </div>
             </div>
@@ -602,17 +617,17 @@
             // pixelRatio: 最高像素比 | shadow: 陰影貼圖解析度 | bloom / ssao / smaa: 後製開關
             // fog: 霧氣濃度 (越小看越遠) | npcs / traffic: 行人與車流數量 | props: 物理道具數量倍率
             presets: {
-                PHONE_LOW:     { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 6, props: 0.5 },
-                PHONE_MED:     { pixelRatio: 1.5,  shadow: 1024, bloom: true,  ssao: false, smaa: false, fog: 0.0014, npcs: 10, traffic: 8, props: 0.75 },
-                TABLET_LOW:    { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 8, props: 0.5 },
-                TABLET_MED:    { pixelRatio: 1.5,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 11, props: 0.75 },
-                TABLET_HIGH:   { pixelRatio: 1.75, shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0011, npcs: 14, traffic: 13, props: 1.0 },
-                DESKTOP_MED:   { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0011, npcs: 16, traffic: 14, props: 1.0 },
-                DESKTOP_HIGH:  { pixelRatio: 2.0,  shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0010, npcs: 16, traffic: 18, props: 1.0 },
-                DESKTOP_ULTRA: { pixelRatio: 2.0,  shadow: 4096, bloom: true,  ssao: true,  smaa: true,  fog: 0.0006, npcs: 24, traffic: 24, props: 1.0 },
-                IGPU_LOW:      { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0016, npcs: 8,  traffic: 8, props: 0.6 },
-                IGPU_MED:      { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 10, props: 0.8 },
-                IGPU_HIGH:     { pixelRatio: 1.25, shadow: 2048, bloom: true,  ssao: false, smaa: true,  fog: 0.0011, npcs: 14, traffic: 12, props: 1.0 }
+                PHONE_LOW:     { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 10, props: 0.5 },
+                PHONE_MED:     { pixelRatio: 1.5,  shadow: 1024, bloom: true,  ssao: false, smaa: false, fog: 0.0014, npcs: 10, traffic: 12, props: 0.75 },
+                TABLET_LOW:    { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 12, props: 0.5 },
+                TABLET_MED:    { pixelRatio: 1.5,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 16, props: 0.75 },
+                TABLET_HIGH:   { pixelRatio: 1.75, shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0011, npcs: 14, traffic: 18, props: 1.0 },
+                DESKTOP_MED:   { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0011, npcs: 16, traffic: 20, props: 1.0 },
+                DESKTOP_HIGH:  { pixelRatio: 2.0,  shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0010, npcs: 16, traffic: 26, props: 1.0 },
+                DESKTOP_ULTRA: { pixelRatio: 2.0,  shadow: 4096, bloom: true,  ssao: true,  smaa: true,  fog: 0.0006, npcs: 24, traffic: 34, props: 1.0 },
+                IGPU_LOW:      { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0016, npcs: 8,  traffic: 12, props: 0.6 },
+                IGPU_MED:      { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 15, props: 0.8 },
+                IGPU_HIGH:     { pixelRatio: 1.25, shadow: 2048, bloom: true,  ssao: false, smaa: true,  fog: 0.0011, npcs: 14, traffic: 18, props: 1.0 }
             },
             // 陰影範圍 (公尺) 與行人顯示距離：等級越低越近，省下大量繪製
             shadowRange: { LOW: 60, MED: 85, HIGH: 110, ULTRA: 130 },
@@ -675,6 +690,18 @@
         // 人數、車流與道具數量依「開始時的畫質」決定
         const DENSITY = QUALITY_CONFIG.presets[PROFILE + '_' + initialQuality];
 
+        // 存檔：現金、已購買車款、引擎升級、完成的跳台、配送單數
+        const SAVE = (() => {
+            const base = { owned: [], jumps: {}, deliveries: 0 };
+            try { return Object.assign(base, JSON.parse(localStorage.getItem('vh_save') || '{}')); } catch (e) { return base; }
+        })();
+        function saveGame() {
+            clearTimeout(saveGame.t);
+            saveGame.t = setTimeout(() => {
+                SAVE.cash = STATE.cash; SAVE.upgrade = STATE.upgradeLevel;
+                try { localStorage.setItem('vh_save', JSON.stringify(SAVE)); } catch (e) {}
+            }, 400);
+        }
         const STATE = {
             mode: 'FOOT', // 'FOOT' | 'CAR'
             quality: initialQuality, // 依裝置：PHONE (LOW/MED)、TABLET (LOW/MED/HIGH)、DESKTOP (MED/HIGH/ULTRA)
@@ -687,7 +714,7 @@
             perfCheck: { active: true, elapsed: 0, frames: 0, done: false },
             currentVehicle: null,
             nearestVehicle: null,
-            cash: 3500,
+            cash: (typeof SAVE.cash === 'number' ? SAVE.cash : 3500),
             wantedStars: 0,
             bustedProgress: 0,
             evadeTimer: 0,
@@ -699,8 +726,9 @@
             cratesCollected: 0,
             totalCrates: 15,
             selectedArchetype: 'SUPER',
+            selectedModel: null,
             selectedPaint: 0xdc2626,
-            upgradeLevel: 1,
+            upgradeLevel: SAVE.upgrade || 1,
             bannerTimer: null,
             ferrariTemplate: null
         };
@@ -887,6 +915,7 @@
         function addCash(amt) {
             STATE.cash = Math.max(0, STATE.cash + amt);
             document.getElementById('hud-cash').textContent = STATE.cash.toLocaleString();
+            saveGame();
         }
 
         // ==================== 3. CANNON-ES 物理世界初始化 (嚴格使用 CANNON.Box 地面) ====================
@@ -2484,18 +2513,7 @@
             scene.add(beacon);
             addStaticBoxCollider(mastX, sumY + 18, mastZ, 1.8, 18, 1.8);
 
-            // 4. 山頂極限高空飛躍跳台 (朝向東北方市中心飛躍)
-            addProfileRamp({
-                x: sumX + 8,
-                y: sumY,
-                z: sumZ - 8,
-                rotY: THREE.MathUtils.degToRad(145),
-                width: 11,
-                profile: smoothProfile(24, 6.2, 12, 'kicker'),
-                mat: concreteMat,
-                rails: true,
-                railMat: redTowerMat
-            });
+
         }
 
         // 被新道路切掉的街區改成小公園 (只在不壓到道路的位置種樹)
@@ -4596,13 +4614,15 @@
             addStaticBoxCollider(-465, 19, 0, 6, 19, 6);
 
             // 10. 物理特技斜坡跳台
+            // 每座都實測過：起跳、飛行、落地路徑上沒有建築、高架、橋墩
             const rampList = [
-                { x: 110, z: -55, rotY: 0, len: 16, h: 3.8 },
-                { x: 110, z: 130, rotY: Math.PI, len: 16, h: 3.8 },
-                { x: -60, z: -15, rotY: 0, len: 18, h: 4.2 },
-                { x: -420, z: -150, rotY: Math.PI, len: 22, h: 5.2 }, // 面向從北方 (-Z) 駛來的車
-                { x: -420, z: 30, rotY: Math.PI, len: 22, h: 5.5 },
-                { x: -420, z: 170, rotY: Math.PI, len: 22, h: 5.2 }
+                { id: 'DT', name: '市中心廣場跳台', x: -60, z: -15, rotY: 0, len: 18, h: 4.2 },
+                { id: 'AP1', name: '機場跑道跳台 1', x: -420, z: -215, rotY: Math.PI, len: 22, h: 5.2 },
+                { id: 'AP2', name: '機場跑道跳台 2', x: -420, z: -55, rotY: Math.PI, len: 22, h: 5.5 },
+                { id: 'AP3', name: '機場跑道跳台 3', x: -420, z: 100, rotY: Math.PI, len: 22, h: 5.2 },
+                { id: 'N0', name: '北區第 0 大道跳台', x: 0, z: 640, rotY: Math.PI, len: 18, h: 4.2 },
+                { id: 'M600', name: '中城 600 街跳台', x: -150, z: 600, rotY: -Math.PI / 2, len: 18, h: 4.0 },
+                { id: 'OT', name: '老城區 720 街跳台', x: -330, z: -720, rotY: -Math.PI / 2, len: 18, h: 4.0 }
             ];
             const rampMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.6, metalness: 0.3 });
             const railMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
@@ -4621,6 +4641,7 @@
                     rails: true,
                     railMat
                 });
+                registerStuntJump({ id: rc.id, name: rc.name, x: rc.x, z: rc.z, dir: buildRot, len: rc.len, h: rc.h });
             });
 
             // 11. 【升級 12】動態物理物件：木箱 (Box)、可滾動鐵桶 (CANNON.Cylinder) 與精準貼合路障三角錐 (Compound Cylinder + Base)
@@ -5398,6 +5419,42 @@
             MONSTER: { s: [1.06, 1.12, 1.06], drop: 0, track: 1.2, wheelScale: 1.5 }
         };
 
+
+        // ==================== 新車款：Porsche 911 / Lexus LC 500 (用遊戲幣購買)、Ford Shelby GT500 警車、Kenney 低面數交通車 ====================
+        // 模型都已轉成「車頭朝 +Z、地面 y = 0、軸距中點在原點」的 GLB；物理輪胎位置在模型載入後依實際輪子重新設定
+        const CAR_BASE_URLS = ['./models/cars/', './models/cars/'];
+        const CAR_MODELS = {
+            porsche911: { file: 'porsche911.glb', label: 'Porsche 911 Carrera 4S', price: 25000, power: 1.14, vmax: 295, paint: /^(coat|paint)$/i, glass: /^glass$/i, tire: /^rubber$/i },
+            lexuslc500: { file: 'lexuslc500.glb', label: 'Lexus LC 500 Convertible', price: 18000, power: 1.04, vmax: 270, paint: /Paint_Material/i, glass: /Window_Material/i, tire: null },
+            fordcop: { file: 'fordgt500cop.glb', label: 'Ford Shelby GT500 Patrol', power: 1.08, vmax: 265, paint: null, glass: /^windwos$/i, tire: /^tire$/i, copLights: /^CopLights$/i },
+            // Kenney Car Kit (CC0)：卡通比例偏寬偏短，依軸向縮放成真實尺寸 (輪子 y、z 同比例才會是圓的)
+            kenney: { file: 'kenney_traffic.glb', scale: [1.25, 1.2, 1.75] }
+        };
+        const KENNEY_TYPES = [
+            ['sedan', 6, '轎車'], ['suv', 4, '休旅車'], ['hatchback-sports', 3, '掀背車'], ['taxi', 3, '計程車'], ['van', 3, '廂型車'],
+            ['sedan-sports', 2, '跑車'], ['suv-luxury', 2, '豪華休旅'], ['truck', 2, '皮卡'], ['delivery', 2, '貨車'], ['garbage-truck', 1, '垃圾車'], ['ambulance', 1, '救護車']
+        ];
+        function pickKenneyType(k) {
+            const tot = KENNEY_TYPES.reduce((a, t) => a + t[1], 0);
+            let r = ((k * 7919 + 13) % 1000) / 1000 * tot;
+            for (const t of KENNEY_TYPES) { r -= t[1]; if (r < 0) return t; }
+            return KENNEY_TYPES[0];
+        }
+        const CAR_TEMPLATES = {};
+        function loadCarModel(key) {
+            if (CAR_TEMPLATES[key]) return CAR_TEMPLATES[key];
+            const def = CAR_MODELS[key];
+            CAR_TEMPLATES[key] = new Promise((resolve, reject) => {
+                const tryUrl = i => {
+                    if (i >= CAR_BASE_URLS.length) { delete CAR_TEMPLATES[key]; reject(new Error('car model ' + key)); return; }
+                    gltfLoader.load(CAR_BASE_URLS[i] + def.file, resolve, undefined, () => tryUrl(i + 1));
+                };
+                tryUrl(0);
+            });
+            return CAR_TEMPLATES[key];
+        }
+        const WHEEL_NODE_RE = [/^(wheel_fl|wheel-front-left)$/i, /^(wheel_fr|wheel-front-right)$/i, /^(wheel_rl|wheel-back-left)$/i, /^(wheel_rr|wheel-back-right)$/i];
+
         class RealisticRaycastVehicle {
             constructor(cfg) {
                 this.name = cfg.name || 'Ferrari GT';
@@ -5405,6 +5462,13 @@
                 this.color = cfg.color || 0xdc2626;
                 this.isAI = !!cfg.isAI;
                 this.isPolice = !!cfg.isPolice;
+                // 新車款 (Porsche / Lexus / Ford 警車 / Kenney 交通車)；沒指定就用 Ferrari
+                this.modelKey = cfg.model || null;
+                this.kenneyType = cfg.kenneyType || null;
+                const md = this.modelKey ? CAR_MODELS[this.modelKey] : null;
+                this.power = (md && md.power) || 1;
+                this.vmax = (md && md.vmax) || 245;
+                this.hasFerrariMesh = !!this.modelKey;
                 this.aiDir = cfg.aiDir || 1;
                 this.nitro = 100;
                 this.airTime = 0;
@@ -5520,8 +5584,10 @@
                 this.setupLivery(cfg);
 
                 this.buildFallbackCarMesh(this.wheelRadius);
-                this.buildRearLights();
-                this.buildBodyKit();
+                if (!this.modelKey) {
+                    this.buildRearLights();
+                    this.buildBodyKit();
+                }
 
                 // 撞擊損傷：大力碰撞會讓車漆變暗變粗糙、車身輕微變形
                 this.chassisBody.addEventListener('collide', (event) => {
@@ -5531,7 +5597,9 @@
                 });
                 scene.add(this.chassisGroup);
 
-                if (STATE.ferrariTemplate) {
+                if (this.modelKey) {
+                    loadCarModel(this.modelKey).then(g => this.applyCustomModel(g)).catch(e => console.warn('[VH] 車款模型載入失敗', e));
+                } else if (STATE.ferrariTemplate) {
                     this.applyFerrariModel(this.isAI ? (STATE.ferrariFar || STATE.ferrariLOD || STATE.ferrariTemplate) : STATE.ferrariTemplate);
                 }
             }
@@ -5757,6 +5825,7 @@
             // 【升級 4】套用官方 ferrari.glb 模型，綁定清漆車身、透明車窗並同步四顆原廠輪框至物理輪胎
             // 玩家正在開的車用完整模型，其他車用低面數模型
             setDetail(full) {
+                if (this.modelKey) return;
                 const lodTpl = (this.isAI && STATE.ferrariFar) ? STATE.ferrariFar : STATE.ferrariLOD;
                 const tpl = full ? STATE.ferrariTemplate : (lodTpl || STATE.ferrariTemplate);
                 if (!tpl || this.modelTemplate === tpl) return;
@@ -5837,6 +5906,102 @@
                 if (this.liveryUniforms) this.liveryUniforms.uLiveryOn.value = 1;
                 this.bodyPivot.add(carModel);
                 toDetailLayer(carModel);
+                this.wheelClones.forEach(w => toDetailLayer(w));
+            }
+
+            // 套用新車款模型 (Porsche / Lexus / Ford 警車 / Kenney 交通車)：依模型實際輪子位置重設物理輪胎與車身碰撞箱
+            applyCustomModel(gltf) {
+                if (this.customApplied) return;
+                this.customApplied = true;
+                this.wheelClones = [];
+                const def = CAR_MODELS[this.modelKey];
+                let src = gltf.scene;
+                if (this.modelKey === 'kenney') src = gltf.scenes.find(s => s.name === this.kenneyType) || gltf.scenes[0];
+                const S = new THREE.Vector3(...(def.scale || [1, 1, 1]));
+                const root = new THREE.Group();
+                src.children.forEach(c => root.add(c.clone(true)));
+                root.scale.copy(S);
+                root.updateMatrixWorld(true);
+
+                // 材質：車漆換成可改色的清漆材質、車窗換成遊戲的玻璃、輪胎壓暗、警示燈可閃爍
+                const matCache = new Map();
+                root.traverse(o => {
+                    if (!o.isMesh) return;
+                    o.castShadow = true;
+                    o.receiveShadow = true;
+                    const mn = o.material.name || '';
+                    if (def.paint && def.paint.test(mn)) {
+                        // 這些模型的 UV 比例和 Ferrari 不同，金屬顆粒法線貼圖會變成白色雜點，改用純清漆
+                        if (this.bodyMat.normalMap) { this.bodyMat.normalMap = null; this.bodyMat.needsUpdate = true; }
+                        o.material = this.bodyMat;
+                    }
+                    else if (def.glass && def.glass.test(mn)) o.material = this.glassMat;
+                    else if (def.tire && def.tire.test(mn)) {
+                        if (!matCache.has(mn)) { const m = o.material.clone(); m.color.setHex(0x2a2a2a); m.roughness = 0.92; m.metalness = 0; matCache.set(mn, m); }
+                        o.material = matCache.get(mn);
+                    } else if (def.copLights && def.copLights.test(mn)) {
+                        if (!this.copLightMat) {
+                            this.copLightMat = o.material.clone();
+                            this.copLightMat.emissive = new THREE.Color(0xffffff);
+                            this.copLightMat.emissiveMap = this.copLightMat.map;
+                            this.copLightMat.emissiveIntensity = 0;
+                        }
+                        o.material = this.copLightMat;
+                    }
+                });
+
+                // 找四顆輪子，算出輪心 (車身座標) 與半徑
+                const wheels = WHEEL_NODE_RE.map(re => { let f = null; root.traverse(o => { if (!f && re.test(o.name || '')) f = o; }); return f; });
+                if (wheels.every(Boolean)) {
+                    const box = new THREE.Box3(), ctr = new THREE.Vector3(), size = new THREE.Vector3();
+                    const centers = wheels.map(w => box.setFromObject(w).getCenter(new THREE.Vector3()));
+                    box.setFromObject(wheels[0]).getSize(size);
+                    const radius = size.y / 2;
+                    const track = centers.reduce((a, c) => a + Math.abs(c.x), 0) / 4;
+                    const fz = (centers[0].z + centers[1].z) / 2, rz = (centers[2].z + centers[3].z) / 2;
+                    this.wheelRadius = radius;
+                    // 地面在車身座標 -0.62；靜止時懸吊約壓到 0.30 m
+                    this.vehicle.wheelInfos.forEach((wi, i) => {
+                        wi.chassisConnectionPointLocal.set(i % 2 === 0 ? track : -track, radius - 0.32, i < 2 ? fz : rz);
+                        wi.radius = radius;
+                    });
+                    // 車身碰撞箱依模型大小 (卡車、廂型車比較長)
+                    const bodyBox = new THREE.Box3();
+                    root.traverse(o => { if (o.isMesh && !wheels.some(w => w === o || w.getObjectById(o.id))) bodyBox.expandByObject(o); });
+                    bodyBox.getSize(size);
+                    const he = this.chassisBody.shapes[0].halfExtents;
+                    he.set(Math.min(1.25, size.x * 0.46), 0.36, Math.min(3.4, Math.max(1.9, size.z * 0.47)));
+                    this.chassisBody.shapes[0].updateConvexPolyhedronRepresentation();
+                    this.chassisBody.shapes[0].updateBoundingSphereRadius();
+                    this.chassisBody.updateBoundingRadius();
+                    this.chassisBody.aabbNeedsUpdate = true;
+                    this.bodyHalfLength = he.z;
+
+                    // 把模型裡的輪子搬到物理輪胎上 (保留節點本身的旋轉，例如右側輪子轉 180°)
+                    wheels.forEach((wNode, idx) => {
+                        const holder = this.wheelMeshes[idx];
+                        if (holder.userData.fallbackWheel) {
+                            holder.remove(holder.userData.fallbackWheel);
+                            holder.userData.fallbackWheel = null;
+                        }
+                        const wc = wNode.clone(true);
+                        wc.visible = true;
+                        wc.position.set(0, 0, 0);
+                        wc.scale.multiply(new THREE.Vector3(S.x, S.y, S.y));
+                        wc.updateMatrixWorld(true);
+                        wc.position.sub(box.setFromObject(wc).getCenter(ctr));
+                        holder.add(wc);
+                        this.wheelClones.push(wc);
+                        wNode.visible = false;
+                    });
+                }
+
+                this.fallbackVisualGroup.visible = false;
+                (this.kitParts || []).forEach(m => { m.visible = false; });
+                root.position.y = -0.62 - this.stance.drop;
+                this.carModel = root;
+                this.bodyPivot.add(root);
+                toDetailLayer(root);
                 this.wheelClones.forEach(w => toDetailLayer(w));
             }
 
@@ -5968,6 +6133,16 @@
                         this.wheelMeshes.forEach(w => { w.visible = !hide; });
                     }
                 }
+                // 看不到的交通車 (430 m 外) 暫停物理，省下輪胎射線與碰撞運算；車流回收把它搬回附近時自動恢復
+                if (this.isAI && !this.isPolice) {
+                    const far = camera.position.distanceToSquared(this.chassisBody.position) > 430 * 430;
+                    if (far !== !!this.frozen) {
+                        this.frozen = far;
+                        if (far) this.vehicle.removeFromWorld(physicsWorld);
+                        else { this.vehicle.addToWorld(physicsWorld); this.chassisBody.wakeUp(); }
+                    }
+                    if (far) return;
+                }
 
                 const isPlayer = (STATE.mode === 'CAR' && STATE.currentVehicle === this);
 
@@ -5975,6 +6150,10 @@
                     const fl = Math.floor(STATE.time * 10) % 2 === 0;
                     this.sirenBars[0].material.color.setHex(fl ? 0xff0033 : 0x00d8ff);
                     this.sirenBars[1].material.color.setHex(fl ? 0x00d8ff : 0xff0033);
+                }
+                if (this.copLightMat) {
+                    const on = (this.isPolice && STATE.wantedStars > 0) || isPlayer;
+                    this.copLightMat.emissiveIntensity = on ? (Math.floor(STATE.time * 8) % 2 ? 2.6 : 0.25) : 0;
                 }
 
                 const forwardVec = new CANNON.Vec3(0, 0, 1);
@@ -6044,7 +6223,7 @@
 
                     // 【升級 5】0-100 km/h (27.78 m/s) 約 4.0 秒之真實引擎扭力曲線
                     // 1200kg 車重在 4.0 秒達到 27.78 m/s 平均需要約 8334 N 總推進力 (四輪合計，每輪約 2100 N)
-                    const baseWheelForce = 1650 * (0.55 + gearRatio * 0.32) * upgMultiplier * nitroBoost;
+                    const baseWheelForce = 1650 * (0.55 + gearRatio * 0.32) * upgMultiplier * nitroBoost * this.power;
                     const shiftCut = this.shiftTimer > 0 ? 0.35 : 1.0;
 
                     let engineForce = 0;
@@ -6053,7 +6232,7 @@
                     if (gas) {
                         if (forwardSpeed < -1.5) {
                             brakeForce = 90;
-                        } else if (speedKmh < 245 * upgMultiplier * nitroBoost) {
+                        } else if (speedKmh < this.vmax * upgMultiplier * nitroBoost) {
                             engineForce = -baseWheelForce * shiftCut;
                         }
                     } else if (brk) {
@@ -6098,7 +6277,7 @@
                     if (this.chassisBody.position.y > 2.2) {
                         this.airTime += dt;
                     } else {
-                        if (this.airTime > 0.65) {
+                        if (this.airTime > 0.65 && STATE.time - STUNT.lastStart > 10) {
                             const bonus = Math.round(this.airTime * 500);
                             addCash(bonus);
                             AUDIO.playSFX('stunt');
@@ -6192,32 +6371,13 @@
                 { name: 'Ferrari GT', archetype: 'SUPER', color: 0xdc2626, x: 103, z: 26, heading: 0 },
                 { name: 'Muscle 69', archetype: 'MUSCLE', color: 0xeab308, livery: 'stripes', color2: 0x0b0d12, x: 103, z: -14, heading: 0 },
                 { name: 'Apex 4x4', archetype: 'MONSTER', color: 0x059669, x: 235, z: 10, heading: -Math.PI / 2 },
-                { name: 'VCPD Interceptor', archetype: 'POLICE', color: 0x111827, x: -45, z: 12, heading: 0 }
+                { name: 'VCPD Shelby GT500', archetype: 'POLICE', model: 'fordcop', color: 0x111827, x: -45, z: 12, heading: 0 }
             ].forEach(cfg => WORLD.vehicles.push(new RealisticRaycastVehicle(cfg)));
 
-            [
-                { name: 'Vice Cab', color: 0xf2b705, livery: 'taxi', x: 115, z: -130, aiDir: 1, isAI: true },
-                { name: 'Silver Corsa', color: 0xb8bec6, x: 105, z: 140, aiDir: -1, isAI: true },
-                { name: 'Pearl Spider', color: 0xeef1f4, livery: 'stripes', color2: 0x1e3a8a, x: 5, z: -110, aiDir: 1, isAI: true },
-                { name: 'Graphite Roma', color: 0x4b5563, finish: 'matte', x: -5, z: 120, aiDir: -1, isAI: true },
-                { name: 'Sunset Portofino', color: 0xea580c, livery: 'twotone', color2: 0x0b0d12, x: 115, z: 260, aiDir: 1, isAI: true },
-                { name: 'Vice Cab 2', color: 0xf2b705, livery: 'taxi', x: 105, z: -280, aiDir: -1, isAI: true },
-                { name: 'Midnight Roma', color: 0x0f172a, x: 0, z: 0, isAI: true },
-                { name: 'Arctic Corsa', color: 0xf1f5f9, x: 0, z: 0, isAI: true },
-                { name: 'Navy Spider', color: 0x1e3a8a, x: 0, z: 0, isAI: true },
-                { name: 'Gunmetal GT', color: 0x374151, x: 0, z: 0, isAI: true },
-                { name: 'Vice Cab 3', color: 0xf2b705, livery: 'taxi', x: 0, z: 0, isAI: true },
-                { name: 'Wine Roma', color: 0x7f1d1d, x: 0, z: 0, isAI: true },
-                { name: 'Silver Spider', color: 0x9ca3af, finish: 'matte', x: 0, z: 0, isAI: true },
-                { name: 'Mint Portofino', color: 0xa7f3d0, livery: 'twotone', color2: 0x0b0d12, x: 0, z: 0, isAI: true }
-            ].concat(Array.from({ length: 16 }, (_, j) => ({
-                name: 'Commuter ' + (j + 1),
-                color: [0x9ca3af, 0x1f2937, 0xe5e7eb, 0x7c2d12, 0x1e40af, 0x065f46, 0xf2b705, 0x475569][j % 8],
-                livery: j % 8 === 6 ? 'taxi' : (j % 5 === 3 ? 'stripes' : undefined),
-                color2: 0x0b0d12,
-                finish: j % 6 === 2 ? 'matte' : undefined,
-                x: 0, z: 0, isAI: true
-            }))).slice(0, DENSITY.traffic).forEach((cfg, k) => {
+            Array.from({ length: DENSITY.traffic }, (_, k) => {
+                const t = pickKenneyType(k);
+                return { name: t[2], model: 'kenney', kenneyType: t[0], color: 0xffffff, isAI: true };
+            }).forEach((cfg, k) => {
                 const car = new RealisticRaycastVehicle(cfg);
                 // 平均分配到各條路線上，並沿路線錯開位置
                 const nR = ROAD_NET.routes.length;
@@ -6231,6 +6391,7 @@
                 const cop = new RealisticRaycastVehicle({
                     name: 'VCPD Unit #' + (i + 1),
                     archetype: 'POLICE',
+                    model: 'fordcop',
                     color: 0x0f172a,
                     x: -600,
                     z: -400 - i * 25,
@@ -6256,7 +6417,6 @@
                         WORLD.vehicles.forEach(v => { if (!v.isAI) v.applyFerrariModel(STATE.ferrariTemplate); });
                         buildFerrariLOD(gltf.scene).then(async lod => {
                             STATE.ferrariLOD = lod;
-                            try { STATE.ferrariFar = await buildFerrariFar(lod); } catch (e) { console.warn('[VH] 遠景車模型失敗', e); }
                             WORLD.vehicles.forEach(v => v.setDetail(v === STATE.currentVehicle && STATE.mode === 'CAR'));
                         }).catch(() => {});
                     },
@@ -6609,8 +6769,9 @@
                 if (!car) {
                     const pos = getActivePosition();
                     car = new RealisticRaycastVehicle({
-                        name: 'Custom ' + STATE.selectedArchetype,
+                        name: STATE.selectedModel ? CAR_MODELS[STATE.selectedModel].label : 'Custom ' + STATE.selectedArchetype,
                         archetype: STATE.selectedArchetype,
+                        model: STATE.selectedModel || undefined,
                         color: STATE.selectedPaint,
                         x: pos.x + 3.5,
                         z: pos.z + 3.5,
@@ -6650,7 +6811,9 @@
         }
 
         function startMission(mode) {
+            if (mode === 'DELIVERY') { goToNearestDepot(); return; }
             closeModals();
+            if (DELIVERY.job) endDeliveryJob(null);
             MISSION.active = true;
             MISSION.mode = mode;
             MISSION.currentCP = 0;
@@ -6676,9 +6839,9 @@
                 MISSION.checkpoints = [];
                 showBanner('💨 甩尾積分挑戰!', '按住手煞車過彎累積 2,000 分!');
             } else if (mode === 'STUNT') {
-                teleportTo(-420, -240, 0);
+                teleportTo(-420, -345, 0);
                 MISSION.checkpoints = [
-                    { x: -420, z: -150 }, { x: -420, z: 30 }, { x: -420, z: 170 }
+                    { x: -420, z: -215 }, { x: -420, z: -55 }, { x: -420, z: 100 }
                 ];
                 showBanner('🚀 機場飛躍挑戰!', '衝上 3 座跑道大型跳台!');
             }
@@ -6943,6 +7106,246 @@
             document.getElementById('radar-zone').textContent = zone;
         }
 
+
+        // ==================== 賺錢玩法：配送工作 (配送站接單 → 地圖隨機地點送貨) 與每日特技跳台 ====================
+        function makeIconSprite(emoji, ring, scale) {
+            const c = document.createElement('canvas'); c.width = c.height = 128;
+            const g = c.getContext('2d');
+            g.fillStyle = 'rgba(2,6,23,0.82)'; g.beginPath(); g.arc(64, 64, 56, 0, Math.PI * 2); g.fill();
+            g.lineWidth = 8; g.strokeStyle = ring; g.stroke();
+            g.font = '64px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+            g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(emoji, 64, 70);
+            const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+            const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthWrite: false, fog: false }));
+            sp.scale.setScalar(scale || 5);
+            return sp;
+        }
+
+        // ---------- 特技跳台：每座第一次飛越 $1,500，之後每次依飛行距離給獎金 ----------
+        const STUNT = { jumps: [], active: null, lastStart: -99 };
+        function registerStuntJump(j) {
+            j.ux = Math.sin(j.dir); j.uz = Math.cos(j.dir);
+            const sp = makeIconSprite('🚀', SAVE.jumps[j.id] ? '#64748b' : '#fbbf24', 4.5);
+            sp.position.set(j.x - j.ux * (j.len + 6), (j.y || 0) + 6.5, j.z - j.uz * (j.len + 6));
+            scene.add(sp);
+            j.sprite = sp;
+            STUNT.jumps.push(j);
+        }
+        function updateStuntJumps(dt) {
+            const car = STATE.mode === 'CAR' ? STATE.currentVehicle : null;
+            if (!car) { STUNT.active = null; return; }
+            const p = car.chassisBody.position, v = car.chassisBody.velocity;
+            const grounded = car.vehicle.wheelInfos.some(w => w.raycastResult.hasHit); // isInContact 在這版 cannon-es 永遠是 false
+            if (!STUNT.active) {
+                for (const j of STUNT.jumps) {
+                    const dx = p.x - j.x, dz = p.z - j.z;
+                    const along = dx * j.ux + dz * j.uz, lat = -dx * j.uz + dz * j.ux;
+                    if (along > -4 && along < 7 && Math.abs(lat) < 6.5 && Math.abs(p.y - (j.y || 0) - j.h) < 4 && (v.x * j.ux + v.z * j.uz) > 12) {
+                        STUNT.active = { j, t: 0, air: 0, y0: p.y, maxY: p.y };
+                        STUNT.lastStart = STATE.time;
+                        break;
+                    }
+                }
+                return;
+            }
+            const a = STUNT.active;
+            a.t += dt;
+            if (!grounded) { a.air += dt; a.maxY = Math.max(a.maxY, p.y); }
+            if (grounded && a.air > 0.6) {
+                const dist = Math.hypot(p.x - a.j.x, p.z - a.j.z);
+                const first = !SAVE.jumps[a.j.id];
+                const reward = first ? 1500 : 300 + Math.round(dist * 4 / 10) * 10;
+                SAVE.jumps[a.j.id] = Math.max(SAVE.jumps[a.j.id] || 0, Math.round(dist));
+                a.j.sprite.material.map.dispose();
+                const nsp = makeIconSprite('🚀', '#64748b', 4.5);
+                a.j.sprite.material = nsp.material;
+                addCash(reward);
+                AUDIO.playSFX('stunt');
+                const done = STUNT.jumps.filter(j => SAVE.jumps[j.id]).length;
+                showBanner(first ? '🏆 新跳台完成! +$' + reward.toLocaleString() : '🚀 特技飛越 +$' + reward.toLocaleString(),
+                    a.j.name + ' • 飛行 ' + Math.round(dist) + ' m • 滯空 ' + a.air.toFixed(1) + ' s • 已完成 ' + done + '/' + STUNT.jumps.length + ' 座');
+                STUNT.active = null;
+            } else if (a.t > 9 || (grounded && a.t > 1.0 && a.air < 0.3)) {
+                STUNT.active = null;
+            }
+        }
+
+        // ---------- 配送工作 ----------
+        const DELIVERY = {
+            depots: [
+                { id: 'PORT', name: '碼頭貨運站', x: 236, z: -40 },
+                { id: 'CBD', name: '市中心物流中心', x: -120, z: 60 },
+                { id: 'OLD', name: '老城區郵局', x: -120, z: -660 },
+                { id: 'AIR', name: '機場貨運站', x: -480, z: -240 },
+                { id: 'SUB', name: '郊區倉庫', x: -900, z: -245 },
+                { id: 'NORTH', name: '北區倉庫', x: 60, z: 720 }
+            ],
+            job: null,
+            cooldown: 0
+        };
+        function buildDeliveryDepots() {
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.35, side: THREE.DoubleSide, depthWrite: false });
+            DELIVERY.depots.forEach(d => {
+                const s = snapToRoad(d.x, d.z);
+                if (s) { d.x = s.x; d.z = s.z; }
+                d.y = terrainHeight(d.x, d.z);
+                const ring = new THREE.Mesh(new THREE.CylinderGeometry(6.5, 6.5, 2.4, 32, 1, true), ringMat);
+                ring.position.set(d.x, d.y + 1.2, d.z);
+                scene.add(ring);
+                const sp = makeIconSprite('📦', '#facc15', 5);
+                sp.position.set(d.x, d.y + 7, d.z);
+                scene.add(sp);
+                d.ring = ring; d.sprite = sp;
+            });
+            const beam = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 140, 16, 1, true), new THREE.MeshBasicMaterial({ color: 0x22c55e, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.DoubleSide }));
+            const pad = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 1.6, 32, 1, true), new THREE.MeshBasicMaterial({ color: 0x4ade80, transparent: true, opacity: 0.45, depthWrite: false, side: THREE.DoubleSide }));
+            beam.visible = pad.visible = false;
+            scene.add(beam, pad);
+            DELIVERY.beam = beam; DELIVERY.pad = pad;
+        }
+        function nearestDepot(x, z) {
+            let best = null, bd = Infinity;
+            DELIVERY.depots.forEach(d => { const dd = Math.hypot(d.x - x, d.z - z); if (dd < bd) { bd = dd; best = d; } });
+            return best;
+        }
+        function pickDeliveryDestination(from) {
+            for (let k = 0; k < 60; k++) {
+                const x = -1350 + Math.random() * 1575, z = -880 + Math.random() * 1760;
+                const s = snapToRoad(x, z);
+                if (!s) continue;
+                const d = Math.hypot(s.x - from.x, s.z - from.z);
+                if (d < 320 || d > 1500) continue;
+                if (DELIVERY.depots.some(dp => Math.hypot(dp.x - s.x, dp.z - s.z) < 60)) continue;
+                return { x: s.x, z: s.z, y: terrainHeight(s.x, s.z), name: districtName(s.x, s.z) + ' • ' + (s.name || '道路'), dist: d };
+            }
+            return null;
+        }
+        function startDeliveryJob(depot) {
+            const dest = pickDeliveryDestination(depot);
+            if (!dest) return;
+            if (MISSION.active) { MISSION.active = false; if (MISSION.marker) MISSION.marker.visible = false; }
+            const reward = Math.round((350 + dest.dist * 1.3) / 10) * 10;
+            const limit = Math.round(dest.dist / 15 + 30);
+            DELIVERY.job = { depot, dest, reward, limit, left: limit };
+            DELIVERY.beam.position.set(dest.x, dest.y + 70, dest.z);
+            DELIVERY.pad.position.set(dest.x, dest.y + 0.8, dest.z);
+            DELIVERY.beam.visible = DELIVERY.pad.visible = true;
+            if (STATE.waypoint) clearWaypoint();
+            document.getElementById('mission-panel').classList.remove('hidden');
+            document.getElementById('mission-title').textContent = '📦 配送';
+            AUDIO.playSFX('checkpoint');
+            showBanner('📦 接到配送訂單! 報酬 $' + reward.toLocaleString(), '送到 ' + dest.name + ' (' + (dest.dist / 1000).toFixed(1) + ' km)，時限 ' + Math.floor(limit / 60) + ':' + String(limit % 60).padStart(2, '0') + '，到綠色光柱停車卸貨');
+        }
+        function endDeliveryJob(msg) {
+            DELIVERY.job = null;
+            DELIVERY.cooldown = 4;
+            DELIVERY.beam.visible = DELIVERY.pad.visible = false;
+            if (!MISSION.active) document.getElementById('mission-panel').classList.add('hidden');
+            if (msg) showBanner(msg[0], msg[1]);
+        }
+        function goToNearestDepot() {
+            const pos = getActivePosition();
+            const d = nearestDepot(pos.x, pos.z);
+            closeModals();
+            if (DELIVERY.job) { showBanner('📦 配送進行中', '先把貨送到 ' + DELIVERY.job.dest.name); return; }
+            setWaypoint(d.x, d.z, '📦 ' + d.name);
+            showBanner('📦 前往 ' + d.name + ' 接單', '開車進入黃色圓圈就會接到訂單 (地圖上的 📦 都是配送站)');
+        }
+        function updateDelivery(dt) {
+            const t = STATE.time;
+            DELIVERY.depots.forEach(d => { if (d.ring) { d.ring.material.opacity = 0.25 + Math.sin(t * 3) * 0.1; d.sprite.position.y = d.y + 7 + Math.sin(t * 2) * 0.4; } });
+            DELIVERY.cooldown = Math.max(0, DELIVERY.cooldown - dt);
+            const inCar = STATE.mode === 'CAR' && STATE.currentVehicle;
+            const pos = getActivePosition();
+            const speed = inCar ? STATE.currentVehicle.getSpeedMPS() * 3.6 : 0;
+            const job = DELIVERY.job;
+            if (!job) {
+                if (!inCar || DELIVERY.cooldown > 0) return;
+                for (const d of DELIVERY.depots) {
+                    if (Math.hypot(pos.x - d.x, pos.z - d.z) < 7.5 && speed < 45) { startDeliveryJob(d); break; }
+                }
+                return;
+            }
+            job.left -= dt;
+            const dist = Math.hypot(pos.x - job.dest.x, pos.z - job.dest.z);
+            DELIVERY.pad.material.opacity = 0.35 + Math.sin(t * 5) * 0.12;
+            const late = job.left < 0;
+            const sec = Math.abs(Math.ceil(job.left));
+            document.getElementById('mission-timer').textContent = (late ? '逾時 +' : '') + Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+            document.getElementById('mission-progress').textContent = (dist > 1000 ? (dist / 1000).toFixed(2) + ' km' : Math.round(dist) + ' m') + ' • $' + (late ? Math.round(job.reward * 0.5) : job.reward).toLocaleString();
+            if (dist < 10 && inCar && speed < 35) {
+                let pay = job.reward, note = '準時送達';
+                if (late) { pay = Math.round(job.reward * 0.5); note = '逾時送達 (報酬減半)'; }
+                else if (job.left > job.limit * 0.4) { pay = Math.round(job.reward * 1.3); note = '超快送達 +30% 獎金'; }
+                addCash(pay);
+                SAVE.deliveries = (SAVE.deliveries || 0) + 1;
+                saveGame();
+                AUDIO.playSFX('stunt');
+                endDeliveryJob(['📦 配送完成! +$' + pay.toLocaleString(), note + ' • 累計 ' + SAVE.deliveries + ' 單 • 回任一 📦 配送站接下一單']);
+            } else if (dist < 10 && !inCar) {
+                document.getElementById('mission-progress').textContent = '上車才能卸貨';
+            }
+        }
+        // 雷達與世界地圖上的配送站、目的地、特技跳台圖示
+        function drawRadarExtras(ctx, pos, scale) {
+            const R = 60;
+            const dot = (x, z, color, r, clamp) => {
+                let mx = (x - pos.x) * scale, mz = (z - pos.z) * scale;
+                const d = Math.hypot(mx, mz);
+                if (d > R) { if (!clamp) return; mx = mx / d * (R - 2); mz = mz / d * (R - 2); }
+                ctx.fillStyle = color; ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.arc(mx, mz, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+            };
+            DELIVERY.depots.forEach(d => dot(d.x, d.z, '#facc15', 3.6, false));
+            STUNT.jumps.forEach(j => dot(j.x, j.z, SAVE.jumps[j.id] ? '#94a3b8' : '#fb923c', 3.0, false));
+            if (DELIVERY.job) dot(DELIVERY.job.dest.x, DELIVERY.job.dest.z, '#22c55e', 5, true);
+        }
+        function drawMapExtras(g, P, s) {
+            const icon = (x, z, emoji, ring) => {
+                const [a, b] = P(x, z);
+                g.fillStyle = 'rgba(2,6,23,0.85)'; g.strokeStyle = ring; g.lineWidth = 2;
+                g.beginPath(); g.arc(a, b, 10, 0, Math.PI * 2); g.fill(); g.stroke();
+                g.font = '11px system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+                g.fillText(emoji, a, b + 1);
+            };
+            DELIVERY.depots.forEach(d => icon(d.x, d.z, '📦', '#facc15'));
+            STUNT.jumps.forEach(j => icon(j.x, j.z, '🚀', SAVE.jumps[j.id] ? '#64748b' : '#fb923c'));
+            if (DELIVERY.job) {
+                const [a, b] = P(DELIVERY.job.dest.x, DELIVERY.job.dest.z);
+                g.fillStyle = '#22c55e';
+                g.beginPath(); g.moveTo(a, b); g.lineTo(a - 8, b - 16); g.arc(a, b - 18, 8, Math.PI * 0.85, Math.PI * 0.15); g.closePath(); g.fill();
+            }
+        }
+
+        // 車流回收：離玩家 470 m 以外的交通車，搬到玩家附近 150~360 m 的路線空位，讓身邊一直有車
+        const TRAFFIC = { t: 0 };
+        function recycleTraffic(dt) {
+            TRAFFIC.t += dt;
+            if (TRAFFIC.t < 1.2) return;
+            TRAFFIC.t = 0;
+            const pos = getActivePosition();
+            const routes = ROAD_NET.routes;
+            let moved = 0;
+            for (const v of WORLD.vehicles) {
+                if (moved >= 2) break;
+                if (!v.isAI || v.isPolice || v.routeId === undefined || v === STATE.currentVehicle) continue;
+                const p = v.chassisBody.position;
+                if (Math.hypot(p.x - pos.x, p.z - pos.z) < 470) continue;
+                for (let tries = 0; tries < 16; tries++) {
+                    const rid = Math.floor(Math.random() * routes.length);
+                    const route = routes[rid];
+                    const idx = Math.floor(Math.random() * route.length);
+                    const q = route[idx];
+                    const d = Math.hypot(q.x - pos.x, q.z - pos.z);
+                    if (d < 150 || d > 360) continue;
+                    if (WORLD.vehicles.some(o => o !== v && Math.hypot(o.chassisBody.position.x - q.x, o.chassisBody.position.z - q.z) < 30)) continue;
+                    v.placeOnRoute(rid, idx);
+                    moved++;
+                    break;
+                }
+            }
+        }
+
         function drawRadar() {
             const rCanvas = document.getElementById('radar-canvas');
             const ctx = rCanvas.getContext('2d');
@@ -7044,6 +7447,7 @@
                 ctx.fillStyle = '#fbbf24'; ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1.5;
                 ctx.beginPath(); ctx.arc(wx, wz, 5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
             }
+            drawRadarExtras(ctx, pos, scale);
             ctx.restore();
 
             ctx.fillStyle = '#ffffff';
@@ -7186,6 +7590,7 @@
                 }
                 WMAP.hits.push({ ft, a, b });
             });
+            drawMapExtras(g, P, s);
             // 導航點
             if (STATE.waypoint) {
                 const [a, b] = P(STATE.waypoint.x, STATE.waypoint.z);
@@ -7514,21 +7919,59 @@
                 });
             });
             document.getElementById('cancel-mission-btn').addEventListener('click', () => {
+                if (DELIVERY.job) endDeliveryJob(['📦 已取消配送', '可以隨時回配送站接新訂單']);
                 MISSION.active = false;
                 if (MISSION.marker) MISSION.marker.visible = false;
                 document.getElementById('mission-panel').classList.add('hidden');
                 closeModals();
             });
 
+            // 車款卡片：未擁有的車第一次點顯示價格，再點一次確認購買
+            const refreshGarageCards = () => {
+                document.querySelectorAll('.car-archetype-btn').forEach(b => {
+                    const m = b.getAttribute('data-model'), def = m && CAR_MODELS[m], tag = b.querySelector('.car-price');
+                    if (!tag || !def) return;
+                    const owned = SAVE.owned.includes(m);
+                    tag.textContent = owned ? '✅ 已擁有' : (b.dataset.confirm ? '👉 再按一次購買 $' + def.price.toLocaleString() : '🔒 $' + def.price.toLocaleString());
+                    tag.className = 'car-price text-[10px] font-black mt-0.5 ' + (owned ? 'text-emerald-300' : (STATE.cash >= def.price ? 'text-yellow-300' : 'text-rose-300'));
+                });
+            };
             document.querySelectorAll('.car-archetype-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
+                    const model = btn.getAttribute('data-model') || null;
+                    const def = model && CAR_MODELS[model];
+                    if (def && def.price && !SAVE.owned.includes(model)) {
+                        if (STATE.cash < def.price) {
+                            showBanner('💰 現金不足', def.label + ' 售價 $' + def.price.toLocaleString() + '，還差 $' + (def.price - STATE.cash).toLocaleString() + '。去送貨或飛躍特技跳台賺錢吧!');
+                            return;
+                        }
+                        if (!btn.dataset.confirm) {
+                            btn.dataset.confirm = '1';
+                            refreshGarageCards();
+                            setTimeout(() => { delete btn.dataset.confirm; refreshGarageCards(); }, 4000);
+                            return;
+                        }
+                        delete btn.dataset.confirm;
+                        addCash(-def.price);
+                        SAVE.owned.push(model);
+                        saveGame();
+                        AUDIO.playSFX('stunt');
+                        showBanner('🔑 購買成功!', def.label + ' 已加入你的車庫，按「立即召喚」就能開');
+                        loadCarModel(model).catch(() => {});
+                    }
                     STATE.selectedArchetype = btn.getAttribute('data-car');
+                    STATE.selectedModel = model;
                     document.querySelectorAll('.car-archetype-btn').forEach(b => {
                         b.className = 'car-archetype-btn p-2 rounded-xl bg-white/5 border border-white/15 text-left';
                     });
                     btn.className = 'car-archetype-btn p-2 rounded-xl bg-rose-500/30 border border-rose-400 text-left';
+                    refreshGarageCards();
                 });
             });
+            refreshGarageCards();
+            document.getElementById('pill-garage').addEventListener('click', refreshGarageCards);
+            document.getElementById('upg-lvl-text').textContent = 'Lv.' + STATE.upgradeLevel + '/5';
+            addCash(0);
             document.querySelectorAll('#paint-swatches button').forEach(btn => {
                 btn.addEventListener('click', () => {
                     STATE.selectedPaint = parseInt(btn.getAttribute('data-paint'), 16);
@@ -7780,6 +8223,7 @@
 
         buildRealisticWorld();
         buildTrees();
+        buildDeliveryDepots();
         buildCityDetails();
         batchStaticMeshes();
         // 所有 InstancedMesh (窗戶、棕櫚樹、道具、紅綠燈…) 都不進海面倒影
@@ -7879,6 +8323,9 @@
             updateCityDetails(dt);
             updateFacadeLOD(false);
             updateWaypoint();
+            updateDelivery(dt);
+            updateStuntJumps(dt);
+            recycleTraffic(dt);
             TREES.uTime.value = STATE.time;
             updateDayCycle(dt);
             drawRadar();
@@ -7894,7 +8341,7 @@
         requestAnimationFrame(animate);
 
         // 除錯用：在瀏覽器主控台輸入 __VH 可查看遊戲狀態
-        window.__VH = { TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
+        window.__VH = { __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
     </script>
 </body>
 </html>
