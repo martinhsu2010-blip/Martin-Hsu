@@ -43,7 +43,7 @@ Context: <3 lines>   Deliverable: <exact output>   Acceptance: <list>
 - Any change to a file listed in `sw.js` `PRECACHE` (index.html, models, libs, fonts, css, icons, manifest) needs a new `CACHE` value. On a PR this is only a warning; on `main` it fails. Claude bumps it when integrating.
 - Docs-only changes (`*.md`, `tools/`, `.github/`) are not a game release.
 - `tools/test/syntax_check.py` runs on every push/PR (script syntax + PRECACHE files exist).
-- Recommended (Martin, one-time in GitHub settings): protect `main` — require a pull request before merging, block force pushes.
+- `main` is protected on GitHub (D-013): changes only arrive through a Pull Request (no approvals needed, but admins are not exempt); force pushes and deletion are blocked. Claude's own releases and doc updates also go branch → PR → merge.
 - AI-triggered automation beyond the `@codex` mention is out of scope for now.
 
 ## Setup text for ChatGPT's project instructions (Martin pastes)

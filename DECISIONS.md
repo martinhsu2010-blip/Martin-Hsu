@@ -49,4 +49,5 @@ D-012 | 2026-11-18 | agreed | by Martin
 D-012 | 2026-11-18 | implemented | AGENTS.md and CI (PR = warning, main = failure)
 
 ## D-013 Protect `main` on GitHub (require PR, no force push)
-D-013 | 2026-11-18 | proposed | Martin to enable in repo settings; Claude does not change repo settings
+D-013 | 2026-11-18 | agreed | by Martin
+D-013 | 2026-11-18 | implemented | GitHub classic rule on main: PR required (0 approvals), applies to admins, no force push, no deletion
