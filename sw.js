@@ -1,6 +1,6 @@
 // VICE HORIZON VI Service Worker：快取優先，第一次載入後可離線遊玩
 // 更新遊戲時，把 CACHE 的版本號改掉，玩家下次開啟就會下載新版本
-const CACHE = 'vh-2026-11-18-6';
+const CACHE = 'vh-2026-11-18-7';
 const PRECACHE = [
   "./",
   "./css/app.css",
@@ -87,12 +87,18 @@ const PRECACHE = [
   "./models/polyhaven/Models/jpg/1k/water_manhole_cover/water_manhole_cover_arm_1k.jpg",
   "./models/polyhaven/Models/jpg/1k/water_manhole_cover/water_manhole_cover_diff_1k.jpg",
   "./models/polyhaven/Models/jpg/1k/water_manhole_cover/water_manhole_cover_nor_gl_1k.jpg",
+  "./textures/polyhaven/aerial_grass_rock/aerial_grass_rock_diff_1k.jpg",
+  "./textures/polyhaven/aerial_grass_rock/aerial_grass_rock_nor_gl_1k.jpg",
   "./textures/polyhaven/asphalt_02/asphalt_02_nor_gl_1k.jpg",
   "./textures/polyhaven/asphalt_02/asphalt_02_rough_1k.jpg",
   "./textures/polyhaven/concrete_wall_008/concrete_wall_008_diff_1k.jpg",
   "./textures/polyhaven/concrete_wall_008/concrete_wall_008_nor_gl_1k.jpg",
   "./textures/polyhaven/red_brick_03/red_brick_03_diff_1k.jpg",
   "./textures/polyhaven/red_brick_03/red_brick_03_nor_gl_1k.jpg",
+  "./textures/polyhaven/rock_face/rock_face_diff_1k.jpg",
+  "./textures/polyhaven/rock_face/rock_face_nor_gl_1k.jpg",
+  "./textures/polyhaven/snow_02/snow_02_diff_1k.jpg",
+  "./textures/polyhaven/snow_02/snow_02_nor_gl_1k.jpg",
   "./textures/waternormals.jpg"
 ];
 

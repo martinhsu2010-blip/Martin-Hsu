@@ -64,6 +64,46 @@
         .neon-glow-cyan {
             box-shadow: 0 0 18px rgba(56, 189, 248, 0.55), inset 0 0 8px rgba(56, 189, 248, 0.3);
         }
+
+        /* ===== VICE HORIZON UI：統一的霓虹玻璃風格 (SVG 圖示取代 emoji) ===== */
+        :root { --vh-pink: #ff3d9a; --vh-cyan: #22d3ee; --vh-sun: #fbbf24; --vh-lime: #4ade80; --vh-rose: #fb7185; --vh-sky: #38bdf8; --vh-orange: #fb923c; --vh-slate: #cbd5e1; --vh-violet: #c084fc; }
+        .vh-pill {
+            --acc: var(--vh-cyan);
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 12px 6px 9px; border-radius: 999px;
+            font: 700 12px/1 'Rajdhani', 'Noto Sans TC', system-ui, sans-serif; letter-spacing: 0.05em;
+            color: #f8fafc;
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.9), rgba(2, 6, 23, 0.88));
+            border: 1px solid color-mix(in srgb, var(--acc) 45%, transparent);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 12px color-mix(in srgb, var(--acc) 22%, transparent);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+        .vh-pill svg, .vh-btn svg, .vh-badge svg { fill: none; stroke: var(--acc); stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px color-mix(in srgb, var(--acc) 70%, transparent)); }
+        .vh-pill svg { width: 15px; height: 15px; flex: none; }
+        .vh-pill .vh-sub { color: var(--acc); font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 0.08em; }
+        .vh-badge { --acc: var(--vh-sun); display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; font: 700 11px/1 'Rajdhani', 'Noto Sans TC', sans-serif; color: #fde68a; background: rgba(2, 6, 23, 0.82); border: 1px solid rgba(251, 191, 36, 0.35); }
+        .vh-badge svg { width: 12px; height: 12px; }
+        .vh-btn {
+            --acc: var(--vh-cyan);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+            font: 800 12px/1 'Rajdhani', 'Noto Sans TC', system-ui, sans-serif; letter-spacing: 0.06em; color: #f8fafc;
+            background: radial-gradient(120% 100% at 50% 0%, color-mix(in srgb, var(--acc) 28%, rgba(15, 23, 42, 0.9)), rgba(2, 6, 23, 0.9));
+            border: 1.5px solid color-mix(in srgb, var(--acc) 70%, transparent);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 16px color-mix(in srgb, var(--acc) 35%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .vh-btn svg { width: 22px; height: 22px; }
+        .vh-btn .vh-lbl { color: color-mix(in srgb, var(--acc) 55%, white); }
+        .vh-btn.vh-row { flex-direction: row; gap: 6px; padding: 0 14px; }
+        .vh-btn.vh-row svg { width: 18px; height: 18px; }
+        .vh-gas { --acc: var(--vh-lime); background: linear-gradient(0deg, rgba(255, 61, 154, 0.92), rgba(56, 189, 248, 0.88) 55%, rgba(74, 222, 128, 0.92)); border-color: rgba(255, 255, 255, 0.9); }
+        .vh-gas svg { stroke: #fff; width: 30px; height: 30px; }
+        .vh-gas .vh-lbl { color: #fff; font-size: 15px; }
+        .vh-steer { width: 84px; height: 84px; border-radius: 22px; }
+        .vh-steer svg { width: 44px; height: 44px; stroke-width: 2.6; }
+        @media (min-width: 640px) { .vh-steer { width: 96px; height: 96px; } }
+        .touch-btn.active-press.vh-btn, .vh-btn:active { filter: brightness(1.35); }
         .touch-btn {
             transition: transform 0.08s ease, filter 0.1s ease;
             touch-action: none;
@@ -233,7 +273,7 @@
                 </select>
             </label>
             <p id="gpu-info" class="text-[11px] text-gray-400 mt-2"></p>
-            <p class="text-[11px] text-gray-400 mt-3">操作方式：左搖桿只控制移動方向；在畫面空白處拖曳旋轉鏡頭，雙指捏合縮放。</p>
+            <p class="text-[11px] text-gray-400 mt-3">操作方式：步行時左搖桿控制方向；開車時左側為左 / 右轉向鍵，右側為油門、煞車、氮氣、手煞車。在畫面空白處拖曳旋轉鏡頭，雙指捏合縮放。</p>
         </div>
     </div>
 
@@ -249,37 +289,35 @@
                     OCEAN DRIVE
                 </div>
             </div>
-            <div class="hud-glass px-2 py-0.5 rounded-full text-[10px] font-bold text-amber-300 border border-amber-400/30 mt-0.5">
-                💎 補給箱: <span id="hud-crates">0/15</span>
-            </div>
+            <div class="vh-badge mt-0.5"><svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M10 3 8 9l4 12 4-12-2-6"/></svg>補給箱 <span id="hud-crates" class="font-vice text-[10px]">0/15</span></div>
         </div>
 
-        <!-- 中上：快捷功能按鈕列 (含「畫質：LOW / MED / HIGH」切換按鈕) -->
-        <div class="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 max-w-[290px] sm:max-w-2xl pointer-events-auto mt-0.5">
-            <button id="pill-quality" type="button" class="touch-btn hud-glass px-2.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-amber-300 border border-amber-400/80 shadow">
-                📺 畫質：HIGH
+        <!-- 中上：快捷功能按鈕列 (含「畫質」切換按鈕) -->
+        <div class="flex flex-wrap items-center justify-center gap-1.5 max-w-[300px] sm:max-w-2xl pointer-events-auto mt-0.5">
+            <button id="pill-quality" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sun)">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path d="m9 10 2 2 4-4"/></svg><span>畫質</span><span id="pill-quality-label" class="vh-sub">HIGH</span>
             </button>
-            <button id="pill-mission" type="button" class="touch-btn hud-glass px-2.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-emerald-300 border border-emerald-400/60 shadow">
-                🎯 任務
+            <button id="pill-mission" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-lime)">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg><span>任務</span>
             </button>
-            <button id="pill-garage" type="button" class="touch-btn hud-glass px-2.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-sky-300 border border-sky-400/60 shadow">
-                🔧 車庫
+            <button id="pill-garage" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-cyan)">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg><span>車庫</span>
             </button>
-            <button id="pill-cop-chase" type="button" class="touch-btn hud-glass px-2.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-rose-300 border border-rose-400/70 shadow">
-                🚓 警匪追逐
+            <button id="pill-cop-chase" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-rose)">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M7 18v-5a5 5 0 0 1 10 0v5"/><path d="M5 21h14v-3H5z"/><path d="M12 3v2M4.5 7l1.5 1.5M19.5 7 18 8.5"/></svg><span>警匪追逐</span>
             </button>
-            <button id="pill-radio" type="button" class="touch-btn hud-glass px-2.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-pink-200 border border-pink-400/50 flex items-center gap-1 shadow">
-                <span id="radio-dot" class="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span>
-                <span id="hud-radio">VICE FM</span>
+            <button id="pill-radio" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-pink)">
+                <span id="radio-dot" class="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
+                <span id="hud-radio" class="vh-sub" style="color:#fbcfe8">VICE FM</span>
             </button>
-            <button id="pill-cam" type="button" class="touch-btn hud-glass px-2.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-cyan-200 border border-cyan-400/50 shadow">
-                🎥 視角
+            <button id="pill-cam" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sky)">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><rect x="2" y="7" width="14" height="10" rx="2"/><path d="m16 11 6-3.5v9L16 13"/></svg><span>視角</span>
             </button>
-            <button id="pill-sky" type="button" class="touch-btn hud-glass px-2.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-orange-200 border border-orange-400/50 shadow">
-                🌤️ 天氣
+            <button id="pill-sky" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-orange)">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>天氣</span>
             </button>
-            <button id="pill-settings" type="button" class="touch-btn hud-glass px-2.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-slate-200 border border-slate-400/60 shadow">
-                ⚙️ 設定
+            <button id="pill-settings" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-slate)">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><span>設定</span>
             </button>
         </div>
 
@@ -301,7 +339,7 @@
                 </div>
                 <div class="flex items-baseline justify-end gap-1 border-t border-white/10 pt-0.5 mt-0.5">
                     <span id="hud-gear" class="text-[10px] font-vice font-bold px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-300 mr-1">FOOT</span>
-                    <span id="hud-speed" class="font-vice text-sm sm:text-lg font-black text-sky-300">0</span>
+                    <span id="hud-speed" class="font-vice text-xl sm:text-2xl font-black text-sky-300 leading-none">0</span>
                     <span class="text-[9px] font-bold text-gray-300">KM/H</span>
                 </div>
                 <!-- 引擎 RPM 轉速表與氮氣條 -->
@@ -349,18 +387,18 @@
         </div>
     </div>
 
-    <!-- ==================== 底部手機虛擬搖桿與操作按鈕 (BOTTOM MULTI-TOUCH CONTROLS) ==================== -->
+    <!-- ==================== 底部觸控按鈕 (步行：搖桿；駕駛：手遊賽車式 左右轉向鍵 + 油門 / 煞車) ==================== -->
     <div id="touch-controls" class="fixed bottom-0 inset-x-0 z-30 p-3 sm:p-5 flex items-end justify-between pointer-events-none">
 
-        <!-- 左下：360° 虛擬搖桿 -->
+        <!-- 左下：步行用 360° 虛擬搖桿 / 開車時換成左右轉向鍵 -->
         <div class="flex flex-col items-start gap-2 pointer-events-auto">
             <div id="joystick-zone" class="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full hud-glass border-2 border-sky-400/50 neon-glow-cyan flex items-center justify-center">
                 <div class="w-12 h-12 rounded-full border border-white/15 pointer-events-none"></div>
-                <div class="absolute top-2 text-[9px] text-sky-300/70 font-bold pointer-events-none">▲</div>
-                <div class="absolute bottom-2 text-[9px] text-sky-300/70 font-bold pointer-events-none">▼</div>
-                <div class="absolute left-2 text-[9px] text-sky-300/70 font-bold pointer-events-none">◀</div>
-                <div class="absolute right-2 text-[9px] text-sky-300/70 font-bold pointer-events-none">▶</div>
                 <div id="joystick-knob" class="w-14 h-14 rounded-full bg-gradient-to-br from-sky-400 via-blue-600 to-rose-500 border-2 border-white shadow-lg pointer-events-none"></div>
+            </div>
+            <div id="steer-cluster" class="hidden flex items-end gap-3">
+                <button id="btn-steer-left" type="button" class="touch-btn vh-btn vh-steer" style="--acc: var(--vh-cyan)" aria-label="左轉"><svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m15 5-7 7 7 7"/></svg></button>
+                <button id="btn-steer-right" type="button" class="touch-btn vh-btn vh-steer" style="--acc: var(--vh-cyan)" aria-label="右轉"><svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m9 5 7 7-7 7"/></svg></button>
             </div>
         </div>
 
@@ -369,46 +407,39 @@
 
             <!-- 喇叭 + 上下車按鈕 -->
             <div class="flex items-center gap-2">
-                <button id="btn-horn" type="button" class="touch-btn hud-glass px-3 py-2.5 rounded-2xl border-2 border-amber-400/70 flex items-center gap-1 shadow-xl">
-                    <span class="text-sm">📣</span>
-                    <span class="font-vice font-bold text-[11px] text-amber-300">喇叭</span>
+                <button id="btn-horn" type="button" class="touch-btn vh-btn vh-row h-11 rounded-2xl" style="--acc: var(--vh-sun)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M3 10v4h4l6 4V6L7 10z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12"/></svg><span class="vh-lbl">喇叭</span>
                 </button>
-                <button id="btn-car-action" type="button" class="touch-btn hud-glass px-4 py-2.5 rounded-2xl border-2 border-sky-400/80 flex items-center gap-2 shadow-xl pulse-car-action">
-                    <span class="text-base">🚘</span>
-                    <span id="btn-car-action-label" class="font-vice font-black text-xs sm:text-sm tracking-wide text-white">上車 / 召喚跑車</span>
+                <button id="btn-car-action" type="button" class="touch-btn vh-btn vh-row h-11 rounded-2xl pulse-car-action" style="--acc: var(--vh-sky)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M3 17v-4l2.2-5.2A2 2 0 0 1 7 6.5h10a2 2 0 0 1 1.8 1.3L21 13v4"/><path d="M3 13h18"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg><span id="btn-car-action-label" class="vh-lbl" style="color:#fff">上車 / 召喚跑車</span>
                 </button>
             </div>
 
             <!-- 步行控制群 (跳躍 & 衝刺) -->
             <div id="foot-controls-cluster" class="flex items-end gap-3">
-                <button id="btn-foot-jump" type="button" class="touch-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full hud-glass border-2 border-amber-400/70 flex flex-col items-center justify-center shadow-lg">
-                    <span class="text-lg leading-none">⬆️</span>
-                    <span class="font-vice font-bold text-[10px] sm:text-xs text-amber-300 mt-0.5">跳躍</span>
+                <button id="btn-foot-jump" type="button" class="touch-btn vh-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full" style="--acc: var(--vh-sun)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M12 19V5M5 12l7-7 7 7"/></svg><span class="vh-lbl">跳躍</span>
                 </button>
-                <button id="btn-foot-sprint" type="button" class="touch-btn w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr from-rose-600/85 to-sky-500/85 border-2 border-white/80 flex flex-col items-center justify-center shadow-xl neon-glow-pink">
-                    <span class="text-xl leading-none">⚡</span>
-                    <span class="font-vice font-black text-xs sm:text-sm text-white mt-0.5">跑步</span>
+                <button id="btn-foot-sprint" type="button" class="touch-btn vh-btn w-20 h-20 sm:w-24 sm:h-24 rounded-full" style="--acc: var(--vh-pink)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span class="vh-lbl">跑步</span>
                 </button>
             </div>
 
-            <!-- 駕駛控制群 (氮氣、手煞甩尾、煞車/倒車、油門) -->
+            <!-- 駕駛控制群 (氮氣、手煞車、煞車/倒車、油門) -->
             <div id="drive-controls-cluster" class="hidden flex items-end gap-2 sm:gap-2.5">
                 <div class="flex flex-col gap-2">
-                    <button id="btn-drive-nitro" type="button" class="touch-btn w-16 h-12 sm:w-20 sm:h-14 rounded-2xl bg-gradient-to-r from-blue-600/85 to-sky-400/85 border-2 border-sky-200 flex flex-col items-center justify-center shadow-lg">
-                        <span class="font-vice font-black text-xs text-white">🔥 氮氣</span>
+                    <button id="btn-drive-nitro" type="button" class="touch-btn vh-btn w-16 h-14 sm:w-20 sm:h-16 rounded-2xl" style="--acc: var(--vh-sky)">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M12 22c4 0 7-2.8 7-7 0-4.2-3.2-6-4.2-10-2 3-3 4-3.8 4 0-2-1-3.8-2-5-1 4-5 6-5 11 0 4.2 3.4 7 8 7z"/></svg><span class="vh-lbl">氮氣</span>
                     </button>
-                    <button id="btn-drive-drift" type="button" class="touch-btn w-16 h-14 sm:w-20 sm:h-16 rounded-2xl hud-glass border-2 border-amber-400/80 flex flex-col items-center justify-center shadow-lg">
-                        <span class="font-vice font-black text-xs text-amber-300">💨 手煞車</span>
+                    <button id="btn-drive-drift" type="button" class="touch-btn vh-btn w-16 h-14 sm:w-20 sm:h-16 rounded-2xl" style="--acc: var(--vh-sun)">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="9"/><path d="M10 16.5v-9h3a2.6 2.6 0 0 1 0 5.2h-3"/></svg><span class="vh-lbl">手煞車</span>
                     </button>
                 </div>
-                <button id="btn-drive-brake" type="button" class="touch-btn w-16 h-20 sm:w-20 sm:h-24 rounded-2xl hud-glass border-2 border-rose-400/80 flex flex-col items-center justify-center shadow-lg">
-                    <span class="text-xs font-bold text-rose-300">▼</span>
-                    <span class="font-vice font-black text-xs sm:text-sm text-rose-300">煞車</span>
-                    <span class="text-[9px] text-gray-300">倒車</span>
+                <button id="btn-drive-brake" type="button" class="touch-btn vh-btn w-16 h-24 sm:w-20 sm:h-28 rounded-2xl" style="--acc: var(--vh-rose)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m6 9 6 6 6-6"/></svg><span class="vh-lbl">煞車</span><span class="text-[9px] text-slate-300">倒車</span>
                 </button>
-                <button id="btn-drive-gas" type="button" class="touch-btn w-20 h-28 sm:w-24 sm:h-32 rounded-3xl bg-gradient-to-t from-rose-600/90 via-sky-500/85 to-emerald-400/90 border-2 border-white flex flex-col items-center justify-center shadow-xl neon-glow-pink">
-                    <span class="text-lg leading-none">▲</span>
-                    <span class="font-vice font-black text-base sm:text-lg text-white tracking-wider">油門</span>
+                <button id="btn-drive-gas" type="button" class="touch-btn vh-btn vh-gas w-20 h-32 sm:w-24 sm:h-36 rounded-3xl">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m6 15 6-6 6 6"/><path d="m6 20 6-6 6 6" opacity=".55"/></svg><span class="vh-lbl">油門</span>
                 </button>
             </div>
         </div>
@@ -515,17 +546,17 @@
             // pixelRatio: 最高像素比 | shadow: 陰影貼圖解析度 | bloom / ssao / smaa: 後製開關
             // fog: 霧氣濃度 (越小看越遠) | npcs / traffic: 行人與車流數量 | props: 物理道具數量倍率
             presets: {
-                PHONE_LOW:     { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 2, props: 0.5 },
-                PHONE_MED:     { pixelRatio: 1.5,  shadow: 1024, bloom: true,  ssao: false, smaa: false, fog: 0.0014, npcs: 10, traffic: 3, props: 0.75 },
-                TABLET_LOW:    { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 2, props: 0.5 },
-                TABLET_MED:    { pixelRatio: 1.5,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 3, props: 0.75 },
-                TABLET_HIGH:   { pixelRatio: 1.75, shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0011, npcs: 14, traffic: 3, props: 1.0 },
-                DESKTOP_MED:   { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0011, npcs: 16, traffic: 3, props: 1.0 },
-                DESKTOP_HIGH:  { pixelRatio: 2.0,  shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0010, npcs: 16, traffic: 4, props: 1.0 },
-                DESKTOP_ULTRA: { pixelRatio: 2.0,  shadow: 4096, bloom: true,  ssao: true,  smaa: true,  fog: 0.0006, npcs: 24, traffic: 6, props: 1.0 },
-                IGPU_LOW:      { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0016, npcs: 8,  traffic: 2, props: 0.6 },
-                IGPU_MED:      { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 3, props: 0.8 },
-                IGPU_HIGH:     { pixelRatio: 1.25, shadow: 2048, bloom: true,  ssao: false, smaa: true,  fog: 0.0011, npcs: 14, traffic: 3, props: 1.0 }
+                PHONE_LOW:     { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 4, props: 0.5 },
+                PHONE_MED:     { pixelRatio: 1.5,  shadow: 1024, bloom: true,  ssao: false, smaa: false, fog: 0.0014, npcs: 10, traffic: 5, props: 0.75 },
+                TABLET_LOW:    { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 5, props: 0.5 },
+                TABLET_MED:    { pixelRatio: 1.5,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 7, props: 0.75 },
+                TABLET_HIGH:   { pixelRatio: 1.75, shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0011, npcs: 14, traffic: 8, props: 1.0 },
+                DESKTOP_MED:   { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0011, npcs: 16, traffic: 9, props: 1.0 },
+                DESKTOP_HIGH:  { pixelRatio: 2.0,  shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0010, npcs: 16, traffic: 12, props: 1.0 },
+                DESKTOP_ULTRA: { pixelRatio: 2.0,  shadow: 4096, bloom: true,  ssao: true,  smaa: true,  fog: 0.0006, npcs: 24, traffic: 14, props: 1.0 },
+                IGPU_LOW:      { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0016, npcs: 8,  traffic: 5, props: 0.6 },
+                IGPU_MED:      { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 7, props: 0.8 },
+                IGPU_HIGH:     { pixelRatio: 1.25, shadow: 2048, bloom: true,  ssao: false, smaa: true,  fog: 0.0011, npcs: 14, traffic: 8, props: 1.0 }
             },
             // 陰影範圍 (公尺) 與行人顯示距離：等級越低越近，省下大量繪製
             shadowRange: { LOW: 60, MED: 85, HIGH: 110, ULTRA: 130 },
@@ -906,7 +937,7 @@
         sunLight.shadow.camera.top = shadowCamSize;
         sunLight.shadow.camera.bottom = -shadowCamSize;
         sunLight.shadow.bias = -0.0005;
-        sunLight.shadow.normalBias = 0.025;
+        sunLight.shadow.normalBias = 0.05;
         scene.add(sunLight);
         scene.add(sunLight.target);
 
@@ -1208,8 +1239,9 @@
                 HIGH: 'text-amber-300 border-amber-400/80',
                 ULTRA: 'text-fuchsia-300 border-fuchsia-400/80'
             };
-            btn.textContent = '📺 畫質：' + STATE.quality;
-            btn.className = 'touch-btn hud-glass px-2.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold border shadow ' + colors[STATE.quality];
+            const qLabel = document.getElementById('pill-quality-label');
+            if (qLabel) qLabel.textContent = STATE.quality;
+            btn.style.setProperty('--acc', { LOW: 'var(--vh-slate)', MED: 'var(--vh-sky)', HIGH: 'var(--vh-sun)', ULTRA: 'var(--vh-violet)' }[STATE.quality] || 'var(--vh-sun)');
             if (sunLight.shadow.map) {
                 sunLight.shadow.map.dispose();
                 sunLight.shadow.map = null;
@@ -1739,6 +1771,20 @@
                 { pts: denseLine([-120, 360], [-120, -360], 20), offset: 4.5 },
                 { pts: denseLine([-120, -360], [-240, -360], 20), offset: 4.5 }
             ]));
+            // R3：西南區環線 (第 -120 大道南下 → z -720 西行 → 第 -600 大道北上 → z -480 東行)
+            ROAD_NET.routes.push(buildRoute([
+                { pts: denseLine([-120, -480], [-120, -720], 20), offset: 4.5 },
+                { pts: denseLine([-120, -720], [-600, -720], 20), offset: 4.5 },
+                { pts: denseLine([-600, -720], [-600, -480], 20), offset: 4.5 },
+                { pts: denseLine([-600, -480], [-120, -480], 20), offset: 4.5 }
+            ]));
+            // R4：北區環線 (第 0 大道北上 → z 720 西行 → 第 -240 大道南下 → z 480 東行)
+            ROAD_NET.routes.push(buildRoute([
+                { pts: denseLine([0, 480], [0, 720], 20), offset: 4.5 },
+                { pts: denseLine([0, 720], [-240, 720], 20), offset: 4.5 },
+                { pts: denseLine([-240, 720], [-240, 480], 20), offset: 4.5 },
+                { pts: denseLine([-240, 480], [0, 480], 20), offset: 4.5 }
+            ]));
         })();
 
         // ---------- 道路視覺建模 ----------
@@ -1920,68 +1966,95 @@
                 }
             });
 
-            // 奇利亞德山 (Mount Chiliad) 寫實漸層岩壁地形 (草坡 → 陡峭灰岩 → 高山雪頂) + 100% 同步之 CANNON.Trimesh
+            // 奇利亞德山 (Mount Chiliad)：高解析地形 + Poly Haven 真實貼圖 (草地 / 岩壁 / 積雪) 依坡度與高度混合，物理 Trimesh 與視覺完全共用
             const hl = ROAD_NET.hill;
-            const nx = Math.round((hl.x1 - hl.x0) / hl.es) + 1;
-            const nz = Math.round((hl.z1 - hl.z0) / hl.es) + 1;
-            const tPos = [], tUv = [], tCol = [], tIdx = [];
+            const es = 6; // 網格間距 6 m (原本 10 m)
+            const nx = Math.round((hl.x1 - hl.x0) / es) + 1;
+            const nz = Math.round((hl.z1 - hl.z0) / es) + 1;
+            const tPos = [], tSplat = [], tIdx = [];
+            const hgt = new Float32Array(nx * nz);
             for (let j = 0; j < nz; j++) {
                 for (let i = 0; i < nx; i++) {
-                    const x = hl.x0 + i * hl.es, z = hl.z0 + j * hl.es;
+                    const x = hl.x0 + i * es, z = hl.z0 + j * es;
                     const y = terrainHeight(x, z);
+                    hgt[j * nx + i] = y;
                     tPos.push(x, y, z);
-                    tUv.push(i / 5, j / 5);
                 }
             }
+            // 全部頂點都貼地 (高度 ≈ 0) 的三角形不建：避免與城市地面重疊閃爍，也省下三角形
             for (let j = 0; j < nz - 1; j++) {
                 for (let i = 0; i < nx - 1; i++) {
                     const a = j * nx + i, b = a + 1, c = a + nx, d = c + 1;
+                    if (Math.max(hgt[a], hgt[b], hgt[c], hgt[d]) < 0.08) continue;
                     tIdx.push(a, c, b, b, c, d);
                 }
             }
             const terrainGeo = new THREE.BufferGeometry();
             terrainGeo.setAttribute('position', new THREE.Float32BufferAttribute(tPos, 3));
-            terrainGeo.setAttribute('uv', new THREE.Float32BufferAttribute(tUv, 2));
             terrainGeo.setIndex(tIdx);
             terrainGeo.computeVertexNormals();
-
-            // 根據高度與法線陡峭度計算頂點色彩 (低處山麓綠草、陡坡岩壁灰褐、山頂積雪岩層)
-            const normAttr = terrainGeo.attributes.normal;
-            const cGrass = new THREE.Color(0x3f6a2e);
-            const cDirt = new THREE.Color(0x6b5b47);
-            const cRock = new THREE.Color(0x57534e);
-            const cSnow = new THREE.Color(0xe2e8f0);
-            const tmpC = new THREE.Color();
+            // 混合權重：r 草地、g 岩壁、b 積雪 (依坡度、高度、與山路距離，再加一點雜訊讓交界自然)
+            const nAttr = terrainGeo.attributes.normal;
+            const hrd = ROAD_NET.hillRoad;
             for (let k = 0; k < tPos.length / 3; k++) {
-                const y = tPos[k * 3 + 1];
-                const ny = normAttr.getY(k);
-                const slope = 1 - THREE.MathUtils.clamp(ny, 0, 1);
-                if (y > 92) {
-                    tmpC.lerpColors(cRock, cSnow, THREE.MathUtils.clamp((y - 92) / 18 - slope * 0.8, 0, 0.85));
-                } else if (slope > 0.28 || y > 52) {
-                    tmpC.lerpColors(cDirt, cRock, THREE.MathUtils.clamp((slope - 0.2) * 2.5 + (y - 35) / 55, 0, 1));
-                } else {
-                    tmpC.lerpColors(cGrass, cDirt, THREE.MathUtils.clamp(slope * 2.4 + y / 75, 0, 1));
+                const x = tPos[k * 3], y = tPos[k * 3 + 1], z = tPos[k * 3 + 2];
+                const slope = 1 - THREE.MathUtils.clamp(nAttr.getY(k), 0, 1);
+                const noise = 0.5 + 0.5 * Math.sin(x * 0.11 + Math.cos(z * 0.07) * 2.0) * Math.cos(z * 0.09 - x * 0.03);
+                let rock = THREE.MathUtils.smoothstep(slope + noise * 0.12, 0.16, 0.34) + THREE.MathUtils.smoothstep(y, 55, 85) * 0.45;
+                let snow = THREE.MathUtils.smoothstep(y + noise * 6, 76, 92) * (1 - THREE.MathUtils.smoothstep(slope, 0.3, 0.55));
+                if (y > 2 && Math.abs(x - hrd.pts[0].x) < 2000) {
+                    const rd = hillRoadHeight(x, z).d;
+                    if (rd < hrd.half + 4) rock = Math.max(rock, 0.55); // 路肩碎石
                 }
-                tCol.push(tmpC.r, tmpC.g, tmpC.b);
+                rock = THREE.MathUtils.clamp(rock, 0, 1);
+                snow = THREE.MathUtils.clamp(snow, 0, 1);
+                const grass = Math.max(0, 1 - rock - snow);
+                const sum = grass + rock + snow || 1;
+                tSplat.push(grass / sum, rock / sum, snow / sum);
             }
-            terrainGeo.setAttribute('color', new THREE.Float32BufferAttribute(tCol, 3));
+            terrainGeo.setAttribute('splat', new THREE.Float32BufferAttribute(tSplat, 3));
 
-            const gc = document.createElement('canvas');
-            gc.width = 128; gc.height = 128;
-            const gctx = gc.getContext('2d');
-            gctx.fillStyle = '#cfcfcf';
-            gctx.fillRect(0, 0, 128, 128);
-            for (let k = 0; k < 1100; k++) {
-                gctx.fillStyle = (k % 2 === 0) ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.14)';
-                gctx.fillRect((k * 53) % 128, (k * 97) % 128, 2, 3);
-            }
-            const grassTex = new THREE.CanvasTexture(gc);
-            grassTex.wrapS = grassTex.wrapT = THREE.RepeatWrapping;
-            grassTex.colorSpace = THREE.SRGBColorSpace;
-            const terrain = new THREE.Mesh(terrainGeo, new THREE.MeshStandardMaterial({ map: grassTex, vertexColors: true, roughness: 0.92 }));
+            // 貼圖先用單色，Poly Haven 貼圖載完再換上 (離線版從 ./textures/polyhaven/ 讀)
+            const solidTex = hex => { const t = new THREE.DataTexture(new Uint8Array([(hex >> 16) & 255, (hex >> 8) & 255, hex & 255, 255]), 1, 1); t.colorSpace = THREE.SRGBColorSpace; t.needsUpdate = true; return t; };
+            const terrainU = {
+                tGrass: { value: solidTex(0x6f7a3e) },
+                tRock: { value: solidTex(0x7a5a43) },
+                tSnow: { value: solidTex(0xe8edf2) }
+            };
+            const terrainMat = new THREE.MeshStandardMaterial({ roughness: 0.95, metalness: 0.0 });
+            terrainMat.customProgramCacheKey = () => 'vh-terrain';
+            terrainMat.onBeforeCompile = sh => {
+                Object.assign(sh.uniforms, terrainU);
+                sh.vertexShader = sh.vertexShader
+                    .replace('#include <common>', '#include <common>\nattribute vec3 splat;\nvarying vec3 vSplat;\nvarying vec3 vTW;\nvarying vec3 vNW;')
+                    .replace('#include <begin_vertex>', '#include <begin_vertex>\nvSplat = splat;\nvTW = (modelMatrix * vec4(position, 1.0)).xyz;\nvNW = normalize(mat3(modelMatrix) * normal);');
+                sh.fragmentShader = sh.fragmentShader
+                    .replace('#include <common>', '#include <common>\nuniform sampler2D tGrass;\nuniform sampler2D tRock;\nuniform sampler2D tSnow;\nvarying vec3 vSplat;\nvarying vec3 vTW;\nvarying vec3 vNW;')
+                    .replace('#include <map_fragment>', `
+                        vec3 wn = normalize(vNW);
+                        vec3 bw = pow(abs(wn), vec3(4.0)); bw /= (bw.x + bw.y + bw.z);
+                        // 兩種尺度混合，消除重複紋理感
+                        vec3 cg = mix(texture2D(tGrass, vTW.xz * 0.05).rgb, texture2D(tGrass, vTW.xz * 0.012).rgb, 0.4);
+                        vec3 cr = texture2D(tRock, vTW.zy * 0.07).rgb * bw.x + texture2D(tRock, vTW.xz * 0.07).rgb * bw.y + texture2D(tRock, vTW.xy * 0.07).rgb * bw.z;
+                        vec3 cs = texture2D(tSnow, vTW.xz * 0.06).rgb;
+                        diffuseColor.rgb *= cg * vSplat.x + cr * vSplat.y + cs * vSplat.z;
+                    `);
+            };
+            (function loadTerrainTextures() {
+                const base = './textures/polyhaven/';
+                const loader = new THREE.TextureLoader();
+                [['tGrass', 'aerial_grass_rock'], ['tRock', 'rock_face'], ['tSnow', 'snow_02']].forEach(([u, name]) => {
+                    loader.load(base + name + '/' + name + '_diff_1k.jpg', tex => {
+                        tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+                        tex.colorSpace = THREE.SRGBColorSpace;
+                        tex.anisotropy = 4;
+                        terrainU[u].value = tex;
+                    });
+                });
+            })();
+            const terrain = new THREE.Mesh(terrainGeo, terrainMat);
             terrain.receiveShadow = true;
-            terrain.castShadow = true;
+            terrain.castShadow = false;
             scene.add(terrain);
             WORLD.cameraBlockers.push(terrain);
             const terrainBody = new CANNON.Body({ mass: 0, material: MAT_GROUND });
@@ -2016,23 +2089,68 @@
             posts.castShadow = true;
             scene.add(posts);
 
-            // 山腰高山松樹林 InstancedMesh
-            const treeMatrices = [];
-            for (let k = 0; k < 280 && treeMatrices.length < 110; k++) {
-                const x = hl.x0 + 25 + ((k * 73) % (hl.x1 - hl.x0 - 50));
-                const z = hl.z0 + 25 + ((k * 59) % (hl.z1 - hl.z0 - 50));
-                const th = hillBump(x, z);
-                if (th < 4.0 || th > 88.0 || hillRoadHeight(x, z).d < hr.half + 8) continue;
-                dmy.position.set(x, terrainHeight(x, z) + 4.2, z);
-                dmy.scale.setScalar(0.9 + (k % 6) * 0.16);
+            // 山區森林：三層松針 + 樹幹的松樹 (頂點色) 與散落的岩石，InstancedMesh 一次畫完
+            const pineParts = [];
+            const addPart = (geo, color, y) => {
+                geo.translate(0, y, 0);
+                const c = new THREE.Color(color), n = geo.attributes.position.count, col = new Float32Array(n * 3);
+                for (let k = 0; k < n; k++) { col[k * 3] = c.r; col[k * 3 + 1] = c.g; col[k * 3 + 2] = c.b; }
+                geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+                pineParts.push(geo.index ? geo.toNonIndexed() : geo);
+            };
+            addPart(new THREE.CylinderGeometry(0.22, 0.34, 3.2, 6), 0x5b3a24, 1.6);
+            addPart(new THREE.ConeGeometry(2.6, 3.6, 8), 0x2f5d34, 3.6);
+            addPart(new THREE.ConeGeometry(2.0, 3.2, 8), 0x356b3a, 5.4);
+            addPart(new THREE.ConeGeometry(1.3, 2.8, 8), 0x3c7a42, 7.1);
+            pineParts.forEach(g => { g.deleteAttribute('uv'); });
+            const pineGeo = mergeGeometries(pineParts);
+            pineGeo.computeVertexNormals();
+            const pineLimit = PROFILE === 'DESKTOP' ? 420 : 220;
+            const treeMatrices = [], treeColors = [];
+            const rockMatrices = [];
+            const tc = new THREE.Color();
+            for (let k = 0; k < 4000 && treeMatrices.length < pineLimit; k++) {
+                // 擬隨機分布 (黃金比例數列)，同一張地圖每次都一樣
+                const x = hl.x0 + 15 + ((k * 0.618034) % 1) * (hl.x1 - hl.x0 - 30);
+                const z = hl.z0 + 15 + ((k * 0.754877 + 0.31) % 1) * (hl.z1 - hl.z0 - 30);
+                const th = terrainHeight(x, z);
+                if (th < 3.0 || th > 80.0) continue;
+                const sl = (Math.abs(terrainHeight(x + 2, z) - th) + Math.abs(terrainHeight(x, z + 2) - th)) / 2;
+                if (hillRoadHeight(x, z).d < hr.half + 6) continue;
+                if (sl > 1.6) {
+                    if (rockMatrices.length < 140 && k % 2 === 0) {
+                        dmy.position.set(x, th - 0.3, z);
+                        dmy.rotation.set(k * 0.7, k * 1.3, k * 0.4);
+                        const s = 0.9 + (k % 5) * 0.45;
+                        dmy.scale.set(s * 1.3, s * 0.8, s);
+                        dmy.updateMatrix();
+                        rockMatrices.push(dmy.matrix.clone());
+                    }
+                    continue;
+                }
+                dmy.position.set(x, th - 0.2, z);
+                dmy.rotation.set(0, k * 2.4, 0);
+                const s = 0.75 + ((k * 7) % 10) * 0.07;
+                dmy.scale.set(s, s * (0.9 + (k % 4) * 0.08), s);
                 dmy.updateMatrix();
                 treeMatrices.push(dmy.matrix.clone());
+                treeColors.push(tc.setHSL(0.3 + (k % 7) * 0.008, 0.35 + (k % 3) * 0.08, 0.85 + (k % 5) * 0.05).clone());
             }
             dmy.scale.setScalar(1);
-            const pines = new THREE.InstancedMesh(new THREE.ConeGeometry(2.8, 8.8, 8), new THREE.MeshStandardMaterial({ color: 0x1e4620, roughness: 0.85 }), treeMatrices.length);
-            treeMatrices.forEach((m, i) => pines.setMatrixAt(i, m));
+            const pines = new THREE.InstancedMesh(pineGeo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.85, flatShading: true }), treeMatrices.length);
+            treeMatrices.forEach((m, i) => { pines.setMatrixAt(i, m); pines.setColorAt(i, treeColors[i]); });
             pines.castShadow = true;
+            pines.receiveShadow = true;
             scene.add(pines);
+            const rockGeo = new THREE.IcosahedronGeometry(1.2, 0);
+            const rp = rockGeo.attributes.position;
+            for (let k = 0; k < rp.count; k++) rp.setXYZ(k, rp.getX(k) * (0.8 + ((k * 13) % 5) * 0.1), rp.getY(k) * (0.7 + ((k * 7) % 4) * 0.12), rp.getZ(k));
+            rockGeo.computeVertexNormals();
+            const rocks = new THREE.InstancedMesh(rockGeo, new THREE.MeshStandardMaterial({ color: 0x8a7a6a, roughness: 0.95, flatShading: true }), rockMatrices.length);
+            rockMatrices.forEach((m, i) => rocks.setMatrixAt(i, m));
+            rocks.castShadow = true;
+            rocks.receiveShadow = true;
+            scene.add(rocks);
 
             // 奇利亞德山頂建築群：觀景台、纜車站、72m 紅白通訊電塔與山頂飛躍大跳台
             const sumX = -615, sumZ = 560;
@@ -3242,16 +3360,17 @@
             // 6. 【區域 2】聖塔克魯茲海濱遊樂園 (Santa Cruz Beach Boardwalk: Giant Dipper 雲霄飛車、自由落體塔、旋轉木馬、嘉年華攤位與摩天輪碼頭)
             const pierMat = new THREE.MeshStandardMaterial({ color: 0x6d4c3d, roughness: 0.85 });
             const boardwalkDeck = new THREE.Mesh(new THREE.BoxGeometry(108, 1.0, 560), pierMat);
-            boardwalkDeck.position.set(298, 0.1, -20);
+            boardwalkDeck.position.set(298, -0.35, -20);
+            addStaticBoxCollider(298, -0.35, -20, 54, 0.5, 280);
             boardwalkDeck.receiveShadow = true;
             scene.add(boardwalkDeck);
 
             // 延伸至海面上的摩天輪觀景長碼頭
             const pier = new THREE.Mesh(new THREE.BoxGeometry(150, 1.2, 48), pierMat);
-            pier.position.set(365, 0.2, 0);
+            pier.position.set(365, -0.25, 0);
             pier.receiveShadow = true;
             scene.add(pier);
-            addStaticBoxCollider(365, 0.2, 0, 75, 0.6, 24);
+            addStaticBoxCollider(365, -0.25, 0, 75, 0.6, 24);
             addStaticBoxCollider(365, 1.6, -23.5, 75, 1.2, 0.6);
             addStaticBoxCollider(365, 1.6, 23.5, 75, 1.2, 0.6);
             addStaticBoxCollider(439, 1.6, 0, 0.8, 1.2, 24);
@@ -3368,7 +3487,7 @@
             // 6D. 夢幻旋轉木馬亭 (Carousel Pavilion)
             const carX = 278, carZ = 85;
             const carouselGroup = new THREE.Group();
-            carouselGroup.position.set(carX, 0.6, carZ);
+            carouselGroup.position.set(carX, 0.15, carZ);
             const carouselBase = new THREE.Mesh(
                 new THREE.CylinderGeometry(10, 10.5, 0.8, 24),
                 new THREE.MeshStandardMaterial({ color: 0xfef08a, roughness: 0.4 })
@@ -3408,11 +3527,11 @@
                     new THREE.BoxGeometry(16, 8.5, 24),
                     new THREE.MeshStandardMaterial({ color: arcadeColors[idx % arcadeColors.length], roughness: 0.55 })
                 );
-                booth.position.set(264, 4.75, bz);
+                booth.position.set(264, 4.4, bz);
                 booth.castShadow = true;
                 booth.receiveShadow = true;
                 scene.add(booth);
-                addStaticBoxCollider(264, 4.75, bz, 8, 4.25, 12);
+                addStaticBoxCollider(264, 4.4, bz, 8, 4.25, 12);
             });
 
             // 6F. 海濱碼頭霓虹摩天輪
@@ -3469,10 +3588,10 @@
 
             // 8. 【區域 4】星光遊艇碼頭 (Starlight Marina & Bobbing Luxury Yachts)
             const marinaDock = new THREE.Mesh(new THREE.BoxGeometry(90, 1.2, 30), pierMat);
-            marinaDock.position.set(355, 0.2, 340);
+            marinaDock.position.set(355, -0.25, 340);
             marinaDock.receiveShadow = true;
             scene.add(marinaDock);
-            addStaticBoxCollider(355, 0.2, 340, 45, 0.6, 15);
+            addStaticBoxCollider(355, -0.25, 340, 45, 0.6, 15);
 
             for (let y = 0; y < 3; y++) {
                 const yacht = new THREE.Group();
@@ -4460,7 +4579,7 @@
                 scene.add(this.chassisGroup);
 
                 if (STATE.ferrariTemplate) {
-                    this.applyFerrariModel(STATE.ferrariTemplate);
+                    this.applyFerrariModel(this.isAI ? (STATE.ferrariFar || STATE.ferrariLOD || STATE.ferrariTemplate) : STATE.ferrariTemplate);
                 }
             }
 
@@ -4685,7 +4804,8 @@
             // 【升級 4】套用官方 ferrari.glb 模型，綁定清漆車身、透明車窗並同步四顆原廠輪框至物理輪胎
             // 玩家正在開的車用完整模型，其他車用低面數模型
             setDetail(full) {
-                const tpl = full ? STATE.ferrariTemplate : (STATE.ferrariLOD || STATE.ferrariTemplate);
+                const lodTpl = (this.isAI && STATE.ferrariFar) ? STATE.ferrariFar : STATE.ferrariLOD;
+                const tpl = full ? STATE.ferrariTemplate : (lodTpl || STATE.ferrariTemplate);
                 if (!tpl || this.modelTemplate === tpl) return;
                 if (this.carModel) this.bodyPivot.remove(this.carModel);
                 (this.wheelClones || []).forEach(w => w.parent && w.parent.remove(w));
@@ -4861,8 +4981,39 @@
                 this.wheelMeshes.forEach(w => { w.visible = visible; });
             }
 
+            // 山區地形支撐：車頭、車身中心、車尾三個點都不能低於地形 (避免衝進山坡後整台掉到山體下面)
+            supportOnTerrain() {
+                const hl = ROAD_NET.hill;
+                const b = this.chassisBody, p = b.position;
+                if (p.x < hl.x0 - 5 || p.x > hl.x1 + 5 || p.z < hl.z0 - 5 || p.z > hl.z1 + 5) return;
+                let lift = 0;
+                const tmp = new CANNON.Vec3();
+                for (const lz of [0, 1.9, -1.9]) {
+                    b.pointToWorldFrame(new CANNON.Vec3(0, -0.12, lz), tmp);
+                    const tH = terrainHeight(tmp.x, tmp.z);
+                    lift = Math.max(lift, tH + 0.05 - tmp.y);
+                }
+                if (lift > 0) {
+                    p.y += lift;
+                    if (b.velocity.y < 0) b.velocity.y = 0;
+                    // 撞上陡坡時順著坡面往上滑，不是直接卡住
+                    b.velocity.x *= 0.98;
+                    b.velocity.z *= 0.98;
+                }
+            }
+
             update(dt) {
                 if (!this.chassisGroup.visible) return;
+                this.supportOnTerrain();
+                // 遠處 (420 m 外) 的 AI 車只跑物理不畫
+                if (this.isAI) {
+                    const hide = camera.position.distanceToSquared(this.chassisGroup.position) > 420 * 420;
+                    if (hide !== this._hidden) {
+                        this._hidden = hide;
+                        this.bodyPivot.visible = !hide;
+                        this.wheelMeshes.forEach(w => { w.visible = !hide; });
+                    }
+                }
 
                 const isPlayer = (STATE.mode === 'CAR' && STATE.currentVehicle === this);
 
@@ -4930,8 +5081,10 @@
                     else if (INPUT.left) steerInput = 1;
                     else if (INPUT.right) steerInput = -1;
 
+                    const steerRate = INPUT.joyActive ? 20 : (steerInput === 0 ? 6 : 4);
+                    this.steerSmooth = (this.steerSmooth || 0) + THREE.MathUtils.clamp(steerInput - (this.steerSmooth || 0), -steerRate * dt, steerRate * dt);
                     const speedFactor = Math.max(0.42, 1.0 - Math.abs(forwardSpeed) / 78);
-                    const steerVal = steerInput * 0.50 * speedFactor;
+                    const steerVal = this.steerSmooth * 0.50 * speedFactor;
                     this.vehicle.setSteeringValue(steerVal, 0);
                     this.vehicle.setSteeringValue(steerVal, 1);
 
@@ -5094,13 +5247,22 @@
                 { name: 'Pearl Spider', color: 0xeef1f4, livery: 'stripes', color2: 0x1e3a8a, x: 5, z: -110, aiDir: 1, isAI: true },
                 { name: 'Graphite Roma', color: 0x4b5563, finish: 'matte', x: -5, z: 120, aiDir: -1, isAI: true },
                 { name: 'Sunset Portofino', color: 0xea580c, livery: 'twotone', color2: 0x0b0d12, x: 115, z: 260, aiDir: 1, isAI: true },
-                { name: 'Vice Cab 2', color: 0xf2b705, livery: 'taxi', x: 105, z: -280, aiDir: -1, isAI: true }
+                { name: 'Vice Cab 2', color: 0xf2b705, livery: 'taxi', x: 105, z: -280, aiDir: -1, isAI: true },
+                { name: 'Midnight Roma', color: 0x0f172a, x: 0, z: 0, isAI: true },
+                { name: 'Arctic Corsa', color: 0xf1f5f9, x: 0, z: 0, isAI: true },
+                { name: 'Navy Spider', color: 0x1e3a8a, x: 0, z: 0, isAI: true },
+                { name: 'Gunmetal GT', color: 0x374151, x: 0, z: 0, isAI: true },
+                { name: 'Vice Cab 3', color: 0xf2b705, livery: 'taxi', x: 0, z: 0, isAI: true },
+                { name: 'Wine Roma', color: 0x7f1d1d, x: 0, z: 0, isAI: true },
+                { name: 'Silver Spider', color: 0x9ca3af, finish: 'matte', x: 0, z: 0, isAI: true },
+                { name: 'Mint Portofino', color: 0xa7f3d0, livery: 'twotone', color2: 0x0b0d12, x: 0, z: 0, isAI: true }
             ].slice(0, DENSITY.traffic).forEach((cfg, k) => {
                 const car = new RealisticRaycastVehicle(cfg);
-                // 平均分配到三條路線上，並沿路線錯開位置
-                const routeId = k % ROAD_NET.routes.length;
-                const slot = Math.floor(k / ROAD_NET.routes.length);
-                car.placeOnRoute(routeId, Math.floor(ROAD_NET.routes[routeId].length * (0.15 + slot * 0.5)));
+                // 平均分配到各條路線上，並沿路線錯開位置
+                const nR = ROAD_NET.routes.length;
+                const routeId = k % nR;
+                const slot = Math.floor(k / nR);
+                car.placeOnRoute(routeId, Math.floor(ROAD_NET.routes[routeId].length * ((0.12 + slot * 0.37) % 1)));
                 WORLD.vehicles.push(car);
             });
 
@@ -5130,9 +5292,10 @@
                     (gltf) => {
                         STATE.ferrariTemplate = gltf.scene;
                         // 先全部套用完整模型，等簡化版做好後，非玩家車輛改用低面數版本
-                        WORLD.vehicles.forEach(v => v.applyFerrariModel(STATE.ferrariTemplate));
-                        buildFerrariLOD(gltf.scene).then(lod => {
+                        WORLD.vehicles.forEach(v => { if (!v.isAI) v.applyFerrariModel(STATE.ferrariTemplate); });
+                        buildFerrariLOD(gltf.scene).then(async lod => {
                             STATE.ferrariLOD = lod;
+                            try { STATE.ferrariFar = await buildFerrariFar(lod); } catch (e) { console.warn('[VH] 遠景車模型失敗', e); }
                             WORLD.vehicles.forEach(v => v.setDetail(v === STATE.currentVehicle && STATE.mode === 'CAR'));
                         }).catch(() => {});
                     },
@@ -5210,6 +5373,44 @@
                 list.forEach(o => o.parent && o.parent.remove(o));
             });
             return lod;
+        }
+
+        // 路上 AI 車專用的遠景模型：車身先依位置焊接頂點 (消除 UV/法線接縫) 再簡化成約 1.2 萬面，內裝整個拿掉
+        async function buildFerrariFar(lod) {
+            const mod = await import('./libs/meshoptimizer/meshopt_simplifier.js');
+            const S = mod.MeshoptSimplifier;
+            await S.ready;
+            const far = lod.clone(true);
+            const drop = [];
+            far.traverse(o => {
+                if (!o.isMesh || Array.isArray(o.material)) return;
+                const mn = (o.material.name || '').toLowerCase(), n = (o.name || '').toLowerCase();
+                for (let p = o; p && p !== far; p = p.parent) if ((p.name || '').toLowerCase().startsWith('wheel')) return;
+                if (/interior|leather|carpet|steering|blue/.test(mn + ' ' + n)) { drop.push(o); return; }
+                if (!(n.startsWith('body') || mn === 'body_color')) return;
+                const src = o.geometry;
+                const pos = src.attributes.position.array, idx = src.index ? src.index.array : null;
+                if (!idx) return;
+                const key = new Map(), remap = new Uint32Array(pos.length / 3), P = [];
+                for (let v = 0; v < remap.length; v++) {
+                    const k = Math.round(pos[v * 3] * 2000) + ',' + Math.round(pos[v * 3 + 1] * 2000) + ',' + Math.round(pos[v * 3 + 2] * 2000);
+                    let id = key.get(k);
+                    if (id === undefined) { id = P.length / 3; key.set(k, id); P.push(pos[v * 3], pos[v * 3 + 1], pos[v * 3 + 2]); }
+                    remap[v] = id;
+                }
+                const I = new Uint32Array(idx.length);
+                for (let i = 0; i < idx.length; i++) I[i] = remap[idx[i]];
+                const Pf = new Float32Array(P);
+                const [out] = S.simplify(I, Pf, 3, Math.floor(idx.length * 0.15 / 3) * 3, 0.004, []);
+                const g = new THREE.BufferGeometry();
+                g.setAttribute('position', new THREE.BufferAttribute(Pf, 3));
+                g.setIndex(new THREE.BufferAttribute(out, 1));
+                g.computeVertexNormals();
+                g.computeBoundingSphere();
+                o.geometry = g;
+            });
+            drop.forEach(o => o.parent && o.parent.remove(o));
+            return far;
         }
 
         // ==================== 9. 物理物件 InstancedMesh 同步、Water.js 動畫與警匪追捕系統 ====================
@@ -5410,6 +5611,13 @@
             const drive = document.getElementById('drive-controls-cluster');
             const nitro = document.getElementById('hud-nitro-wrap');
             const rpmWrap = document.getElementById('hud-rpm-wrap');
+            const joy = document.getElementById('joystick-zone');
+            const steer = document.getElementById('steer-cluster');
+            if (joy && steer) {
+                joy.classList.toggle('hidden', STATE.mode === 'CAR');
+                steer.classList.toggle('hidden', STATE.mode !== 'CAR');
+            }
+            if (STATE.mode !== 'CAR') { INPUT.left = false; INPUT.right = false; }
             if (STATE.mode === 'CAR') {
                 foot.classList.add('hidden');
                 drive.classList.remove('hidden');
@@ -5929,6 +6137,8 @@
             bindHold('btn-drive-brake', 'backward');
             bindHold('btn-drive-drift', 'space');
             bindHold('btn-drive-nitro', 'shift');
+            bindHold('btn-steer-left', 'left');
+            bindHold('btn-steer-right', 'right');
 
             // 畫質：LOW / MED / HIGH 三段循環切換
             document.getElementById('pill-quality').addEventListener('click', () => {
@@ -6383,7 +6593,7 @@
         requestAnimationFrame(animate);
 
         // 除錯用：在瀏覽器主控台輸入 __VH 可查看遊戲狀態
-        window.__VH = { RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
+        window.__VH = { __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
     </script>
 </body>
 </html>
