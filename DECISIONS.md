@@ -51,3 +51,6 @@ D-012 | 2026-11-18 | implemented | AGENTS.md and CI (PR = warning, main = failur
 ## D-013 Protect `main` on GitHub (require PR, no force push)
 D-013 | 2026-11-18 | agreed | by Martin
 D-013 | 2026-11-18 | implemented | GitHub classic rule on main: PR required (0 approvals), applies to admins, no force push, no deletion
+
+## D-014 Economy Balance Specification v1.0 approved for T-001B
+D-014 | 2026-11-18 | agreed | Martin approved T-001A Economy Balance Specification v1.0, covering purchase-time targets, delivery rewards/time limits, stunt and mission payouts, reward cooldowns, and save compatibility. Implementation assigned to Codex as T-001B; full specification in TASKS.md.
