@@ -4,38 +4,7 @@
 (none)
 
 ## Ready for Codex
-### T-001B Economy implementation
-Owner: Codex
-Reviewer: Claude
-Priority: P1
-Depends on: T-001A
-Base commit: Latest `main` after approved documentation is merged
-Branch/PR: `codex/T-001B-economy` / pending
-Output: Minimal implementation PR following the complete approved T-001A specification above.
-
-Acceptance:
-
-1. Apply all approved reward and time formulas.
-2. Preserve existing car prices, six depots and game features.
-3. Implement ramp, airtime, mission and police reward cooldowns.
-4. Prevent duplicate rewards and fast-travel delivery shortcuts.
-5. Preserve all existing save fields and owned cars.
-6. Persist new crate and cooldown information safely.
-7. Pass `python3 tools/test/syntax_check.py`.
-8. Report actual automated/headless checks without claiming unperformed real-device testing.
-9. Claude reviews correctness, regressions, mobile effects, and save compatibility.
-10. Martin performs final gameplay acceptance.
-
-Verification: Implementation not started; pending Codex PR and Claude review.
-
-**Reviewer notes (Claude, after reading the current code; these clarify how the approved spec meets the existing game and change NO approved value. Codex follows them unless Martin objects):**
-
-1. *An airtime reward already exists* (`this.airTime * 500`, no cap, min 0.65 s, 10 s guard after a ramp). Replace it with the approved formula. Do not add a second payout path.
-2. *Crates already exist* (15, HUD `n/15`) and pay $1,000 per pickup, reset every session. Change to $400, once per save via `collectedCrates`. In an old save the field is missing, so all 15 can be collected once more; this is accepted by the spec (old collections are not reconstructed).
-3. *Existing payouts to replace:* police escape currently pays $2,000 (spec: $600, 600 s cooldown); arrest fine is already −$300 (keep); missions pay through `finishMission(reward)`, so the three mission types need an id each. If the game has a mission type the spec does not list, leave its payout unchanged and say so in the PR.
-4. *Cooldowns must survive a reload.* `STATE.time` restarts at 0 on load, so store cooldown expiry as wall-clock time (`Date.now()`) in `rewardCooldowns`; the UI shows the remaining seconds. Treat a missing or non-numeric value as "no cooldown".
-5. *Starting cash is already $3,500* (new saves only); do not touch existing saves' cash.
-6. Spec arithmetic was checked: the delivery table and both progression scenarios add up. Half-dollar cases (for example 365 → $370) round up, as in `Math.round`.
+(none)
 
 ## In review
 (none)
@@ -54,6 +23,30 @@ Why: archives had no license text; needed before any public sharing.
 
 ## Done
 - T-000 Collaboration docs created and migrated to COLLAB v2 (2026-11-18)
+
+### T-001B Economy implementation
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-001A
+Base commit: Latest `main` after approved documentation is merged
+Branch/PR: `codex/T-001B-economy` / PR #3 (squash-merged 0412cbd)
+Output: Minimal implementation PR following the complete approved T-001A specification above.
+
+Acceptance:
+
+1. Apply all approved reward and time formulas.
+2. Preserve existing car prices, six depots and game features.
+3. Implement ramp, airtime, mission and police reward cooldowns.
+4. Prevent duplicate rewards and fast-travel delivery shortcuts.
+5. Preserve all existing save fields and owned cars.
+6. Persist new crate and cooldown information safely.
+7. Pass `python3 tools/test/syntax_check.py`.
+8. Report actual automated/headless checks without claiming unperformed real-device testing.
+9. Claude reviews correctness, regressions, mobile effects, and save compatibility.
+10. Martin performs final gameplay acceptance.
+
+Verification: Claude review approved. CI check+syntax pass. Headless Chrome on the PR build: delivery 974 m → reward 1520, limit 183, early pay 1820 (matches formula); DRIFT/RACE/STUNT pay 1200/1400/1600 once, replay inside cooldown pays $0; crate +$400 once, persists across reload; no page errors. Claude fixed stale mission-menu reward text. NOT auto-verified: airborne reward trigger/cap, ramp repeat cooldown feel, real-device performance → Martin to check in play. Non-blocking: clamp cooldown if system clock moves backwards.
 
 ### T-001A Economy balance spec
 Owner: ChatGPT
