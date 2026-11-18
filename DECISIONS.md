@@ -55,3 +55,7 @@ D-013 | 2026-11-18 | implemented | GitHub classic rule on main: PR required (0 a
 ## D-014 Economy Balance Specification v1.0 approved for T-001B
 D-014 | 2026-11-18 | agreed | Martin approved T-001A Economy Balance Specification v1.0, covering purchase-time targets, delivery rewards/time limits, stunt and mission payouts, reward cooldowns, and save compatibility. Implementation assigned to Codex as T-001B; full specification in TASKS.md.
 D-014 | 2026-11-18 | implemented | PR #3, commit 0412cbd (game vh-2026-11-18-13); Martin final gameplay acceptance pending.
+
+## D-015 Immersive UX overhaul scope (T-003)
+D-015 | 2026-11-19 | proposed | ChatGPT proposed an immersive UX overhaul (lower/closer camera, minimap-driven Game Hub, racing-style pedals, localization), split into T-003B..E. Claude reviewed feasibility (see TASKS T-003A).
+D-015 | 2026-11-19 | agreed | Martin: language is switchable via a UI setting (not English-only); pedal changes are look/layout only with unchanged input behavior; target devices Samsung S26 Ultra and Samsung Tab S11. Full spec still needs Martin approval before any implementation.

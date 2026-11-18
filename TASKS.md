@@ -1,7 +1,35 @@
 # Task board (rules: COLLAB.md v3). One Owner per task. One active code PR at a time.
 
 ## Ready for ChatGPT
-(none)
+### T-003A Immersive UX overhaul — design (proposal, NOT approved for implementation)
+Owner: ChatGPT
+Reviewer: Claude
+Priority: P1
+Depends on: T-001B (done)
+Base commit: `main` at spec approval
+Branch/PR: Not applicable to design
+Output: Complete spec for the sequential tasks T-003B..E below, then Martin approval.
+
+Claude review (2026-11-19, `index.html` at 4d3a391):
+- Camera: chase camera already has distance/pitch/collision/FOV/shake; lowering = tuning constants. Put all defaults in one named constant block. Watch camera-collision jitter when low and shorter forward view at speed. Hood and bird views unchanged.
+- HUD/minimap: no minimap exists (only fullscreen world map, 2D canvas). Minimap = small 2D canvas reusing road data, ~10 Hz update, no extra Three.js render, disabled/reduced on low quality. Add safe-area insets; landscape small screens must not cover joystick/buttons.
+- Game Hub: 8 pill buttons today. Hub only groups them; keep existing feature IDs and the `closeModals` flow. No new features in v1.
+- Input: keep binary forward/backward/left/right (INPUT). Pedal redesign is look/layout only in v1. Analog throttle is a separate later task.
+- Localization: one string table, language switch in the settings UI, language saved in `vh_save` (new field, backward compatible). CI check: no CJK in visible JS/HTML text outside the string table/comments. Watch dynamically built strings (e.g. showBanner args) and longer English text overflowing layouts.
+
+Martin answers (2026-11-19):
+1. Languages: switchable, with a language setting in the UI (not English-only).
+2. Pedals: v1 changes look/layout only, input behavior unchanged.
+3. Target devices: Samsung S26 Ultra (phone) and Samsung Tab S11 (tablet). Performance baseline to be defined by ChatGPT in the spec; must hold on both, tablet landscape layout included.
+
+Proposed task order (one code PR at a time):
+- T-003B Camera tuning
+- T-003C Responsive HUD + minimap (+ pedal look)
+- T-003D Game Hub (on the new HUD)
+- T-003E Language system + English translation (switchable zh-TW/en)
+Analog throttle: separate, only if Martin asks after playing.
+
+Verification: `proposed` — review only; no code changed, no measurements.
 
 ## Ready for Codex
 (none)
