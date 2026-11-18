@@ -287,6 +287,9 @@
         <div class="flex flex-col items-center gap-1 pointer-events-auto">
             <div id="radar-container" class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-sky-500 via-slate-600 to-rose-500 shadow-lg cursor-pointer">
                 <canvas id="radar-canvas" width="140" height="140" class="w-full h-full rounded-full bg-[#090d16] block"></canvas>
+                <div class="absolute -right-0.5 top-1 w-6 h-6 rounded-full flex items-center justify-center border border-cyan-300/70" style="background: rgba(2,6,23,0.92); box-shadow: 0 0 10px rgba(34,211,238,0.5);">
+                    <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none" stroke="#67e8f9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>
+                </div>
                 <div class="absolute top-0.5 left-1/2 -translate-x-1/2 text-[8px] font-vice font-black text-sky-300 bg-black/80 px-1 rounded">N</div>
                 <div id="radar-zone" class="absolute -bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-vice font-bold text-white bg-slate-900/95 px-2 py-0.5 rounded-full border border-white/30 shadow">
                     OCEAN DRIVE
@@ -448,6 +451,39 @@
         </div>
     </div>
 
+    <!-- ==================== 全螢幕世界地圖 (點左上雷達開啟)：拖曳平移、捏合 / 滾輪縮放、點選地點快速穿梭或設導航點 ==================== -->
+    <div id="world-map" class="hidden fixed inset-0 z-[60] flex flex-col" style="background: radial-gradient(120% 120% at 50% 0%, #0f172a, #020617);">
+        <div class="flex items-center gap-2 px-3 sm:px-5 pt-3 pb-2">
+            <div class="font-vice font-black text-sm sm:text-base tracking-wider bg-gradient-to-r from-sky-300 via-fuchsia-300 to-amber-200 bg-clip-text text-transparent">VICE HORIZON 地圖</div>
+            <div class="text-[11px] text-slate-400 hidden sm:block">拖曳移動・捏合 / 滾輪縮放・點選地點</div>
+            <div class="ml-auto flex items-center gap-1.5">
+                <button id="wm-zoom-out" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sky)"><span class="vh-sub" style="font-size:14px">−</span></button>
+                <button id="wm-zoom-in" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sky)"><span class="vh-sub" style="font-size:14px">＋</span></button>
+                <button id="wm-center" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-lime)"><span>回到我</span></button>
+                <button id="wm-close" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-rose)"><span>關閉</span></button>
+            </div>
+        </div>
+        <div id="wm-chips" class="flex gap-1.5 px-3 sm:px-5 pb-2 overflow-x-auto modal-scroll" style="touch-action: pan-x;"></div>
+        <div class="relative flex-1 mx-2 sm:mx-4 mb-2 rounded-2xl overflow-hidden border border-white/10">
+            <canvas id="wm-canvas" class="absolute inset-0 w-full h-full" style="touch-action: none;"></canvas>
+            <div id="wm-panel" class="hidden absolute left-1/2 -translate-x-1/2 bottom-3 w-[min(92%,420px)] rounded-2xl px-4 py-3 border border-white/15" style="background: rgba(2,6,23,0.92); backdrop-filter: blur(10px);">
+                <div class="flex items-center gap-2">
+                    <div id="wm-sel-icon" class="text-xl">📍</div>
+                    <div class="min-w-0">
+                        <div id="wm-sel-name" class="font-vice font-black text-sm text-white truncate">—</div>
+                        <div id="wm-sel-sub" class="text-[11px] text-slate-400">—</div>
+                    </div>
+                </div>
+                <div class="flex gap-2 mt-3">
+                    <button id="wm-travel" type="button" class="touch-btn vh-btn vh-row h-11 rounded-xl flex-1" style="--acc: var(--vh-pink)"><span class="vh-lbl" style="color:#fff">⚡ 快速穿梭</span></button>
+                    <button id="wm-waypoint" type="button" class="touch-btn vh-btn vh-row h-11 rounded-xl flex-1" style="--acc: var(--vh-sun)"><span class="vh-lbl">設為導航點</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 快速穿梭的轉場黑幕 -->
+    <div id="travel-fade" class="fixed inset-0 z-[70] pointer-events-none bg-black opacity-0" style="transition: opacity 0.28s ease;"></div>
+
 
     <!-- ==================== PWA：安裝按鈕與 iPhone/iPad 提示 ==================== -->
     <button id="pwa-install-btn" type="button" class="hidden fixed z-50 left-1/2 -translate-x-1/2 bottom-24 px-5 py-3 rounded-2xl font-vice font-black text-sm bg-gradient-to-r from-rose-600 via-sky-600 to-emerald-500 text-white shadow-xl border-2 border-white/80">📲 安裝遊戲到主畫面</button>
@@ -524,7 +560,7 @@
     <div id="desktop-hints" class="hidden fixed bottom-3 left-3 z-30 hud-glass rounded-2xl px-3 py-2 text-[11px] leading-5 text-gray-200 border border-white/15 pointer-events-none">
         <div class="font-vice font-bold text-sky-300 text-xs mb-0.5">⌨️ 鍵盤 / 滑鼠</div>
         <div><b class="text-white">WASD</b> 移動 / 駕駛　<b class="text-white">Shift</b> 跑步 / 氮氣</div>
-        <div><b class="text-white">Space</b> 跳躍 / 手煞車　<b class="text-white">F</b> 上下車</div>
+        <div><b class="text-white">Space</b> 跳躍 / 手煞車　<b class="text-white">F</b> 上下車　<b class="text-white">M</b> 地圖</div>
         <div><b class="text-white">滑鼠拖曳</b> 旋轉鏡頭　<b class="text-white">滾輪</b> 縮放　<b class="text-white">K</b> 碰撞線框</div>
     </div>
 
@@ -3087,6 +3123,7 @@
                     }
                 }
             });
+            WORLD.suburbHouses = houses;
             if (!houses.length) return;
 
             // 房屋外牆貼圖：米白壁板 + 窗戶 + 門 (正面)
@@ -6692,6 +6729,13 @@
                 ctx.fillStyle = '#fbbf24';
                 ctx.beginPath(); ctx.arc(mx, mz, 4.5, 0, Math.PI * 2); ctx.fill();
             }
+            if (STATE.waypoint) {
+                let wx = (STATE.waypoint.x - pos.x) * scale, wz = (STATE.waypoint.z - pos.z) * scale;
+                const wd = Math.hypot(wx, wz);
+                if (wd > 58) { wx = wx / wd * 58; wz = wz / wd * 58; }
+                ctx.fillStyle = '#fbbf24'; ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.arc(wx, wz, 5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+            }
             ctx.restore();
 
             ctx.fillStyle = '#ffffff';
@@ -6701,6 +6745,305 @@
             ctx.lineTo(cx + 4.5, cy + 4.5);
             ctx.closePath();
             ctx.fill();
+        }
+
+
+        // ==================== 世界地圖、快速穿梭與導航點 ====================
+        // 快速穿梭地點 (傳送按鈕與世界地圖共用)；y 只在需要時給 (山頂、高架)
+        const FAST_TRAVEL = [
+            { id: 'OCEAN', name: '海濱大道', icon: '🌴', x: 110, z: 20, h: 0 },
+            { id: 'PIER', name: '聖塔克魯茲海濱樂園', icon: '🎢', x: 242, z: 0, h: 0 },
+            { id: 'DOWNTOWN', name: '市中心 CBD', icon: '🏙️', x: -60, z: 0, h: 0 },
+            { id: 'OLDTOWN', name: '老城區', icon: '🏛️', x: -120, z: -540, h: 0 },
+            { id: 'SUBURBS', name: '郊區', icon: '🏡', x: -1060, z: -238, h: -Math.PI / 2 },
+            { id: 'RING', name: '環狀高架', icon: '🛣️', x: 104.8, z: -100, h: 0, y: () => ROAD_NET.elevH + 1.8 },
+            { id: 'CHILIAD', name: '奇利亞德山頂', icon: '⛰️', x: -605, z: 555, h: THREE.MathUtils.degToRad(145), y: () => terrainHeight(-605, 555) + 1.8 },
+            { id: 'MARINA', name: '遊艇碼頭', icon: '🛥️', x: 220, z: 340, h: 0 },
+            { id: 'AIRPORT', name: '特技機場', icon: '✈️', x: -420, z: -200, h: 0 },
+            { id: 'CIRCLE', name: 'Vice 圓環', icon: '⭕', x: -240, z: -60, h: Math.PI }
+        ];
+        const WMAP = { open: false, cx: -300, cz: -100, scale: 0.35, sel: null, pointers: new Map(), dragged: false, pinch: 0, last: null };
+        STATE.waypoint = null;
+
+        // 地圖點選位置 → 貼到最近的道路 (避免傳送進大樓裡)；回傳 { x, z, y, h, name }
+        function snapToRoad(x, z) {
+            let best = null, bd = Infinity;
+            const consider = (px, pz, tx, tz, y, name) => {
+                const d = (px - x) * (px - x) + (pz - z) * (pz - z);
+                if (d < bd) { bd = d; best = { x: px, z: pz, y, h: Math.atan2(tx, tz), name }; }
+            };
+            ROAD_NET.avenuesX.forEach(ax => {
+                const zMax = ax < -340 ? ROAD_NET.hillAveZ : 950;
+                const cz = THREE.MathUtils.clamp(z, -940, zMax - 10);
+                consider(ax + 5, cz, 0, 1, undefined, '大道');
+            });
+            ROAD_NET.crossZ.forEach(cz => {
+                const x0 = cz >= 360 ? -340 : ROAD_NET.crossX0;
+                const cx = THREE.MathUtils.clamp(x, x0 + 10, ROAD_NET.crossX1 - 10);
+                consider(cx, cz - 5, 1, 0, undefined, '街道');
+            });
+            [...ROAD_NET.ribbons, ...ROAD_NET.terrainRoads].forEach(r => {
+                for (let i = 0; i < r.pts.length; i += 2) { const p = r.pts[i]; consider(p.x, p.z, p.tx, p.tz, undefined, r.name || '道路'); }
+            });
+            return best && bd < 260 * 260 ? best : null;
+        }
+        function districtName(x, z) {
+            const S = ROAD_NET.suburb, hl = ROAD_NET.hill;
+            if (x > hl.x0 && x < hl.x1 && z > hl.z0 && z < hl.z1) return '奇利亞德山';
+            if (x > S.x0 && x < S.x1 && z > S.z0 && z < S.z1) return '郊區';
+            if (x > 235) return z > 240 ? '遊艇碼頭' : '海濱樂園';
+            if (x > 80) return '海濱大道';
+            if (z < -420) return '老城區';
+            if (Math.abs(z) <= 330 && x > -250 && x < 90) return '市中心 CBD';
+            if (x < -360 && Math.abs(z) < 260) return '特技機場';
+            return '中城';
+        }
+
+        function wmWorldToScreen(x, z, W, H) { return [(x - WMAP.cx) * WMAP.scale + W / 2, (z - WMAP.cz) * WMAP.scale + H / 2]; }
+        function wmScreenToWorld(sx, sy, W, H) { return [(sx - W / 2) / WMAP.scale + WMAP.cx, (sy - H / 2) / WMAP.scale + WMAP.cz]; }
+
+        function drawWorldMap() {
+            const cv = document.getElementById('wm-canvas');
+            const dpr = Math.min(2, window.devicePixelRatio || 1);
+            const W = cv.clientWidth, H = cv.clientHeight;
+            if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+            const g = cv.getContext('2d');
+            g.setTransform(dpr, 0, 0, dpr, 0, 0);
+            const s = WMAP.scale;
+            const P = (x, z) => wmWorldToScreen(x, z, W, H);
+            const rect = (x0, z0, x1, z1, color) => { const [a, b] = P(x0, z0), [c, d] = P(x1, z1); g.fillStyle = color; g.fillRect(a, b, c - a, d - b); };
+            const line = (pts, width, color, closed) => {
+                g.strokeStyle = color; g.lineWidth = Math.max(1, width * s); g.lineCap = 'round'; g.lineJoin = 'round';
+                g.beginPath();
+                pts.forEach((p, i) => { const [a, b] = P(p.x, p.z); if (i === 0) g.moveTo(a, b); else g.lineTo(a, b); });
+                if (closed) g.closePath();
+                g.stroke();
+            };
+            // 底色：陸地、海、沙灘
+            g.fillStyle = '#1b2433'; g.fillRect(0, 0, W, H);
+            rect(-1700, -1200, 365, 1200, '#2a3342');
+            rect(235, -1200, 365, 1200, '#b99a62');
+            rect(365, -1200, 2000, 1200, '#0b4f7a');
+            // 郊區、山
+            const S = ROAD_NET.suburb;
+            rect(S.x0, S.z0, S.x1, S.z1, '#33502c');
+            const hl = ROAD_NET.hill;
+            { const [a, b] = P(hl.cx, hl.cz); g.fillStyle = '#4a5f34'; g.beginPath(); g.ellipse(a, b, hl.rx * s, hl.rz * s, 0, 0, Math.PI * 2); g.fill();
+              g.fillStyle = '#7a6a52'; g.beginPath(); g.ellipse(a, b, hl.rx * s * 0.45, hl.rz * s * 0.45, 0, 0, Math.PI * 2); g.fill(); }
+            // 建築
+            (WORLD.roofs || []).forEach(r => {
+                const t = Math.min(1, r.h / 200);
+                const c = Math.round(70 + t * 80);
+                rect(r.x - r.w / 2, r.z - r.d / 2, r.x + r.w / 2, r.z + r.d / 2, `rgb(${c},${c + 6},${c + 22})`);
+            });
+            (WORLD.suburbHouses || []).forEach(hs => { const [a, b] = P(hs.x, hs.z); g.fillStyle = '#d6c7a8'; g.fillRect(a - 5 * s, b - 4 * s, 10 * s, 8 * s); });
+            // 道路
+            ROAD_NET.avenuesX.forEach(ax => rect(ax - 12, -950, ax + 12, ax < -340 ? ROAD_NET.hillAveZ : 950, '#5b6475'));
+            ROAD_NET.crossZ.forEach(cz => rect(cz >= 360 ? -340 : ROAD_NET.crossX0, cz - 11, ROAD_NET.crossX1, cz + 11, '#5b6475'));
+            [...ROAD_NET.ribbons, ...ROAD_NET.terrainRoads].forEach(r => line(r.pts, r.half * 2, '#5b6475'));
+            ROAD_NET.roundabouts.forEach(rb => { const [a, b] = P(rb.x, rb.z); g.strokeStyle = '#5b6475'; g.lineWidth = (rb.rOut - rb.rIn) * s; g.beginPath(); g.arc(a, b, (rb.rIn + rb.rOut) / 2 * s, 0, Math.PI * 2); g.stroke(); });
+            // 環狀高架 (亮色)
+            line(ROAD_NET.ring.pts, ROAD_NET.ring.half * 2 + 6, 'rgba(34,211,238,0.25)', true);
+            line(ROAD_NET.ring.pts, ROAD_NET.ring.half * 2, '#e2e8f0', true);
+            ROAD_NET.spurs.forEach(sp => line(sp.pts, sp.half * 2, '#cbd5e1'));
+            // 區域名稱
+            g.textAlign = 'center'; g.textBaseline = 'middle';
+            [['VICE SUBURBS 郊區', -1120, -420], ['MT. CHILIAD', -620, 560], ['DOWNTOWN CBD', -60, -120], ['OLD TOWN 老城區', -240, -690], ['MIDTOWN 中城', -280, 420], ['SANTA CRUZ', 300, -120], ['OCEAN', 600, 0]].forEach(([t, x, z]) => {
+                const [a, b] = P(x, z);
+                g.font = `900 ${Math.max(10, Math.min(18, 34 * s))}px Orbitron, sans-serif`;
+                g.fillStyle = 'rgba(255,255,255,0.55)';
+                g.fillText(t, a, b);
+            });
+            // AI 車
+            WORLD.vehicles.forEach(v => {
+                if (!v.chassisGroup.visible || v === STATE.currentVehicle) return;
+                const [a, b] = P(v.chassisBody.position.x, v.chassisBody.position.z);
+                g.fillStyle = v.isPolice ? '#ef4444' : '#38bdf8';
+                g.beginPath(); g.arc(a, b, 2.6, 0, Math.PI * 2); g.fill();
+            });
+            // 快速穿梭點
+            WMAP.hits = [];
+            FAST_TRAVEL.forEach(ft => {
+                const [a, b] = P(ft.x, ft.z);
+                g.fillStyle = 'rgba(2,6,23,0.85)';
+                g.strokeStyle = WMAP.sel && WMAP.sel.id === ft.id ? '#fbbf24' : 'rgba(255,61,154,0.9)';
+                g.lineWidth = 2;
+                g.beginPath(); g.arc(a, b, 14, 0, Math.PI * 2); g.fill(); g.stroke();
+                g.font = '15px system-ui, sans-serif';
+                g.fillText(ft.icon, a, b + 1);
+                if (s > 0.22) {
+                    g.font = '700 11px Rajdhani, "Noto Sans TC", sans-serif';
+                    g.fillStyle = '#f8fafc';
+                    g.fillText(ft.name, a, b + 24);
+                }
+                WMAP.hits.push({ ft, a, b });
+            });
+            // 導航點
+            if (STATE.waypoint) {
+                const [a, b] = P(STATE.waypoint.x, STATE.waypoint.z);
+                g.fillStyle = '#fbbf24';
+                g.beginPath(); g.moveTo(a, b); g.lineTo(a - 8, b - 16); g.arc(a, b - 18, 8, Math.PI * 0.85, Math.PI * 0.15); g.closePath(); g.fill();
+            }
+            // 選取的位置
+            if (WMAP.sel && !WMAP.sel.id) {
+                const [a, b] = P(WMAP.sel.x, WMAP.sel.z);
+                g.strokeStyle = '#fbbf24'; g.lineWidth = 2.5;
+                g.beginPath(); g.arc(a, b, 10, 0, Math.PI * 2); g.stroke();
+                g.beginPath(); g.arc(a, b, 3, 0, Math.PI * 2); g.fillStyle = '#fbbf24'; g.fill();
+            }
+            // 玩家 (箭頭)
+            const pos = getActivePosition(), hd = getActiveHeading();
+            const [pa, pb] = P(pos.x, pos.z);
+            g.save(); g.translate(pa, pb); g.rotate(Math.PI - hd);
+            g.fillStyle = '#ffffff'; g.strokeStyle = '#ff3d9a'; g.lineWidth = 2;
+            g.beginPath(); g.moveTo(0, -11); g.lineTo(-8, 8); g.lineTo(0, 4); g.lineTo(8, 8); g.closePath(); g.fill(); g.stroke();
+            g.restore();
+            // 比例尺
+            const meters = s > 0.6 ? 100 : s > 0.2 ? 250 : 500;
+            g.fillStyle = 'rgba(255,255,255,0.8)'; g.fillRect(14, H - 18, meters * s, 3);
+            g.font = '700 11px Rajdhani, sans-serif'; g.textAlign = 'left'; g.fillText(meters + ' m', 14, H - 28);
+        }
+
+        function wmSelect(sel) {
+            WMAP.sel = sel;
+            const panel = document.getElementById('wm-panel');
+            if (!sel) { panel.classList.add('hidden'); drawWorldMap(); return; }
+            const pos = getActivePosition();
+            const dist = Math.hypot(sel.x - pos.x, sel.z - pos.z);
+            document.getElementById('wm-sel-icon').textContent = sel.icon || '📍';
+            document.getElementById('wm-sel-name').textContent = sel.name;
+            document.getElementById('wm-sel-sub').textContent = districtName(sel.x, sel.z) + '・距離 ' + (dist >= 1000 ? (dist / 1000).toFixed(1) + ' km' : Math.round(dist) + ' m');
+            panel.classList.remove('hidden');
+            drawWorldMap();
+        }
+
+        function openWorldMap() {
+            closeModals();
+            const pos = getActivePosition();
+            WMAP.cx = pos.x; WMAP.cz = pos.z;
+            WMAP.open = true;
+            ['forward', 'backward', 'left', 'right', 'space', 'shift'].forEach(k => { INPUT[k] = false; });
+            document.getElementById('world-map').classList.remove('hidden');
+            requestAnimationFrame(() => { wmSelect(null); });
+            clearInterval(WMAP.timer);
+            WMAP.timer = setInterval(() => { if (WMAP.open) drawWorldMap(); }, 500);
+        }
+        function closeWorldMap() {
+            WMAP.open = false;
+            clearInterval(WMAP.timer);
+            document.getElementById('world-map').classList.add('hidden');
+        }
+
+        // 快速穿梭：黑幕淡出 → 傳送 → 淡入
+        function fastTravelTo(t) {
+            const fade = document.getElementById('travel-fade');
+            closeWorldMap();
+            fade.style.opacity = '1';
+            setTimeout(() => {
+                const y = typeof t.y === 'function' ? t.y() : t.y;
+                teleportTo(t.x, t.z, t.h || 0, y);
+                if (STATE.waypoint && Math.hypot(STATE.waypoint.x - t.x, STATE.waypoint.z - t.z) < 40) clearWaypoint();
+                setTimeout(() => { fade.style.opacity = '0'; }, 120);
+                showBanner('⚡ 快速穿梭', t.name);
+            }, 300);
+        }
+
+        // 導航點：雷達上的黃色標記 + 世界中的光柱，抵達 30 m 內自動清除
+        function setWaypoint(x, z, name) {
+            STATE.waypoint = { x, z, name };
+            if (!WORLD.waypointBeam) {
+                const beam = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 160, 16, 1, true), new THREE.MeshBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.32, depthWrite: false, side: THREE.DoubleSide }));
+                scene.add(beam);
+                WORLD.waypointBeam = beam;
+            }
+            const y0 = terrainHeight(x, z);
+            WORLD.waypointBeam.position.set(x, y0 + 80, z);
+            WORLD.waypointBeam.visible = true;
+            showBanner('📍 已設定導航點', name);
+        }
+        function clearWaypoint() {
+            STATE.waypoint = null;
+            if (WORLD.waypointBeam) WORLD.waypointBeam.visible = false;
+        }
+        function updateWaypoint() {
+            if (!STATE.waypoint) return;
+            const p = getActivePosition();
+            if (Math.hypot(p.x - STATE.waypoint.x, p.z - STATE.waypoint.z) < 30) { showBanner('🏁 已抵達', STATE.waypoint.name); clearWaypoint(); }
+            else if (WORLD.waypointBeam) WORLD.waypointBeam.material.opacity = 0.24 + Math.sin(STATE.time * 4) * 0.08;
+        }
+
+        function setupWorldMap() {
+            const cv = document.getElementById('wm-canvas');
+            const chips = document.getElementById('wm-chips');
+            FAST_TRAVEL.forEach(ft => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'touch-btn vh-pill';
+                b.style.setProperty('--acc', 'var(--vh-pink)');
+                b.innerHTML = `<span>${ft.icon}</span><span>${ft.name}</span>`;
+                b.addEventListener('click', () => { WMAP.cx = ft.x; WMAP.cz = ft.z; WMAP.scale = Math.max(WMAP.scale, 0.5); wmSelect(Object.assign({}, ft)); });
+                chips.appendChild(b);
+            });
+            const zoomAt = (f, sx, sy) => {
+                const W = cv.clientWidth, H = cv.clientHeight;
+                const [wx, wz] = wmScreenToWorld(sx, sy, W, H);
+                WMAP.scale = THREE.MathUtils.clamp(WMAP.scale * f, 0.08, 2.5);
+                WMAP.cx = wx - (sx - W / 2) / WMAP.scale;
+                WMAP.cz = wz - (sy - H / 2) / WMAP.scale;
+                drawWorldMap();
+            };
+            const local = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+            cv.addEventListener('pointerdown', e => {
+                try { cv.setPointerCapture(e.pointerId); } catch (err) {}
+                WMAP.pointers.set(e.pointerId, local(e));
+                WMAP.dragged = false;
+                if (WMAP.pointers.size === 2) { const [a, b] = [...WMAP.pointers.values()]; WMAP.pinch = Math.hypot(a[0] - b[0], a[1] - b[1]); }
+            });
+            cv.addEventListener('pointermove', e => {
+                if (!WMAP.pointers.has(e.pointerId)) return;
+                const prev = WMAP.pointers.get(e.pointerId), cur = local(e);
+                WMAP.pointers.set(e.pointerId, cur);
+                if (WMAP.pointers.size === 2) {
+                    const [a, b] = [...WMAP.pointers.values()];
+                    const d = Math.hypot(a[0] - b[0], a[1] - b[1]);
+                    if (WMAP.pinch > 0) zoomAt(d / WMAP.pinch, (a[0] + b[0]) / 2, (a[1] + b[1]) / 2);
+                    WMAP.pinch = d;
+                    WMAP.dragged = true;
+                    return;
+                }
+                const dx = cur[0] - prev[0], dy = cur[1] - prev[1];
+                if (Math.abs(dx) + Math.abs(dy) > 1) WMAP.dragged = WMAP.dragged || Math.hypot(dx, dy) > 0.5;
+                WMAP.cx -= dx / WMAP.scale; WMAP.cz -= dy / WMAP.scale;
+                drawWorldMap();
+            });
+            const up = e => {
+                const wasSingle = WMAP.pointers.size === 1;
+                const pt = WMAP.pointers.get(e.pointerId);
+                WMAP.pointers.delete(e.pointerId);
+                if (WMAP.pointers.size < 2) WMAP.pinch = 0;
+                if (!wasSingle || WMAP.dragged || !pt) return;
+                // 點擊：先找快速穿梭點，再貼到最近的道路
+                const hit = (WMAP.hits || []).find(h => Math.hypot(h.a - pt[0], h.b - pt[1]) < 18);
+                if (hit) { wmSelect(Object.assign({}, hit.ft)); return; }
+                const [wx, wz] = wmScreenToWorld(pt[0], pt[1], cv.clientWidth, cv.clientHeight);
+                const sn = snapToRoad(wx, wz);
+                if (!sn) { wmSelect(null); return; }
+                wmSelect({ x: sn.x, z: sn.z, h: sn.h, y: undefined, name: districtName(sn.x, sn.z) + '・' + sn.name, icon: '📍' });
+            };
+            cv.addEventListener('pointerup', up);
+            cv.addEventListener('pointercancel', e => { WMAP.pointers.delete(e.pointerId); WMAP.pinch = 0; });
+            cv.addEventListener('wheel', e => { e.preventDefault(); const [sx, sy] = local(e); zoomAt(e.deltaY < 0 ? 1.18 : 1 / 1.18, sx, sy); }, { passive: false });
+            document.getElementById('wm-zoom-in').addEventListener('click', () => zoomAt(1.4, cv.clientWidth / 2, cv.clientHeight / 2));
+            document.getElementById('wm-zoom-out').addEventListener('click', () => zoomAt(1 / 1.4, cv.clientWidth / 2, cv.clientHeight / 2));
+            document.getElementById('wm-center').addEventListener('click', () => { const p = getActivePosition(); WMAP.cx = p.x; WMAP.cz = p.z; drawWorldMap(); });
+            document.getElementById('wm-close').addEventListener('click', closeWorldMap);
+            document.getElementById('wm-travel').addEventListener('click', () => { if (WMAP.sel) fastTravelTo(WMAP.sel); });
+            document.getElementById('wm-waypoint').addEventListener('click', () => { if (WMAP.sel) { setWaypoint(WMAP.sel.x, WMAP.sel.z, WMAP.sel.name); drawWorldMap(); } });
+            window.addEventListener('resize', () => { if (WMAP.open) drawWorldMap(); });
+            window.addEventListener('keydown', e => {
+                if (e.code === 'KeyM' && !e.repeat) { if (WMAP.open) closeWorldMap(); else openWorldMap(); }
+                if (e.code === 'Escape' && WMAP.open) closeWorldMap();
+            });
         }
 
         // ==================== 11. 觸控搖桿、3段畫質切換、天氣切換與鍵盤事件 ====================
@@ -6817,11 +7160,7 @@
                 const m = document.getElementById('missions-modal');
                 m.classList.remove('hidden'); m.classList.add('flex');
             });
-            document.getElementById('radar-container').addEventListener('click', () => {
-                closeModals();
-                const m = document.getElementById('missions-modal');
-                m.classList.remove('hidden'); m.classList.add('flex');
-            });
+            document.getElementById('radar-container').addEventListener('click', openWorldMap);
             document.getElementById('close-missions-btn').addEventListener('click', closeModals);
 
             document.getElementById('pill-garage').addEventListener('click', () => {
@@ -6852,22 +7191,9 @@
             });
             document.querySelectorAll('.tp-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    const tp = btn.getAttribute('data-tp');
-                    const chiliadY = terrainHeight(-605, 555) + 1.8;
-                    const coords = {
-                        OCEAN: [110, 20, 0],
-                        PIER: [242, 0, 0],
-                        DOWNTOWN: [-60, 0, 0],
-                        CHILIAD: [-605, 555, THREE.MathUtils.degToRad(145), chiliadY],
-                        MARINA: [220, 340, 0],
-                        AIRPORT: [-420, -200, 0],
-                        OLDTOWN: [-120, -540, 0],
-                        SUBURBS: [-1060, -238, -Math.PI / 2],
-                        RING: [104.8, -100, 0, ROAD_NET.elevH + 1.8]
-                    };
-                    const c = coords[tp] || [110, 20, 0];
-                    teleportTo(c[0], c[1], c[2] || 0, c[3]);
-                    showBanner('✈️ 已傳送至: ' + tp, '物理剛體座標已同步');
+                    const ft = FAST_TRAVEL.find(f => f.id === btn.getAttribute('data-tp')) || FAST_TRAVEL[0];
+                    closeModals();
+                    fastTravelTo(ft);
                 });
             });
             document.getElementById('cancel-mission-btn').addEventListener('click', () => {
@@ -7144,6 +7470,7 @@
         loadPolyHavenTextures();
         spawnVehicles();
         setupControlsAndEvents();
+        setupWorldMap();
 
         // 依裝置顯示觸控按鈕或鍵盤提示；電腦使用者一碰螢幕就改顯示觸控按鈕
         function applyDeviceControls(showTouch) {
@@ -7233,6 +7560,7 @@
             updateVehicleFX(dt);
             updateCityDetails(dt);
             updateFacadeLOD(false);
+            updateWaypoint();
             drawRadar();
 
             // 3. 依據「畫質：LOW / MED / HIGH」決定使用 EffectComposer 或直接渲染
