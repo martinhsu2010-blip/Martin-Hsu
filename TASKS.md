@@ -1,38 +1,35 @@
-# Task board (rules: COLLAB.md v3). One Owner per task. One active code PR at a time.
+# Task board (rules: COLLAB.md v3.1). One Owner per task. One active code PR at a time.
 
 ## Ready for ChatGPT
-### T-003A Immersive UX overhaul — design (proposal, NOT approved for implementation)
-Owner: ChatGPT
-Reviewer: Claude
-Priority: P1
-Depends on: T-001B (done)
-Base commit: `main` at spec approval
-Branch/PR: Not applicable to design
-Output: Complete spec for the sequential tasks T-003B..E below, then Martin approval.
-
-Claude review (2026-11-19, `index.html` at 4d3a391):
-- Camera: chase camera already has distance/pitch/collision/FOV/shake; lowering = tuning constants. Put all defaults in one named constant block. Watch camera-collision jitter when low and shorter forward view at speed. Hood and bird views unchanged.
-- HUD/minimap: no minimap exists (only fullscreen world map, 2D canvas). Minimap = small 2D canvas reusing road data, ~10 Hz update, no extra Three.js render, disabled/reduced on low quality. Add safe-area insets; landscape small screens must not cover joystick/buttons.
-- Game Hub: 8 pill buttons today. Hub only groups them; keep existing feature IDs and the `closeModals` flow. No new features in v1.
-- Input: keep binary forward/backward/left/right (INPUT). Pedal redesign is look/layout only in v1. Analog throttle is a separate later task.
-- Localization: one string table, language switch in the settings UI, language saved in `vh_save` (new field, backward compatible). CI check: no CJK in visible JS/HTML text outside the string table/comments. Watch dynamically built strings (e.g. showBanner args) and longer English text overflowing layouts.
-
-Martin answers (2026-11-19):
-1. Languages: switchable, with a language setting in the UI (not English-only).
-2. Pedals: v1 changes look/layout only, input behavior unchanged.
-3. Target devices: Samsung S26 Ultra (phone) and Samsung Tab S11 (tablet). Performance baseline to be defined by ChatGPT in the spec; must hold on both, tablet landscape layout included.
-
-Proposed task order (one code PR at a time):
-- T-003B Camera tuning
-- T-003C Responsive HUD + minimap (+ pedal look)
-- T-003D Game Hub (on the new HUD)
-- T-003E Language system + English translation (switchable zh-TW/en)
-Analog throttle: separate, only if Martin asks after playing.
-
-Verification: `proposed` — review only; no code changed, no measurements.
+(none)
 
 ## Ready for Codex
-(none)
+### T-003B Third-person camera tuning
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-003A (approved, done)
+Base commit: latest `main` (Claude reports the SHA when this task is unlocked)
+Branch/PR: `codex/T-003B-camera` / pending
+Spec: `specs/T-003A-spec-v1.1.md` section 2 (camera), section 10 (release gates), section 11 (out of scope). The spec file is the authority; this entry only points to it.
+Output: Camera-only PR. No HUD, minimap, Hub, localization, input or physics changes.
+
+Acceptance (from spec section 2 and 10):
+1. One named camera configuration block holds all defaults: on-foot 4.2 / 12° / 1.55; Chase Near 7.2 / 10° / 1.10; Chase Far 10.5 / 14° / 1.10 (distance / pitch / target height, world units).
+2. Hood and bird's-eye cameras unchanged. Pinch/wheel zoom and manual yaw/pitch preserved.
+3. Recenter to heading after 2 s without camera input; smooth follow lag; less high-speed shake.
+4. FOV: 60° normal, progressive widening to max 68°, nitro max 72°, applied smoothly.
+5. Building collision avoidance preserved; smooth distance recovery when an obstacle clears; no jitter near walls, ramps, hills, overpasses.
+6. No per-frame allocations in the camera path.
+7. `python3 tools/test/syntax_check.py` passes; `sw.js` CACHE untouched; saves, missions, controls and offline play unchanged.
+8. PR states phone/tablet performance impact honestly; no `measured` claims. Martin does final hand acceptance on S26 Ultra and Tab S11 (city, mountain road, elevated highway, collisions, manual rotation).
+
+Claude reviewer notes (from `index.html`, 2026-11-19):
+- Mode map today: `STATE.cameraMode` 0 = near (dist 8.8, pitch 0.24 rad), 1 = far (13.5, 0.36 rad), 2 = hood, 3 = bird. Recenter delay today 1.5 s; FOV today 62 base, up to +14 with speed, +6 nitro; shake above 150 km/h.
+- The hood/bird branch currently does `new THREE.Vector3(...)` every frame inside `updateCameraAndLights`; reuse a module-level vector while touching this function (in scope: spec item "avoid per-frame allocations").
+- Existing camera collision uses `CAM.raycaster` against `WORLD.cameraBlockers`; keep it, add smoothing on the recovery side only.
+
+Verification: `designed` — spec approved, code not written.
 
 ## In review
 (none)
@@ -46,10 +43,48 @@ Owner: Martin
 Priority: P2
 Why: archives had no license text; needed before any public sharing.
 
+### T-003C Responsive HUD, radar optimization and pedals
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-003B
+Spec: `specs/T-003A-spec-v1.1.md` sections 3, 4, 8, 10. Acceptance in spec section 9: tablet landscape layout, phone compact layout, minimap 8-10 Hz, dark racing pedals, unchanged input behavior, essential HUD only, no feature functionality removed.
+Claude notes (apply when unlocked): (1) Spec removes the permanent 8-button toolbar here but the Hub arrives only in T-003D, and "no functionality removed" also applies: this task must keep every action reachable through an interim entry (e.g. tapping the minimap opens a simple panel with the existing actions) which T-003D then replaces. (2) Reuse `radar-canvas` / `drawRadar()`; the canvas backing is 140x140, enough for the 112-128 CSS px target. (3) No `safe-area` handling exists today; add it. (4) Validate the matrix in spec section 8.
+Verification: `designed`.
+
+### T-003D Minimap-driven Game Hub
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-003C
+Spec: `specs/T-003A-spec-v1.1.md` sections 5, 8, 10. All existing toolbar actions through the Hub; mission/garage/map/settings preserved; correct modal and input handling; `closeModals` flow and the delivery fast-travel block preserved.
+Claude note: spec lists an "airport stunt" mission; no such name exists in code today. Map it to the existing STUNT mission and do not add a new one.
+Verification: `designed`.
+
+### T-003E Bilingual interface (English / Traditional Chinese)
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-003D
+Spec: `specs/T-003A-spec-v1.1.md` sections 6, 8, 10. String table, language selector in SETTINGS, `vh_save.language` (new field, default-safe), complete player-visible translation, CI check for leftover CJK, live panel refresh, old saves keep working.
+Claude notes: (1) Default policy needs "new player vs existing save": decide by whether `vh_save` existed before this load (no key = new = English; key without `language` = existing = zh-TW). (2) Dynamic strings (e.g. `showBanner` calls, delivery/mission text, reward messages from T-001B) must go through the table. (3) Existing `vh_settings` holds other settings; keep language in `vh_save` as specified.
+Verification: `designed`.
+
 ## Inbox
 (none)
 
 ## Done
+### T-003A Immersive Gameplay UX Specification v1.1
+Owner: ChatGPT
+Reviewer: Claude
+Priority: P1
+Depends on: T-001B
+Base commit: design base `5937859ff7160851e7342359b576a45c5177d423`; spec archived on `main` in PR #8 (ea43ece)
+Branch/PR: PR #8 (docs, archive); registered in the docs PR that follows it
+Output: `specs/T-003A-spec-v1.1.md` (verbatim) defining T-003B..E.
+Verification: `designed / Martin approved` (2026-11-19). Not device-measured; no code written. Spec targets: Samsung S26 Ultra and Samsung Tab S11, 30 FPS default; tablet landscape layouts 1280x800, 1024x768, 960x540; real-device FPS must be reported by Martin before anything is marked `measured`.
+Review notes: spec names verified against `index.html` (`radar-canvas`, `drawRadar`, device presets, existing 30 FPS cap for phone/tablet). Spec text still says "awaiting Martin's approval" because it is stored verbatim; the approval is recorded in D-015.
+
 - T-000 Collaboration docs created and migrated to COLLAB v2 (2026-11-18)
 
 ### T-001B Economy implementation
