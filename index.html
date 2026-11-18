@@ -692,14 +692,35 @@
 
         // 存檔：現金、已購買車款、引擎升級、完成的跳台、配送單數
         const SAVE = (() => {
-            const base = { owned: [], jumps: {}, deliveries: 0 };
+            const base = { owned: [], jumps: {}, deliveries: 0, collectedCrates: [], rewardCooldowns: {} };
             try { return Object.assign(base, JSON.parse(localStorage.getItem('vh_save') || '{}')); } catch (e) { return base; }
         })();
+        if (!Array.isArray(SAVE.collectedCrates)) SAVE.collectedCrates = [];
+        if (!SAVE.rewardCooldowns || typeof SAVE.rewardCooldowns !== 'object' || Array.isArray(SAVE.rewardCooldowns)) SAVE.rewardCooldowns = {};
+        function cooldownLeft(key) {
+            const expiry = SAVE.rewardCooldowns[key];
+            return Number.isFinite(expiry) ? Math.max(0, Math.ceil((expiry - Date.now()) / 1000)) : 0;
+        }
+        function claimReward(key, seconds, amount, shared = false) {
+            const remaining = Math.max(cooldownLeft(key), shared ? cooldownLeft('airborne') : 0);
+            if (remaining) {
+                showBanner('獎金冷卻中', remaining + ' 秒後可再次獲得獎金');
+                return 0;
+            }
+            SAVE.rewardCooldowns[key] = Date.now() + seconds * 1000;
+            if (shared) SAVE.rewardCooldowns.airborne = Date.now() + 90000;
+            addCash(amount);
+            persistSave();
+            return amount;
+        }
+        function persistSave() {
+            SAVE.cash = STATE.cash; SAVE.upgrade = STATE.upgradeLevel;
+            try { localStorage.setItem('vh_save', JSON.stringify(SAVE)); } catch (e) {}
+        }
         function saveGame() {
             clearTimeout(saveGame.t);
             saveGame.t = setTimeout(() => {
-                SAVE.cash = STATE.cash; SAVE.upgrade = STATE.upgradeLevel;
-                try { localStorage.setItem('vh_save', JSON.stringify(SAVE)); } catch (e) {}
+                persistSave();
             }, 400);
         }
         const STATE = {
@@ -4750,7 +4771,11 @@
                 const cz = -210 + (i % 8) * 65;
                 mesh.position.set(cx, 1.8, cz);
                 scene.add(mesh);
-                WORLD.crates.push({ mesh, x: cx, z: cz, collected: false });
+                const collected = SAVE.collectedCrates.includes(i);
+                mesh.visible = !collected;
+                if (collected) STATE.cratesCollected++;
+                WORLD.crates.push({ id: i, mesh, x: cx, z: cz, collected });
+                document.getElementById('hud-crates').textContent = STATE.cratesCollected + '/' + STATE.totalCrates;
             }
         }
 
@@ -6273,17 +6298,25 @@
                     this.fxHandbrake = handbrake;
                     this.fxHardBrake = brk && forwardSpeed > 9;
 
-                    // 飛躍滯空獎勵偵測
-                    if (this.chassisBody.position.y > 2.2) {
-                        this.airTime += dt;
+                    // Count genuine airborne time and resolve a single reward on landing.
+                    let grounded = false;
+                    for (let i = 0; i < this.vehicle.wheelInfos.length; i++) {
+                        if (this.vehicle.wheelInfos[i].raycastResult.hasHit) grounded = true;
+                    }
+                    if (!grounded) {
+                        if (this.airReady) this.airTime += dt;
+                        if (STUNT.active) this.rampAirborne = true;
                     } else {
-                        if (this.airTime > 0.65 && STATE.time - STUNT.lastStart > 10) {
-                            const bonus = Math.round(this.airTime * 500);
-                            addCash(bonus);
-                            AUDIO.playSFX('stunt');
-                            showBanner('🚀 飛躍特技成功!', '+$' + bonus + ' 滯空獎金');
+                        if (this.airTime >= 0.65 && !this.rampAirborne && !STUNT.active) {
+                            const bonus = claimReward('airborne', 90, Math.min(400, Math.round(this.airTime * 150)));
+                            if (bonus) {
+                                AUDIO.playSFX('stunt');
+                                showBanner('🚀 飛躍特技成功!', '+$' + bonus + ' 滯空獎金');
+                            }
                         }
                         this.airTime = 0;
+                        this.airReady = true;
+                        this.rampAirborne = false;
                     }
 
                     // 防翻車自動回正輔助
@@ -6662,9 +6695,11 @@
                     c.mesh.visible = false;
                     STATE.cratesCollected++;
                     document.getElementById('hud-crates').textContent = STATE.cratesCollected + '/' + STATE.totalCrates;
-                    addCash(1000);
+                    SAVE.collectedCrates.push(c.id);
+                    addCash(400);
+                    persistSave();
                     AUDIO.playSFX('stunt');
-                    showBanner('💎 獲得補給箱!', '+$1,000 現金獎勵');
+                    showBanner('💎 獲得補給箱!', '+$400 現金獎勵');
                 }
             });
 
@@ -6693,9 +6728,9 @@
                     document.getElementById('pursuit-status-label').textContent = '🕵️ 正在擺脫警方...';
                     document.getElementById('pursuit-meter-bar').style.width = pct + '%';
                     if (STATE.evadeTimer >= 8) {
-                        addCash(2000);
+                        const reward = claimReward('police', 600, 600);
                         togglePoliceChase(true);
-                        showBanner('🏆 成功擺脫追捕!', '+$2,000 逃脫獎金');
+                        if (reward) showBanner('🏆 成功擺脫追捕!', '+$600 逃脫獎金');
                     }
                 } else {
                     STATE.bustedProgress = Math.max(0, STATE.bustedProgress - dt * 20);
@@ -6871,7 +6906,7 @@
 
             if (MISSION.mode === 'DRIFT') {
                 document.getElementById('mission-progress').textContent = Math.round(MISSION.score) + ' / 2000 PTS';
-                if (MISSION.score >= 2000) finishMission(3000);
+                if (MISSION.score >= 2000) finishMission(1200);
             } else {
                 const pos = getActivePosition();
                 const cp = MISSION.checkpoints[MISSION.currentCP];
@@ -6879,7 +6914,7 @@
                     AUDIO.playSFX('checkpoint');
                     MISSION.currentCP++;
                     if (MISSION.currentCP >= MISSION.checkpoints.length) {
-                        finishMission(MISSION.mode === 'STUNT' ? 3500 : 2500);
+                        finishMission(MISSION.mode === 'STUNT' ? 1600 : 1400);
                         return;
                     }
                     updateMissionVisual();
@@ -6894,12 +6929,13 @@
         }
 
         function finishMission(reward) {
+            if (!MISSION.active) return;
             MISSION.active = false;
             if (MISSION.marker) MISSION.marker.visible = false;
             document.getElementById('mission-panel').classList.add('hidden');
-            addCash(reward);
+            const paid = claimReward('mission-' + MISSION.mode, 300, reward);
             AUDIO.playSFX('stunt');
-            showBanner('🏆 任務完成!', '+$' + reward.toLocaleString() + ' 獎金');
+            if (paid) showBanner('🏆 任務完成!', '+$' + paid.toLocaleString() + ' 獎金');
         }
 
         function teleportTo(x, z, heading = 0, y = null) {
@@ -6907,6 +6943,10 @@
             const groundY = (y !== null && y !== undefined) ? y - 1.8 : terrainHeight(x, z);
             if (STATE.mode === 'CAR' && STATE.currentVehicle) {
                 const car = STATE.currentVehicle;
+                car.airTime = 0;
+                car.airReady = false;
+                car.rampAirborne = false;
+                STUNT.active = null;
                 car.chassisBody.position.set(x, groundY + 1.35, z);
                 car.chassisBody.velocity.set(0, 0, 0);
                 car.chassisBody.angularVelocity.set(0, 0, 0);
@@ -7121,7 +7161,7 @@
             return sp;
         }
 
-        // ---------- 特技跳台：每座第一次飛越 $1,500，之後每次依飛行距離給獎金 ----------
+        // ---------- 特技跳台：每座第一次飛越 $900，之後每次依飛行距離給獎金 ----------
         const STUNT = { jumps: [], active: null, lastStart: -99 };
         function registerStuntJump(j) {
             j.ux = Math.sin(j.dir); j.uz = Math.cos(j.dir);
@@ -7154,15 +7194,16 @@
             if (grounded && a.air > 0.6) {
                 const dist = Math.hypot(p.x - a.j.x, p.z - a.j.z);
                 const first = !SAVE.jumps[a.j.id];
-                const reward = first ? 1500 : 300 + Math.round(dist * 4 / 10) * 10;
+                const reward = first ? 900 : claimReward('ramp-' + a.j.id, 120, Math.min(450, 180 + 10 * Math.round(dist / 20)), true);
                 SAVE.jumps[a.j.id] = Math.max(SAVE.jumps[a.j.id] || 0, Math.round(dist));
                 a.j.sprite.material.map.dispose();
                 const nsp = makeIconSprite('🚀', '#64748b', 4.5);
                 a.j.sprite.material = nsp.material;
-                addCash(reward);
+                if (first) addCash(reward);
+                persistSave();
                 AUDIO.playSFX('stunt');
                 const done = STUNT.jumps.filter(j => SAVE.jumps[j.id]).length;
-                showBanner(first ? '🏆 新跳台完成! +$' + reward.toLocaleString() : '🚀 特技飛越 +$' + reward.toLocaleString(),
+                if (reward) showBanner(first ? '🏆 新跳台完成! +$' + reward.toLocaleString() : '🚀 特技飛越 +$' + reward.toLocaleString(),
                     a.j.name + ' • 飛行 ' + Math.round(dist) + ' m • 滯空 ' + a.air.toFixed(1) + ' s • 已完成 ' + done + '/' + STUNT.jumps.length + ' 座');
                 STUNT.active = null;
             } else if (a.t > 9 || (grounded && a.t > 1.0 && a.air < 0.3)) {
@@ -7224,8 +7265,8 @@
             const dest = pickDeliveryDestination(depot);
             if (!dest) return;
             if (MISSION.active) { MISSION.active = false; if (MISSION.marker) MISSION.marker.visible = false; }
-            const reward = Math.round((350 + dest.dist * 1.3) / 10) * 10;
-            const limit = Math.round(dest.dist / 15 + 30);
+            const reward = Math.round((350 + dest.dist * 1.2) / 10) * 10;
+            const limit = Math.round(75 + dest.dist / 9);
             DELIVERY.job = { depot, dest, reward, limit, left: limit };
             DELIVERY.beam.position.set(dest.x, dest.y + 70, dest.z);
             DELIVERY.pad.position.set(dest.x, dest.y + 0.8, dest.z);
@@ -7272,14 +7313,14 @@
             const late = job.left < 0;
             const sec = Math.abs(Math.ceil(job.left));
             document.getElementById('mission-timer').textContent = (late ? '逾時 +' : '') + Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
-            document.getElementById('mission-progress').textContent = (dist > 1000 ? (dist / 1000).toFixed(2) + ' km' : Math.round(dist) + ' m') + ' • $' + (late ? Math.round(job.reward * 0.5) : job.reward).toLocaleString();
+            document.getElementById('mission-progress').textContent = (dist > 1000 ? (dist / 1000).toFixed(2) + ' km' : Math.round(dist) + ' m') + ' • $' + (late ? Math.round(job.reward * 0.5 / 10) * 10 : job.reward).toLocaleString();
             if (dist < 10 && inCar && speed < 35) {
                 let pay = job.reward, note = '準時送達';
-                if (late) { pay = Math.round(job.reward * 0.5); note = '逾時送達 (報酬減半)'; }
-                else if (job.left > job.limit * 0.4) { pay = Math.round(job.reward * 1.3); note = '超快送達 +30% 獎金'; }
+                if (late) { pay = Math.round(job.reward * 0.5 / 10) * 10; note = '逾時送達 (報酬減半)'; }
+                else if (job.left > job.limit * 0.35) { pay = Math.round(job.reward * 1.2 / 10) * 10; note = '超快送達 +20% 獎金'; }
                 addCash(pay);
                 SAVE.deliveries = (SAVE.deliveries || 0) + 1;
-                saveGame();
+                persistSave();
                 AUDIO.playSFX('stunt');
                 endDeliveryJob(['📦 配送完成! +$' + pay.toLocaleString(), note + ' • 累計 ' + SAVE.deliveries + ' 單 • 回任一 📦 配送站接下一單']);
             } else if (dist < 10 && !inCar) {
@@ -7649,10 +7690,12 @@
 
         // 快速穿梭：黑幕淡出 → 傳送 → 淡入
         function fastTravelTo(t) {
+            if (DELIVERY.job) { showBanner('配送中無法快速穿梭', '請先完成配送'); return; }
             const fade = document.getElementById('travel-fade');
             closeWorldMap();
             fade.style.opacity = '1';
             setTimeout(() => {
+                if (DELIVERY.job) { fade.style.opacity = '0'; return; }
                 const y = typeof t.y === 'function' ? t.y() : t.y;
                 teleportTo(t.x, t.z, t.h || 0, y);
                 if (STATE.waypoint && Math.hypot(STATE.waypoint.x - t.x, STATE.waypoint.z - t.z) < 40) clearWaypoint();
