@@ -456,7 +456,24 @@
     (function () {
         // 註冊 Service Worker：第一次開啟後，之後沒有網路也能玩
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function () { navigator.serviceWorker.register('./sw.js').catch(function () {}); });
+            // 自動更新：每次開啟都檢查新版本；新版本下載完、接管頁面時自動重新載入 (只在「更新」時，第一次安裝不會)
+            var hadController = !!navigator.serviceWorker.controller;
+            var reloaded = false;
+            navigator.serviceWorker.addEventListener('controllerchange', function () {
+                if (!hadController || reloaded) return;
+                reloaded = true;
+                var n = document.createElement('div');
+                n.textContent = '已下載新版本，重新載入中…';
+                n.style.cssText = 'position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:9999;padding:8px 16px;border-radius:999px;background:rgba(2,6,23,.92);color:#67e8f9;font:700 13px system-ui,sans-serif;border:1px solid rgba(34,211,238,.6)';
+                document.body.appendChild(n);
+                setTimeout(function () { location.reload(); }, 900);
+            });
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(function (reg) {
+                    reg.update().catch(function () {});
+                    document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') reg.update().catch(function () {}); });
+                }).catch(function () {});
+            });
         }
         var standalone = window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || window.navigator.standalone === true;
         var deferred = null;
