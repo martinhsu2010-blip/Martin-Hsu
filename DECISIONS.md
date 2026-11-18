@@ -59,3 +59,6 @@ D-014 | 2026-11-18 | implemented | PR #3, commit 0412cbd (game vh-2026-11-18-13)
 ## D-015 Immersive UX overhaul scope (T-003)
 D-015 | 2026-11-19 | proposed | ChatGPT proposed an immersive UX overhaul (lower/closer camera, minimap-driven Game Hub, racing-style pedals, localization), split into T-003B..E. Claude reviewed feasibility (see TASKS T-003A).
 D-015 | 2026-11-19 | agreed | Martin: language is switchable via a UI setting (not English-only); pedal changes are look/layout only with unchanged input behavior; target devices Samsung S26 Ultra and Samsung Tab S11. Full spec still needs Martin approval before any implementation.
+
+## D-016 Fixed collaboration pipeline (COLLAB v3.1)
+D-016 | 2026-11-19 | agreed | Martin asked for a fixed, repeatable process. COLLAB v3.1 defines 8 stages with gates, a Transfer rule (a handoff must carry its full body; Claude never invents spec content; approval is only Martin's own words), full specs stored verbatim in `specs/`, and standard message templates. Supersedes the free-form handoff block of v3.
