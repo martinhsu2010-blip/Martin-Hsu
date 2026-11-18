@@ -3,6 +3,7 @@
 ## Ready for ChatGPT
 ### T-001A Economy balance spec
 Owner: ChatGPT
+Reviewer: Claude (brainstorm / sanity check)
 Priority: P1
 Depends on: —
 Base commit: c2596f9
@@ -17,8 +18,9 @@ Output: spec text in this task or a DECISIONS entry
 (none)
 
 ## Blocked
-### T-001B Economy implementation
-Owner: Claude
+### T-001B Economy implementation (diff)
+Owner: ChatGPT
+Reviewer: Claude (review, test, release)
 Priority: P1
 Depends on: T-001A
 Acceptance: values from T-001A implemented, existing saves still load.

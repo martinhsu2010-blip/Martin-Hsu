@@ -34,3 +34,7 @@ D-008 | 2026-11-18 | proposed | Claude advises against for now (cost, needs alwa
 ## D-009 Docs-only changes do not need a game version bump; any change to a file in `sw.js` PRECACHE does; enforced by CI
 D-009 | 2026-11-18 | agreed | by Martin via ChatGPT review
 D-009 | 2026-11-18 | implemented | .github/workflows/pwa-cache-check.yml
+
+## D-010 Division of labour: ChatGPT (GPT-6 Astra) writes code as diffs; Claude reviews, brainstorms, tests, and releases (supersedes the builder/designer split in D-007)
+D-010 | 2026-11-18 | agreed | by Martin
+D-010 | 2026-11-18 | implemented | COLLAB.md roles and feature flow updated

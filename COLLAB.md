@@ -2,10 +2,19 @@
 
 Adopted 2026-11-18 (agreed by Martin, reviewed by ChatGPT). The owner (Martin) relays between the AIs. **This GitHub repo is the single source of truth.** Neither AI can see the other's private chat; only what is written here is shared.
 
-## Roles
-- **Claude (builder)**: implements, tests, bumps `sw.js` `CACHE`, commits, pushes `main`, releases. Only Claude or Martin writes to `main`.
-- **ChatGPT (designer/reviewer)**: system design, code review, bug analysis, performance plans, task specs. Sends patches/diffs/designs, never overwrites `index.html`.
-- **Martin**: final decisions, acceptance, priorities.
+## Roles (updated 2026-11-18, D-010: ChatGPT writes the code, Claude reviews)
+- **ChatGPT (author)**: designs and writes the code for features and fixes (GPT-6 Astra). Delivers a unified diff against a stated base commit plus a short design note. Does not overwrite `index.html` directly.
+- **Claude (reviewer, tester, release gate, brainstorm partner)**: reviews every diff, applies it in the sandbox, runs the game in a headless browser, checks performance impact, sends back findings, and only then commits, bumps `CACHE`, pushes `main` and releases. Also proposes ideas and critiques designs. Claude fixes small defects found in review itself (and says so); anything larger goes back to ChatGPT.
+- **Martin**: final decisions, acceptance, priorities, and relaying between the two chats.
+- Why Claude still pushes: ChatGPT cannot push to GitHub or run the game; Claude has the sandbox and the deploy path.
+
+## Feature flow
+1. Idea → `Inbox` (either AI can propose; Claude's brainstorm notes go here as `proposed`).
+2. Martin approves → ChatGPT designs and writes the diff (`Ready for ChatGPT` → output).
+3. Martin pastes the HANDOFF block + diff to Claude → `Ready for Claude`: review.
+4. Claude replies with a verdict: `approved` / `changes-requested` (numbered findings) / `rejected` (reason). Reviews check: correctness, regressions in existing systems, mobile performance (draw calls, physics cost, memory), save-file compatibility, security, asset licenses.
+5. On `approved`: Claude applies, tests, releases, logs version + commit SHA. On `changes-requested`: Martin returns the findings to ChatGPT, loop to step 2.
+6. A task is `Done` only with evidence in `Verification`.
 
 ## Files (repo root is the only official location; ignore any old `records/` path)
 `HANDOFF.md` how the project works · `TASKS.md` task board · `DECISIONS.md` decision register · `LOG.md` releases · `tools/` archived scripts. Both AIs re-read the relevant files at the start of every session:
@@ -18,8 +27,8 @@ Adopted 2026-11-18 (agreed by Martin, reviewed by ChatGPT). The owner (Martin) r
 
 ## Tasks (`TASKS.md`)
 - Sections: `Inbox · Ready for ChatGPT · Ready for Claude · Doing · Blocked · Done`.
-- Fields: `ID, Title, Owner (exactly ONE), Priority P0/P1/P2, Depends on, Base commit, Acceptance, Verification, Output`.
-- Work needing both AIs is split: A = design/spec (ChatGPT), B = implementation (Claude, `Depends on` A).
+- Fields: `ID, Title, Owner (exactly ONE), Reviewer, Priority P0/P1/P2, Depends on, Base commit, Acceptance, Verification, Output`.
+- Normal feature task: Owner ChatGPT (design + diff), then Owner Claude (review/test/release). Add a `Reviewer:` line. Work can still be split A (design/spec) and B (diff) when large.
 - `Verification` states what was actually checked, using levels `designed` / `code-reviewed` / `measured (where)`. Phone 30 FPS and desktop 60 FPS are targets until measured on a real device; headless-browser numbers are labelled as such.
 
 ## Handoff message (paste between AIs)
