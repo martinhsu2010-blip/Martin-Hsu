@@ -1,7 +1,7 @@
 # VICE HORIZON VI — Project Handoff
 
 Written for another AI assistant (e.g. ChatGPT) or developer picking up this project.
-Last updated: 2026-11-18, game version `vh-2026-11-18-12` (see `CACHE` in `sw.js`).
+Last updated: 2026-11-18, game version `vh-2026-11-18-13` (see `CACHE` in `sw.js`).
 Owner: martinhsu2010-blip (Traditional Chinese speaker, Taiwan). Explain things to the owner in Traditional Chinese; write prompts for Gemini in English.
 
 ## What this is
@@ -39,7 +39,8 @@ Debug handle: `window.__VH` exposes internals (SAVE, STUNT, DELIVERY, CAR_MODELS
 **Cars** (`CAR_MODELS` registry): Ferrari (default, free), Ford Shelby GT500 (police car, used for the chase system and roadside cop), Porsche 911 (price $25,000), Lexus LC 500 (price $18,000). Buying in the garage needs two clicks (4 s confirm window). Wheels/physics are laid out from each model's wheel nodes at load time.
 
 **Money / save** (`localStorage` key `vh_save`: cash, owned[], jumps{}, deliveries, upgrade):
-- *Delivery jobs*: 6 depots on roads. Drive into a depot (<7.5 m, <45 km/h) → random destination 320–1500 m away. Reward = round((350 + dist×1.3)/10)×10; time limit = dist/15 + 30 s; ×1.3 if >40% time left, ×0.5 if late. Deliver within 10 m at <35 km/h. Mission menu has a "Delivery" entry that navigates to the nearest depot.
+- *Delivery jobs*: 6 depots on roads. Drive into a depot (<7.5 m, <45 km/h) → random destination 320–1500 m away. Reward = round((350 + dist×1.2)/10)×10; time limit = round(75 + dist/9) s; ×1.2 (rounded to 10) if >35% time left, ×0.5 if late. Fast travel is blocked during a job. Deliver within 10 m at <35 km/h.
+- *Economy (D-014, T-001B)*: crates $400 (persisted in `SAVE.collectedCrates`); missions DRIFT 1200 / RACE 1400 / STUNT 1600 (300 s cooldown each); police escape 600 (600 s); ramps first $900, repeat min(450, 180+10·round(dist/20)) (120 s, shared 90 s with airtime); airtime min(400, round(t·150)) if ≥0.65 s, 90 s cooldown. Cooldowns live in `SAVE.rewardCooldowns` (Date.now-based).
 - *Stunt jumps* (7 ramps): first clear $1,500; later $300 + distance×0.4. Landing detection uses `wheel.raycastResult.hasHit` (cannon-es `isInContact` is always false).
 
 **Traffic**: Kenney low-poly cars (11 types, weighted). Density per device, e.g. phone 10 … desktop-ultra 34. Cars farther than 470 m are recycled to route points 150–360 m from the player; AI cars >430 m from the camera have physics removed from the world.
