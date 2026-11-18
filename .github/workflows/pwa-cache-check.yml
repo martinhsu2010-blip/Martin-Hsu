@@ -1,0 +1,20 @@
+name: PWA cache version check
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['**.md', 'tools/**', '.github/**']
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Check CACHE bump
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE=${{ github.event.pull_request.base.sha }}; HEAD=${{ github.event.pull_request.head.sha }}
+          else
+            BASE=${{ github.event.before }}; HEAD=${{ github.sha }}
+          fi
+          python3 .github/scripts/check_cache.py "$BASE" "$HEAD"

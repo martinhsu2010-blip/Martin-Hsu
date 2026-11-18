@@ -1,22 +1,35 @@
-# Task board (see COLLAB.md for the workflow)
+# Task board (rules: COLLAB.md). One Owner per task.
+
+## Ready for ChatGPT
+### T-001A Economy balance spec
+Owner: ChatGPT
+Priority: P1
+Depends on: —
+Base commit: c2596f9
+Acceptance: numbers for delivery reward/time limit, stunt-jump reward, car prices (Porsche $25,000, Lexus $18,000), and target play time to first and second purchase; agreed by Martin. Current values are in HANDOFF.md ("Current gameplay systems").
+Verification: designed
+Output: spec text in this task or a DECISIONS entry
+
+## Ready for Claude
+(none)
 
 ## Doing
 (none)
 
-## Next
-(none)
+## Blocked
+### T-001B Economy implementation
+Owner: Claude
+Priority: P1
+Depends on: T-001A
+Acceptance: values from T-001A implemented, existing saves still load.
 
-## Inbox
-### T-001 Balance pass on money (delivery rewards, jump rewards, car prices)
-Status: Inbox
-Owner: ChatGPT (spec) → Claude (implement)
-Why: delivery pays $700–2,300, first jump $1,500, Porsche $25,000, Lexus $18,000; unplayed, may be too fast or too slow.
-Acceptance: target time-to-first-purchase and time-to-second-purchase agreed with Martin.
-
-### T-002 Verify licenses of Porsche / Lexus / Ford Sketchfab models
-Status: Inbox
+### T-002 Verify licenses of the Porsche / Lexus / Ford Sketchfab models
 Owner: Martin
+Priority: P2
 Why: archives had no license text; needed before any public sharing.
 
+## Inbox
+(none)
+
 ## Done
-- T-000 Handoff docs created (HANDOFF.md, COLLAB.md, TASKS.md)
+- T-000 Collaboration docs created and migrated to COLLAB v2 (2026-11-18)

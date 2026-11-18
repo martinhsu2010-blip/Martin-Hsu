@@ -1,13 +1,36 @@
-# Decisions (append-only; newest at the bottom)
+# Decision register (append-only; rules in COLLAB.md)
 
-Claude updates this at the end of every working session, including decisions that were discussed but **not yet implemented**. Keep it free of secrets and personal info (the repo is public).
-Format: `D-NNN | date | status (agreed/implemented/dropped) | decision | why`
+Format: a header line per decision, then one event line per status change, newest last. Latest event = current state. Never edit or delete old events. Keep secrets and personal info out (public repo).
+Event format: `D-NNN | date | proposed/agreed/implemented/dropped | note or commit SHA`
 
-D-001 | 2026-11 | implemented | Game is a single-file `index.html` PWA on GitHub Pages, all assets vendored locally | offline play, easy hosting, no build step
-D-002 | 2026-11 | implemented | New cars are loaded from GLB files via a `CAR_MODELS` registry; physics wheels are laid out from the model's wheel nodes | lets any converted model drop in
-D-003 | 2026-11 | implemented | Ford Shelby GT500 is the police car; Porsche 911 ($25,000) and Lexus LC 500 ($18,000) must be bought with in-game cash | owner request
-D-004 | 2026-11 | implemented | Income comes from delivery jobs (random destination, no physical cargo) and daily stunt jumps | owner request
-D-005 | 2026-11 | implemented | NPC traffic uses low-poly Kenney cars, density ~50% higher, with distance-based recycling and physics freezing | performance on phones
-D-006 | 2026-11 | implemented | Progress (cash, owned cars, jumps) is saved in localStorage `vh_save` | no backend needed
-D-007 | 2026-11-18 | agreed | Claude↔ChatGPT collaboration runs through the public repo files (HANDOFF/TASKS/DECISIONS/LOG); only the builder pushes to `main` | cheap, works from phone, no API keys
-D-008 | 2026-11-18 | open | Whether to build ChatGPT's proposed "Dual AI Studio" (own server + API keys) | pending owner decision; see COLLAB.md
+## D-001 Single-file `index.html` PWA on GitHub Pages, all assets vendored locally (offline play, no build step)
+D-001 | 2026-11 | implemented | in repo from first deploy
+
+## D-002 Cars load from GLB via a `CAR_MODELS` registry; physics wheels laid out from the model's wheel nodes
+D-002 | 2026-11-18 | implemented | commit 2dfdf7d
+
+## D-003 Ford Shelby GT500 is the police car; Porsche 911 ($25,000) and Lexus LC 500 ($18,000) are bought with in-game cash
+D-003 | 2026-11-18 | agreed | by Martin
+D-003 | 2026-11-18 | implemented | commit 2dfdf7d
+
+## D-004 Income from delivery jobs (random destination, no physical cargo) and daily stunt jumps
+D-004 | 2026-11-18 | agreed | by Martin
+D-004 | 2026-11-18 | implemented | commit 2dfdf7d
+
+## D-005 NPC traffic uses low-poly Kenney cars, ~50% higher density, distance recycling and far-physics freezing
+D-005 | 2026-11-18 | agreed | by Martin
+D-005 | 2026-11-18 | implemented | commit 2dfdf7d
+
+## D-006 Progress (cash, owned cars, jumps) saved in localStorage `vh_save`
+D-006 | 2026-11-18 | implemented | commit 2dfdf7d
+
+## D-007 Claude/ChatGPT collaborate through repo files; only the builder pushes `main`
+D-007 | 2026-11-18 | agreed | by Martin
+D-007 | 2026-11-18 | implemented | COLLAB v2 adopted, docs in repo
+
+## D-008 Build ChatGPT's proposed "Dual AI Studio" (own server + API keys)
+D-008 | 2026-11-18 | proposed | Claude advises against for now (cost, needs always-on PC, API Claude loses sandbox tools); revisit after v2 runs a few weeks
+
+## D-009 Docs-only changes do not need a game version bump; any change to a file in `sw.js` PRECACHE does; enforced by CI
+D-009 | 2026-11-18 | agreed | by Martin via ChatGPT review
+D-009 | 2026-11-18 | implemented | .github/workflows/pwa-cache-check.yml
