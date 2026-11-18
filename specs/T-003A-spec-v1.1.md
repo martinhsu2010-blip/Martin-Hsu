@@ -5,7 +5,7 @@
 **Reviewer:** Claude  
 **Priority:** P1  
 **Depends on:** T-001B  
-**Design base commit:** \`5937859ff7160851e7342359b576a45c5177d423\`  
+**Design base commit:** `5937859ff7160851e7342359b576a45c5177d423`  
 **Related decision:** D-015  
 **Verification:** designed / code-inspected, not device-measured  
 **Status:** Specification complete; awaiting Martin's implementation approval
@@ -102,7 +102,7 @@ Use CSS viewport dimensions, not physical panel pixels, for responsive sizing.
 
 Placement rules:
 
-1. Respect \`safe-area-inset-top/right/bottom/left\`, plus 12–20 px of padding.
+1. Respect `safe-area-inset-top/right/bottom/left`, plus 12–20 px of padding.
 2. Controls anchor to the viewport corners, not fixed absolute positions.
 3. Maintain at least 12 px separation between unrelated control groups.
 4. Do not allow any HUD component to cover interactive controls.
@@ -139,28 +139,28 @@ Use matte black, graphite gray and metallic silver.
 
 Suggested palette:
 
-- Main surface: \`#24282E\`
-- Raised surface: \`#414750\`
-- Metallic edge: \`#858C96\`
-- Primary symbols: \`#F1F5F9\`
+- Main surface: `#24282E`
+- Raised surface: `#414750`
+- Metallic edge: `#858C96`
+- Primary symbols: `#F1F5F9`
 - Active pressed state: slightly brighter surface with reduced elevation
 
 Gas pedal:
 
 - Taller and narrower.
 - Vertical groove design.
-- Label \`GAS\` in English mode.
+- Label `GAS` in English mode.
 - Slight downward visual movement while pressed.
 
 Brake pedal:
 
 - Shorter and wider.
 - Horizontal groove design.
-- Label \`BRAKE\` in English mode.
+- Label `BRAKE` in English mode.
 
 Use CSS and existing SVG infrastructure, not new image textures.
 
-Keep existing input bindings and binary \`INPUT\` states unchanged:
+Keep existing input bindings and binary `INPUT` states unchanged:
 
 - Gas = forward.
 - Brake = backward/brake.
@@ -172,7 +172,7 @@ No analog throttle, steering-wheel simulation or vehicle-physics change in this 
 
 ## 4. Minimap performance rules
 
-The current \`radar-canvas\` and \`drawRadar()\` must be reused.
+The current `radar-canvas` and `drawRadar()` must be reused.
 
 Do not introduce a second minimap, an additional Three.js renderer or an extra 3D camera.
 
@@ -216,7 +216,7 @@ In landscape:
 - All long settings and mission content scrolls within its panel.
 - Close/back control stays accessible at all times.
 - Avoid rendering the world map continuously when another tab is selected.
-- Preserve the original \`closeModals\` and mission/garage event behavior.
+- Preserve the original `closeModals` and mission/garage event behavior.
 
 Opening a menu releases held driving inputs. Preserve existing game-time behavior for this release; changing whether missions or physics pause during menus requires a separate approved design decision.
 
@@ -226,8 +226,8 @@ Existing delivery restrictions must remain effective, including preventing fast 
 
 Support:
 
-- \`en\` — English.
-- \`zh-TW\` — Traditional Chinese.
+- `en` — English.
+- `zh-TW` — Traditional Chinese.
 
 Add a language selector inside SETTINGS.
 
@@ -237,7 +237,7 @@ Recommended default policy:
 - Existing saves without a language preference: Traditional Chinese.
 - A saved preference always overrides the default.
 
-Store the preference in a new backward-compatible \`vh_save.language\` field, as requested in the T-003A review.
+Store the preference in a new backward-compatible `vh_save.language` field, as requested in the T-003A review.
 
 Use one centralized string table containing English and Traditional Chinese translations.
 
@@ -314,7 +314,7 @@ Report:
 - Approximate test duration.
 - Any thermal or memory issue.
 
-Headless-browser results must be marked \`measured (headless)\`. They cannot replace physical-device testing.
+Headless-browser results must be marked `measured (headless)`. They cannot replace physical-device testing.
 
 ### 7.4 Performance restrictions
 
@@ -396,14 +396,14 @@ Only one active game-code PR at a time, per COLLAB v3.
 
 Every PR must:
 
-1. Start from the latest \`main\`.
+1. Start from the latest `main`.
 2. Change only its assigned task scope.
-3. Pass \`python3 tools/test/syntax_check.py\`.
+3. Pass `python3 tools/test/syntax_check.py`.
 4. Include a before/after check or clear test evidence.
 5. Avoid regressions to saves, missions, controls and offline play.
 6. Include phone/tablet performance impact notes.
 7. Receive Claude's review.
-8. Leave \`sw.js\` CACHE untouched in Codex's branch; Claude handles the release bump.
+8. Leave `sw.js` CACHE untouched in Codex's branch; Claude handles the release bump.
 9. Record actual performance measurements separately from design targets.
 10. Require Martin's final gameplay acceptance.
 
