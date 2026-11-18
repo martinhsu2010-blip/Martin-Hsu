@@ -1,6 +1,6 @@
 // VICE HORIZON VI Service Worker：快取優先，第一次載入後可離線遊玩
 // 更新遊戲時，把 CACHE 的版本號改掉，玩家下次開啟就會下載新版本
-const CACHE = 'vh-2026-11-18-12';
+const CACHE = 'vh-2026-11-18-13';
 const PRECACHE = [
   "./",
   "./css/app.css",
