@@ -1003,7 +1003,44 @@
         const scene = new THREE.Scene();
         scene.fog = new THREE.FogExp2(0xd97757, 0.0011);
 
-        const camera = new THREE.PerspectiveCamera(62, window.innerWidth / window.innerHeight, 0.5, 2600);
+        // T-003B: camera distances/heights are world units; angles are radians except FOV.
+        const CAMERA_CONFIG = {
+            foot: { distance: 4.2, pitch: THREE.MathUtils.degToRad(12), targetHeight: 1.55 },
+            near: { distance: 7.2, pitch: THREE.MathUtils.degToRad(10), targetHeight: 1.10 },
+            far: { distance: 10.5, pitch: THREE.MathUtils.degToRad(14), targetHeight: 1.10 },
+            hood: { distance: -0.8, height: 1.35 },
+            bird: { distance: 4.0, height: 38.0 },
+            recenterDelay: 2,
+            yawRate: 2.6,
+            pitchRate: 2,
+            followRate: 14,
+            recoveryRate: 4,
+            transitionSeconds: 0.75,
+            teleportDistance: 40,
+            collisionPadding: 0.6,
+            minDistance: 0.05,
+            minHeight: 0.6,
+            pitchMin: THREE.MathUtils.degToRad(-10),
+            pitchMax: THREE.MathUtils.degToRad(60),
+            fov: 60,
+            speedFov: 68,
+            nitroFov: 72,
+            fovStartKmh: 60,
+            fovFullKmh: 240,
+            fovRate: 3,
+            shakeStartKmh: 150,
+            shakeScale: 5000,
+            shakeMax: 0.02,
+            fixedFollowRate: 10,
+            fixedLookRate: 12,
+            fixedLookAhead: 4.5,
+            fixedLookHeight: 1.2,
+            fixedMinHeight: 1.2,
+            fixedFov: 62,
+            fixedSpeedFov: 14,
+            fixedNitroFov: 6
+        };
+        const camera = new THREE.PerspectiveCamera(CAMERA_CONFIG.fov, window.innerWidth / window.innerHeight, 0.5, 2600);
         camera.position.set(98, 6, 12);
 
         // 1. 物理大氣天空 (three/addons/objects/Sky.js) + PMREMGenerator.fromScene(sky)
@@ -6980,7 +7017,7 @@
         // ---------- 第三人稱環繞鏡頭 (獨立 yaw / pitch，像原神、PUBG Mobile) ----------
         const CAM = {
             yaw: 0,            // 鏡頭面向方向 (與角色 heading 同一套角度定義)
-            pitch: 0.32,       // 鏡頭仰角 (弧度)，限制約 -10° ~ 60°
+            pitch: CAMERA_CONFIG.foot.pitch,
             zoom: 1.0,
             sens: 1.0,
             invertY: false,
@@ -6990,10 +7027,14 @@
             pinchStartZoom: 1,
             raycaster: new THREE.Raycaster(),
             target: new THREE.Vector3(98, 2, 22),
-            initialized: false
+            initialized: false,
+            profile: null,
+            distance: 0,
+            wasFixed: false,
+            transitionLeft: 0
         };
-        const CAM_PITCH_MIN = THREE.MathUtils.degToRad(-10);
-        const CAM_PITCH_MAX = THREE.MathUtils.degToRad(60);
+        const CAM_PITCH_MIN = CAMERA_CONFIG.pitchMin;
+        const CAM_PITCH_MAX = CAMERA_CONFIG.pitchMax;
         try {
             const saved = JSON.parse(localStorage.getItem('vh_settings') || '{}');
             if (typeof saved.sens === 'number') CAM.sens = saved.sens;
@@ -7005,6 +7046,9 @@
         const smoothLookAt = new THREE.Vector3(98, 2, 22);
         const _camDesired = new THREE.Vector3();
         const _camDir = new THREE.Vector3();
+        const _camLook = new THREE.Vector3();
+        const _camLightDir = new THREE.Vector3();
+        const _camHits = [];
 
         function angleLerp(a, b, t) {
             let d = b - a;
@@ -7017,34 +7061,61 @@
             const pos = getActivePosition();
             const spd = getActiveSpeed();
             const inCar = STATE.mode === 'CAR' && STATE.currentVehicle;
-            if (!CAM.initialized) { CAM.yaw = getActiveHeading(); CAM.initialized = true; }
+            const fixedView = inCar && (STATE.cameraMode === 2 || STATE.cameraMode === 3);
+            const profile = inCar ? (STATE.cameraMode === 1 ? CAMERA_CONFIG.far : CAMERA_CONFIG.near) : CAMERA_CONFIG.foot;
+            if (!CAM.initialized) {
+                CAM.yaw = getActiveHeading();
+                CAM.pitch = profile.pitch;
+                smoothLookAt.set(pos.x, pos.y + profile.targetHeight, pos.z);
+                CAM.distance = profile.distance * CAM.zoom;
+                CAM.initialized = true;
+            }
+            if (CAM.profile !== profile) {
+                CAM.pitch = profile.pitch;
+                CAM.profile = profile;
+            }
 
-            if (inCar && (STATE.cameraMode === 2 || STATE.cameraMode === 3)) {
+            if (fixedView) {
                 // 引擎蓋視角與高空鳥瞰維持固定跟隨
                 const heading = getActiveHeading();
-                const dist = STATE.cameraMode === 2 ? -0.8 : 4.0;
-                const height = STATE.cameraMode === 2 ? 1.35 : 38.0;
+                const fixed = STATE.cameraMode === 2 ? CAMERA_CONFIG.hood : CAMERA_CONFIG.bird;
+                const dist = fixed.distance;
+                const height = fixed.height;
                 const tx = pos.x - Math.sin(heading) * dist;
                 const tz = pos.z - Math.cos(heading) * dist;
-                const ty = Math.max(1.2, pos.y + height);
-                const k = Math.min(1, dt * 10);
+                const ty = Math.max(CAMERA_CONFIG.fixedMinHeight, pos.y + height);
+                const k = Math.min(1, dt * CAMERA_CONFIG.fixedFollowRate);
                 camera.position.set(
                     THREE.MathUtils.lerp(camera.position.x, tx, k),
                     THREE.MathUtils.lerp(camera.position.y, ty, k),
                     THREE.MathUtils.lerp(camera.position.z, tz, k)
                 );
-                smoothLookAt.lerp(new THREE.Vector3(pos.x + Math.sin(heading) * 4.5, pos.y + 1.2, pos.z + Math.cos(heading) * 4.5), Math.min(1, dt * 12));
+                _camLook.set(pos.x + Math.sin(heading) * CAMERA_CONFIG.fixedLookAhead, pos.y + CAMERA_CONFIG.fixedLookHeight, pos.z + Math.cos(heading) * CAMERA_CONFIG.fixedLookAhead);
+                smoothLookAt.lerp(_camLook, Math.min(1, dt * CAMERA_CONFIG.fixedLookRate));
                 camera.lookAt(smoothLookAt);
                 CAM.yaw = heading;
+                CAM.profile = null;
+                CAM.wasFixed = true;
             } else {
-                // 開車時 1.5 秒沒有操作鏡頭，就平滑轉回車尾後方
-                if (inCar && STATE.time - CAM.lastInput > 1.5) {
-                    CAM.yaw = angleLerp(CAM.yaw, getActiveHeading(), Math.min(1, dt * 2.6));
-                    CAM.pitch = THREE.MathUtils.lerp(CAM.pitch, STATE.cameraMode === 1 ? 0.36 : 0.24, Math.min(1, dt * 2.0));
+                // Respect a held camera gesture, then recenter after two seconds of inactivity.
+                if (inCar && CAM.pointers.size === 0 && STATE.time - CAM.lastInput > CAMERA_CONFIG.recenterDelay) {
+                    CAM.yaw = angleLerp(CAM.yaw, getActiveHeading(), 1 - Math.exp(-dt * CAMERA_CONFIG.yawRate));
+                    CAM.pitch = THREE.MathUtils.lerp(CAM.pitch, profile.pitch, 1 - Math.exp(-dt * CAMERA_CONFIG.pitchRate));
                 }
-                const baseDist = inCar ? (STATE.cameraMode === 1 ? 13.5 : 8.8) : 5.4;
-                let dist = baseDist * CAM.zoom;
-                CAM.target.set(pos.x, pos.y + (inCar ? 1.1 : 1.55), pos.z);
+                CAM.target.set(pos.x, pos.y + profile.targetHeight, pos.z);
+                if (CAM.wasFixed) {
+                    CAM.transitionLeft = CAMERA_CONFIG.transitionSeconds;
+                    CAM.distance = camera.position.distanceTo(CAM.target);
+                    CAM.wasFixed = false;
+                }
+                if (smoothLookAt.distanceToSquared(CAM.target) > CAMERA_CONFIG.teleportDistance * CAMERA_CONFIG.teleportDistance) {
+                    // Teleports must not sweep a lagging camera through unrelated city blocks.
+                    smoothLookAt.copy(CAM.target);
+                    CAM.distance = profile.distance * CAM.zoom;
+                    CAM.transitionLeft = 0;
+                }
+                // Smooth the follow anchor before collision testing, never the resolved camera.
+                smoothLookAt.lerp(CAM.target, 1 - Math.exp(-dt * CAMERA_CONFIG.followRate));
 
                 _camDir.set(
                     -Math.sin(CAM.yaw) * Math.cos(CAM.pitch),
@@ -7052,33 +7123,44 @@
                     -Math.cos(CAM.yaw) * Math.cos(CAM.pitch)
                 ).normalize();
 
-                // 鏡頭碰撞：建築物擋在角色與鏡頭之間時把鏡頭拉近，避免穿牆
-                CAM.raycaster.set(CAM.target, _camDir);
-                CAM.raycaster.far = dist;
-                const hits = CAM.raycaster.intersectObjects(WORLD.cameraBlockers, false);
-                if (hits.length > 0) dist = Math.max(1.2, hits[0].distance - 0.45);
-
-                _camDesired.copy(CAM.target).addScaledVector(_camDir, dist);
-                _camDesired.y = Math.max(0.6, _camDesired.y);
-                const k = Math.min(1, dt * 14);
-                camera.position.lerp(_camDesired, k);
-                // Forza 式高速鏡頭震動
+                _camDesired.copy(smoothLookAt).addScaledVector(_camDir, profile.distance * CAM.zoom);
+                // Reduced shake is included in the collision query, not applied after it.
                 const kmhNow = spd * 3.6;
-                if (inCar && kmhNow > 150) {
-                    const amp = Math.min(0.06, (kmhNow - 150) / 2500);
-                    camera.position.x += (Math.random() - 0.5) * amp;
-                    camera.position.y += (Math.random() - 0.5) * amp;
+                if (inCar && kmhNow > CAMERA_CONFIG.shakeStartKmh) {
+                    const amp = Math.min(CAMERA_CONFIG.shakeMax, (kmhNow - CAMERA_CONFIG.shakeStartKmh) / CAMERA_CONFIG.shakeScale);
+                    _camDesired.x += (Math.random() - 0.5) * amp;
+                    _camDesired.y += (Math.random() - 0.5) * amp;
                 }
-                smoothLookAt.lerp(CAM.target, Math.min(1, dt * 20));
-                camera.lookAt(smoothLookAt);
+                _camDesired.y = Math.max(CAMERA_CONFIG.minHeight, _camDesired.y);
+                if (CAM.transitionLeft > 0) {
+                    _camDesired.lerp(camera.position, Math.exp(-dt * CAMERA_CONFIG.followRate));
+                    CAM.transitionLeft = Math.max(0, CAM.transitionLeft - dt);
+                }
+                _camDir.subVectors(_camDesired, CAM.target);
+                let dist = _camDir.length();
+                _camDir.normalize();
+                CAM.raycaster.set(CAM.target, _camDir);
+                CAM.raycaster.far = dist + CAMERA_CONFIG.collisionPadding;
+                _camHits.length = 0;
+                CAM.raycaster.intersectObjects(WORLD.cameraBlockers, false, _camHits);
+                if (_camHits.length) dist = Math.min(dist, Math.max(CAMERA_CONFIG.minDistance, _camHits[0].distance - CAMERA_CONFIG.collisionPadding));
+                // Pull in immediately; ease outward only so smoothing cannot cross a blocker.
+                CAM.distance = dist < CAM.distance ? dist : THREE.MathUtils.lerp(CAM.distance, dist, 1 - Math.exp(-dt * CAMERA_CONFIG.recoveryRate));
+                camera.position.copy(CAM.target).addScaledVector(_camDir, CAM.distance);
+                // A collision can pull the camera inside the lagging anchor; keep looking at the subject.
+                camera.lookAt(CAM.target);
             }
 
             // 速度感：車速越快視角 (FOV) 越寬，開氮氣時再加寬並加上徑向動態模糊
             const nitroOn = inCar && STATE.currentVehicle.flameGroup && STATE.currentVehicle.flameGroup.visible;
             const kmh = spd * 3.6;
-            const targetFov = 62 + (inCar ? THREE.MathUtils.clamp((kmh - 60) / 180, 0, 1) * 14 : 0) + (nitroOn ? 6 : 0);
+            const speedBlend = inCar ? THREE.MathUtils.clamp((kmh - CAMERA_CONFIG.fovStartKmh) / (CAMERA_CONFIG.fovFullKmh - CAMERA_CONFIG.fovStartKmh), 0, 1) : 0;
+            // Preserve hood/bird optics; the new 60/68/72 degree range is third-person only.
+            const targetFov = fixedView
+                ? CAMERA_CONFIG.fixedFov + speedBlend * CAMERA_CONFIG.fixedSpeedFov + (nitroOn ? CAMERA_CONFIG.fixedNitroFov : 0)
+                : CAMERA_CONFIG.fov + speedBlend * (CAMERA_CONFIG.speedFov - CAMERA_CONFIG.fov) + (nitroOn ? CAMERA_CONFIG.nitroFov - CAMERA_CONFIG.speedFov : 0);
             if (Math.abs(camera.fov - targetFov) > 0.05) {
-                camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, Math.min(1, dt * 3));
+                camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, fixedView ? Math.min(1, dt * CAMERA_CONFIG.fovRate) : 1 - Math.exp(-dt * CAMERA_CONFIG.fovRate));
                 camera.updateProjectionMatrix();
             }
             if (gradePass) {
@@ -7094,7 +7176,7 @@
             const snappedZ = Math.floor(pos.z / worldUnitsPerTexel) * worldUnitsPerTexel;
 
             const lightDist = 175;
-            const lightDir = sunVector.clone().normalize();
+            const lightDir = _camLightDir.copy(sunVector).normalize();
             // 若夜間太陽低於地平線，改以高空月光角度投射穩定陰影
             const effY = Math.max(0.35, lightDir.y);
             sunLight.target.position.set(snappedX, 0, snappedZ);
