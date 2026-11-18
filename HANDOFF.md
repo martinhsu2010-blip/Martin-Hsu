@@ -1,7 +1,7 @@
 # VICE HORIZON VI — Project Handoff
 
 Written for another AI assistant (e.g. ChatGPT) or developer picking up this project.
-Last updated: 2026-11-18, game version `vh-2026-11-18-13` (see `CACHE` in `sw.js`).
+Last updated: 2026-11-18, game version `vh-2026-11-19-14` (see `CACHE` in `sw.js`).
 Owner: martinhsu2010-blip (Traditional Chinese speaker, Taiwan). Explain things to the owner in Traditional Chinese; write prompts for Gemini in English.
 
 ## What this is
@@ -69,3 +69,6 @@ Facade/terrain/ring-road expansion → world map + fast travel → new trees, mo
 - Balance prices/rewards after real play.
 - More purchasable cars or upgrades.
 - Verify licenses of the three Sketchfab car models before any public release.
+
+## Camera (T-003B)
+All third-person camera defaults live in `CAMERA_CONFIG` (near the `PerspectiveCamera` creation): foot 4.2 / 12°, chase near 7.2 / 10°, far 10.5 / 14° (distance / pitch, world units), FOV 60 → 68 (nitro 72), recenter after 2 s idle, collision padding 0.6 with immediate pull-in and eased recovery. Hood and bird views keep their old optics. Regression harness: `node tools/test/camera_check.mjs <base-sha>` (Node only, not a browser test).
