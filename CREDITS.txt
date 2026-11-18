@@ -1,0 +1,8 @@
+VICE HORIZON VI — 第三方資源
+- three.js r160 (MIT) — https://threejs.org
+- cannon-es 0.20.0 (MIT) — https://github.com/pmndrs/cannon-es
+- 3D 模型 Soldier.glb、Xbot.glb、Michelle.glb、ferrari.glb 與 waternormals.jpg 取自 three.js 官方範例 (examples/models, examples/textures)，版權與授權依原作者，請保留此說明
+- 牆面 / 柏油貼圖：Poly Haven (CC0) — red_brick_03、concrete_wall_008、asphalt_02 — https://polyhaven.com
+- 3D 模型：Poly Haven (CC0) — street_lamp_01、painted_wooden_bench、covered_car、barrel_03、water_manhole_cover、modular_urban_apartments_facade
+- meshoptimizer (MIT) — https://github.com/zeux/meshoptimizer
+- 字型：Orbitron、Rajdhani (SIL Open Font License) — Fontsource
