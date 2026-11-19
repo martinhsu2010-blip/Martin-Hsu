@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-20 | — | Martin | — | T-004D accepted on S26 Ultra / Tab S11 (vh-2026-11-20-01); T-004E unlocked for Codex
 - 2026-11-20 | vh-2026-11-20-01 | Claude (impl. Codex) | commit 17c16b3 | T-004D suburbs (Option B): seven building types (bungalow, 2-story, duplex, townhouse, walk-up, corner store, workshop), 130 -> 210 structures on phones / 215 -> 390 desktop, solid colliders including foundations; Claude spread the types evenly over all four suburban roads
 - 2026-11-19 | — | Martin | — | T-004C accepted on S26 Ultra / Tab S11 (vh-2026-11-19-19); T-004D unlocked for Codex
 - 2026-11-19 | vh-2026-11-19-19 | Claude (impl. Codex) | commit 06e0514 | T-004C collisions: tree trunks are now solid (pooled colliders near the player and active cars), suburban house colliders fixed for height and grouping, two trees moved off the Chiliad road; Claude extended house colliders over exposed foundations on slopes
