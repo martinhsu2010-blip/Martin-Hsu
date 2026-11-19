@@ -1,7 +1,7 @@
 # VICE HORIZON VI — Project Handoff
 
 Written for another AI assistant (e.g. ChatGPT) or developer picking up this project.
-Last updated: 2026-11-18, game version `vh-2026-11-19-14` (see `CACHE` in `sw.js`).
+Last updated: 2026-11-18, game version `vh-2026-11-19-15` (see `CACHE` in `sw.js`).
 Owner: martinhsu2010-blip (Traditional Chinese speaker, Taiwan). Explain things to the owner in Traditional Chinese; write prompts for Gemini in English.
 
 ## What this is
@@ -72,3 +72,6 @@ Facade/terrain/ring-road expansion → world map + fast travel → new trees, mo
 
 ## Camera (T-003B)
 All third-person camera defaults live in `CAMERA_CONFIG` (near the `PerspectiveCamera` creation): foot 4.2 / 12°, chase near 7.2 / 10°, far 10.5 / 14° (distance / pitch, world units), FOV 60 → 68 (nitro 72), recenter after 2 s idle, collision padding 0.6 with immediate pull-in and eased recovery. Hood and bird views keep their old optics. Regression harness: `node tools/test/camera_check.mjs <base-sha>` (Node only, not a browser test).
+
+## HUD (T-003C)
+The permanent toolbar is gone: tapping the minimap (`radar-container`, now a button) opens the interim `#quick-actions` dialog with the original buttons and IDs (quality, missions, garage, cop chase, radio, camera, sky, settings) plus map, the crate counter, RPM/nitro bars and keyboard help. T-003D replaces this dialog with the Game Hub. Layout sizes are CSS variables in `:root` (`--radar-size`, `--steer-size`, `--gas-*`, `--brake-*`, `--aux-size`) with three modes: tablet landscape (>= 960x560), compact, and short (< 430 px high; pursuit bar moves under the minimap). Safe areas use `env(safe-area-inset-*)`. Radar state is in `RADAR` (cached context, 10 Hz / 8 Hz LOW, skips drawing while hidden or behind a dialog/overlay). `releaseHudControls()` clears held input on resize/orientation/blur/hidden. Tests: `node tools/test/hud_check.mjs`, and `python3 tools/test/hud_layout_check.py http://127.0.0.1:8765` with a local server (`CHROMIUM_BIN=/usr/bin/google-chrome`).

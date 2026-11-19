@@ -4,13 +4,16 @@
 (none)
 
 ## Ready for Codex
+(none — T-003D starts after Martin accepts T-003C)
+
+## In review
 ### T-003C Responsive HUD, radar optimization and pedals
 Owner: Codex
 Reviewer: Claude
 Priority: P1
 Depends on: T-003B (done, accepted by Martin 2026-11-19)
-Base commit: latest `main` (Claude reports the SHA when this is unlocked)
-Branch/PR: `codex/T-003C-hud` / pending
+Base commit: `b05cfd559ef7dcce516be7507dc17b924433ff27`
+Branch/PR: `codex/T-003C-hud` / PR #14 (squash-merged db06aa2, released as `vh-2026-11-19-15`)
 Spec: `specs/T-003A-spec-v1.1.md` sections 3 (HUD, tablet landscape, compact fallback, pedal design), 4 (minimap rules), 8 (layout matrix), 10 (release gates), 11 (out of scope). The spec file is the authority; this entry points to it and adds Claude's clarifications.
 Output: HUD and visual-controls PR only. No camera, Game Hub, localization, economy, physics or input-logic changes.
 
@@ -32,10 +35,10 @@ Claude clarifications (reviewer notes, 2026-11-19):
 5. Verified existing behavior to keep: `touch-action`/pointer handling on `touch-controls` (steering and gas/brake simultaneously), `bindHold('btn-drive-gas','forward')`, `bindHold('btn-drive-brake','backward')`.
 6. Real-device S26 Ultra / Tab S11 FPS and layout acceptance belong to Martin after release.
 
-Verification: `designed`.
+Verification: `code-reviewed` + headless (Chrome/SwiftShader, not a device). Status: released, awaiting Martin's device acceptance (stage 8).
+Claude review (2026-11-19): spec sizes match (tablet 120/80/64x118/64x100/50, compact 96/64/58x100/60x88, short 84/56/50x84/54x74, targets >= 44 px); radar reuses the 140x140 canvas, 10 Hz / 8 Hz LOW, no draw while hidden/dialog/overlay; bindings unchanged plus pointercancel and resize/orientation/blur/visibility release. Claude fixed one defect (eb8b04d, CSS only): at 800x360 the pursuit bar covered horn/enter-exit, and on narrow/portrait screens the mission line covered the pursuit bar. `hud_layout_check.py` then PASS for 11 viewports x 2 label languages (1280x800, 1024x768, 960x540, 915x412, 844x390, 800x360, 667x375, 568x320, 640x480, 540x768, 412x915); live headless run: no errors, all dialog actions work, gas+steer together and release, keyboard W/M work, seeded save survives reload. NOT verified: radar Hz under real rendering (headless ~0.6 FPS), real multitouch, notch safe areas, S26 Ultra / Tab S11 FPS and feel.
+Visible changes for Martin to judge: the 8-button toolbar, nitro/RPM bars and crate counter now live in the minimap menu (tap the minimap); long enter/exit labels truncate with an ellipsis.
 
-## In review
-(none)
 
 ## Doing (Claude)
 (none)
@@ -50,7 +53,7 @@ Why: archives had no license text; needed before any public sharing.
 Owner: Codex
 Reviewer: Claude
 Priority: P1
-Depends on: T-003C
+Depends on: T-003C (released, awaiting Martin's acceptance)
 Spec: `specs/T-003A-spec-v1.1.md` sections 5, 8, 10. All existing toolbar actions through the Hub; mission/garage/map/settings preserved; correct modal and input handling; `closeModals` flow and the delivery fast-travel block preserved.
 Claude note: spec lists an "airport stunt" mission; no such name exists in code today. Map it to the existing STUNT mission and do not add a new one.
 Verification: `designed`.
