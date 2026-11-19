@@ -216,21 +216,42 @@
         #touch-controls svg { filter: none; }
         #foot-controls-cluster { gap: 12px; }
         #foot-controls-cluster button { width: 60px; height: 60px; }
+        /* Fullscreen Hub: one native modal, original panels and action IDs. */
         #quick-actions {
-            position: fixed; inset: 0; margin: auto; padding: 0; width: min(440px, calc(100% - var(--left-edge) - var(--right-edge)));
-            max-height: calc(100% - var(--top-edge) - var(--bottom-edge));
-            color: #f1f5f9; background: #171c23; border: 1px solid #858c96; border-radius: 16px;
+            position: fixed; inset: 0; margin: 0; padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+            width: 100%; height: 100%; height: 100dvh; max-width: none; max-height: none;
+            color: #f1f5f9; background: #171c23; border: 0; border-radius: 0; overflow: hidden;
         }
         #quick-actions[open] { display: flex; flex-direction: column; }
-        #quick-actions::backdrop { background: rgba(0,0,0,.65); }
-        #quick-actions header { display: flex; flex: none; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 16px; border-bottom: 1px solid #414750; }
+        #quick-actions::backdrop { background: #020617; }
+        #quick-actions header { display: flex; flex: none; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 12px; border-bottom: 1px solid #414750; }
         #quick-actions-title { font-size: 16px; font-weight: 700; }
         #quick-actions-close { width: 44px; height: 44px; flex: none; border-radius: 10px; background: #414750; }
-        .quick-actions-body { padding: 12px 16px 16px; min-height: 0; }
-        #quick-actions-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 12px 0; }
-        #quick-actions .vh-pill { width: 100%; min-height: 44px; min-width: 0; border-radius: 10px; white-space: normal; overflow-wrap: anywhere; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+        #quick-actions-list { display: flex; flex: none; gap: 4px; padding: 4px 8px; margin: 0; overflow-x: auto; touch-action: pan-x; }
+        #quick-actions-list button { flex: 1 0 60px; padding: 4px; border-radius: 8px; font-size: 12px; }
+        #quick-actions-list [aria-selected="true"] { background: #164e63; box-shadow: inset 0 -3px #67e8f9; }
+        #quick-actions button, #quick-actions input, #quick-actions select { min-height: 44px; min-width: 44px; }
+        #quick-actions .vh-pill { min-width: 44px; border-radius: 10px; white-space: normal; overflow-wrap: anywhere; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
         #quick-actions .vh-sub { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-        #quick-actions .vh-badge { margin-top: 4px; }
+        .hub-content { position: relative; flex: 1; min-height: 0; min-width: 0; overflow: hidden; }
+        #quick-actions [role="tabpanel"] { position: absolute; inset: 0; padding: 0; background: transparent; backdrop-filter: none; }
+        #quick-actions [role="tabpanel"] > .hud-glass { width: 100%; max-width: 900px; max-height: 100%; border: 0; border-radius: 0; box-shadow: none; background: transparent; backdrop-filter: none; }
+        #quick-actions #hub-world { display: block; }
+        #quick-actions #hub-world.hidden { display: none; }
+        #quick-actions .hub-scroll { touch-action: pan-y; overflow-y: auto; padding: 16px; }
+        .hub-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+        .hub-actions .vh-pill { flex: 1 1 140px; }
+        #quick-actions #world-map { padding: 0; }
+        #world-map > div:first-child { flex: none; padding: 4px 8px; }
+        #world-map > div:first-child > div:first-child { display: none; }
+        #wm-chips { flex: none; padding: 0 8px 4px; }
+        #wm-chips button { flex-shrink: 0; }
+        #wm-map-area { min-height: 0; }
+        #quick-actions #wm-panel { touch-action: pan-y; max-height: calc(100% - 12px); overflow-y: auto; padding: 8px; }
+        @media (orientation: landscape) {
+            #quick-actions #wm-panel { left: auto; right: 6px; top: 6px; bottom: auto; width: min(32%, 320px); transform: none; }
+            #wm-panel > div:last-child { flex-wrap: wrap; margin-top: 6px; }
+        }
         #desktop-hints { position: static; padding: 8px 0 0; margin-top: 8px; border: 0; border-radius: 0; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
         #missions-modal, #garage-modal, #settings-modal { padding: var(--top-edge) var(--right-edge) var(--bottom-edge) var(--left-edge); }
         #missions-modal > div, #garage-modal > div, #settings-modal > div { max-height: 100%; }
@@ -282,8 +303,106 @@
     <!-- 3D WebGL Viewport Canvas -->
     <canvas id="game-canvas"></canvas>
 
+    <!-- ==================== 頂部 HUD 狀態列 (TOP HUD) ==================== -->
+    <div id="game-hud" class="fixed top-0 inset-x-0 z-20 flex items-start justify-between pointer-events-none">
+
+        <!-- 左上：即時雷達小地圖 + 區域 + 補給箱收集 -->
+        <div id="radar-column" class="pointer-events-auto">
+            <button id="radar-container" type="button" aria-label="開啟 Game Hub" aria-haspopup="dialog" aria-controls="quick-actions" class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-sky-500 via-slate-600 to-rose-500 shadow-lg cursor-pointer">
+                <canvas id="radar-canvas" width="140" height="140" class="w-full h-full rounded-full bg-[#090d16] block"></canvas>
+                <span class="absolute -right-0.5 top-1 w-6 h-6 rounded-full flex items-center justify-center border border-cyan-300/70" style="background: rgba(2,6,23,0.92); box-shadow: 0 0 10px rgba(34,211,238,0.5);">
+                    <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none" stroke="#67e8f9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>
+                </span>
+                <span class="absolute top-0.5 left-1/2 -translate-x-1/2 text-[8px] font-vice font-black text-sky-300 bg-black/80 px-1 rounded">N</span>
+                <span id="radar-zone" class="absolute -bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-vice font-bold text-white bg-slate-900/95 px-2 py-0.5 rounded-full border border-white/30 shadow">
+                    OCEAN DRIVE
+                </span>
+            </button>
+
+        </div>
+
+        <!-- 右上：通緝星數、金錢、6速檔位、RPM轉速條、時速表與氮氣條 -->
+        <div id="status-column" class="flex flex-col items-end gap-1.5 pointer-events-none">
+            <div id="status-card" class="hud-glass rounded-2xl text-right">
+                <div id="wanted-row" class="flex items-center justify-end gap-1 mb-0.5">
+                    <span id="wanted-badge" class="text-[9px] font-vice font-bold px-1 rounded bg-red-500/40 text-red-200 hidden">VCPD</span>
+                    <div id="hud-stars" class="flex items-center justify-end gap-0.5 text-xs sm:text-sm leading-none">
+                        <span class="star text-white/25">★</span>
+                        <span class="star text-white/25">★</span>
+                        <span class="star text-white/25">★</span>
+                        <span class="star text-white/25">★</span>
+                        <span class="star text-white/25">★</span>
+                    </div>
+                </div>
+                <div class="font-vice text-base sm:text-xl font-black text-emerald-400 leading-tight">
+                    $<span id="hud-cash">3,500</span>
+                </div>
+                <div class="flex items-baseline justify-end gap-1 border-t border-white/10 pt-0.5 mt-0.5">
+                    <span id="hud-gear" class="text-[10px] font-vice font-bold px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-300 mr-1">FOOT</span>
+                    <span id="hud-speed" class="font-vice text-xl sm:text-2xl font-black text-sky-300 leading-none">0</span>
+                    <span class="text-[9px] font-bold text-gray-300">KM/H</span>
+                </div>
+
+            </div>
+
+            <!-- 警方追捕狀態條 -->
+            <div id="pursuit-hud-panel" class="hud-glass siren-border rounded-xl px-2.5 py-1 border border-red-500/80 text-right hidden min-w-[132px]">
+                <div id="pursuit-status-label" class="text-[9px] font-vice font-black text-red-400">🚨 VCPD 追捕中</div>
+                <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden mt-1">
+                    <div id="pursuit-meter-bar" class="h-full bg-gradient-to-r from-red-500 to-yellow-300 w-0"></div>
+                </div>
+                <div class="text-[9px] font-bold text-gray-200 mt-0.5">拉開距離以擺脫警車</div>
+            </div>
+
+            <!-- 任務進度面板 -->
+            <div id="mission-panel" class="hud-glass rounded-xl px-2.5 py-1 border border-amber-400/60 text-right hidden">
+                <div id="mission-title" class="text-[9px] font-bold uppercase text-amber-300">STREET RACE</div>
+                <div id="mission-progress" class="font-vice text-xs font-black text-white">CP 1/6</div>
+                <div id="mission-timer" class="text-xs font-extrabold text-rose-400">60.0s</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interim actions entry; T-003D will replace this with the Game Hub. -->
+    <dialog id="quick-actions" aria-labelledby="quick-actions-title">
+        <header>
+            <h2 id="quick-actions-title">Game Hub</h2>
+            <button id="quick-actions-close" type="button" aria-label="關閉 Game Hub">✕</button>
+        </header>
+        <nav id="quick-actions-list" role="tablist" aria-label="Game Hub"><button id="quick-actions-map" type="button" role="tab" aria-controls="world-map" aria-selected="false" tabindex="-1">地圖</button><button id="pill-mission" type="button" role="tab" aria-controls="missions-modal" aria-selected="false" tabindex="-1">任務</button><button id="pill-garage" type="button" role="tab" aria-controls="garage-modal" aria-selected="false" tabindex="-1">車庫</button><button id="hub-world-tab" type="button" role="tab" aria-controls="hub-world" aria-selected="false" tabindex="-1">世界</button><button id="pill-settings" type="button" role="tab" aria-controls="settings-modal" aria-selected="false" tabindex="-1">設定</button></nav>
+        <div class="hub-content">
+    <!-- ==================== 全螢幕世界地圖 (點左上雷達開啟)：拖曳平移、捏合 / 滾輪縮放、點選地點快速穿梭或設導航點 ==================== -->
+    <div role="tabpanel" aria-labelledby="quick-actions-map" tabindex="0" id="world-map" class="hidden fixed inset-0 z-[60] flex flex-col" style="background: radial-gradient(120% 120% at 50% 0%, #0f172a, #020617);">
+        <div class="flex items-center gap-2 px-3 sm:px-5 pt-3 pb-2">
+            <div class="font-vice font-black text-sm sm:text-base tracking-wider bg-gradient-to-r from-sky-300 via-fuchsia-300 to-amber-200 bg-clip-text text-transparent">VICE HORIZON 地圖</div>
+            <div class="text-[11px] text-slate-400 hidden sm:block">拖曳移動・捏合 / 滾輪縮放・點選地點</div>
+            <div class="ml-auto flex items-center gap-1.5">
+                <button id="wm-zoom-out" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sky)"><span class="vh-sub" style="font-size:14px">−</span></button>
+                <button id="wm-zoom-in" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sky)"><span class="vh-sub" style="font-size:14px">＋</span></button>
+                <button id="wm-center" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-lime)"><span>回到我</span></button>
+                <button id="wm-close" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-rose)"><span>關閉</span></button>
+            </div>
+        </div>
+        <div id="wm-chips" class="flex gap-1.5 px-3 sm:px-5 pb-2 overflow-x-auto modal-scroll" style="touch-action: pan-x;"></div>
+        <div id="wm-map-area" class="relative flex-1 mx-2 sm:mx-4 mb-2 rounded-2xl overflow-hidden border border-white/10">
+            <canvas id="wm-canvas" class="absolute inset-0 w-full h-full" style="touch-action: none;"></canvas>
+            <div id="wm-panel" class="hidden absolute left-1/2 -translate-x-1/2 bottom-3 w-[min(92%,420px)] rounded-2xl px-4 py-3 border border-white/15" style="background: rgba(2,6,23,0.92); backdrop-filter: blur(10px);">
+                <div class="flex items-center gap-2">
+                    <div id="wm-sel-icon" class="text-xl">📍</div>
+                    <div class="min-w-0">
+                        <div id="wm-sel-name" class="font-vice font-black text-sm text-white truncate">—</div>
+                        <div id="wm-sel-sub" class="text-[11px] text-slate-400">—</div>
+                    </div>
+                </div>
+                <div class="flex gap-2 mt-3">
+                    <button id="wm-travel" type="button" class="touch-btn vh-btn vh-row h-11 rounded-xl flex-1" style="--acc: var(--vh-pink)"><span class="vh-lbl" style="color:#fff">⚡ 快速穿梭</span></button>
+                    <button id="wm-waypoint" type="button" class="touch-btn vh-btn vh-row h-11 rounded-xl flex-1" style="--acc: var(--vh-sun)"><span class="vh-lbl">設為導航點</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- ==================== 任務與快速傳送選單 (MISSIONS & FAST TRAVEL MODAL) ==================== -->
-    <div id="missions-modal" class="fixed inset-0 z-40 hidden items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-md">
+    <div role="tabpanel" aria-labelledby="pill-mission" tabindex="0" id="missions-modal" class="fixed inset-0 z-40 hidden items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-md">
         <div class="max-w-xl w-full hud-glass rounded-3xl p-4 sm:p-6 border border-emerald-400/50 shadow-2xl modal-scroll max-h-[88vh]">
             <div class="flex items-center justify-between border-b border-white/15 pb-3 mb-3">
                 <div>
@@ -335,7 +454,7 @@
     </div>
 
     <!-- ==================== 改裝車庫選單 (GARAGE & CUSTOMIZER MODAL) ==================== -->
-    <div id="garage-modal" class="fixed inset-0 z-40 hidden items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-md">
+    <div role="tabpanel" aria-labelledby="pill-garage" tabindex="0" id="garage-modal" class="fixed inset-0 z-40 hidden items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-md">
         <div class="max-w-xl w-full hud-glass rounded-3xl p-4 sm:p-6 border border-sky-400/50 shadow-2xl modal-scroll max-h-[88vh]">
             <div class="flex items-center justify-between border-b border-white/15 pb-2.5 mb-3">
                 <div>
@@ -406,7 +525,7 @@
     </div>
 
     <!-- ==================== 設定選單 (SETTINGS MODAL) ==================== -->
-    <div id="settings-modal" class="fixed inset-0 z-40 hidden items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-md">
+    <div role="tabpanel" aria-labelledby="pill-settings" tabindex="0" id="settings-modal" class="fixed inset-0 z-40 hidden items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-md">
         <div class="max-w-md w-full hud-glass rounded-3xl p-4 sm:p-6 border border-slate-400/50 shadow-2xl modal-scroll max-h-[88vh]">
             <div class="flex items-center justify-between border-b border-white/15 pb-2.5 mb-3">
                 <div>
@@ -415,6 +534,14 @@
                 </div>
                 <button id="close-settings-btn" type="button" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 font-bold text-lg flex items-center justify-center">✕</button>
             </div>
+<div class="hub-actions"><button id="pill-quality" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sun)">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path d="m9 10 2 2 4-4"/></svg><span>畫質</span><span id="pill-quality-label" class="vh-sub">HIGH</span>
+            </button><button id="pill-cam" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sky)">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><rect x="2" y="7" width="14" height="10" rx="2"/><path d="m16 11 6-3.5v9L16 13"/></svg><span>視角</span>
+            </button><button id="pill-radio" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-pink)">
+                <span id="radio-dot" class="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
+                <span id="hud-radio" class="vh-sub" style="color:#fbcfe8">VICE FM</span>
+            </button></div>
             <label class="block text-xs font-bold text-sky-300 mb-1">鏡頭靈敏度 <span id="cam-sens-value">1.0x</span></label>
             <input id="cam-sens" type="range" min="0.2" max="2.5" step="0.1" value="1.0" class="w-full mb-4">
             <label class="flex items-center justify-between text-sm font-bold text-white mb-3 p-2.5 rounded-xl bg-white/5 border border-white/10">
@@ -438,101 +565,13 @@
         </div>
     </div>
 
-    <!-- ==================== 頂部 HUD 狀態列 (TOP HUD) ==================== -->
-    <div id="game-hud" class="fixed top-0 inset-x-0 z-20 flex items-start justify-between pointer-events-none">
-
-        <!-- 左上：即時雷達小地圖 + 區域 + 補給箱收集 -->
-        <div id="radar-column" class="pointer-events-auto">
-            <button id="radar-container" type="button" aria-label="開啟快速選單" aria-haspopup="dialog" aria-controls="quick-actions" class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-sky-500 via-slate-600 to-rose-500 shadow-lg cursor-pointer">
-                <canvas id="radar-canvas" width="140" height="140" class="w-full h-full rounded-full bg-[#090d16] block"></canvas>
-                <span class="absolute -right-0.5 top-1 w-6 h-6 rounded-full flex items-center justify-center border border-cyan-300/70" style="background: rgba(2,6,23,0.92); box-shadow: 0 0 10px rgba(34,211,238,0.5);">
-                    <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none" stroke="#67e8f9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>
-                </span>
-                <span class="absolute top-0.5 left-1/2 -translate-x-1/2 text-[8px] font-vice font-black text-sky-300 bg-black/80 px-1 rounded">N</span>
-                <span id="radar-zone" class="absolute -bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-vice font-bold text-white bg-slate-900/95 px-2 py-0.5 rounded-full border border-white/30 shadow">
-                    OCEAN DRIVE
-                </span>
-            </button>
-
-        </div>
-
-        <!-- 右上：通緝星數、金錢、6速檔位、RPM轉速條、時速表與氮氣條 -->
-        <div id="status-column" class="flex flex-col items-end gap-1.5 pointer-events-none">
-            <div id="status-card" class="hud-glass rounded-2xl text-right">
-                <div id="wanted-row" class="flex items-center justify-end gap-1 mb-0.5">
-                    <span id="wanted-badge" class="text-[9px] font-vice font-bold px-1 rounded bg-red-500/40 text-red-200 hidden">VCPD</span>
-                    <div id="hud-stars" class="flex items-center justify-end gap-0.5 text-xs sm:text-sm leading-none">
-                        <span class="star text-white/25">★</span>
-                        <span class="star text-white/25">★</span>
-                        <span class="star text-white/25">★</span>
-                        <span class="star text-white/25">★</span>
-                        <span class="star text-white/25">★</span>
-                    </div>
-                </div>
-                <div class="font-vice text-base sm:text-xl font-black text-emerald-400 leading-tight">
-                    $<span id="hud-cash">3,500</span>
-                </div>
-                <div class="flex items-baseline justify-end gap-1 border-t border-white/10 pt-0.5 mt-0.5">
-                    <span id="hud-gear" class="text-[10px] font-vice font-bold px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-300 mr-1">FOOT</span>
-                    <span id="hud-speed" class="font-vice text-xl sm:text-2xl font-black text-sky-300 leading-none">0</span>
-                    <span class="text-[9px] font-bold text-gray-300">KM/H</span>
-                </div>
-
-            </div>
-
-            <!-- 警方追捕狀態條 -->
-            <div id="pursuit-hud-panel" class="hud-glass siren-border rounded-xl px-2.5 py-1 border border-red-500/80 text-right hidden min-w-[132px]">
-                <div id="pursuit-status-label" class="text-[9px] font-vice font-black text-red-400">🚨 VCPD 追捕中</div>
-                <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden mt-1">
-                    <div id="pursuit-meter-bar" class="h-full bg-gradient-to-r from-red-500 to-yellow-300 w-0"></div>
-                </div>
-                <div class="text-[9px] font-bold text-gray-200 mt-0.5">拉開距離以擺脫警車</div>
-            </div>
-
-            <!-- 任務進度面板 -->
-            <div id="mission-panel" class="hud-glass rounded-xl px-2.5 py-1 border border-amber-400/60 text-right hidden">
-                <div id="mission-title" class="text-[9px] font-bold uppercase text-amber-300">STREET RACE</div>
-                <div id="mission-progress" class="font-vice text-xs font-black text-white">CP 1/6</div>
-                <div id="mission-timer" class="text-xs font-extrabold text-rose-400">60.0s</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Interim actions entry; T-003D will replace this with the Game Hub. -->
-    <dialog id="quick-actions" aria-labelledby="quick-actions-title">
-        <header>
-            <h2 id="quick-actions-title">快速選單</h2>
-            <button id="quick-actions-close" type="button" aria-label="關閉快速選單">✕</button>
-        </header>
-        <div class="quick-actions-body modal-scroll">
-            <button id="quick-actions-map" type="button" class="touch-btn vh-pill">地圖與導航</button>
-        <div id="quick-actions-list">
-            <button id="pill-quality" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sun)">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path d="m9 10 2 2 4-4"/></svg><span>畫質</span><span id="pill-quality-label" class="vh-sub">HIGH</span>
-            </button>
-            <button id="pill-mission" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-lime)">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg><span>任務</span>
-            </button>
-            <button id="pill-garage" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-cyan)">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg><span>車庫</span>
-            </button>
-            <button id="pill-cop-chase" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-rose)">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M7 18v-5a5 5 0 0 1 10 0v5"/><path d="M5 21h14v-3H5z"/><path d="M12 3v2M4.5 7l1.5 1.5M19.5 7 18 8.5"/></svg><span>警匪追逐</span>
-            </button>
-            <button id="pill-radio" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-pink)">
-                <span id="radio-dot" class="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
-                <span id="hud-radio" class="vh-sub" style="color:#fbcfe8">VICE FM</span>
-            </button>
-            <button id="pill-cam" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sky)">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><rect x="2" y="7" width="14" height="10" rx="2"/><path d="m16 11 6-3.5v9L16 13"/></svg><span>視角</span>
-            </button>
-            <button id="pill-sky" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-orange)">
+        <section id="hub-world" class="hidden hub-scroll" role="tabpanel" aria-labelledby="hub-world-tab" tabindex="0">
+            <h2>世界</h2>
+            <div class="hub-actions"><button id="pill-sky" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-orange)">
                 <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="pill-sky-label">天氣</span>
-            </button>
-            <button id="pill-settings" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-slate)">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><span>設定</span>
-            </button>
-        </div>
+            </button><button id="pill-cop-chase" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-rose)">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M7 18v-5a5 5 0 0 1 10 0v5"/><path d="M5 21h14v-3H5z"/><path d="M12 3v2M4.5 7l1.5 1.5M19.5 7 18 8.5"/></svg><span>警匪追逐</span>
+            </button></div>
             <div class="vh-badge mt-0.5"><svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M10 3 8 9l4 12 4-12-2-6"/></svg>補給箱 <span id="hud-crates" class="font-vice text-[10px]">0/15</span></div>
                 <!-- 引擎 RPM 轉速表與氮氣條 -->
                 <div id="hud-rpm-wrap" class="w-full mt-1 hidden">
@@ -555,6 +594,7 @@
         <div><b class="text-white">滑鼠拖曳</b> 旋轉鏡頭　<b class="text-white">滾輪</b> 縮放　<b class="text-white">K</b> 碰撞線框</div>
     </div>
 
+        </section>
         </div>
     </dialog>
 
@@ -628,36 +668,6 @@
         </div>
     </div>
 
-    <!-- ==================== 全螢幕世界地圖 (點左上雷達開啟)：拖曳平移、捏合 / 滾輪縮放、點選地點快速穿梭或設導航點 ==================== -->
-    <div id="world-map" class="hidden fixed inset-0 z-[60] flex flex-col" style="background: radial-gradient(120% 120% at 50% 0%, #0f172a, #020617);">
-        <div class="flex items-center gap-2 px-3 sm:px-5 pt-3 pb-2">
-            <div class="font-vice font-black text-sm sm:text-base tracking-wider bg-gradient-to-r from-sky-300 via-fuchsia-300 to-amber-200 bg-clip-text text-transparent">VICE HORIZON 地圖</div>
-            <div class="text-[11px] text-slate-400 hidden sm:block">拖曳移動・捏合 / 滾輪縮放・點選地點</div>
-            <div class="ml-auto flex items-center gap-1.5">
-                <button id="wm-zoom-out" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sky)"><span class="vh-sub" style="font-size:14px">−</span></button>
-                <button id="wm-zoom-in" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sky)"><span class="vh-sub" style="font-size:14px">＋</span></button>
-                <button id="wm-center" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-lime)"><span>回到我</span></button>
-                <button id="wm-close" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-rose)"><span>關閉</span></button>
-            </div>
-        </div>
-        <div id="wm-chips" class="flex gap-1.5 px-3 sm:px-5 pb-2 overflow-x-auto modal-scroll" style="touch-action: pan-x;"></div>
-        <div class="relative flex-1 mx-2 sm:mx-4 mb-2 rounded-2xl overflow-hidden border border-white/10">
-            <canvas id="wm-canvas" class="absolute inset-0 w-full h-full" style="touch-action: none;"></canvas>
-            <div id="wm-panel" class="hidden absolute left-1/2 -translate-x-1/2 bottom-3 w-[min(92%,420px)] rounded-2xl px-4 py-3 border border-white/15" style="background: rgba(2,6,23,0.92); backdrop-filter: blur(10px);">
-                <div class="flex items-center gap-2">
-                    <div id="wm-sel-icon" class="text-xl">📍</div>
-                    <div class="min-w-0">
-                        <div id="wm-sel-name" class="font-vice font-black text-sm text-white truncate">—</div>
-                        <div id="wm-sel-sub" class="text-[11px] text-slate-400">—</div>
-                    </div>
-                </div>
-                <div class="flex gap-2 mt-3">
-                    <button id="wm-travel" type="button" class="touch-btn vh-btn vh-row h-11 rounded-xl flex-1" style="--acc: var(--vh-pink)"><span class="vh-lbl" style="color:#fff">⚡ 快速穿梭</span></button>
-                    <button id="wm-waypoint" type="button" class="touch-btn vh-btn vh-row h-11 rounded-xl flex-1" style="--acc: var(--vh-sun)"><span class="vh-lbl">設為導航點</span></button>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- 快速穿梭的轉場黑幕 -->
     <div id="travel-fade" class="fixed inset-0 z-[70] pointer-events-none bg-black opacity-0" style="transition: opacity 0.28s ease;"></div>
 
@@ -7029,14 +7039,46 @@
             }
         }
 
-        function closeModals() {
-            const quickActions = document.getElementById('quick-actions');
-            if (quickActions.open) quickActions.close();
-            ['missions-modal', 'garage-modal', 'settings-modal'].forEach(id => {
+        const HUB_PANELS = ['world-map', 'missions-modal', 'garage-modal', 'hub-world', 'settings-modal'];
+        const HUB_TABS = ['quick-actions-map', 'pill-mission', 'pill-garage', 'hub-world-tab', 'pill-settings'];
+        let releaseHubInputs = () => {};
+
+        function hideHubPanels() {
+            WMAP.open = false;
+            clearInterval(WMAP.timer);
+            WMAP.timer = null;
+            WMAP.pointers.clear(); WMAP.pinch = 0; WMAP.last = null;
+            HUB_PANELS.forEach(id => {
                 const el = document.getElementById(id);
-                el.classList.add('hidden');
-                el.classList.remove('flex');
+                el.classList.add('hidden'); el.classList.remove('flex');
             });
+        }
+
+        function openGameHub(panel = 'world-map') {
+            releaseHubInputs();
+            hideHubPanels();
+            const dialog = document.getElementById('quick-actions');
+            const active = HUB_PANELS.indexOf(panel);
+            HUB_TABS.forEach((id, i) => {
+                const tab = document.getElementById(id);
+                tab.setAttribute('aria-selected', String(i === active));
+                tab.tabIndex = i === active ? 0 : -1;
+            });
+            const content = document.getElementById(panel);
+            content.classList.remove('hidden'); content.classList.add('flex');
+            if (!dialog.open) dialog.showModal();
+            if (panel === 'world-map') {
+                const pos = getActivePosition();
+                WMAP.cx = pos.x; WMAP.cz = pos.z; WMAP.open = true;
+                requestAnimationFrame(() => { if (WMAP.open) wmSelect(null); });
+                WMAP.timer = setInterval(() => { if (WMAP.open) drawWorldMap(); }, 500);
+            }
+        }
+
+        function closeModals() {
+            hideHubPanels();
+            const dialog = document.getElementById('quick-actions');
+            if (dialog.open) dialog.close();
         }
 
         function startMission(mode) {
@@ -7817,6 +7859,7 @@
         function wmScreenToWorld(sx, sy, W, H) { return [(sx - W / 2) / WMAP.scale + WMAP.cx, (sy - H / 2) / WMAP.scale + WMAP.cz]; }
 
         function drawWorldMap() {
+            if (!WMAP.open) return;
             const cv = document.getElementById('wm-canvas');
             const dpr = Math.min(2, window.devicePixelRatio || 1);
             const W = cv.clientWidth, H = cv.clientHeight;
@@ -7932,22 +7975,8 @@
             drawWorldMap();
         }
 
-        function openWorldMap() {
-            closeModals();
-            const pos = getActivePosition();
-            WMAP.cx = pos.x; WMAP.cz = pos.z;
-            WMAP.open = true;
-            ['forward', 'backward', 'left', 'right', 'space', 'shift'].forEach(k => { INPUT[k] = false; });
-            document.getElementById('world-map').classList.remove('hidden');
-            requestAnimationFrame(() => { wmSelect(null); });
-            clearInterval(WMAP.timer);
-            WMAP.timer = setInterval(() => { if (WMAP.open) drawWorldMap(); }, 500);
-        }
-        function closeWorldMap() {
-            WMAP.open = false;
-            clearInterval(WMAP.timer);
-            document.getElementById('world-map').classList.add('hidden');
-        }
+        function openWorldMap() { openGameHub('world-map'); }
+        function closeWorldMap() { closeModals(); }
 
         // 快速穿梭：黑幕淡出 → 傳送 → 淡入
         function fastTravelTo(t) {
@@ -8054,7 +8083,10 @@
             document.getElementById('wm-zoom-out').addEventListener('click', () => zoomAt(1 / 1.4, cv.clientWidth / 2, cv.clientHeight / 2));
             document.getElementById('wm-center').addEventListener('click', () => { const p = getActivePosition(); WMAP.cx = p.x; WMAP.cz = p.z; drawWorldMap(); });
             document.getElementById('wm-close').addEventListener('click', closeWorldMap);
-            document.getElementById('wm-travel').addEventListener('click', () => { if (WMAP.sel) fastTravelTo(WMAP.sel); });
+            document.getElementById('wm-travel').addEventListener('click', () => {
+                if (WMAP.sel) fastTravelTo(WMAP.sel);
+                if (DELIVERY.job) document.getElementById('wm-sel-sub').textContent = '配送中無法快速穿梭，請先完成配送';
+            });
             document.getElementById('wm-waypoint').addEventListener('click', () => { if (WMAP.sel) { setWaypoint(WMAP.sel.x, WMAP.sel.z, WMAP.sel.name); drawWorldMap(); } });
             window.addEventListener('resize', () => { if (WMAP.open) drawWorldMap(); });
             window.addEventListener('keydown', e => {
@@ -8187,36 +8219,42 @@
                 showBanner('📣 叭叭!', '喇叭音效已觸發');
             });
 
-            document.getElementById('pill-mission').addEventListener('click', () => {
-                closeModals();
-                const m = document.getElementById('missions-modal');
-                m.classList.remove('hidden'); m.classList.add('flex');
-            });
+            releaseHubInputs = releaseHudControls;
+            document.getElementById('pill-mission').addEventListener('click', () => openGameHub('missions-modal'));
+            document.getElementById('pill-garage').addEventListener('click', () => openGameHub('garage-modal'));
+            document.getElementById('hub-world-tab').addEventListener('click', () => openGameHub('hub-world'));
             const quickActions = document.getElementById('quick-actions');
             const radarEntry = document.getElementById('radar-container');
-            radarEntry.addEventListener('click', () => {
-                closeModals();
-                releaseHudControls();
-                quickActions.showModal();
-            });
+            radarEntry.addEventListener('click', openWorldMap);
             radarEntry.addEventListener('keydown', e => {
                 if (e.code === 'Enter' || e.code === 'Space') e.stopPropagation();
             });
-            // Native dialog keeps focus inside the temporary panel; existing action handlers stay intact.
-            quickActions.addEventListener('keydown', e => e.stopPropagation());
-            document.getElementById('quick-actions-close').addEventListener('click', () => quickActions.close());
-            document.getElementById('quick-actions-map').addEventListener('click', openWorldMap);
-            document.getElementById('quick-actions-list').addEventListener('click', e => {
-                if (e.target.closest('button') && quickActions.open) quickActions.close();
-            }, true);
-            quickActions.addEventListener('close', () => { RADAR.lastDraw = -Infinity; });
-            document.getElementById('close-missions-btn').addEventListener('click', closeModals);
-
-            document.getElementById('pill-garage').addEventListener('click', () => {
-                closeModals();
-                const g = document.getElementById('garage-modal');
-                g.classList.remove('hidden'); g.classList.add('flex');
+            // Trap gameplay shortcuts inside the native dialog; retain native form keys.
+            quickActions.addEventListener('keydown', e => {
+                e.stopPropagation();
+                if (e.code === 'KeyM' && !e.repeat && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') closeModals();
             });
+            quickActions.addEventListener('cancel', e => { e.preventDefault(); closeModals(); });
+            document.getElementById('quick-actions-close').addEventListener('click', closeModals);
+            document.getElementById('quick-actions-map').addEventListener('click', openWorldMap);
+            document.getElementById('quick-actions-list').addEventListener('keydown', e => {
+                const index = HUB_TABS.indexOf(e.target.id);
+                if (index < 0) return;
+                let next = index;
+                if (e.key === 'ArrowRight') next = (index + 1) % HUB_TABS.length;
+                else if (e.key === 'ArrowLeft') next = (index + HUB_TABS.length - 1) % HUB_TABS.length;
+                else if (e.key === 'Home') next = 0;
+                else if (e.key === 'End') next = HUB_TABS.length - 1;
+                else return;
+                e.preventDefault();
+                const tab = document.getElementById(HUB_TABS[next]);
+                tab.click(); tab.focus();
+            });
+            quickActions.addEventListener('close', () => {
+                if (quickActions.open) return;
+                hideHubPanels(); RADAR.lastDraw = -Infinity; radarEntry.focus();
+            });
+            document.getElementById('close-missions-btn').addEventListener('click', closeModals);
             document.getElementById('close-garage-btn').addEventListener('click', closeModals);
 
             document.getElementById('pill-cop-chase').addEventListener('click', () => togglePoliceChase(false));
@@ -8393,11 +8431,7 @@
                 saveSettings();
             });
             document.getElementById('gpu-info').textContent = '顯示卡：' + (GPU_NAME || '未知') + '　畫質組合：' + PROFILE;
-            document.getElementById('pill-settings').addEventListener('click', () => {
-                closeModals();
-                const m = document.getElementById('settings-modal');
-                m.classList.remove('hidden'); m.classList.add('flex');
-            });
+            document.getElementById('pill-settings').addEventListener('click', () => openGameHub('settings-modal'));
             document.getElementById('close-settings-btn').addEventListener('click', closeModals);
 
             window.addEventListener('keydown', e => {

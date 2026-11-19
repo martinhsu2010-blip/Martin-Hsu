@@ -88,11 +88,39 @@ async def main():
                 print(json.dumps({"viewport": [width, height], "labels": language, "corridor": result["corridor"], "result": "PASS"}), flush=True)
             await page.locator("#radar-container").click()
             assert await page.locator("#quick-actions").is_visible()
-            for id_ in ["pill-quality", "pill-mission", "pill-garage", "pill-cop-chase", "pill-radio", "pill-cam", "pill-sky", "pill-settings", "quick-actions-map"]:
-                button = page.locator("#" + id_)
-                await button.scroll_into_view_if_needed()
-                box = await button.bounding_box()
-                assert box and box["width"] >= 44 and box["height"] >= 44, id_
+            for language in ["zh-TW", "en"]:
+                await page.evaluate("""language => {
+                    const labels=language==='en'?['MAP','MISSIONS','GARAGE','WORLD','SETTINGS']:['地圖','任務','車庫','世界','設定'];
+                    document.querySelectorAll('#quick-actions-list button').forEach((b,i)=>b.textContent=labels[i]);
+                }""", language)
+                for tab, panel in [("quick-actions-map", "world-map"), ("pill-mission", "missions-modal"), ("pill-garage", "garage-modal"), ("hub-world-tab", "hub-world"), ("pill-settings", "settings-modal")]:
+                    await page.locator("#" + tab).click()
+                    assert await page.locator("#" + panel).is_visible()
+                    if panel == "world-map":
+                        await page.locator("#wm-chips button").first.click()
+                    result = await page.evaluate("""({width,height}) => {
+                        const hub=document.getElementById('quick-actions');
+                        const tabs=[...hub.querySelectorAll('[role=tab]')];
+                        const close=document.getElementById('quick-actions-close');
+                        const boxes=[...tabs,close].map(e=>({id:e.id,r:e.getBoundingClientRect()}));
+                        const errors=[];
+                        for(const {id,r} of boxes)if(r.width<44 || r.height<44 || r.x<0 || r.y<0 || r.right>width+1 || r.bottom>height+1)errors.push(id);
+                        for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++) {
+                            const a=boxes[i].r,b=boxes[j].r;
+                            if(Math.min(a.right,b.right)>Math.max(a.x,b.x)+1 && Math.min(a.bottom,b.bottom)>Math.max(a.y,b.y)+1)errors.push('overlap');
+                        }
+                        if(hub.scrollWidth>width)errors.push('horizontal Hub overflow');
+                        return errors;
+                    }""", {"width": width, "height": height})
+                    assert not result, (width,height,language,panel,result)
+                    for button in await page.locator("#" + panel + " button, #" + panel + " input, #" + panel + " select").all():
+                        if not await button.is_visible():
+                            continue
+                        await button.scroll_into_view_if_needed()
+                        box = await button.bounding_box()
+                        assert box and box["width"] >= 44 and box["height"] >= 44, (panel,box)
+                        assert box["x"] >= 0 and box["y"] >= 0 and box["x"]+box["width"] <= width+1 and box["y"]+box["height"] <= height+1, (panel,box)
+                    await page.screenshot(path=str(output / f"hub-{panel}-{width}x{height}-{language}.png"))
             await page.locator("#quick-actions-close").click()
             assert not await page.locator("#quick-actions").is_visible()
 
@@ -100,7 +128,7 @@ async def main():
             await page.locator("#radar-container").click()
             await page.locator("#" + button).click()
             assert await page.locator("#" + modal).is_visible()
-            assert not await page.locator("#quick-actions").is_visible()
+            assert await page.locator("#quick-actions").is_visible()
             close = {"missions-modal": "close-missions-btn", "garage-modal": "close-garage-btn", "settings-modal": "close-settings-btn", "world-map": "wm-close"}[modal]
             await page.locator("#" + close).click()
 
