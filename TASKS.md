@@ -4,7 +4,18 @@
 (none)
 
 ## Ready for Codex
-(none)
+### T-004B Traffic population + Ferrari exclusion
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-004A (approved, D-017); no other active code PR
+Base commit: latest `main` (reported in the HANDOFF)
+Branch: `codex/T-004B-traffic`
+Spec: `specs/T-004A-spec-v1.1.md` §3.1, §3.6, §4 (T-004B row), §5.1 items 1–3 and 8.
+Acceptance (spec §4): §3.1 pool table exactly; 0 ordinary AI Ferrari; 5 fresh / 5 recycled loads; spawn separation (>=20 units between cars, >=25 from player's car) and 30-unit insertion clearance; no recycle within 120 units; syntax + offline; measured nearby/visible counts at 10 viewpoints vs baseline.
+Claude notes: (1) Every ordinary AI car is a full `RaycastVehicle` (4 wheel raycasts per physics step); doubling the pool is the main phone-CPU risk, so §3.1 item 5 (physics active only near the player, safe re-activation of frozen far cars) must be implemented, and the PR must report `physicsWorld.step` cost before/after (headless numbers labelled as headless). (2) Current code already gives ordinary traffic `model: 'kenney'`; find and fix the real path where Ferrari appears on NPC traffic (or show none exists) instead of assuming. Parked/selectable cars and the player Ferrari stay unchanged. (3) No per-frame allocations in traffic loops; saves, missions, police and controls unchanged.
+Verification: `designed`.
+
 ## In review
 (none)
 
@@ -12,6 +23,34 @@
 (none)
 
 ## Blocked
+### T-004C Tree and existing house collision repair
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Blocked by: T-004B released and Martin-accepted
+Branch: `codex/T-004C-collisions`
+Spec: `specs/T-004A-spec-v1.1.md` §3.5, §3.6, §4 (T-004C row), §5.1 items 4–7.
+Claude notes: prefer upright `CANNON.Box` trunks over `CANNON.Cylinder` (box chassis vs cylinder is a costly convex test); preallocated pool, add/remove only on the 0.5 s grid refresh, update AABBs after moving static bodies, immediate refresh on teleport; house compound bodies regrouped by spatial cell must not increase total body count.
+Verification: `designed`.
+
+### T-004D Suburban variety (Option B) and increased structure density
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Blocked by: T-004C released and Martin-accepted
+Branch: `codex/T-004D-suburb-variety`
+Spec: `specs/T-004A-spec-v1.1.md` §3.3 Option B, §3.4, §3.6, §4 (T-004D row).
+Verification: `designed`.
+
+### T-004E City district infill
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Blocked by: T-004D released and Martin-accepted
+Branch: `codex/T-004E-urban-infill`
+Spec: `specs/T-004A-spec-v1.1.md` §3.2, §3.6, §4 (T-004E row).
+Verification: `designed`.
+
 ### T-002 Verify licenses of the Porsche / Lexus / Ford Sketchfab models
 Owner: Martin
 Priority: P2
@@ -21,6 +60,17 @@ Why: archives had no license text; needed before any public sharing.
 (none)
 
 ## Done
+### T-004A Living City 2.0 Specification v1.1
+Owner: ChatGPT
+Reviewer: Claude
+Priority: P1
+Depends on: T-003 pipeline (Done)
+Base commit: design base `79ba05bcdf4def80ad4d2bd96cd3abba86d9baf6`; spec archived on `main` in PR #23 (a53d0ba)
+Branch/PR: PR #23 (docs, archive); registered in the docs PR that follows it
+Output: `specs/T-004A-spec-v1.1.md` (verbatim) defining T-004B..E. Suburban style: **Option B — Mixed American Small Town** (Martin, 2026-11-19 17:28).
+Verification: `designed / Martin approved` (2026-11-19). Nothing measured; no code written.
+Review notes: code facts checked against main 30514a9 — traffic pool table in §2 matches `DENSITY` presets; suburb collider Y-offset bug and missing tree trunk bodies confirmed. Ordinary AI traffic is created with `model: 'kenney'` and does not reach `applyFerrariModel()` in current code, so T-004B must first locate where Ferrari traffic is actually seen. Spec text still says "proposed; NOT approved" and §2/§6.5 still describe T-003D/E as pending because it is stored verbatim; approval and scheduling are recorded in D-017 and here. All approved numbers (traffic table, building shares/caps, collider tolerances, activation radii, FPS targets) are binding as written.
+
 ### T-003E Bilingual interface (English / Traditional Chinese)
 Owner: Codex
 Reviewer: Claude
