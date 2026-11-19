@@ -44,6 +44,7 @@ const PRECACHE = [
   "./libs/three/examples/jsm/utils/BufferGeometryUtils.js",
   "./libs/three/examples/jsm/utils/SkeletonUtils.js",
   "./manifest.webmanifest",
+  "./manifest.zh-TW.webmanifest",
   "./models/Michelle.glb",
   "./models/Soldier.glb",
   "./models/Xbot.glb",

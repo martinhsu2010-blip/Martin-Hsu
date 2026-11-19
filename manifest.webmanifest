@@ -1,7 +1,7 @@
 {
   "name": "VICE HORIZON VI",
   "short_name": "Vice Horizon",
-  "description": "開放世界駕駛遊戲 (Three.js + cannon-es)",
+  "description": "Open-world driving game (Three.js + cannon-es)",
   "start_url": "./index.html",
   "scope": "./",
   "display": "fullscreen",
@@ -29,5 +29,6 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "lang": "en"
 }

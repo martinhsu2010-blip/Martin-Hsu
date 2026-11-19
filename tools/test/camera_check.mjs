@@ -21,7 +21,7 @@ function harness(source) {
     car.chassisGroup.position.set(0, 1, 0);
     const element = { style: {}, textContent: '' };
     const context = vm.createContext({
-        THREE, Math, console, localStorage: { getItem: () => null, setItem() {} },
+        THREE, Math, console, tr:key=>key, localStorage: { getItem: () => null, setItem() {} },
         document: { getElementById: () => element },
         STATE: { mode: 'FOOT', cameraMode: 0, time: 0, currentVehicle: null },
         PLAYER: { group: new THREE.Group(), body: { velocity: { x: 0, z: 0 } }, heading: 0 },

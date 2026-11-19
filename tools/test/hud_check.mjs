@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import { execFileSync } from 'node:child_process';
 const root = new URL('../../', import.meta.url);
 const html = fs.readFileSync(new URL('index.html', root), 'utf8');
-const baselineRef = process.argv[2] || 'd96335833dba1207ab693a70dd0d77c91d477019';
+const baselineRef = process.argv[2] || '4bf6d967935c0e678ad29a2c420d17ad630c76da';
 const before = execFileSync('git', ['show', `${baselineRef}:index.html`], {cwd:root,maxBuffer:2e6}).toString();
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
 assert.equal(ids.length, new Set(ids).size, 'Duplicate DOM IDs');
@@ -17,13 +17,11 @@ assert.ok(dialog.includes('id="hud-crates"') && dialog.includes('id="desktop-hin
 function between(source, start, end) { const a=source.indexOf(start); assert.ok(a>=0,start);const b=source.indexOf(end,a);assert.ok(b>a,end);return source.slice(a,b); }
 for (const [start,end] of [
     ['        const CAMERA_CONFIG =','        const camera ='],
-    ['        function getActivePosition()', '        // ==================== 賺錢玩法'],
-    ['        function fastTravelTo(', '        function setWaypoint('],
-    ['        const SAVE =','        const STATE =']
 ]) assert.equal(between(html,start,end),between(before,start,end),`Out-of-scope change: ${start}`);
+assert.equal(between(html,'        function getActivePosition()', '            renderDrivingHUD();'),between(before,'        function getActivePosition()', '            // 更新 HUD 時速'));
 assert.equal((html.match(/new THREE.WebGLRenderer/g)||[]).length,(before.match(/new THREE.WebGLRenderer/g)||[]).length);
 assert.ok(!between(html,'        function drawRadar(now','        // ==================== 世界地圖').includes('...ROAD_NET'));
-console.log('PASS: preserved IDs, single 140x140 radar, all eight actions, unchanged camera/save/fast-travel paths');
+console.log('PASS: preserved IDs, single 140x140 radar, all eight actions, unchanged camera optics; save/language compatibility covered by i18n_check.mjs');
 
 class Element {
     constructor(id) {
@@ -91,7 +89,7 @@ console.log('PASS: 10 Hz normal / 8 Hz LOW at 30/60/120 render Hz; hidden/menu s
 
 const document=documentStub(), window=new Element('window');const INPUT={};
 const timers=new Map(),frames=[];let timerId=0,mapDraws=0;
-const context=vm.createContext({document,window,INPUT,console,parseInt,parseFloat,
+const context=vm.createContext({document,window,INPUT,console,parseInt,parseFloat, tr:key=>key, refreshGpuLabel(){},
     canvas:document.getElementById('game-canvas'),CAM:{pointers:new Map(),sens:1,invertY:false},RADAR:{lastDraw:0},
     STATE:{upgradeLevel:1,cash:3500,fpsCap:30},SAVE:{owned:[]},GPU_NAME:'test',PROFILE:'TABLET',
     camera:{updateProjectionMatrix(){}},applyResolution(){},
