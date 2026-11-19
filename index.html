@@ -132,6 +132,137 @@
         .siren-border {
             animation: sirenFlash 0.5s infinite ease-in-out;
         }
+
+        /* T-003C: CSS-pixel HUD layout; safe areas are independent of device pixel ratio. */
+        :root {
+            --hud-pad: 12px; --radar-size: 96px; --status-width: 144px;
+            --steer-size: 64px; --gas-width: 58px; --gas-height: 100px;
+            --brake-width: 60px; --brake-height: 88px; --aux-size: 44px;
+            --left-edge: calc(env(safe-area-inset-left, 0px) + var(--hud-pad));
+            --right-edge: calc(env(safe-area-inset-right, 0px) + var(--hud-pad));
+            --top-edge: calc(env(safe-area-inset-top, 0px) + var(--hud-pad));
+            --bottom-edge: calc(env(safe-area-inset-bottom, 0px) + var(--hud-pad));
+        }
+        #game-hud { padding: var(--top-edge) var(--right-edge) 0 var(--left-edge); }
+        #radar-container { width: var(--radar-size); height: var(--radar-size); border: 1px solid #858c96; padding: 3px; background: #24282e; }
+        #radar-container:focus-visible, #quick-actions button:focus-visible { outline: 2px solid #67e8f9; outline-offset: 3px; }
+        #radar-zone { max-width: var(--radar-size); overflow: hidden; text-overflow: ellipsis; }
+        #status-column { width: var(--status-width); gap: 8px; }
+        #status-card { width: 100%; min-width: 0; padding: 8px 10px; box-shadow: none; }
+        #status-card > div { min-width: 0; }
+        #hud-cash { font-size: clamp(12px, 1.5vw, 18px); overflow-wrap: anywhere; }
+        #hud-speed { font-size: 22px; }
+        #wanted-row:has(#wanted-badge.hidden) { display: none; }
+        #pursuit-hud-panel { width: 100%; min-width: 0; padding: 6px; animation: none; }
+        #pursuit-status-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
+        #pursuit-hud-panel > div:last-child { display: none; }
+        #mission-panel:not(.hidden) {
+            position: fixed; top: var(--top-edge);
+            left: calc(var(--left-edge) + var(--radar-size) + 12px);
+            right: calc(var(--right-edge) + var(--status-width) + 12px);
+            display: flex; align-items: center; gap: 8px; min-height: 32px; padding: 6px 10px;
+            text-align: left; border-radius: 10px; min-width: 0;
+        }
+        #mission-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        #mission-progress { min-width: 0; max-width: 52%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+        #mission-timer { flex-shrink: 0; font-size: 12px; }
+        #notice-area {
+            top: calc(var(--top-edge) + 44px);
+            left: calc(var(--left-edge) + var(--radar-size) + 12px);
+            right: calc(var(--right-edge) + var(--status-width) + 12px);
+            display: flex; justify-content: center;
+        }
+        #center-banner { max-width: 420px; min-width: 0; width: 100%; }
+        #banner-title { font-size: 13px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        #banner-sub { font-size: 11px; line-height: 1.4; border-radius: 8px; padding: 4px 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        #touch-controls { padding: 0 var(--right-edge) var(--bottom-edge) var(--left-edge); }
+        #steer-cluster { gap: 12px; }
+        #steer-cluster .vh-steer { width: var(--steer-size); height: var(--steer-size); border-radius: 16px; }
+        #steer-cluster svg { width: 32px; height: 32px; }
+        #joystick-zone { width: 116px; height: 116px; }
+        #joystick-knob { position: absolute; }
+        #action-controls { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+        #context-controls { display: flex; justify-content: flex-end; gap: 12px; }
+        #context-controls button { height: 44px; min-width: 44px; padding: 0 8px; border-radius: 12px; }
+        #btn-horn { width: 44px; }
+        #btn-horn .vh-lbl { display: none; }
+        #btn-car-action { width: 88px; animation: none; }
+        #btn-car-action-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+        #drive-controls-cluster:not(.hidden) { display: grid; grid-template-columns: var(--brake-width) var(--gas-width); align-items: end; gap: 12px; }
+        #drive-secondary { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 12px; }
+        #drive-secondary button { width: var(--aux-size); height: var(--aux-size); border-radius: 12px; font-size: 10px; }
+        #drive-secondary .vh-lbl { display: none; }
+        #btn-drive-gas, #btn-drive-brake {
+            position: relative; border: 1px solid #858c96; border-radius: 12px;
+            background: linear-gradient(160deg, #414750, #24282e 65%);
+            color: #f1f5f9; padding: 10px 8px; gap: 6px;
+            box-shadow: 0 4px 0 #11151a, inset 0 1px 1px #858c96;
+            backdrop-filter: none; -webkit-backdrop-filter: none; filter: none;
+        }
+        #btn-drive-gas { width: var(--gas-width); height: var(--gas-height); }
+        #btn-drive-brake { width: var(--brake-width); height: var(--brake-height); }
+        #btn-drive-gas::before, #btn-drive-brake::before { content: ''; display: block; flex: 1; width: 100%; border-radius: 4px; }
+        #btn-drive-gas::before { width: 78%; background: repeating-linear-gradient(90deg, #11151a 0 3px, #858c96 3px 4px, #414750 4px 9px); }
+        #btn-drive-brake::before { background: repeating-linear-gradient(0deg, #11151a 0 3px, #858c96 3px 4px, #414750 4px 9px); }
+        #btn-drive-gas svg, #btn-drive-brake svg, #btn-drive-brake > span:last-child { display: none; }
+        #btn-drive-gas .vh-lbl, #btn-drive-brake .vh-lbl { color: #f1f5f9; font-size: 12px; }
+        #btn-drive-gas.active-press, #btn-drive-brake.active-press, #btn-drive-gas:active, #btn-drive-brake:active {
+            transform: translateY(2px); filter: brightness(1.12); box-shadow: 0 2px 0 #11151a, inset 0 1px 2px #858c96;
+        }
+        #touch-controls .vh-btn:not(#btn-drive-gas):not(#btn-drive-brake) {
+            --acc: #cbd5e1; background: rgba(36,40,46,.9); border-color: #858c96;
+            box-shadow: 0 3px 0 #11151a; backdrop-filter: none; -webkit-backdrop-filter: none;
+        }
+        #touch-controls svg { filter: none; }
+        #foot-controls-cluster { gap: 12px; }
+        #foot-controls-cluster button { width: 60px; height: 60px; }
+        #quick-actions {
+            position: fixed; inset: 0; margin: auto; padding: 0; width: min(440px, calc(100% - var(--left-edge) - var(--right-edge)));
+            max-height: calc(100% - var(--top-edge) - var(--bottom-edge));
+            color: #f1f5f9; background: #171c23; border: 1px solid #858c96; border-radius: 16px;
+        }
+        #quick-actions[open] { display: flex; flex-direction: column; }
+        #quick-actions::backdrop { background: rgba(0,0,0,.65); }
+        #quick-actions header { display: flex; flex: none; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 16px; border-bottom: 1px solid #414750; }
+        #quick-actions-title { font-size: 16px; font-weight: 700; }
+        #quick-actions-close { width: 44px; height: 44px; flex: none; border-radius: 10px; background: #414750; }
+        .quick-actions-body { padding: 12px 16px 16px; min-height: 0; }
+        #quick-actions-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 12px 0; }
+        #quick-actions .vh-pill { width: 100%; min-height: 44px; min-width: 0; border-radius: 10px; white-space: normal; overflow-wrap: anywhere; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+        #quick-actions .vh-sub { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+        #quick-actions .vh-badge { margin-top: 4px; }
+        #desktop-hints { position: static; padding: 8px 0 0; margin-top: 8px; border: 0; border-radius: 0; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+        #missions-modal, #garage-modal, #settings-modal { padding: var(--top-edge) var(--right-edge) var(--bottom-edge) var(--left-edge); }
+        #missions-modal > div, #garage-modal > div, #settings-modal > div { max-height: 100%; }
+        #close-missions-btn, #close-garage-btn, #close-settings-btn { width: 44px; height: 44px; min-width: 44px; }
+        #world-map { padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
+        #world-map button { min-width: 44px; min-height: 44px; }
+        .hud-low .hud-glass, .hud-low .vh-pill, .hud-low .vh-btn { backdrop-filter: none; -webkit-backdrop-filter: none; }
+        .hud-low .siren-border, .hud-low #radio-dot { animation: none; }
+        @media (min-width: 960px) and (min-height: 560px) and (orientation: landscape) {
+            :root { --hud-pad: 16px; --radar-size: 120px; --status-width: 176px; --steer-size: 80px; --gas-width: 64px; --gas-height: 118px; --brake-width: 64px; --brake-height: 100px; --aux-size: 50px; }
+            #joystick-zone { width: 128px; height: 128px; }
+            #foot-controls-cluster button { width: 72px; height: 72px; }
+            #drive-secondary .vh-lbl { display: block; }
+            #btn-car-action { width: 96px; }
+        }
+        @media (max-height: 429px) {
+            :root { --radar-size: 84px; --status-width: 128px; --steer-size: 56px; --gas-width: 50px; --gas-height: 84px; --brake-width: 54px; --brake-height: 74px; }
+            #joystick-zone { width: 100px; height: 100px; }
+            #radar-zone { display: none; }
+            #status-card { padding: 5px 8px; }
+            #status-card .font-vice { font-size: 12px; }
+            #status-card #hud-speed { font-size: 18px; }
+            #foot-controls-cluster button { width: 54px; height: 54px; }
+            #banner-title { font-size: 12px; }
+        }
+        @media (orientation: portrait), (max-width: 599px) {
+            #mission-panel:not(.hidden) { top: calc(var(--top-edge) + var(--radar-size) + 20px); left: var(--left-edge); right: var(--right-edge); }
+            #notice-area { top: calc(var(--top-edge) + var(--radar-size) + 64px); left: var(--left-edge); right: var(--right-edge); }
+            #quick-actions-list { grid-template-columns: 1fr; }
+            #world-map > div:first-child { flex-wrap: wrap; }
+        }
+
     </style>
 </head>
 <body class="text-white relative select-none overflow-hidden">
@@ -296,25 +427,74 @@
     </div>
 
     <!-- ==================== 頂部 HUD 狀態列 (TOP HUD) ==================== -->
-    <div class="fixed top-0 inset-x-0 z-20 p-2 sm:p-3 flex items-start justify-between pointer-events-none gap-2">
+    <div id="game-hud" class="fixed top-0 inset-x-0 z-20 flex items-start justify-between pointer-events-none">
 
         <!-- 左上：即時雷達小地圖 + 區域 + 補給箱收集 -->
-        <div class="flex flex-col items-center gap-1 pointer-events-auto">
-            <div id="radar-container" class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-sky-500 via-slate-600 to-rose-500 shadow-lg cursor-pointer">
+        <div id="radar-column" class="pointer-events-auto">
+            <button id="radar-container" type="button" aria-label="開啟快速選單" aria-haspopup="dialog" aria-controls="quick-actions" class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-sky-500 via-slate-600 to-rose-500 shadow-lg cursor-pointer">
                 <canvas id="radar-canvas" width="140" height="140" class="w-full h-full rounded-full bg-[#090d16] block"></canvas>
-                <div class="absolute -right-0.5 top-1 w-6 h-6 rounded-full flex items-center justify-center border border-cyan-300/70" style="background: rgba(2,6,23,0.92); box-shadow: 0 0 10px rgba(34,211,238,0.5);">
+                <span class="absolute -right-0.5 top-1 w-6 h-6 rounded-full flex items-center justify-center border border-cyan-300/70" style="background: rgba(2,6,23,0.92); box-shadow: 0 0 10px rgba(34,211,238,0.5);">
                     <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none" stroke="#67e8f9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>
-                </div>
-                <div class="absolute top-0.5 left-1/2 -translate-x-1/2 text-[8px] font-vice font-black text-sky-300 bg-black/80 px-1 rounded">N</div>
-                <div id="radar-zone" class="absolute -bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-vice font-bold text-white bg-slate-900/95 px-2 py-0.5 rounded-full border border-white/30 shadow">
+                </span>
+                <span class="absolute top-0.5 left-1/2 -translate-x-1/2 text-[8px] font-vice font-black text-sky-300 bg-black/80 px-1 rounded">N</span>
+                <span id="radar-zone" class="absolute -bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-vice font-bold text-white bg-slate-900/95 px-2 py-0.5 rounded-full border border-white/30 shadow">
                     OCEAN DRIVE
-                </div>
-            </div>
-            <div class="vh-badge mt-0.5"><svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M10 3 8 9l4 12 4-12-2-6"/></svg>補給箱 <span id="hud-crates" class="font-vice text-[10px]">0/15</span></div>
+                </span>
+            </button>
+
         </div>
 
-        <!-- 中上：快捷功能按鈕列 (含「畫質」切換按鈕) -->
-        <div class="flex flex-wrap items-center justify-center gap-1.5 max-w-[300px] sm:max-w-2xl pointer-events-auto mt-0.5">
+        <!-- 右上：通緝星數、金錢、6速檔位、RPM轉速條、時速表與氮氣條 -->
+        <div id="status-column" class="flex flex-col items-end gap-1.5 pointer-events-none">
+            <div id="status-card" class="hud-glass rounded-2xl text-right">
+                <div id="wanted-row" class="flex items-center justify-end gap-1 mb-0.5">
+                    <span id="wanted-badge" class="text-[9px] font-vice font-bold px-1 rounded bg-red-500/40 text-red-200 hidden">VCPD</span>
+                    <div id="hud-stars" class="flex items-center justify-end gap-0.5 text-xs sm:text-sm leading-none">
+                        <span class="star text-white/25">★</span>
+                        <span class="star text-white/25">★</span>
+                        <span class="star text-white/25">★</span>
+                        <span class="star text-white/25">★</span>
+                        <span class="star text-white/25">★</span>
+                    </div>
+                </div>
+                <div class="font-vice text-base sm:text-xl font-black text-emerald-400 leading-tight">
+                    $<span id="hud-cash">3,500</span>
+                </div>
+                <div class="flex items-baseline justify-end gap-1 border-t border-white/10 pt-0.5 mt-0.5">
+                    <span id="hud-gear" class="text-[10px] font-vice font-bold px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-300 mr-1">FOOT</span>
+                    <span id="hud-speed" class="font-vice text-xl sm:text-2xl font-black text-sky-300 leading-none">0</span>
+                    <span class="text-[9px] font-bold text-gray-300">KM/H</span>
+                </div>
+
+            </div>
+
+            <!-- 警方追捕狀態條 -->
+            <div id="pursuit-hud-panel" class="hud-glass siren-border rounded-xl px-2.5 py-1 border border-red-500/80 text-right hidden min-w-[132px]">
+                <div id="pursuit-status-label" class="text-[9px] font-vice font-black text-red-400">🚨 VCPD 追捕中</div>
+                <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden mt-1">
+                    <div id="pursuit-meter-bar" class="h-full bg-gradient-to-r from-red-500 to-yellow-300 w-0"></div>
+                </div>
+                <div class="text-[9px] font-bold text-gray-200 mt-0.5">拉開距離以擺脫警車</div>
+            </div>
+
+            <!-- 任務進度面板 -->
+            <div id="mission-panel" class="hud-glass rounded-xl px-2.5 py-1 border border-amber-400/60 text-right hidden">
+                <div id="mission-title" class="text-[9px] font-bold uppercase text-amber-300">STREET RACE</div>
+                <div id="mission-progress" class="font-vice text-xs font-black text-white">CP 1/6</div>
+                <div id="mission-timer" class="text-xs font-extrabold text-rose-400">60.0s</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interim actions entry; T-003D will replace this with the Game Hub. -->
+    <dialog id="quick-actions" aria-labelledby="quick-actions-title">
+        <header>
+            <h2 id="quick-actions-title">快速選單</h2>
+            <button id="quick-actions-close" type="button" aria-label="關閉快速選單">✕</button>
+        </header>
+        <div class="quick-actions-body modal-scroll">
+            <button id="quick-actions-map" type="button" class="touch-btn vh-pill">地圖與導航</button>
+        <div id="quick-actions-list">
             <button id="pill-quality" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sun)">
                 <svg viewBox="0 0 24 24" aria-hidden="true" class=""><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path d="m9 10 2 2 4-4"/></svg><span>畫質</span><span id="pill-quality-label" class="vh-sub">HIGH</span>
             </button>
@@ -341,28 +521,7 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><span>設定</span>
             </button>
         </div>
-
-        <!-- 右上：通緝星數、金錢、6速檔位、RPM轉速條、時速表與氮氣條 -->
-        <div class="flex flex-col items-end gap-1.5 pointer-events-none">
-            <div class="hud-glass rounded-2xl px-3 py-1.5 border-r-4 border-r-sky-400 text-right shadow-lg min-w-[126px] sm:min-w-[156px]">
-                <div class="flex items-center justify-end gap-1 mb-0.5">
-                    <span id="wanted-badge" class="text-[9px] font-vice font-bold px-1 rounded bg-red-500/40 text-red-200 hidden">VCPD</span>
-                    <div id="hud-stars" class="flex items-center justify-end gap-0.5 text-xs sm:text-sm leading-none">
-                        <span class="star text-white/25">★</span>
-                        <span class="star text-white/25">★</span>
-                        <span class="star text-white/25">★</span>
-                        <span class="star text-white/25">★</span>
-                        <span class="star text-white/25">★</span>
-                    </div>
-                </div>
-                <div class="font-vice text-base sm:text-xl font-black text-emerald-400 leading-tight">
-                    $<span id="hud-cash">3,500</span>
-                </div>
-                <div class="flex items-baseline justify-end gap-1 border-t border-white/10 pt-0.5 mt-0.5">
-                    <span id="hud-gear" class="text-[10px] font-vice font-bold px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-300 mr-1">FOOT</span>
-                    <span id="hud-speed" class="font-vice text-xl sm:text-2xl font-black text-sky-300 leading-none">0</span>
-                    <span class="text-[9px] font-bold text-gray-300">KM/H</span>
-                </div>
+            <div class="vh-badge mt-0.5"><svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M10 3 8 9l4 12 4-12-2-6"/></svg>補給箱 <span id="hud-crates" class="font-vice text-[10px]">0/15</span></div>
                 <!-- 引擎 RPM 轉速表與氮氣條 -->
                 <div id="hud-rpm-wrap" class="w-full mt-1 hidden">
                     <div class="flex justify-between text-[8px] font-vice text-gray-300 mb-0.5">
@@ -376,28 +535,19 @@
                 <div id="hud-nitro-wrap" class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mt-1 hidden">
                     <div id="hud-nitro-bar" class="h-full bg-gradient-to-r from-rose-500 to-sky-400 w-full"></div>
                 </div>
-            </div>
-
-            <!-- 警方追捕狀態條 -->
-            <div id="pursuit-hud-panel" class="hud-glass siren-border rounded-xl px-2.5 py-1 border border-red-500/80 text-right hidden min-w-[132px]">
-                <div id="pursuit-status-label" class="text-[9px] font-vice font-black text-red-400">🚨 VCPD 追捕中</div>
-                <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden mt-1">
-                    <div id="pursuit-meter-bar" class="h-full bg-gradient-to-r from-red-500 to-yellow-300 w-0"></div>
-                </div>
-                <div class="text-[9px] font-bold text-gray-200 mt-0.5">拉開距離以擺脫警車</div>
-            </div>
-
-            <!-- 任務進度面板 -->
-            <div id="mission-panel" class="hud-glass rounded-xl px-2.5 py-1 border border-amber-400/60 text-right hidden">
-                <div id="mission-title" class="text-[9px] font-bold uppercase text-amber-300">STREET RACE</div>
-                <div id="mission-progress" class="font-vice text-xs font-black text-white">CP 1/6</div>
-                <div id="mission-timer" class="text-xs font-extrabold text-rose-400">60.0s</div>
-            </div>
-        </div>
+    <!-- 電腦版鍵盤滑鼠提示 -->
+    <div id="desktop-hints" class="hidden fixed bottom-3 left-3 z-30 hud-glass rounded-2xl px-3 py-2 text-[11px] leading-5 text-gray-200 border border-white/15 pointer-events-none">
+        <div class="font-vice font-bold text-sky-300 text-xs mb-0.5">⌨️ 鍵盤 / 滑鼠</div>
+        <div><b class="text-white">WASD</b> 移動 / 駕駛　<b class="text-white">Shift</b> 跑步 / 氮氣</div>
+        <div><b class="text-white">Space</b> 跳躍 / 手煞車　<b class="text-white">F</b> 上下車　<b class="text-white">M</b> 地圖</div>
+        <div><b class="text-white">滑鼠拖曳</b> 旋轉鏡頭　<b class="text-white">滾輪</b> 縮放　<b class="text-white">K</b> 碰撞線框</div>
     </div>
 
+        </div>
+    </dialog>
+
     <!-- 中央動態提示橫幅 -->
-    <div class="fixed inset-x-0 top-28 sm:top-24 z-10 flex flex-col items-center pointer-events-none px-4">
+    <div id="notice-area" class="fixed z-10 pointer-events-none">
         <div id="center-banner" class="transition-all duration-300 opacity-0 transform -translate-y-3 text-center">
             <div id="banner-title" class="font-vice text-lg sm:text-2xl font-black italic uppercase bg-gradient-to-r from-amber-200 via-sky-300 to-rose-400 bg-clip-text text-transparent drop-shadow">
                 VICE HORIZON VI
@@ -409,10 +559,10 @@
     </div>
 
     <!-- ==================== 底部觸控按鈕 (步行：搖桿；駕駛：手遊賽車式 左右轉向鍵 + 油門 / 煞車) ==================== -->
-    <div id="touch-controls" class="fixed bottom-0 inset-x-0 z-30 p-3 sm:p-5 flex items-end justify-between pointer-events-none">
+    <div id="touch-controls" class="fixed bottom-0 inset-x-0 z-30 flex items-end justify-between pointer-events-none">
 
         <!-- 左下：步行用 360° 虛擬搖桿 / 開車時換成左右轉向鍵 -->
-        <div class="flex flex-col items-start gap-2 pointer-events-auto">
+        <div id="steering-controls" class="pointer-events-auto">
             <div id="joystick-zone" class="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full hud-glass border-2 border-sky-400/50 neon-glow-cyan flex items-center justify-center">
                 <div class="w-12 h-12 rounded-full border border-white/15 pointer-events-none"></div>
                 <div id="joystick-knob" class="w-14 h-14 rounded-full bg-gradient-to-br from-sky-400 via-blue-600 to-rose-500 border-2 border-white shadow-lg pointer-events-none"></div>
@@ -424,42 +574,42 @@
         </div>
 
         <!-- 右下：步行 / 駕駛情境按鈕群 -->
-        <div class="flex flex-col items-end gap-2.5 pointer-events-auto">
+        <div id="action-controls" class="pointer-events-auto">
 
             <!-- 喇叭 + 上下車按鈕 -->
-            <div class="flex items-center gap-2">
-                <button id="btn-horn" type="button" class="touch-btn vh-btn vh-row h-11 rounded-2xl" style="--acc: var(--vh-sun)">
+            <div id="context-controls">
+                <button id="btn-horn" type="button" aria-label="喇叭" class="touch-btn vh-btn vh-row h-11 rounded-2xl" style="--acc: var(--vh-sun)">
                     <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M3 10v4h4l6 4V6L7 10z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12"/></svg><span class="vh-lbl">喇叭</span>
                 </button>
-                <button id="btn-car-action" type="button" class="touch-btn vh-btn vh-row h-11 rounded-2xl pulse-car-action" style="--acc: var(--vh-sky)">
+                <button id="btn-car-action" type="button" aria-label="上車、下車或召喚車輛" class="touch-btn vh-btn vh-row h-11 rounded-2xl pulse-car-action" style="--acc: var(--vh-sky)">
                     <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M3 17v-4l2.2-5.2A2 2 0 0 1 7 6.5h10a2 2 0 0 1 1.8 1.3L21 13v4"/><path d="M3 13h18"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg><span id="btn-car-action-label" class="vh-lbl" style="color:#fff">上車 / 召喚跑車</span>
                 </button>
             </div>
 
             <!-- 步行控制群 (跳躍 & 衝刺) -->
             <div id="foot-controls-cluster" class="flex items-end gap-3">
-                <button id="btn-foot-jump" type="button" class="touch-btn vh-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full" style="--acc: var(--vh-sun)">
+                <button id="btn-foot-jump" type="button" aria-label="跳躍" class="touch-btn vh-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full" style="--acc: var(--vh-sun)">
                     <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M12 19V5M5 12l7-7 7 7"/></svg><span class="vh-lbl">跳躍</span>
                 </button>
-                <button id="btn-foot-sprint" type="button" class="touch-btn vh-btn w-20 h-20 sm:w-24 sm:h-24 rounded-full" style="--acc: var(--vh-pink)">
+                <button id="btn-foot-sprint" type="button" aria-label="跑步" class="touch-btn vh-btn w-20 h-20 sm:w-24 sm:h-24 rounded-full" style="--acc: var(--vh-pink)">
                     <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span class="vh-lbl">跑步</span>
                 </button>
             </div>
 
             <!-- 駕駛控制群 (氮氣、手煞車、煞車/倒車、油門) -->
             <div id="drive-controls-cluster" class="hidden flex items-end gap-2 sm:gap-2.5">
-                <div class="flex flex-col gap-2">
-                    <button id="btn-drive-nitro" type="button" class="touch-btn vh-btn w-16 h-14 sm:w-20 sm:h-16 rounded-2xl" style="--acc: var(--vh-sky)">
+                <div id="drive-secondary">
+                    <button id="btn-drive-nitro" type="button" aria-label="氮氣" class="touch-btn vh-btn w-16 h-14 sm:w-20 sm:h-16 rounded-2xl" style="--acc: var(--vh-sky)">
                         <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M12 22c4 0 7-2.8 7-7 0-4.2-3.2-6-4.2-10-2 3-3 4-3.8 4 0-2-1-3.8-2-5-1 4-5 6-5 11 0 4.2 3.4 7 8 7z"/></svg><span class="vh-lbl">氮氣</span>
                     </button>
-                    <button id="btn-drive-drift" type="button" class="touch-btn vh-btn w-16 h-14 sm:w-20 sm:h-16 rounded-2xl" style="--acc: var(--vh-sun)">
+                    <button id="btn-drive-drift" type="button" aria-label="手煞車" class="touch-btn vh-btn w-16 h-14 sm:w-20 sm:h-16 rounded-2xl" style="--acc: var(--vh-sun)">
                         <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="9"/><path d="M10 16.5v-9h3a2.6 2.6 0 0 1 0 5.2h-3"/></svg><span class="vh-lbl">手煞車</span>
                     </button>
                 </div>
-                <button id="btn-drive-brake" type="button" class="touch-btn vh-btn w-16 h-24 sm:w-20 sm:h-28 rounded-2xl" style="--acc: var(--vh-rose)">
+                <button id="btn-drive-brake" type="button" aria-label="煞車與倒車" class="touch-btn vh-btn w-16 h-24 sm:w-20 sm:h-28 rounded-2xl" style="--acc: var(--vh-rose)">
                     <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m6 9 6 6 6-6"/></svg><span class="vh-lbl">煞車</span><span class="text-[9px] text-slate-300">倒車</span>
                 </button>
-                <button id="btn-drive-gas" type="button" class="touch-btn vh-btn vh-gas w-20 h-32 sm:w-24 sm:h-36 rounded-3xl">
+                <button id="btn-drive-gas" type="button" aria-label="油門" class="touch-btn vh-btn vh-gas w-20 h-32 sm:w-24 sm:h-36 rounded-3xl">
                     <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m6 15 6-6 6 6"/><path d="m6 20 6-6 6 6" opacity=".55"/></svg><span class="vh-lbl">油門</span>
                 </button>
             </div>
@@ -570,14 +720,6 @@
         document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
     })();
     </script>
-
-    <!-- 電腦版鍵盤滑鼠提示 -->
-    <div id="desktop-hints" class="hidden fixed bottom-3 left-3 z-30 hud-glass rounded-2xl px-3 py-2 text-[11px] leading-5 text-gray-200 border border-white/15 pointer-events-none">
-        <div class="font-vice font-bold text-sky-300 text-xs mb-0.5">⌨️ 鍵盤 / 滑鼠</div>
-        <div><b class="text-white">WASD</b> 移動 / 駕駛　<b class="text-white">Shift</b> 跑步 / 氮氣</div>
-        <div><b class="text-white">Space</b> 跳躍 / 手煞車　<b class="text-white">F</b> 上下車　<b class="text-white">M</b> 地圖</div>
-        <div><b class="text-white">滑鼠拖曳</b> 旋轉鏡頭　<b class="text-white">滾輪</b> 縮放　<b class="text-white">K</b> 碰撞線框</div>
-    </div>
 
     <!-- ==================== 主程式 (ES MODULE: THREE.JS + CANNON-ES) ==================== -->
     <script type="module">
@@ -1425,6 +1567,7 @@
             if (fxaaPass) fxaaPass.material.uniforms['resolution'].value.set(1 / (window.innerWidth * pr), 1 / (window.innerHeight * pr));
         }
         function applyQualitySetting() {
+            document.body.classList.toggle('hud-low', STATE.quality === 'LOW');
             const btn = document.getElementById('pill-quality');
             const q = currentPreset();
             STATE.resScale = 1.0;
@@ -6875,6 +7018,8 @@
         }
 
         function closeModals() {
+            const quickActions = document.getElementById('quick-actions');
+            if (quickActions.open) quickActions.close();
             ['missions-modal', 'garage-modal', 'settings-modal'].forEach(id => {
                 const el = document.getElementById(id);
                 el.classList.add('hidden');
@@ -7410,18 +7555,17 @@
             }
         }
         // 雷達與世界地圖上的配送站、目的地、特技跳台圖示
+        function drawRadarDot(ctx, pos, scale, x, z, color, radius, clamp) {
+            let mx = (x - pos.x) * scale, mz = (z - pos.z) * scale;
+            const d = Math.hypot(mx, mz);
+            if (d > 60) { if (!clamp) return; mx = mx / d * 58; mz = mz / d * 58; }
+            ctx.fillStyle = color; ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.arc(mx, mz, radius, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        }
         function drawRadarExtras(ctx, pos, scale) {
-            const R = 60;
-            const dot = (x, z, color, r, clamp) => {
-                let mx = (x - pos.x) * scale, mz = (z - pos.z) * scale;
-                const d = Math.hypot(mx, mz);
-                if (d > R) { if (!clamp) return; mx = mx / d * (R - 2); mz = mz / d * (R - 2); }
-                ctx.fillStyle = color; ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1.5;
-                ctx.beginPath(); ctx.arc(mx, mz, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-            };
-            DELIVERY.depots.forEach(d => dot(d.x, d.z, '#facc15', 3.6, false));
-            STUNT.jumps.forEach(j => dot(j.x, j.z, SAVE.jumps[j.id] ? '#94a3b8' : '#fb923c', 3.0, false));
-            if (DELIVERY.job) dot(DELIVERY.job.dest.x, DELIVERY.job.dest.z, '#22c55e', 5, true);
+            for (const d of DELIVERY.depots) drawRadarDot(ctx, pos, scale, d.x, d.z, '#facc15', 3.6, false);
+            for (const j of STUNT.jumps) drawRadarDot(ctx, pos, scale, j.x, j.z, SAVE.jumps[j.id] ? '#94a3b8' : '#fb923c', 3, false);
+            if (DELIVERY.job) drawRadarDot(ctx, pos, scale, DELIVERY.job.dest.x, DELIVERY.job.dest.z, '#22c55e', 5, true);
         }
         function drawMapExtras(g, P, s) {
             const icon = (x, z, emoji, ring) => {
@@ -7469,9 +7613,28 @@
             }
         }
 
-        function drawRadar() {
-            const rCanvas = document.getElementById('radar-canvas');
-            const ctx = rCanvas.getContext('2d');
+        // Cache DOM/context once; visibility observers do no work in the animation hot path.
+        const RADAR = {
+            canvas: document.getElementById('radar-canvas'),
+            context: document.getElementById('radar-canvas').getContext('2d'),
+            visible: true, lastDraw: -Infinity,
+            actions: document.getElementById('quick-actions'),
+            overlays: ['missions-modal', 'garage-modal', 'settings-modal', 'world-map'].map(id => document.getElementById(id))
+        };
+        if (typeof IntersectionObserver !== 'undefined') {
+            new IntersectionObserver(entries => {
+                RADAR.visible = entries[0].isIntersecting;
+                if (RADAR.visible) RADAR.lastDraw = -Infinity;
+            }).observe(RADAR.canvas);
+        }
+        function drawRadar(now = performance.now()) {
+            if (document.hidden || !RADAR.visible || RADAR.actions.open) return;
+            const interval = STATE.quality === 'LOW' ? 125 : 100;
+            const elapsed = now - RADAR.lastDraw;
+            if (elapsed < interval) return;
+            for (const overlay of RADAR.overlays) if (!overlay.classList.contains('hidden')) return;
+            RADAR.lastDraw = Number.isFinite(elapsed) ? now - elapsed % interval : now;
+            const ctx = RADAR.context;
             const cx = 70, cy = 70, scale = 0.11;
             const pos = getActivePosition();
             const heading = getActiveHeading();
@@ -7498,51 +7661,55 @@
             ctx.fillRect((sbr.x0 - pos.x) * scale, (sbr.z0 - pos.z) * scale, (sbr.x1 - sbr.x0) * scale, (sbr.z1 - sbr.z0) * scale);
             // 直線大道與橫向街道
             ctx.fillStyle = '#334155';
-            ROAD_NET.avenuesX.forEach(rx => {
+            for (const rx of ROAD_NET.avenuesX) {
                 const AZ = ROAD_NET.avenueZ, az1 = rx < -340 ? ROAD_NET.hillAveZ : AZ;
                 ctx.fillRect((rx - pos.x - 12) * scale, (-AZ - pos.z) * scale, 24 * scale, (az1 + AZ) * scale);
-            });
-            ROAD_NET.crossZ.forEach(cz => {
+            }
+            for (const cz of ROAD_NET.crossZ) {
                 const westX = (cz >= 360) ? -340 : ROAD_NET.crossX0;
                 ctx.fillRect((westX - pos.x) * scale, (cz - 11 - pos.z) * scale, (ROAD_NET.crossX1 - westX) * scale, 22 * scale);
-            });
+            }
             // 曲線道路、山路與圓環
             ctx.strokeStyle = '#475569';
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            [...ROAD_NET.ribbons, ...ROAD_NET.terrainRoads].forEach(r => {
+            for (let ri = 0; ri < ROAD_NET.ribbons.length + ROAD_NET.terrainRoads.length; ri++) {
+                const r = ri < ROAD_NET.ribbons.length ? ROAD_NET.ribbons[ri] : ROAD_NET.terrainRoads[ri - ROAD_NET.ribbons.length];
                 ctx.lineWidth = r.half * 2 * scale;
                 ctx.beginPath();
-                r.pts.forEach((q, i) => {
-                    if (i % 3 !== 0 && i !== r.pts.length - 1) return;
+                for (let i = 0; i < r.pts.length; i++) {
+                    const q = r.pts[i];
+                    if (i % 3 !== 0 && i !== r.pts.length - 1) continue;
                     const mx = (q.x - pos.x) * scale, mz = (q.z - pos.z) * scale;
                     if (i === 0) ctx.moveTo(mx, mz); else ctx.lineTo(mx, mz);
-                });
+                }
                 ctx.stroke();
-            });
+            }
             // 環狀高架與匝道 (淺色、加外框)
-            [ROAD_NET.ring, ...ROAD_NET.spurs].forEach((r, ri) => {
+            for (let ri = 0; ri <= ROAD_NET.spurs.length; ri++) {
+                const r = ri === 0 ? ROAD_NET.ring : ROAD_NET.spurs[ri - 1];
                 ctx.strokeStyle = '#cbd5e1';
                 ctx.lineWidth = r.half * 2 * scale + 1.5;
                 ctx.beginPath();
-                r.pts.forEach((q, i) => {
-                    if (i % 3 !== 0 && i !== r.pts.length - 1) return;
+                for (let i = 0; i < r.pts.length; i++) {
+                    const q = r.pts[i];
+                    if (i % 3 !== 0 && i !== r.pts.length - 1) continue;
                     const mx = (q.x - pos.x) * scale, mz = (q.z - pos.z) * scale;
                     if (i === 0) ctx.moveTo(mx, mz); else ctx.lineTo(mx, mz);
-                });
+                }
                 if (ri === 0) ctx.closePath();
                 ctx.stroke();
-            });
+            }
             ctx.strokeStyle = '#475569';
-            ROAD_NET.roundabouts.forEach(rb => {
+            for (const rb of ROAD_NET.roundabouts) {
                 ctx.lineWidth = (rb.rOut - rb.rIn) * scale;
                 ctx.beginPath();
                 ctx.arc((rb.x - pos.x) * scale, (rb.z - pos.z) * scale, (rb.rIn + rb.rOut) / 2 * scale, 0, Math.PI * 2);
                 ctx.stroke();
-            });
+            }
 
-            WORLD.vehicles.forEach(v => {
-                if (v === STATE.currentVehicle || !v.chassisGroup.visible) return;
+            for (const v of WORLD.vehicles) {
+                if (v === STATE.currentVehicle || !v.chassisGroup.visible) continue;
                 const vx = (v.chassisBody.position.x - pos.x) * scale;
                 const vz = (v.chassisBody.position.z - pos.z) * scale;
                 if (Math.hypot(vx, vz) < 62) {
@@ -7551,7 +7718,7 @@
                     ctx.arc(vx, vz, v.isPolice ? 4 : 2.8, 0, Math.PI * 2);
                     ctx.fill();
                 }
-            });
+            }
 
             if (MISSION.active && MISSION.checkpoints[MISSION.currentCP]) {
                 const cp = MISSION.checkpoints[MISSION.currentCP];
@@ -7960,6 +8127,7 @@
                 el.addEventListener('pointerdown', on);
                 el.addEventListener('pointerup', off);
                 el.addEventListener('pointerleave', off);
+                el.addEventListener('pointercancel', off);
             }
             bindHold('btn-foot-jump', 'space');
             bindHold('btn-foot-sprint', 'shift');
@@ -7969,6 +8137,20 @@
             bindHold('btn-drive-nitro', 'shift');
             bindHold('btn-steer-left', 'left');
             bindHold('btn-steer-right', 'right');
+
+            function releaseHudControls() {
+                INPUT.forward = INPUT.backward = INPUT.left = INPUT.right = INPUT.space = INPUT.shift = false;
+                resetKnob();
+                for (const button of document.querySelectorAll('#touch-controls .active-press')) button.classList.remove('active-press');
+                CAM.pointers.clear();
+            }
+            window.addEventListener('resize', releaseHudControls);
+            window.addEventListener('orientationchange', releaseHudControls);
+            window.addEventListener('blur', releaseHudControls);
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) releaseHudControls();
+                RADAR.lastDraw = -Infinity;
+            });
 
             // 畫質：LOW / MED / HIGH 三段循環切換
             document.getElementById('pill-quality').addEventListener('click', () => {
@@ -7998,7 +8180,24 @@
                 const m = document.getElementById('missions-modal');
                 m.classList.remove('hidden'); m.classList.add('flex');
             });
-            document.getElementById('radar-container').addEventListener('click', openWorldMap);
+            const quickActions = document.getElementById('quick-actions');
+            const radarEntry = document.getElementById('radar-container');
+            radarEntry.addEventListener('click', () => {
+                closeModals();
+                releaseHudControls();
+                quickActions.showModal();
+            });
+            radarEntry.addEventListener('keydown', e => {
+                if (e.code === 'Enter' || e.code === 'Space') e.stopPropagation();
+            });
+            // Native dialog keeps focus inside the temporary panel; existing action handlers stay intact.
+            quickActions.addEventListener('keydown', e => e.stopPropagation());
+            document.getElementById('quick-actions-close').addEventListener('click', () => quickActions.close());
+            document.getElementById('quick-actions-map').addEventListener('click', openWorldMap);
+            document.getElementById('quick-actions-list').addEventListener('click', e => {
+                if (e.target.closest('button') && quickActions.open) quickActions.close();
+            }, true);
+            quickActions.addEventListener('close', () => { RADAR.lastDraw = -Infinity; });
             document.getElementById('close-missions-btn').addEventListener('click', closeModals);
 
             document.getElementById('pill-garage').addEventListener('click', () => {
@@ -8453,7 +8652,7 @@
             recycleTraffic(dt);
             TREES.uTime.value = STATE.time;
             updateDayCycle(dt);
-            drawRadar();
+            drawRadar(now);
 
             // 3. 依據「畫質：LOW / MED / HIGH」決定使用 EffectComposer 或直接渲染
             if (STATE.usePostFX && composer) {
