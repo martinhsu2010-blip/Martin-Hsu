@@ -1,7 +1,7 @@
 # VICE HORIZON VI — Project Handoff
 
 Written for another AI assistant (e.g. ChatGPT) or developer picking up this project.
-Last updated: 2026-11-18, game version `vh-2026-11-19-18` (see `CACHE` in `sw.js`).
+Last updated: 2026-11-18, game version `vh-2026-11-19-19` (see `CACHE` in `sw.js`).
 Owner: martinhsu2010-blip (Traditional Chinese speaker, Taiwan). Explain things to the owner in Traditional Chinese; write prompts for Gemini in English.
 
 ## What this is
@@ -84,3 +84,6 @@ All player-visible text lives in one table, `STRINGS` = {en, zh-TW} (between `I1
 
 ## Traffic (T-004B)
 Ordinary traffic pool sizes are `DENSITY.traffic` per preset (spec T-004A §3.1). Ordinary AI (`isAI && !isPolice`) is always `modelKey 'kenney'`; `setDetail`/`applyFerrariModel` return early for it, and a missing Kenney subtype keeps the geometric fallback. `TRAFFIC` holds the rules: spawn via `findInitialTrafficSlot` (20 units between cars, 25 from the player's car), `recycleTraffic` every 1.2 s moves at most 2 cars that are > 470 units away (or flagged `trafficRecovery`) and not on screen, to an off-screen slot 125-260 units away with 30-unit clearance, never within 120. `updateTrafficPhysics()` runs every frame before `physicsWorld.step`: a car wakes within 160 units or as soon as it is on screen; it freezes only beyond 200 units after `hideGrace` (2 s) off screen. "On screen" = camera frustum and within the 420-unit AI draw distance. Diagnostics: `__VH.trafficDiagnostics()`. Test: `node tools/test/traffic_check.mjs`.
+
+## Collisions (T-004C)
+Trees: `addTree()` moves a tree that lands on a terrain road to the roadside (3 units clear), keeping its ground embed; `buildTrees()` records the trunk geometry on each tree. `initTreeColliders()` (after `spawnVehicles()`) preallocates one static upright `CANNON.Box` per tree in `TREE_COLLIDERS` (32-unit grid). `refreshTreeColliders(dt)` runs before `physicsWorld.step` every 0.5 s (and immediately from `teleportTo`): trunks within 140 units of the player or near any active car join the world, those beyond 180 and not near an active car leave; a trunk occupied by a car or the walking player is deferred. Diagnostics: `__VH.treeColliderDiagnostics()`. Houses: `buildHouseColliders()` splits `WORLD.suburbHouses` into spatial cells (ceil(n/16) bodies, <=16 shapes); each box covers walls plus foundation (y - 2.8 to wall top, footprint 5.8 x 4.55, scaled for big houses); `house.collider` maps to body/shape/instance. New structures in T-004D/E must cover their visible foundations the same way. Test: `node tools/test/collision_check.mjs` (needs full git history for the baseline).
