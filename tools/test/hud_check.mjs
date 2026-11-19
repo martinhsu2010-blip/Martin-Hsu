@@ -33,6 +33,7 @@ class Element {
     }
     setAttribute(name,value){this[name]=value;}
     focus(){this.focused=true;}
+    appendChild(child){child.parentId=this.id;return child;}
     click(){this.emit('click');}
     addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);}
     emit(type,event={}){event.preventDefault??=()=>{};event.stopPropagation??=()=>{};event.target??=this;for(const fn of this.listeners[type]||[])fn(event);}
@@ -41,7 +42,7 @@ class Element {
     closest(selector){return selector==='button'?this:null;}
 }
 function documentStub(){
-    const elements=new Map(); const doc=new Element('document');doc.hidden=false;
+    const elements=new Map(); const doc=new Element('document');doc.hidden=false;doc.body=new Element('body');
     doc.getElementById=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id);};
     doc.querySelectorAll=selector=>selector==='#touch-controls .active-press'?[...elements.values()].filter(e=>e.classList.contains('active-press')):[];
     return doc;

@@ -241,6 +241,8 @@
         #quick-actions .hub-scroll { touch-action: pan-y; overflow-y: auto; padding: 16px; }
         .hub-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
         .hub-actions .vh-pill { flex: 1 1 140px; }
+        /* Review fix: banners (cash, purchase, quality, sky...) must stay visible above the Hub's top layer. */
+        #quick-actions #notice-area { position: fixed; top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); left: 12px; right: 12px; z-index: 80; }
         #quick-actions #world-map { padding: 0; }
         #world-map > div:first-child { flex: none; padding: 4px 8px; }
         #world-map > div:first-child > div:first-child { display: none; }
@@ -7066,6 +7068,7 @@
             });
             const content = document.getElementById(panel);
             content.classList.remove('hidden'); content.classList.add('flex');
+            dialog.appendChild(document.getElementById('notice-area'));
             if (!dialog.open) dialog.showModal();
             if (panel === 'world-map') {
                 const pos = getActivePosition();
@@ -8253,6 +8256,7 @@
             quickActions.addEventListener('close', () => {
                 if (quickActions.open) return;
                 hideHubPanels(); RADAR.lastDraw = -Infinity; radarEntry.focus();
+                document.body.appendChild(document.getElementById('notice-area'));
             });
             document.getElementById('close-missions-btn').addEventListener('click', closeModals);
             document.getElementById('close-garage-btn').addEventListener('click', closeModals);
