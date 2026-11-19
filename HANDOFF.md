@@ -1,7 +1,7 @@
 # VICE HORIZON VI — Project Handoff
 
 Written for another AI assistant (e.g. ChatGPT) or developer picking up this project.
-Last updated: 2026-11-18, game version `vh-2026-11-19-19` (see `CACHE` in `sw.js`).
+Last updated: 2026-11-18, game version `vh-2026-11-20-01` (see `CACHE` in `sw.js`).
 Owner: martinhsu2010-blip (Traditional Chinese speaker, Taiwan). Explain things to the owner in Traditional Chinese; write prompts for Gemini in English.
 
 ## What this is
@@ -87,3 +87,6 @@ Ordinary traffic pool sizes are `DENSITY.traffic` per preset (spec T-004A §3.1)
 
 ## Collisions (T-004C)
 Trees: `addTree()` moves a tree that lands on a terrain road to the roadside (3 units clear), keeping its ground embed; `buildTrees()` records the trunk geometry on each tree. `initTreeColliders()` (after `spawnVehicles()`) preallocates one static upright `CANNON.Box` per tree in `TREE_COLLIDERS` (32-unit grid). `refreshTreeColliders(dt)` runs before `physicsWorld.step` every 0.5 s (and immediately from `teleportTo`): trunks within 140 units of the player or near any active car join the world, those beyond 180 and not near an active car leave; a trunk occupied by a car or the walking player is deferred. Diagnostics: `__VH.treeColliderDiagnostics()`. Houses: `buildHouseColliders()` splits `WORLD.suburbHouses` into spatial cells (ceil(n/16) bodies, <=16 shapes); each box covers walls plus foundation (y - 2.8 to wall top, footprint 5.8 x 4.55, scaled for big houses); `house.collider` maps to body/shape/instance. New structures in T-004D/E must cover their visible foundations the same way. Test: `node tools/test/collision_check.mjs` (needs full git history for the baseline).
+
+## Suburbs (T-004D)
+`buildSuburbs()` still runs the old house layout only to seed tree exclusions; the rendered/physical structures come from `buildSuburbParcels()` (Option B, `SUBURB_TYPES` with shares, sizes, floors, units, roof kind) and `buildSuburbMeshes()`. Candidates: every 5th road point, both sides, setbacks 12 and 28, rotated SAT gap >= 3, road and terrain checks, pads/depots and existing trunks kept clear; each type's candidates are ordered by a golden-ratio stride so types spread over all roads; quotas by largest remainder, total from the cap (210 / 390) down to 1.4x baseline until every quota fills. Stats: `WORLD.suburbStats`. `WORLD.suburbHouses` holds the placed structures (map-compatible) with `ti`, `type`, `bottom`, `wallMesh/wallInstance`, `baseMesh/baseInstance` and `collider`. Tests: `node tools/test/suburb_check.mjs`, `collision_check.mjs`.
