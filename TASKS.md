@@ -4,34 +4,24 @@
 (none)
 
 ## Ready for Codex
-(none — T-004E starts after Martin accepts T-004D)
-## In review
-### T-004D Suburban variety (Option B) and increased structure density
+### T-004E City district infill
 Owner: Codex
 Reviewer: Claude
 Priority: P1
-Depends on: T-004C (Done, Martin-accepted 2026-11-19)
-Base commit: `dab2ba607ac77e706e82a947c3ce171ef5c45311`
-Branch/PR: `codex/T-004D-suburb-variety` / PR #31 (squash-merged 17c16b3, released as `vh-2026-11-20-01`)
-Spec: `specs/T-004A-spec-v1.1.md` §3.3 Option B, §3.4, §3.6, §4 (T-004D row).
-Claude notes: (1) Every new structure needs a collider that covers its visible foundation on slopes, like the T-004C house fix (box from base bottom to wall top, base footprint); keep `house.collider`-style mapping for each structure so alignment can be tested, and extend `collision_check.mjs` to all seven types. (2) Keep `WORLD.suburbHouses` usable by the world map (§3.4.6) and keep the T-004C spatial grouping (<=16 shapes per body); report the new body count. (3) Trees: new parcels must not overlap existing tree trunks; drop or skip a parcel rather than moving trees unless the tree sits on a road. (4) Report placed counts per type and zone against the Option B shares and the >=1.40x baseline, draw calls added on PHONE_LOW and DESKTOP (limits +20 / +30), and headless physics step cost.
-Verification: `code-reviewed` + headless full game (Chrome/SwiftShader, not a device). Status: released, awaiting Martin's device acceptance (stage 8).
-Claude review (2026-11-20): seven Option B types at exact shares (210 phone / 390 desktop, 1.62x / 1.81x baseline, residential 87%); placement rules per §3.4; one foundation-to-wall-top box per structure; 2 opaque + 1 roof material, vertex colors, no per-building textures. Claude fixed one defect (2916bab): candidates were taken in road order, so on phones Maple Ave fell from 39 to 20 houses (aerial view almost empty), Hillcrest was bungalows only and Valley Loop empty; a golden-ratio stride now spreads each type. Zones Main/Maple/Hillcrest/Valley: phone 50/39/41/0 -> 47/35/60/68, desktop 50/39/62/64 -> 96/75/102/117, all mixed. PHONE_LOW renderer draw calls at 8 suburb views: +7 at most (limit +20). Full game: 42/42 downhill foundation impacts (2 steepest per type x 30/60/120 km/h) stopped outside, upright; smoke + offline OK. Walls are flat vertex colours with box windows/doors (old siding texture removed). NOT verified: desktop draw calls (headless fell back to mobile profile), device FPS/heat, reachability of 28-unit rear rows on foot.
+Depends on: T-004D (Done, Martin-accepted 2026-11-20)
+Base commit: latest `main` (reported in the HANDOFF)
+Branch: `codex/T-004E-urban-infill`
+Spec: `specs/T-004A-spec-v1.1.md` §3.2, §3.6, §4 (T-004E row).
+Claude notes: (1) Report placed building counts per district (CBD / Midtown / Old Town) for the exact same baseline build and the new build, and the increase vs the +20 / +40 / +35 % targets; record shortfalls instead of forcing overlaps (§3.2.2). (2) Every new building needs a static collider matching its visible shell down to its visible base (as in T-004C/D) and must appear in `WORLD.buildings` (map, camera blockers, facade LOD) like existing buildings; extend `collision_check.mjs` with impacts on new city buildings. (3) Clearance audit for every addition: `rectHitsElevated`, `rectHitsCurvedRoad`, grid roads and intersections with >= 3 units, depots, mission checkpoints, ramps (takeoff and landing), garage access, fast-travel arrivals, spawn and the CBD plaza. (4) Reuse the existing facade/window batching; report draw calls added on PHONE_LOW (<= 8) and DESKTOP_HIGH (<= 16) for city infill, measured with `renderer.info.render.calls` if a browser works, otherwise a structural count clearly labelled. (5) Traffic, trees, suburbs, camera, HUD, Hub, localization, economy and saves unchanged.
+Verification: `designed`.
 
+## In review
+(none)
 
 ## Doing (Claude)
 (none)
 
 ## Blocked
-### T-004E City district infill
-Owner: Codex
-Reviewer: Claude
-Priority: P1
-Blocked by: Martin's acceptance of T-004D (released vh-2026-11-20-01)
-Branch: `codex/T-004E-urban-infill`
-Spec: `specs/T-004A-spec-v1.1.md` §3.2, §3.6, §4 (T-004E row).
-Verification: `designed`.
-
 ### T-002 Verify licenses of the Porsche / Lexus / Ford Sketchfab models
 Owner: Martin
 Priority: P2
@@ -41,6 +31,18 @@ Why: archives had no license text; needed before any public sharing.
 (none)
 
 ## Done
+### T-004D Suburban variety (Option B) and increased structure density
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-004C (Done, Martin-accepted 2026-11-19)
+Base commit: `dab2ba607ac77e706e82a947c3ce171ef5c45311`
+Branch/PR: `codex/T-004D-suburb-variety` / PR #31 (squash-merged 17c16b3, released as `vh-2026-11-20-01`)
+Spec: `specs/T-004A-spec-v1.1.md` §3.3 Option B, §3.4, §3.6, §4 (T-004D row).
+Claude notes: (1) Every new structure needs a collider that covers its visible foundation on slopes, like the T-004C house fix (box from base bottom to wall top, base footprint); keep `house.collider`-style mapping for each structure so alignment can be tested, and extend `collision_check.mjs` to all seven types. (2) Keep `WORLD.suburbHouses` usable by the world map (§3.4.6) and keep the T-004C spatial grouping (<=16 shapes per body); report the new body count. (3) Trees: new parcels must not overlap existing tree trunks; drop or skip a parcel rather than moving trees unless the tree sits on a road. (4) Report placed counts per type and zone against the Option B shares and the >=1.40x baseline, draw calls added on PHONE_LOW and DESKTOP (limits +20 / +30), and headless physics step cost.
+Verification: `Martin-accepted` (2026-11-20, S26 Ultra / Tab S11 device test) + `code-reviewed` + headless full game (Chrome/SwiftShader).
+Claude review (2026-11-20): seven Option B types at exact shares (210 phone / 390 desktop, 1.62x / 1.81x baseline, residential 87%); placement rules per §3.4; one foundation-to-wall-top box per structure; 2 opaque + 1 roof material, vertex colors, no per-building textures. Claude fixed one defect (2916bab): candidates were taken in road order, so on phones Maple Ave fell from 39 to 20 houses (aerial view almost empty), Hillcrest was bungalows only and Valley Loop empty; a golden-ratio stride now spreads each type. Zones Main/Maple/Hillcrest/Valley: phone 50/39/41/0 -> 47/35/60/68, desktop 50/39/62/64 -> 96/75/102/117, all mixed. PHONE_LOW renderer draw calls at 8 suburb views: +7 at most (limit +20). Full game: 42/42 downhill foundation impacts (2 steepest per type x 30/60/120 km/h) stopped outside, upright; smoke + offline OK. Walls are flat vertex colours with box windows/doors (old siding texture removed). NOT verified: desktop draw calls (headless fell back to mobile profile), device FPS/heat, reachability of 28-unit rear rows on foot.
+
 ### T-004C Tree and existing house collision repair
 Owner: Codex
 Reviewer: Claude
