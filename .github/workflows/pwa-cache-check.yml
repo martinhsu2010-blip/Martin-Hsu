@@ -36,3 +36,5 @@ jobs:
         run: node tools/test/traffic_check.mjs
       - name: Check tree and house collider alignment, activation and impacts
         run: node tools/test/collision_check.mjs
+      - name: Check Option B populations, placement clearances and render batches
+        run: node tools/test/suburb_check.mjs
