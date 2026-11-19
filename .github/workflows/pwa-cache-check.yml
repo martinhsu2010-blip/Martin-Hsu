@@ -24,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
       - name: Syntax check index.html scripts and PRECACHE files
         run: python3 tools/test/syntax_check.py
 
@@ -33,3 +34,5 @@ jobs:
         run: node tools/test/i18n_check.mjs
       - name: Check traffic pools, exclusion, spacing and reactivation
         run: node tools/test/traffic_check.mjs
+      - name: Check tree and house collider alignment, activation and impacts
+        run: node tools/test/collision_check.mjs
