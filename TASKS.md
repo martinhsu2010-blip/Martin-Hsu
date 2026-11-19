@@ -4,22 +4,19 @@
 (none)
 
 ## Ready for Codex
-(none — T-003E starts after Martin accepts T-003D)
-## In review
-### T-003D Minimap-driven Game Hub
+### T-003E Bilingual interface (English / Traditional Chinese)
 Owner: Codex
 Reviewer: Claude
 Priority: P1
-Depends on: T-003C (Done, Martin-accepted 2026-11-19)
-Base commit: `d96335833dba1207ab693a70dd0d77c91d477019`
-Branch/PR: `codex/T-003D-game-hub` / PR #17 (squash-merged 872ab73, released as `vh-2026-11-19-16`)
-Spec: `specs/T-003A-spec-v1.1.md` sections 5, 8, 10. All existing toolbar actions through the Hub; mission/garage/map/settings preserved; correct modal and input handling; `closeModals` flow and the delivery fast-travel block preserved.
-Claude note: T-003C left an interim `#quick-actions` dialog (opened by tapping `#radar-container`) holding all old toolbar buttons with their original IDs, the crate counter and RPM/nitro bars; the Game Hub replaces this dialog, keeps those IDs/handlers working, and keeps the radar draw skip while the Hub is open (`RADAR` in index.html, see HANDOFF "HUD (T-003C)").
-Claude note: spec lists an "airport stunt" mission; no such name exists in code today. Map it to the existing STUNT mission and do not add a new one.
-Verification: `code-reviewed` + headless (Chrome/SwiftShader, not a device). Status: released, awaiting Martin's device acceptance (stage 8).
-Claude review (2026-11-19): one `<dialog id="quick-actions">` with MAP/MISSIONS/GARAGE/WORLD/SETTINGS tabs holding the original panels and IDs; `closeModals` is the single close path (Escape, M, ✕, wm-close); opening releases held input; map timer and pointers cleared off the MAP tab; radar suppressed while open; delivery fast-travel block kept (message also in the map panel). Claude fixed one defect (9eae832): banners were hidden under the modal's top layer, so "not enough cash", purchase, upgrade, quality, camera and sky feedback was invisible; `#notice-area` now moves into the Hub while it is open. `hud_layout_check.py` PASS for 11 viewports x 2 label languages, including all five panels; live headless flows: Esc/M/focus, garage insufficient cash/purchase/paint/upgrade/summon, WORLD/SETTINGS, race start/cancel, delivery blocks travel, no errors. NOT verified: real touch pan/pinch, notch safe areas, device FPS.
-Notes: at 800x360 the map area is small but usable; the 3D scene still renders behind the opaque Hub (skipping it would need a design decision, spec §5).
+Depends on: T-003D (Done, Martin-accepted 2026-11-19)
+Branch: `codex/T-003E-i18n` from latest `main`
+Spec: `specs/T-003A-spec-v1.1.md` sections 6, 8, 10. String table, language selector in SETTINGS, `vh_save.language` (new field, default-safe), complete player-visible translation, CI check for leftover CJK, live panel refresh, old saves keep working.
+Claude notes: (1) Default policy needs "new player vs existing save": decide by whether `vh_save` existed before this load (no key = new = English; key without `language` = existing = zh-TW). (2) Dynamic strings (e.g. `showBanner` calls, delivery/mission text, reward messages from T-001B) must go through the table. (3) Existing `vh_settings` holds other settings; keep language in `vh_save` as specified.
+Claude note (4): the language selector goes in the SETTINGS tab of the Game Hub (`#settings-modal` inside `#quick-actions`, see HANDOFF "Game Hub (T-003D)"); Hub tab labels, Hub title/close aria-labels, map chips/detail text, and the T-003C/D aria-labels are player-visible and must be translated too. `hud_layout_check.py` already sets English-length labels; keep it passing with the real strings.
+Verification: `designed`.
 
+## In review
+(none)
 
 ## Doing (Claude)
 (none)
@@ -30,19 +27,24 @@ Owner: Martin
 Priority: P2
 Why: archives had no license text; needed before any public sharing.
 
-### T-003E Bilingual interface (English / Traditional Chinese)
-Owner: Codex
-Reviewer: Claude
-Priority: P1
-Depends on: T-003D (released, awaiting Martin's acceptance)
-Spec: `specs/T-003A-spec-v1.1.md` sections 6, 8, 10. String table, language selector in SETTINGS, `vh_save.language` (new field, default-safe), complete player-visible translation, CI check for leftover CJK, live panel refresh, old saves keep working.
-Claude notes: (1) Default policy needs "new player vs existing save": decide by whether `vh_save` existed before this load (no key = new = English; key without `language` = existing = zh-TW). (2) Dynamic strings (e.g. `showBanner` calls, delivery/mission text, reward messages from T-001B) must go through the table. (3) Existing `vh_settings` holds other settings; keep language in `vh_save` as specified.
-Verification: `designed`.
-
 ## Inbox
 (none)
 
 ## Done
+### T-003D Minimap-driven Game Hub
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-003C (Done, Martin-accepted 2026-11-19)
+Base commit: `d96335833dba1207ab693a70dd0d77c91d477019`
+Branch/PR: `codex/T-003D-game-hub` / PR #17 (squash-merged 872ab73, released as `vh-2026-11-19-16`)
+Spec: `specs/T-003A-spec-v1.1.md` sections 5, 8, 10. All existing toolbar actions through the Hub; mission/garage/map/settings preserved; correct modal and input handling; `closeModals` flow and the delivery fast-travel block preserved.
+Claude note: T-003C left an interim `#quick-actions` dialog (opened by tapping `#radar-container`) holding all old toolbar buttons with their original IDs, the crate counter and RPM/nitro bars; the Game Hub replaces this dialog, keeps those IDs/handlers working, and keeps the radar draw skip while the Hub is open (`RADAR` in index.html, see HANDOFF "HUD (T-003C)").
+Claude note: spec lists an "airport stunt" mission; no such name exists in code today. Map it to the existing STUNT mission and do not add a new one.
+Verification: `Martin-accepted` (2026-11-19, S26 Ultra / Tab S11 device test) + `code-reviewed` + headless (Chrome/SwiftShader).
+Claude review (2026-11-19): one `<dialog id="quick-actions">` with MAP/MISSIONS/GARAGE/WORLD/SETTINGS tabs holding the original panels and IDs; `closeModals` is the single close path (Escape, M, ✕, wm-close); opening releases held input; map timer and pointers cleared off the MAP tab; radar suppressed while open; delivery fast-travel block kept (message also in the map panel). Claude fixed one defect (9eae832): banners were hidden under the modal's top layer, so "not enough cash", purchase, upgrade, quality, camera and sky feedback was invisible; `#notice-area` now moves into the Hub while it is open. `hud_layout_check.py` PASS for 11 viewports x 2 label languages, including all five panels; live headless flows: Esc/M/focus, garage insufficient cash/purchase/paint/upgrade/summon, WORLD/SETTINGS, race start/cancel, delivery blocks travel, no errors. NOT verified: real touch pan/pinch, notch safe areas, device FPS.
+Notes: at 800x360 the map area is small but usable; the 3D scene still renders behind the opaque Hub (skipping it would need a design decision, spec §5).
+
 ### T-003C Responsive HUD, radar optimization and pedals
 Owner: Codex
 Reviewer: Claude
