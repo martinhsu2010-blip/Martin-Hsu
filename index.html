@@ -1486,17 +1486,17 @@
             // pixelRatio: 最高像素比 | shadow: 陰影貼圖解析度 | bloom / ssao / smaa: 後製開關
             // fog: 霧氣濃度 (越小看越遠) | npcs / traffic: 行人與車流數量 | props: 物理道具數量倍率
             presets: {
-                PHONE_LOW:     { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 10, props: 0.5 },
-                PHONE_MED:     { pixelRatio: 1.5,  shadow: 1024, bloom: true,  ssao: false, smaa: false, fog: 0.0014, npcs: 10, traffic: 12, props: 0.75 },
-                TABLET_LOW:    { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 12, props: 0.5 },
-                TABLET_MED:    { pixelRatio: 1.5,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 16, props: 0.75 },
-                TABLET_HIGH:   { pixelRatio: 1.75, shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0011, npcs: 14, traffic: 18, props: 1.0 },
-                DESKTOP_MED:   { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0011, npcs: 16, traffic: 20, props: 1.0 },
-                DESKTOP_HIGH:  { pixelRatio: 2.0,  shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0010, npcs: 16, traffic: 26, props: 1.0 },
-                DESKTOP_ULTRA: { pixelRatio: 2.0,  shadow: 4096, bloom: true,  ssao: true,  smaa: true,  fog: 0.0006, npcs: 24, traffic: 34, props: 1.0 },
-                IGPU_LOW:      { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0016, npcs: 8,  traffic: 12, props: 0.6 },
-                IGPU_MED:      { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 15, props: 0.8 },
-                IGPU_HIGH:     { pixelRatio: 1.25, shadow: 2048, bloom: true,  ssao: false, smaa: true,  fog: 0.0011, npcs: 14, traffic: 18, props: 1.0 }
+                PHONE_LOW:     { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 18, props: 0.5 },
+                PHONE_MED:     { pixelRatio: 1.5,  shadow: 1024, bloom: true,  ssao: false, smaa: false, fog: 0.0014, npcs: 10, traffic: 24, props: 0.75 },
+                TABLET_LOW:    { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 22, props: 0.5 },
+                TABLET_MED:    { pixelRatio: 1.5,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 32, props: 0.75 },
+                TABLET_HIGH:   { pixelRatio: 1.75, shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0011, npcs: 14, traffic: 36, props: 1.0 },
+                DESKTOP_MED:   { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0011, npcs: 16, traffic: 40, props: 1.0 },
+                DESKTOP_HIGH:  { pixelRatio: 2.0,  shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0010, npcs: 16, traffic: 52, props: 1.0 },
+                DESKTOP_ULTRA: { pixelRatio: 2.0,  shadow: 4096, bloom: true,  ssao: true,  smaa: true,  fog: 0.0006, npcs: 24, traffic: 68, props: 1.0 },
+                IGPU_LOW:      { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0016, npcs: 8,  traffic: 20, props: 0.6 },
+                IGPU_MED:      { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 28, props: 0.8 },
+                IGPU_HIGH:     { pixelRatio: 1.25, shadow: 2048, bloom: true,  ssao: false, smaa: true,  fog: 0.0011, npcs: 14, traffic: 36, props: 1.0 }
             },
             // 陰影範圍 (公尺) 與行人顯示距離：等級越低越近，省下大量繪製
             shadowRange: { LOW: 60, MED: 85, HIGH: 110, ULTRA: 130 },
@@ -6405,8 +6405,13 @@
                 this.isAI = !!cfg.isAI;
                 this.isPolice = !!cfg.isPolice;
                 // 新車款 (Porsche / Lexus / Ford 警車 / Kenney 交通車)；沒指定就用 Ferrari
-                this.modelKey = cfg.model || null;
-                this.kenneyType = cfg.kenneyType || null;
+                this.modelKey = this.isAI && !this.isPolice ? 'kenney' : (cfg.model || null);
+                this.kenneyType = this.modelKey === 'kenney' ? (cfg.kenneyType || KENNEY_TYPES[0][0]) : null;
+                this.trafficForward = new CANNON.Vec3();
+                this.trafficUp = new CANNON.Vec3();
+                this.trafficHeading = new THREE.Vector3();
+                this.terrainProbe = new CANNON.Vec3();
+                this.terrainLocal = new CANNON.Vec3();
                 const md = this.modelKey ? CAR_MODELS[this.modelKey] : null;
                 this.power = (md && md.power) || 1;
                 this.vmax = (md && md.vmax) || 245;
@@ -6767,7 +6772,7 @@
             // 【升級 4】套用官方 ferrari.glb 模型，綁定清漆車身、透明車窗並同步四顆原廠輪框至物理輪胎
             // 玩家正在開的車用完整模型，其他車用低面數模型
             setDetail(full) {
-                if (this.modelKey) return;
+                if (this.modelKey || (this.isAI && !this.isPolice)) return;
                 const lodTpl = (this.isAI && STATE.ferrariFar) ? STATE.ferrariFar : STATE.ferrariLOD;
                 const tpl = full ? STATE.ferrariTemplate : (lodTpl || STATE.ferrariTemplate);
                 if (!tpl || this.modelTemplate === tpl) return;
@@ -6778,6 +6783,7 @@
             }
 
             applyFerrariModel(templateScene) {
+                if (this.isAI && !this.isPolice) return;
                 if (this.hasFerrariMesh) return;
                 this.hasFerrariMesh = true;
                 this.modelTemplate = templateScene;
@@ -6854,11 +6860,11 @@
             // 套用新車款模型 (Porsche / Lexus / Ford 警車 / Kenney 交通車)：依模型實際輪子位置重設物理輪胎與車身碰撞箱
             applyCustomModel(gltf) {
                 if (this.customApplied) return;
+                const def = CAR_MODELS[this.modelKey];
+                const src = this.modelKey === 'kenney' ? gltf.scenes.find(s => s.name === this.kenneyType) : gltf.scene;
+                if (!src) return; // Keep the geometric fallback if a Kenney subtype is missing.
                 this.customApplied = true;
                 this.wheelClones = [];
-                const def = CAR_MODELS[this.modelKey];
-                let src = gltf.scene;
-                if (this.modelKey === 'kenney') src = gltf.scenes.find(s => s.name === this.kenneyType) || gltf.scenes[0];
                 const S = new THREE.Vector3(...(def.scale || [1, 1, 1]));
                 const root = new THREE.Group();
                 src.children.forEach(c => root.add(c.clone(true)));
@@ -6948,7 +6954,8 @@
             }
 
             getForwardHeading() {
-                const fwd = new THREE.Vector3(0, 0, 1).applyQuaternion(this.chassisGroup.quaternion);
+                const fwd = this.isAI ? this.trafficHeading.set(0, 0, 1) : new THREE.Vector3(0, 0, 1);
+                fwd.applyQuaternion(this.chassisGroup.quaternion);
                 return Math.atan2(fwd.x, fwd.z);
             }
 
@@ -6963,7 +6970,8 @@
                 this.chassisBody.position.set(p.x, gy + 1.0, p.z);
                 this.chassisBody.velocity.set(0, 0, 0);
                 this.chassisBody.angularVelocity.set(0, 0, 0);
-                this.chassisBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.atan2(p.tx, p.tz));
+                this.chassisBody.quaternion.setFromAxisAngle(this.trafficUp.set(0, 1, 0), Math.atan2(p.tx, p.tz));
+                resetTrafficBody(this);
                 this.stuckTime = 0;
             }
 
@@ -6998,18 +7006,12 @@
                 let targetSpeed = THREE.MathUtils.lerp(15, 6.5, Math.min(1, Math.abs(turn) / 1.2));
 
                 const fx = Math.sin(curH), fz = Math.cos(curH);
-                const isBlocking = (ox, oz, range, oy) => {
-                    if (oy !== undefined && Math.abs(oy - p.y) > 3) return false;
-                    const dx = ox - p.x, dz = oz - p.z;
-                    const along = dx * fx + dz * fz;
-                    const lateral = Math.abs(-dx * fz + dz * fx);
-                    return along > 0 && along < range && lateral < 2.6;
-                };
                 for (const o of WORLD.vehicles) {
                     if (o === this || !o.chassisGroup.visible) continue;
-                    if (isBlocking(o.chassisBody.position.x, o.chassisBody.position.z, 11, o.chassisBody.position.y)) { targetSpeed = 0; break; }
+                    const op = o.chassisBody.position;
+                    if (trafficBlocks(p, fx, fz, op.x, op.z, 11, op.y)) { targetSpeed = 0; break; }
                 }
-                if (STATE.mode === 'FOOT' && isBlocking(PLAYER.body.position.x, PLAYER.body.position.z, 9, PLAYER.body.position.y - 0.3)) targetSpeed = 0;
+                if (STATE.mode === 'FOOT' && trafficBlocks(p, fx, fz, PLAYER.body.position.x, PLAYER.body.position.z, 9, PLAYER.body.position.y - 0.3)) targetSpeed = 0;
 
                 let force = 0, brakeF = 0;
                 if (forwardSpeed < targetSpeed - 0.5) force = -1900;
@@ -7022,14 +7024,13 @@
                 this.lightReverse = false;
 
                 // 卡住或翻車時自動回到路線上
-                const up = new CANNON.Vec3(0, 1, 0);
+                const up = this.trafficUp.set(0, 1, 0);
                 this.chassisBody.quaternion.vmult(up, up);
                 if ((targetSpeed > 3 && speed < 0.8) || up.y < 0.3) this.stuckTime = (this.stuckTime || 0) + dt;
                 else this.stuckTime = 0;
                 if (this.stuckTime > 5) {
-                    const pp = getActivePosition();
-                    const farFromPlayer = Math.hypot(p.x - pp.x, p.z - pp.z) > 40;
-                    if (farFromPlayer || up.y < 0.3) this.placeOnRoute(this.routeId, best + 12);
+                    // Recovery uses the same distance/visibility/clearance gates as recycling.
+                    this.trafficRecovery = true;
                     this.stuckTime = 0;
                 }
             }
@@ -7048,9 +7049,10 @@
                 const b = this.chassisBody, p = b.position;
                 if (!inTerrainRegion(p.x, p.z, 5)) return;
                 let lift = 0;
-                const tmp = new CANNON.Vec3();
-                for (const lz of [0, 1.9, -1.9]) {
-                    b.pointToWorldFrame(new CANNON.Vec3(0, -0.12, lz), tmp);
+                const tmp = this.terrainProbe;
+                for (let i = 0; i < 3; i++) {
+                    const lz = i === 0 ? 0 : i === 1 ? 1.9 : -1.9;
+                    b.pointToWorldFrame(this.terrainLocal.set(0, -0.12, lz), tmp);
                     const tH = terrainHeight(tmp.x, tmp.z);
                     lift = Math.max(lift, tH + 0.05 - tmp.y);
                 }
@@ -7065,26 +7067,17 @@
 
             update(dt) {
                 if (!this.chassisGroup.visible) return;
-                this.supportOnTerrain();
-                // 遠處 (420 m 外) 的 AI 車只跑物理不畫
+                if (!this.frozen) this.supportOnTerrain();
+                // Keep the existing 420-unit AI draw cutoff; physics activation is managed before stepping.
                 if (this.isAI) {
                     const hide = camera.position.distanceToSquared(this.chassisGroup.position) > 420 * 420;
                     if (hide !== this._hidden) {
                         this._hidden = hide;
                         this.bodyPivot.visible = !hide;
-                        this.wheelMeshes.forEach(w => { w.visible = !hide; });
+                        for (const wheel of this.wheelMeshes) wheel.visible = !hide;
                     }
                 }
-                // 看不到的交通車 (430 m 外) 暫停物理，省下輪胎射線與碰撞運算；車流回收把它搬回附近時自動恢復
-                if (this.isAI && !this.isPolice) {
-                    const far = camera.position.distanceToSquared(this.chassisBody.position) > 430 * 430;
-                    if (far !== !!this.frozen) {
-                        this.frozen = far;
-                        if (far) this.vehicle.removeFromWorld(physicsWorld);
-                        else { this.vehicle.addToWorld(physicsWorld); this.chassisBody.wakeUp(); }
-                    }
-                    if (far) return;
-                }
+                if (this.frozen) return;
 
                 const isPlayer = (STATE.mode === 'CAR' && STATE.currentVehicle === this);
 
@@ -7098,7 +7091,7 @@
                     this.copLightMat.emissiveIntensity = on ? (Math.floor(STATE.time * 8) % 2 ? 2.6 : 0.25) : 0;
                 }
 
-                const forwardVec = new CANNON.Vec3(0, 0, 1);
+                const forwardVec = this.isAI ? this.trafficForward.set(0, 0, 1) : new CANNON.Vec3(0, 0, 1);
                 this.chassisBody.quaternion.vmult(forwardVec, forwardVec);
                 const forwardSpeed = this.chassisBody.velocity.dot(forwardVec); // m/s
                 const speedKmh = Math.abs(forwardSpeed) * 3.6;
@@ -7324,18 +7317,15 @@
                 { name: 'VCPD Shelby GT500', archetype: 'POLICE', model: 'fordcop', color: 0x111827, x: -45, z: 12, heading: 0 }
             ].forEach(cfg => WORLD.vehicles.push(new RealisticRaycastVehicle(cfg)));
 
-            Array.from({ length: DENSITY.traffic }, (_, k) => {
-                const t = pickKenneyType(k);
-                return { name: t[2], model: 'kenney', kenneyType: t[0], color: 0xffffff, isAI: true };
-            }).forEach((cfg, k) => {
-                const car = new RealisticRaycastVehicle(cfg);
-                // 平均分配到各條路線上，並沿路線錯開位置
-                const nR = ROAD_NET.routes.length;
-                const routeId = k % nR;
-                const slot = Math.floor(k / nR);
-                car.placeOnRoute(routeId, Math.floor(ROAD_NET.routes[routeId].length * ((0.12 + slot * 0.37) % 1)));
+            for (let k = 0; k < DENSITY.traffic; k++) {
+                const nR = ROAD_NET.routes.length, rid = k % nR, slot = Math.floor(k / nR);
+                const preferred = Math.floor(ROAD_NET.routes[rid].length * ((0.12 + slot * 0.37) % 1));
+                if (!findInitialTrafficSlot(rid, preferred)) throw new Error('No safe traffic spawn slot');
+                const type = pickKenneyType(k);
+                const car = new RealisticRaycastVehicle({ name: type[2], model: 'kenney', kenneyType: type[0], color: 0xffffff, isAI: true });
+                car.placeOnRoute(TRAFFIC.slotRoute, TRAFFIC.slotIndex);
                 WORLD.vehicles.push(car);
-            });
+            }
 
             for (let i = 0; i < 2; i++) {
                 const cop = new RealisticRaycastVehicle({
@@ -8424,33 +8414,142 @@
             }
         }
 
-        // 車流回收：離玩家 470 m 以外的交通車，搬到玩家附近 150~360 m 的路線空位，讓身邊一直有車
-        const TRAFFIC = { t: 0 };
+        // Ordinary traffic only. Reuse bodies, wheel callbacks, instances and visibility scratch objects.
+        const TRAFFIC = {
+            t: 0, cursor: 0, slotRoute: 0, slotIndex: 0,
+            activate: 160, deactivate: 200, protectedRadius: 120,
+            insertMin: 125, insertMax: 260,
+            frustum: new THREE.Frustum(), matrix: new THREE.Matrix4(), sphere: new THREE.Sphere(new THREE.Vector3(), 4)
+        };
+        function trafficPlayerPosition() {
+            return STATE.mode === 'CAR' && STATE.currentVehicle ? STATE.currentVehicle.chassisBody.position : PLAYER.body.position;
+        }
+        function trafficBlocks(p, fx, fz, ox, oz, range, oy) {
+            if (Math.abs(oy - p.y) > 3) return false;
+            const dx = ox - p.x, dz = oz - p.z;
+            const along = dx * fx + dz * fz;
+            return along > 0 && along < range && Math.abs(-dx * fz + dz * fx) < 2.6;
+        }
+        function resetTrafficBody(car) {
+            const body = car.chassisBody;
+            body.velocity.setZero(); body.angularVelocity.setZero(); body.force.setZero(); body.torque.setZero();
+            body.previousPosition.copy(body.position); body.interpolatedPosition.copy(body.position);
+            body.previousQuaternion.copy(body.quaternion); body.interpolatedQuaternion.copy(body.quaternion);
+            body.aabbNeedsUpdate = true; body.updateAABB(); physicsWorld.broadphase.dirty = true;
+            car.prevFwdSpeed = 0; car.smoothAccel = 0;
+            car.chassisGroup.position.copy(body.position); car.chassisGroup.quaternion.copy(body.quaternion);
+            for (let i = 0; i < car.vehicle.wheelInfos.length; i++) {
+                const wheel = car.vehicle.wheelInfos[i];
+                wheel.engineForce = 0; wheel.brake = 0; wheel.steering = 0;
+                wheel.suspensionLength = wheel.suspensionRestLength;
+                wheel.suspensionForce = 0; wheel.suspensionRelativeVelocity = 0; wheel.deltaRotation = 0;
+                wheel.raycastResult.reset();
+                car.vehicle.updateWheelTransform(i);
+                car.wheelMeshes[i].position.copy(wheel.worldTransform.position);
+                car.wheelMeshes[i].quaternion.copy(wheel.worldTransform.quaternion);
+            }
+        }
+        function updateTrafficPhysics() {
+            const pos = trafficPlayerPosition();
+            for (const car of WORLD.vehicles) {
+                if (car.isPolice || (!car.isAI && !car.frozen)) continue;
+                const p = car.chassisBody.position, dx = p.x - pos.x, dz = p.z - pos.z, d2 = dx * dx + dz * dz;
+                if (car.frozen) {
+                    if (car === STATE.currentVehicle || !car.isAI || d2 <= TRAFFIC.activate * TRAFFIC.activate) {
+                        resetTrafficBody(car);
+                        // Reattach the original callback; RaycastVehicle.addToWorld allocates a new closure.
+                        physicsWorld.addBody(car.chassisBody);
+                        physicsWorld.addEventListener('preStep', car.vehicle.preStepCallback);
+                        car.vehicle.world = physicsWorld;
+                        car.frozen = false; car.chassisBody.wakeUp();
+                    }
+                } else if (car !== STATE.currentVehicle && d2 > TRAFFIC.deactivate * TRAFFIC.deactivate) {
+                    car.vehicle.removeFromWorld(physicsWorld); car.frozen = true;
+                    resetTrafficBody(car);
+                }
+            }
+        }
+        function trafficSlotClear(x, z, car, separation, playerClearance) {
+            const player = trafficPlayerPosition();
+            let dx = x - player.x, dz = z - player.z;
+            if (dx * dx + dz * dz < playerClearance * playerClearance) return false;
+            for (const other of WORLD.vehicles) {
+                if (other === car || !other.chassisGroup.visible) continue;
+                dx = x - other.chassisBody.position.x; dz = z - other.chassisBody.position.z;
+                const minimum = other === WORLD.vehicles[0] && car === null ? Math.max(25, separation) : separation;
+                if (dx * dx + dz * dz < minimum * minimum) return false;
+            }
+            return true;
+        }
+        function findInitialTrafficSlot(routeId, preferred) {
+            const routes = ROAD_NET.routes;
+            for (let r = 0; r < routes.length; r++) {
+                const rid = (routeId + r) % routes.length, route = routes[rid];
+                for (let j = 0; j < route.length; j++) {
+                    const idx = (preferred + j) % route.length, p = route[idx];
+                    if (!trafficSlotClear(p.x, p.z, null, 20, 25)) continue;
+                    TRAFFIC.slotRoute = rid; TRAFFIC.slotIndex = idx;
+                    return true;
+                }
+            }
+            return false;
+        }
+        function updateTrafficFrustum() {
+            camera.updateMatrixWorld();
+            TRAFFIC.matrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+            TRAFFIC.frustum.setFromProjectionMatrix(TRAFFIC.matrix);
+        }
+        function trafficVisible(x, y, z) {
+            // Match the existing AI draw cutoff; off-screen includes cars too far away to render.
+            const dx = x - camera.position.x, dy = y - camera.position.y, dz = z - camera.position.z;
+            if (dx * dx + dy * dy + dz * dz > 420 * 420) return false;
+            TRAFFIC.sphere.center.set(x, y, z);
+            return TRAFFIC.frustum.intersectsSphere(TRAFFIC.sphere);
+        }
         function recycleTraffic(dt) {
             TRAFFIC.t += dt;
             if (TRAFFIC.t < 1.2) return;
             TRAFFIC.t = 0;
-            const pos = getActivePosition();
-            const routes = ROAD_NET.routes;
+            const pos = trafficPlayerPosition(), routes = ROAD_NET.routes, count = WORLD.vehicles.length;
+            updateTrafficFrustum();
             let moved = 0;
-            for (const v of WORLD.vehicles) {
-                if (moved >= 2) break;
+            for (let checked = 0; checked < count && moved < 2; checked++) {
+                const v = WORLD.vehicles[TRAFFIC.cursor % count];
+                TRAFFIC.cursor = (TRAFFIC.cursor + 1) % count;
                 if (!v.isAI || v.isPolice || v.routeId === undefined || v === STATE.currentVehicle) continue;
-                const p = v.chassisBody.position;
-                if (Math.hypot(p.x - pos.x, p.z - pos.z) < 470) continue;
-                for (let tries = 0; tries < 16; tries++) {
-                    const rid = Math.floor(Math.random() * routes.length);
-                    const route = routes[rid];
-                    const idx = Math.floor(Math.random() * route.length);
-                    const q = route[idx];
-                    const d = Math.hypot(q.x - pos.x, q.z - pos.z);
-                    if (d < 150 || d > 360) continue;
-                    if (WORLD.vehicles.some(o => o !== v && Math.hypot(o.chassisBody.position.x - q.x, o.chassisBody.position.z - q.z) < 30)) continue;
-                    v.placeOnRoute(rid, idx);
-                    moved++;
-                    break;
+                const p = v.chassisBody.position, dx = p.x - pos.x, dz = p.z - pos.z, d2 = dx * dx + dz * dz;
+                if (d2 <= TRAFFIC.protectedRadius * TRAFFIC.protectedRadius || (!v.trafficRecovery && d2 < 470 * 470)) continue;
+                if (trafficVisible(p.x, p.y, p.z)) continue;
+                for (let tries = 0; tries < 64; tries++) {
+                    const rid = Math.floor(Math.random() * routes.length), route = routes[rid];
+                    const idx = Math.floor(Math.random() * route.length), q = route[idx];
+                    const qx = q.x - pos.x, qz = q.z - pos.z, qd2 = qx * qx + qz * qz;
+                    if (qd2 < TRAFFIC.insertMin * TRAFFIC.insertMin || qd2 > TRAFFIC.insertMax * TRAFFIC.insertMax) continue;
+                    const y = (q.y !== undefined ? q.y : terrainHeight(q.x, q.z)) + 1;
+                    if (trafficVisible(q.x, y, q.z) || !trafficSlotClear(q.x, q.z, v, 30, 30)) continue;
+                    v.placeOnRoute(rid, idx); v.trafficRecovery = false;
+                    moved++; break;
                 }
             }
+            updateTrafficPhysics();
+        }
+        // On-demand audit only: counts are spatial/frustum counts, not occlusion-tested screenshots or FPS.
+        function trafficDiagnostics() {
+            const pos = trafficPlayerPosition();
+            updateTrafficFrustum();
+            let total = 0, nearby = 0, visibleNearby = 0, active = 0, ferrari = 0;
+            for (const v of WORLD.vehicles) {
+                if (!v.isAI || v.isPolice) continue;
+                total++;
+                if (!v.frozen) active++;
+                if (v.modelKey !== 'kenney' || v.modelTemplate) ferrari++;
+                const p = v.chassisBody.position, dx = p.x - pos.x, dz = p.z - pos.z;
+                if (dx * dx + dz * dz <= 200 * 200) {
+                    nearby++;
+                    if (v.chassisGroup.visible && trafficVisible(p.x, p.y, p.z)) visibleNearby++;
+                }
+            }
+            return { total, nearby, visibleNearby, active, ferrari };
         }
 
         // Cache DOM/context once; visibility observers do no work in the animation hot path.
@@ -9460,6 +9559,7 @@
             }
 
             // 1. 固定時間步長 1/60 之 Cannon-es 物理模擬
+            updateTrafficPhysics(); // Activate before stepping, including immediately after teleports/entering a car.
             physicsWorld.step(FIXED_TIME_STEP, dt, 3);
 
             // 2. 更新玩家、RaycastVehicle 車輛、NPC 物理與世界特效
@@ -9494,7 +9594,7 @@
         requestAnimationFrame(animate);
 
         // 除錯用：在瀏覽器主控台輸入 __VH 可查看遊戲狀態
-        window.__VH = { changeLanguage, refreshMissionLabels, renderDrivingHUD, showBanner, VH_I18N, WMAP, openGameHub, closeModals, __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
+        window.__VH = { TRAFFIC, updateTrafficPhysics, trafficDiagnostics, changeLanguage, refreshMissionLabels, renderDrivingHUD, showBanner, VH_I18N, WMAP, openGameHub, closeModals, __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
     </script>
 </body>
 </html>

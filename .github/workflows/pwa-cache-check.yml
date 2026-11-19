@@ -31,3 +31,5 @@ jobs:
         run: python3 tools/test/i18n_check.py
       - name: Check locale defaults and live refresh
         run: node tools/test/i18n_check.mjs
+      - name: Check traffic pools, exclusion, spacing and reactivation
+        run: node tools/test/traffic_check.mjs
