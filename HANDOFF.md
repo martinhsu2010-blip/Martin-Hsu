@@ -1,7 +1,7 @@
 # VICE HORIZON VI — Project Handoff
 
 Written for another AI assistant (e.g. ChatGPT) or developer picking up this project.
-Last updated: 2026-11-18, game version `vh-2026-11-19-16` (see `CACHE` in `sw.js`).
+Last updated: 2026-11-18, game version `vh-2026-11-19-17` (see `CACHE` in `sw.js`).
 Owner: martinhsu2010-blip (Traditional Chinese speaker, Taiwan). Explain things to the owner in Traditional Chinese; write prompts for Gemini in English.
 
 ## What this is
@@ -78,3 +78,6 @@ The permanent toolbar is gone: tapping the minimap (`radar-container`, now a but
 
 ## Game Hub (T-003D)
 `#quick-actions` is now the fullscreen Game Hub (native `<dialog>`). Tabs (`HUB_TABS`): `quick-actions-map`, `pill-mission`, `pill-garage`, `hub-world-tab`, `pill-settings`; panels (`HUB_PANELS`): `world-map`, `missions-modal`, `garage-modal`, `hub-world`, `settings-modal`. `openGameHub(panel)` releases input, hides panels, starts the 500 ms map redraw only on MAP; `closeModals()` is the single close path (Escape via `cancel`, M, ✕, `wm-close`, mission start, summon, fast travel). WORLD holds sky/day-cycle, cop chase, crate counter and RPM/nitro bars; SETTINGS holds quality, camera, radio plus the old settings. Because the dialog is in the top layer, `#notice-area` is moved inside it while open and back to `body` on close — anything else that must show over the Hub has to do the same.
+
+## Language (T-003E)
+All player-visible text lives in one table, `STRINGS` = {en, zh-TW} (between `I18N_TABLE_*` markers near the top of `index.html`); use `tr('key')` (or `VH_I18N.text`). `VH_I18N` reads `vh_save` once at startup: no key = English, a save without a valid `language` = zh-TW, a valid choice wins. `changeLanguage(lang)` (selector `#language-select` in SETTINGS) writes `SAVE.language`, converts copied names through `VH_I18N.name`, and refreshes panels, aria/title via `data-i18n*` attributes, map chips/selection, garage, HUD, pursuit text and the active banner. Banners must be passed as callbacks (`showBanner(() => tr('k'), () => ...)`) so they re-render on a switch. New text must be added to both languages; CI (`tools/test/i18n_check.py`, `i18n_check.mjs`) fails on raw CJK outside the table or on mismatched keys. `manifest.webmanifest` is English, `manifest.zh-TW.webmanifest` Chinese; the `<link rel=manifest>` href follows the language.
