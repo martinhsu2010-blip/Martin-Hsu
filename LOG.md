@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-19 | vh-2026-11-19-17 | Claude (impl. Codex) | commit a9de637 | T-003E bilingual UI: English / Traditional Chinese selector in Hub SETTINGS, 318-key string table, `vh_save.language` (new player English, existing save zh-TW), English manifest + zh-TW manifest precached, CI check for untranslated CJK
 - 2026-11-19 | — | Martin | — | T-003D accepted on S26 Ultra / Tab S11 (vh-2026-11-19-16); T-003E unlocked for Codex
 - 2026-11-19 | vh-2026-11-19-16 | Claude (impl. Codex) | commit 872ab73 | T-003D Game Hub: tapping the minimap opens a fullscreen Hub with MAP / MISSIONS / GARAGE / WORLD / SETTINGS tabs (replaces the interim menu); Claude fixed banners being hidden behind the Hub
 - 2026-11-19 | — | Martin | — | T-003C accepted on S26 Ultra / Tab S11 (vh-2026-11-19-15); T-003D unlocked for Codex

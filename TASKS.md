@@ -4,19 +4,21 @@
 (none)
 
 ## Ready for Codex
+(none)
+## In review
 ### T-003E Bilingual interface (English / Traditional Chinese)
 Owner: Codex
 Reviewer: Claude
 Priority: P1
 Depends on: T-003D (Done, Martin-accepted 2026-11-19)
-Branch: `codex/T-003E-i18n` from latest `main`
+Base commit: `4bf6d967935c0e678ad29a2c420d17ad630c76da`
+Branch/PR: `codex/T-003E-i18n` / PR #20 (squash-merged a9de637, released as `vh-2026-11-19-17`)
 Spec: `specs/T-003A-spec-v1.1.md` sections 6, 8, 10. String table, language selector in SETTINGS, `vh_save.language` (new field, default-safe), complete player-visible translation, CI check for leftover CJK, live panel refresh, old saves keep working.
 Claude notes: (1) Default policy needs "new player vs existing save": decide by whether `vh_save` existed before this load (no key = new = English; key without `language` = existing = zh-TW). (2) Dynamic strings (e.g. `showBanner` calls, delivery/mission text, reward messages from T-001B) must go through the table. (3) Existing `vh_settings` holds other settings; keep language in `vh_save` as specified.
 Claude note (4): the language selector goes in the SETTINGS tab of the Game Hub (`#settings-modal` inside `#quick-actions`, see HANDOFF "Game Hub (T-003D)"); Hub tab labels, Hub title/close aria-labels, map chips/detail text, and the T-003C/D aria-labels are player-visible and must be translated too. `hud_layout_check.py` already sets English-length labels; keep it passing with the real strings.
-Verification: `designed`.
+Verification: `code-reviewed` + headless (Chrome/SwiftShader, not a device). Status: released, awaiting Martin's device acceptance (stage 8).
+Claude review (2026-11-19): approved with no code changes. 318-key en/zh-TW table; new player = English, existing save without language = zh-TW, valid choice wins, only `SAVE.language` added and unknown fields preserved; live refresh of panels, aria, map chips/selection, garage, mission/delivery/pursuit HUD and active banner; manifest href and `<html lang>` follow the language; both manifests precached. All five automated checks PASS (i18n_check .py/.mjs, syntax, hud, camera); `hud_layout_check.py` PASS with real strings, 11 viewports x 2 languages; live headless: new-player English with no CJK left in visible DOM/Hub (only full-width "＋" on map zoom, cosmetic), legacy save boots zh-TW with all fields kept, language persists across reload, delivery and map selection switch live, both manifests served offline. CACHE bumped for the PRECACHE change. NOT verified: real device, whether an already-installed PWA picks up a runtime manifest href change, FPS.
 
-## In review
-(none)
 
 ## Doing (Claude)
 (none)
