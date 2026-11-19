@@ -68,19 +68,14 @@ async def main():
             await page.set_viewport_size({"width": width, "height": height})
             for language in ["zh-TW", "en"]:
                 await page.evaluate("""language => {
-                    const en=language==='en';
-                    document.getElementById('btn-drive-gas').querySelector('.vh-lbl').textContent=en?'GAS':'油門';
-                    document.getElementById('btn-drive-brake').querySelector('.vh-lbl').textContent=en?'BRAKE':'煞車';
-                    document.getElementById('btn-car-action-label').textContent=en?'Enter / exit vehicle':'上車／下車／召喚車輛';
+                    __VH.MISSION.active=true; __VH.MISSION.mode='STUNT';
+                    __VH.changeLanguage(language);
                     document.getElementById('mission-panel').classList.remove('hidden');
-                    document.getElementById('mission-title').textContent=en?'Airport stunt challenge':'機場飛躍挑戰';
                     document.getElementById('mission-progress').textContent='1.2 km • $2,150';
                     document.getElementById('mission-timer').textContent='3:42';
                     document.getElementById('wanted-badge').classList.remove('hidden');
                     document.getElementById('pursuit-hud-panel').classList.remove('hidden');
-                    document.getElementById('pursuit-status-label').textContent=en?'Escaping pursuit (105 m)':'正在擺脫警方追捕';
-                    document.getElementById('banner-title').textContent=en?'Delivery complete':'配送完成';
-                    document.getElementById('banner-sub').textContent=en?'+$1,720 early bonus':'+$1,720 提早送達獎勵';
+                    __VH.showBanner(() => __VH.VH_I18N.text('delivery_complete') + '1,720', () => __VH.VH_I18N.text('early_delivery_20_bonus'));
                 }""", language)
                 result = await layout(page, width, height)
                 assert not result["errors"], (width, height, language, result)
@@ -90,8 +85,7 @@ async def main():
             assert await page.locator("#quick-actions").is_visible()
             for language in ["zh-TW", "en"]:
                 await page.evaluate("""language => {
-                    const labels=language==='en'?['MAP','MISSIONS','GARAGE','WORLD','SETTINGS']:['地圖','任務','車庫','世界','設定'];
-                    document.querySelectorAll('#quick-actions-list button').forEach((b,i)=>b.textContent=labels[i]);
+                    __VH.changeLanguage(language);
                 }""", language)
                 for tab, panel in [("quick-actions-map", "world-map"), ("pill-mission", "missions-modal"), ("pill-garage", "garage-modal"), ("hub-world-tab", "hub-world"), ("pill-settings", "settings-modal")]:
                     await page.locator("#" + tab).click()
@@ -131,6 +125,16 @@ async def main():
             assert await page.locator("#quick-actions").is_visible()
             close = {"missions-modal": "close-missions-btn", "garage-modal": "close-garage-btn", "settings-modal": "close-settings-btn", "world-map": "wm-close"}[modal]
             await page.locator("#" + close).click()
+
+        await page.locator("#radar-container").click()
+        await page.locator("#pill-settings").click()
+        await page.locator("#language-select").select_option("en")
+        assert await page.locator("#pill-mission").inner_text() == "MISSIONS"
+        await page.locator("#language-select").select_option("zh-TW")
+        assert await page.locator("#pill-mission").inner_text() == "任務"
+        assert await page.locator("#settings-modal").is_visible()
+        assert await page.evaluate("JSON.parse(localStorage.getItem('vh_save')).language === 'zh-TW'")
+        await page.locator("#quick-actions-close").click()
 
         # Synthetic pointer events test wiring, not a physical multitouch device.
         await page.locator("#btn-drive-gas").dispatch_event("pointerdown", {"pointerId": 1, "pointerType": "touch"})

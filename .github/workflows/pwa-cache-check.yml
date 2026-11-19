@@ -26,3 +26,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Syntax check index.html scripts and PRECACHE files
         run: python3 tools/test/syntax_check.py
+
+      - name: Check bilingual strings and untranslated CJK
+        run: python3 tools/test/i18n_check.py
+      - name: Check locale defaults and live refresh
+        run: node tools/test/i18n_check.mjs

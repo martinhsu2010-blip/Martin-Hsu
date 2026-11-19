@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Open-world driving game (Three.js + cannon-es)">
     <meta name="theme-color" content="#0f172a">
     <link rel="stylesheet" href="./css/app.css">
     <link rel="manifest" href="./manifest.webmanifest">
@@ -12,7 +13,701 @@
     <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Vice Horizon">
-    <title>VICE HORIZON VI: Realistic PBR &amp; Cannon-es Edition</title>
+    <title>VICE HORIZON VI</title>
+
+    <script>
+    // I18N_TABLE_START
+    const STRINGS = {
+    "en": {
+        "update_downloaded_reloading": "Update downloaded. Reloading…",
+        "reward_on_cooldown": "Reward on cooldown",
+        "s_until_the_next_reward": " s until the next reward",
+        "radio": "📻 Radio: ",
+        "muted": "Muted",
+        "synthwave_playing": "Synthwave playing",
+        "miami_sunset": "Miami Sunset",
+        "sunny_noon": "Sunny Noon",
+        "golden_dusk": "Golden Dusk",
+        "neon_night": "Neon Night",
+        "overcast_storm": "Overcast Storm",
+        "sunset": "Sunset",
+        "noon": "Noon",
+        "dusk": "Dusk",
+        "midnight": "Midnight",
+        "storm": "Storm",
+        "weather": "Weather",
+        "downtown_plaza_ramp": "Downtown Plaza Ramp",
+        "airport_runway_ramp_1": "Airport Runway Ramp 1",
+        "airport_runway_ramp_2": "Airport Runway Ramp 2",
+        "airport_runway_ramp_3": "Airport Runway Ramp 3",
+        "north_0_avenue_ramp": "North 0 Avenue Ramp",
+        "midtown_600_street_ramp": "Midtown 600 Street Ramp",
+        "old_town_720_street_ramp": "Old Town 720 Street Ramp",
+        "pedestrian_collision": "⚠️ Pedestrian collision!",
+        "impact_speed": "Impact speed: ",
+        "sedan": "Sedan",
+        "suv": "SUV",
+        "hatchback": "Hatchback",
+        "taxi": "Taxi",
+        "van": "Van",
+        "sports_car": "Sports car",
+        "luxury_suv": "Luxury SUV",
+        "pickup": "Pickup",
+        "delivery_truck": "Delivery truck",
+        "garbage_truck": "Garbage truck",
+        "ambulance": "Ambulance",
+        "vehicle_damage": "💥 Vehicle damage: ",
+        "repaint_in_the_garage_to_repair": "Repaint in the garage to repair",
+        "airtime_stunt_landed": "🚀 Airtime stunt landed!",
+        "airtime_bonus": " airtime bonus",
+        "crate_collected": "💎 Crate collected!",
+        "400_cash_reward": "+$400 cash reward",
+        "arrest_progress": "⚠️ Arrest progress: ",
+        "busted": "🚔 Busted!",
+        "300_fine": "$300 fine",
+        "evading_police": "🕵️ Evading police…",
+        "police_escaped": "🏆 Police escaped!",
+        "600_escape_bonus": "+$600 escape bonus",
+        "police_distance": "🚨 Police distance (",
+        "wanted_level_cleared": "🚓 Wanted level cleared",
+        "police_pursuit_ended": "Police pursuit ended",
+        "wanted_level": "🚨 Wanted level ★",
+        "vcpd_interceptors_deployed": "VCPD interceptors deployed!",
+        "driving": "🚘 Driving: ",
+        "0_100_km_h_in_4_0_s_6_speed_automatic": "0–100 km/h in 4.0 s • 6-speed automatic",
+        "street_race_started": "🏁 Street race started!",
+        "pass_all_8_checkpoints_along_the_coastal_road": "Pass all 8 checkpoints along the coastal road!",
+        "drift_challenge": "💨 Drift challenge!",
+        "use_the_handbrake_in_corners_to_score_2_000_points": "Use the handbrake in corners to score 2,000 points!",
+        "airport_stunt_challenge": "🚀 Airport stunt challenge!",
+        "hit_the_3_large_runway_ramps": "Hit the 3 large runway ramps!",
+        "time_is_up": "⏱️ Time is up!",
+        "open_missions_to_try_again": "Open MISSIONS to try again",
+        "mission_complete": "🏆 Mission complete!",
+        "reward": " reward",
+        "enter": "Enter: ",
+        "summon_sports_car": "Summon sports car",
+        "exit_vehicle": "Exit vehicle",
+        "first_ramp_clear": "🏆 First ramp clear! +$",
+        "stunt_jump": "🚀 Stunt jump +$",
+        "distance": " • Distance ",
+        "m_airtime": " m • Airtime ",
+        "s_completed": " s • Completed ",
+        "ramps": " ramps",
+        "port_freight_depot": "Port Freight Depot",
+        "downtown_logistics": "Downtown Logistics",
+        "old_town_post_office": "Old Town Post Office",
+        "airport_cargo_depot": "Airport Cargo Depot",
+        "suburban_warehouse": "Suburban Warehouse",
+        "north_warehouse": "North Warehouse",
+        "road": "Road",
+        "delivery": "📦 DELIVERY",
+        "delivery_accepted_reward": "📦 Delivery accepted! Reward $",
+        "deliver_to": "Deliver to ",
+        "km_time_limit": " km), time limit ",
+        "stop_at_the_green_beam_to_unload": ". Stop at the green beam to unload",
+        "delivery_in_progress": "📦 Delivery in progress",
+        "first_deliver_to": "First deliver to ",
+        "go_to": "📦 Go to ",
+        "to_collect_a_job": " to collect a job",
+        "drive_into_a_yellow_circle_to_accept_a_job_on_the_map": "Drive into a yellow circle to accept a job (📦 on the map)",
+        "late": "Late +",
+        "delivered_on_time": "Delivered on time",
+        "late_delivery_half_pay": "Late delivery (half pay)",
+        "early_delivery_20_bonus": "Early delivery: +20% bonus",
+        "delivery_complete": "📦 Delivery complete! +$",
+        "total": " • Total ",
+        "deliveries_visit_any_depot_for_another_job": " deliveries • Visit any 📦 depot for another job",
+        "enter_a_vehicle_to_unload": "Enter a vehicle to unload",
+        "ocean_drive": "Ocean Drive",
+        "santa_cruz_boardwalk": "Santa Cruz Boardwalk",
+        "downtown_cbd": "Downtown CBD",
+        "old_town": "Old Town",
+        "suburbs": "Suburbs",
+        "ring_expressway": "Ring Expressway",
+        "mount_chiliad_summit": "Mount Chiliad Summit",
+        "starlight_marina": "Starlight Marina",
+        "stunt_airport": "Stunt Airport",
+        "vice_circle": "Vice Circle",
+        "avenue": "Avenue",
+        "street": "Street",
+        "mount_chiliad": "Mount Chiliad",
+        "boardwalk": "Boardwalk",
+        "midtown": "Midtown",
+        "vice_suburbs": "VICE SUBURBS",
+        "old_town_2": "OLD TOWN",
+        "midtown_2": "MIDTOWN",
+        "distance_2": " • Distance ",
+        "fast_travel_unavailable_during_delivery": "Fast travel unavailable during delivery",
+        "complete_your_delivery_first": "Complete your delivery first",
+        "fast_travel": "⚡ Fast travel",
+        "waypoint_set": "📍 Waypoint set",
+        "destination_reached": "🏁 Destination reached",
+        "fast_travel_blocked_complete_your_delivery_first": "Fast travel blocked: complete your delivery first",
+        "shadows": " shadows",
+        "post_processing_off": "Post-processing off",
+        "quality": "📺 Quality: ",
+        "honk": "📣 Honk!",
+        "horn_sounded": "Horn sounded",
+        "chase_near": "Chase Near",
+        "chase_far": "Chase Far",
+        "hood": "Hood",
+        "bird_s_eye": "Bird’s-eye",
+        "camera": "🎥 Camera: ",
+        "drag_empty_screen_space_to_rotate_the_camera": "Drag empty screen space to rotate the camera",
+        "day_night_cycle": "🌗 Day/night cycle",
+        "time_flows_automatically_1_hour_40_seconds": "Time flows automatically (1 hour = 40 seconds)",
+        "weather_2": "🌤️ Weather: ",
+        "fixed_weather_keep_cycling_to_restore_day_night": "Fixed weather; keep cycling to restore day/night",
+        "delivery_cancelled": "📦 Delivery cancelled",
+        "visit_a_depot_for_another_job_anytime": "Visit a depot for another job anytime",
+        "owned": "✅ Owned",
+        "tap_again_to_buy": "👉 Tap again to buy $",
+        "not_enough_cash": "💰 Not enough cash",
+        "costs": " costs $",
+        "you_need": "; you need $",
+        "more_earn_money_from_deliveries_and_stunt_ramps": " more. Earn money from deliveries and stunt ramps!",
+        "purchased": "🔑 Purchased!",
+        "is_in_your_garage_press_summon_to_drive_it": " is in your garage. Press Summon to drive it",
+        "turbo_gearing_stage": "⚡ Turbo & gearing stage ",
+        "engine_torque_and_top_speed_increased": "Engine torque and top speed increased",
+        "gpu": "GPU: ",
+        "unknown": "Unknown",
+        "quality_profile": " • Quality profile: ",
+        "physics_wireframe_on": "🕸️ Physics wireframe: ON",
+        "physics_wireframe_off": "🕸️ Physics wireframe: OFF",
+        "cyan_static_colliders_pink_moving_bodies": "Cyan = static colliders; pink = moving bodies",
+        "average": "Average ",
+        "fps_quality_lowered_to": " FPS → quality lowered to ",
+        "open_game_hub": "Open Game Hub",
+        "vcpd_pursuit": "🚨 VCPD PURSUIT",
+        "gain_distance_to_escape_the_police": "Gain distance to escape the police",
+        "close_game_hub": "Close Game Hub",
+        "map": "MAP",
+        "missions": "MISSIONS",
+        "garage": "GARAGE",
+        "world": "WORLD",
+        "settings": "SETTINGS",
+        "vice_horizon_map": "VICE HORIZON MAP",
+        "drag_to_pan_pinch_scroll_to_zoom_tap_a_location": "Drag to pan • Pinch / scroll to zoom • Tap a location",
+        "centre": "Centre",
+        "close": "Close",
+        "set_waypoint": "Set waypoint",
+        "missions_fast_travel": "🎯 Missions & fast travel",
+        "start_a_challenge_or_travel_to_a_city_district": "Start a challenge or travel to a city district.",
+        "delivery_jobs_always_available": "📦 Delivery jobs (always available)",
+        "730_2_150_per_job_20_for_early_delivery": "$730–$2,150 per job; +20% for early delivery",
+        "drive_to_a_depot_then_stop_at_the_green_beam_to_unload_each_": "Drive to a 📦 depot, then stop at the green beam to unload. Each 🚀 ramp pays $900 on its first clear; repeat jumps also pay, with cooldowns.",
+        "street_race": "🏁 Street race",
+        "reward_1_400": "Reward: +$1,400",
+        "pass_8_checkpoints_along_ocean_drive_and_the_winding_coastal": "Pass 8 checkpoints along Ocean Drive and the winding coastal road.",
+        "drift_challenge_2": "💨 Drift challenge",
+        "reward_1_200": "Reward: +$1,200",
+        "use_weight_transfer_and_the_handbrake_to_score_2_000_drift_p": "Use weight transfer and the handbrake to score 2,000 drift points in 60 seconds.",
+        "airport_stunt": "🚀 Airport stunt",
+        "reward_1_600": "Reward: +$1,600",
+        "travel_to_the_runway_and_launch_off_3_large_ramps": "Travel to the runway and launch off 3 large ramps!",
+        "fast_travel_2": "✈️ Fast travel",
+        "ocean_drive_2": "🌴 Ocean Drive",
+        "santa_cruz_boardwalk_2": "🎢 Santa Cruz Boardwalk",
+        "downtown": "🏙️ Downtown",
+        "mount_chiliad_summit_2": "⛰️ Mount Chiliad Summit",
+        "starlight_marina_2": "🛥️ Starlight Marina",
+        "stunt_airport_2": "✈️ Stunt Airport",
+        "old_town_3": "🏛️ Old Town",
+        "suburbs_2": "🏡 Suburbs",
+        "ring_expressway_2": "🛣️ Ring Expressway",
+        "cancel_mission": "⏹️ Cancel mission",
+        "garage_customization": "🔧 Garage & customization",
+        "choose_or_buy_a_car_with_in_game_cash_repaint_it_and_upgrade": "Choose or buy a car with in-game cash, repaint it and upgrade its power.",
+        "1_vehicle_chassis": "1. Vehicle & chassis",
+        "0_100_in_4_0_s_supercar": "0–100 in 4.0 s • Supercar",
+        "high_torque_rear_wheel_drive": "High-torque rear-wheel drive",
+        "long_travel_off_road_suspension": "Long-travel off-road suspension",
+        "vcpd_patrol_car": "VCPD patrol car",
+        "carrera_4s_all_wheel_drive": "Carrera 4S • All-wheel drive",
+        "v8_convertible_gt": "V8 convertible GT",
+        "2_metallic_clearcoat_paint": "2. Metallic clearcoat paint",
+        "3_engine_suspension_upgrades": "3. Engine & suspension upgrades",
+        "turbo_gearing_upgrade": "⚡ Turbo & gearing upgrade (",
+        "torque_top_speed_and_grip_1_000": "+Torque, top speed and grip ($1,000)",
+        "summon_drive": "🚘 Summon & drive",
+        "game_settings": "⚙️ Game settings",
+        "camera_sensitivity_invert_y_and_physics_wireframe": "Camera sensitivity, invert Y and physics wireframe.",
+        "quality_2": "Quality",
+        "camera_2": "Camera",
+        "camera_sensitivity": "Camera sensitivity",
+        "invert_y_axis": "Invert Y axis",
+        "physics_wireframe_k_on_desktop": "🕸️ Physics wireframe (K on desktop)",
+        "frame_rate_cap": "🎞️ Frame rate cap",
+        "30_fps_save_power": "30 FPS (save power)",
+        "unlimited": "Unlimited",
+        "on_foot_use_the_left_stick_driving_steer_on_the_left_gas_bra": "On foot: use the left stick. Driving: steer on the left; gas, brake, nitro and handbrake on the right. Drag empty space to rotate the camera; pinch to zoom.",
+        "police_chase": "Police chase",
+        "crates": "Crates",
+        "keyboard_mouse": "⌨️ Keyboard / mouse",
+        "move_drive": "Move / drive",
+        "sprint_nitro": "Sprint / nitro",
+        "jump_handbrake": "Jump / handbrake",
+        "enter_exit": "Enter / exit",
+        "mouse_drag": "Mouse drag",
+        "rotate_camera": "Rotate camera",
+        "mouse_wheel": "Mouse wheel",
+        "zoom": "Zoom",
+        "physics_wireframe": "Physics wireframe",
+        "steer_left": "Steer left",
+        "steer_right": "Steer right",
+        "horn": "Horn",
+        "enter_exit_or_summon_a_vehicle": "Enter, exit or summon a vehicle",
+        "enter_summon_car": "Enter / summon car",
+        "jump": "Jump",
+        "sprint": "Sprint",
+        "nitro": "Nitro",
+        "handbrake": "Handbrake",
+        "brake_and_reverse": "Brake and reverse",
+        "brake": "BRAKE",
+        "reverse": "REVERSE",
+        "gas": "GAS",
+        "install_game": "📲 Install game",
+        "to_install_in_safari_tap": "📲 To install: in Safari, tap",
+        "share": "Share",
+        "then_choose": "then choose",
+        "add_to_home_screen": "Add to Home Screen",
+        "got_it": "Got it",
+        "label_game_hub": "Game Hub",
+        "label_foot": "FOOT",
+        "label_street_race": "STREET RACE",
+        "label_redline": "REDLINE",
+        "label_santa_cruz": "SANTA CRUZ",
+        "label_ocean": "OCEAN",
+        "label_coastal_hwy": "COASTAL HWY",
+        "label_vice_broadway": "VICE BROADWAY",
+        "label_sunset_diagonal": "SUNSET DIAGONAL",
+        "label_quality_lowered_for_smoother_gameplay": "Quality lowered for smoother gameplay",
+        "label_device": "Device: ",
+        "label_quality": " · Quality: ",
+        "label_pts": " PTS",
+        "label_custom": "Custom ",
+        "label_ford_shelby_gt500_patrol": "Ford Shelby GT500 Patrol",
+        "label_lexus_lc_500_convertible": "Lexus LC 500 Convertible",
+        "language": "Language",
+        "traditional_chinese": "Traditional Chinese",
+        "english": "English",
+        "description": "Open-world driving game (Three.js + cannon-es)",
+        "shared_vice_horizon_vi_realistic_pbr": "VICE HORIZON VI: Realistic PBR",
+        "shared_cannon_es_edition": "Cannon-es Edition",
+        "shared_n": "N",
+        "shared_vcpd": "VCPD",
+        "shared_km_h": "KM/H",
+        "shared_cp_1_6": "CP 1/6",
+        "shared_60_0s": "60.0s",
+        "shared_ferrari_gt": "Ferrari GT",
+        "shared_muscle_69": "Muscle '69",
+        "shared_apex_4x4": "Apex 4x4",
+        "shared_shelby_gt500": "Shelby GT500",
+        "shared_porsche_911": "Porsche 911",
+        "shared_lexus_lc_500": "Lexus LC 500",
+        "shared_lv_1_5": "Lv.1/5",
+        "shared_high": "HIGH",
+        "shared_vice_fm": "VICE FM",
+        "shared_1_0x": "1.0x",
+        "shared_60_fps": "60 FPS",
+        "shared_850_rpm": "850 RPM",
+        "shared_wasd": "WASD",
+        "shared_shift": "Shift",
+        "shared_space": "Space",
+        "shared_f": "F",
+        "shared_m": "M",
+        "shared_k": "K",
+        "shared_vice_horizon_vi": "VICE HORIZON VI",
+        "shared_physical_sky_ferrari_glb_water_js_cannon_es_physics": "Physical Sky • Ferrari GLB • Water.js • Cannon-es Physics",
+        "radio_off": "OFF",
+        "quality_LOW": "LOW",
+        "quality_MED": "MED",
+        "quality_HIGH": "HIGH",
+        "quality_ULTRA": "ULTRA",
+        "device_PHONE": "Phone",
+        "device_TABLET": "Tablet",
+        "device_DESKTOP": "Desktop",
+        "vcpd_unit": "VCPD Unit #",
+        "road_suburb_main": "SUBURB MAIN",
+        "road_maple_ave": "MAPLE AVE",
+        "road_hillcrest_loop": "HILLCREST LOOP",
+        "road_valley_loop": "VALLEY LOOP",
+        "road_chiliad_link_a": "CHILIAD LINK A",
+        "road_chiliad_link_b": "CHILIAD LINK B",
+        "device_IGPU": "Integrated GPU"
+    },
+    "zh-TW": {
+        "update_downloaded_reloading": "已下載新版本，重新載入中…",
+        "reward_on_cooldown": "獎金冷卻中",
+        "s_until_the_next_reward": " 秒後可再次獲得獎金",
+        "radio": "📻 電台切換: ",
+        "muted": "已靜音",
+        "synthwave_playing": "合成波音樂播放中",
+        "miami_sunset": "邁阿密夕陽 (Miami Sunset)",
+        "sunny_noon": "晴朗正午 (Sunny Noon)",
+        "golden_dusk": "黃金黃昏 (Golden Dusk)",
+        "neon_night": "霓虹午夜 (Neon Night)",
+        "overcast_storm": "陰雨風暴 (Overcast Storm)",
+        "sunset": "夕陽",
+        "noon": "正午",
+        "dusk": "黃昏",
+        "midnight": "午夜",
+        "storm": "風暴",
+        "weather": "天氣",
+        "downtown_plaza_ramp": "市中心廣場跳台",
+        "airport_runway_ramp_1": "機場跑道跳台 1",
+        "airport_runway_ramp_2": "機場跑道跳台 2",
+        "airport_runway_ramp_3": "機場跑道跳台 3",
+        "north_0_avenue_ramp": "北區第 0 大道跳台",
+        "midtown_600_street_ramp": "中城 600 街跳台",
+        "old_town_720_street_ramp": "老城區 720 街跳台",
+        "pedestrian_collision": "⚠️ 擦撞行人!",
+        "impact_speed": "物理碰撞衝擊: ",
+        "sedan": "轎車",
+        "suv": "休旅車",
+        "hatchback": "掀背車",
+        "taxi": "計程車",
+        "van": "廂型車",
+        "sports_car": "跑車",
+        "luxury_suv": "豪華休旅",
+        "pickup": "皮卡",
+        "delivery_truck": "貨車",
+        "garbage_truck": "垃圾車",
+        "ambulance": "救護車",
+        "vehicle_damage": "💥 車身受損 ",
+        "repaint_in_the_garage_to_repair": "到車庫換烤漆即可修復",
+        "airtime_stunt_landed": "🚀 飛躍特技成功!",
+        "airtime_bonus": " 滯空獎金",
+        "crate_collected": "💎 獲得補給箱!",
+        "400_cash_reward": "+$400 現金獎勵",
+        "arrest_progress": "⚠️ 逮捕進度: ",
+        "busted": "🚔 遭警方逮捕!",
+        "300_fine": "罰款 $300",
+        "evading_police": "🕵️ 正在擺脫警方...",
+        "police_escaped": "🏆 成功擺脫追捕!",
+        "600_escape_bonus": "+$600 逃脫獎金",
+        "police_distance": "🚨 警車距離 (",
+        "wanted_level_cleared": "🚓 通緝解除",
+        "police_pursuit_ended": "警方已停止追捕",
+        "wanted_level": "🚨 通緝等級 ★",
+        "vcpd_interceptors_deployed": "VCPD 攔截警車已出動!",
+        "driving": "🚘 正在駕駛: ",
+        "0_100_km_h_in_4_0_s_6_speed_automatic": "0-100km/h 4.0s • 6速自排變速箱",
+        "street_race_started": "🏁 街頭競速開始!",
+        "pass_all_8_checkpoints_along_the_coastal_road": "沿海岸曲線公路依序通過 8 個檢查點!",
+        "drift_challenge": "💨 甩尾積分挑戰!",
+        "use_the_handbrake_in_corners_to_score_2_000_points": "按住手煞車過彎累積 2,000 分!",
+        "airport_stunt_challenge": "🚀 機場飛躍挑戰!",
+        "hit_the_3_large_runway_ramps": "衝上 3 座跑道大型跳台!",
+        "time_is_up": "⏱️ 時間結束!",
+        "open_missions_to_try_again": "點擊「🎯 任務」再次挑戰",
+        "mission_complete": "🏆 任務完成!",
+        "reward": " 獎金",
+        "enter": "上車: ",
+        "summon_sports_car": "召喚並駕駛跑車",
+        "exit_vehicle": "下車步巡",
+        "first_ramp_clear": "🏆 新跳台完成! +$",
+        "stunt_jump": "🚀 特技飛越 +$",
+        "distance": " • 飛行 ",
+        "m_airtime": " m • 滯空 ",
+        "s_completed": " s • 已完成 ",
+        "ramps": " 座",
+        "port_freight_depot": "碼頭貨運站",
+        "downtown_logistics": "市中心物流中心",
+        "old_town_post_office": "老城區郵局",
+        "airport_cargo_depot": "機場貨運站",
+        "suburban_warehouse": "郊區倉庫",
+        "north_warehouse": "北區倉庫",
+        "road": "道路",
+        "delivery": "📦 配送",
+        "delivery_accepted_reward": "📦 接到配送訂單! 報酬 $",
+        "deliver_to": "送到 ",
+        "km_time_limit": " km)，時限 ",
+        "stop_at_the_green_beam_to_unload": "，到綠色光柱停車卸貨",
+        "delivery_in_progress": "📦 配送進行中",
+        "first_deliver_to": "先把貨送到 ",
+        "go_to": "📦 前往 ",
+        "to_collect_a_job": " 接單",
+        "drive_into_a_yellow_circle_to_accept_a_job_on_the_map": "開車進入黃色圓圈就會接到訂單 (地圖上的 📦 都是配送站)",
+        "late": "逾時 +",
+        "delivered_on_time": "準時送達",
+        "late_delivery_half_pay": "逾時送達 (報酬減半)",
+        "early_delivery_20_bonus": "超快送達 +20% 獎金",
+        "delivery_complete": "📦 配送完成! +$",
+        "total": " • 累計 ",
+        "deliveries_visit_any_depot_for_another_job": " 單 • 回任一 📦 配送站接下一單",
+        "enter_a_vehicle_to_unload": "上車才能卸貨",
+        "ocean_drive": "海濱大道",
+        "santa_cruz_boardwalk": "聖塔克魯茲海濱樂園",
+        "downtown_cbd": "市中心 CBD",
+        "old_town": "老城區",
+        "suburbs": "郊區",
+        "ring_expressway": "環狀高架",
+        "mount_chiliad_summit": "奇利亞德山頂",
+        "starlight_marina": "遊艇碼頭",
+        "stunt_airport": "特技機場",
+        "vice_circle": "Vice 圓環",
+        "avenue": "大道",
+        "street": "街道",
+        "mount_chiliad": "奇利亞德山",
+        "boardwalk": "海濱樂園",
+        "midtown": "中城",
+        "vice_suburbs": "VICE SUBURBS 郊區",
+        "old_town_2": "OLD TOWN 老城區",
+        "midtown_2": "MIDTOWN 中城",
+        "distance_2": "・距離 ",
+        "fast_travel_unavailable_during_delivery": "配送中無法快速穿梭",
+        "complete_your_delivery_first": "請先完成配送",
+        "fast_travel": "⚡ 快速穿梭",
+        "waypoint_set": "📍 已設定導航點",
+        "destination_reached": "🏁 已抵達",
+        "fast_travel_blocked_complete_your_delivery_first": "配送中無法快速穿梭，請先完成配送",
+        "shadows": " 陰影",
+        "post_processing_off": "關閉後製",
+        "quality": "📺 畫質切換：",
+        "honk": "📣 叭叭!",
+        "horn_sounded": "喇叭音效已觸發",
+        "chase_near": "標準跟隨",
+        "chase_far": "廣角遠景",
+        "hood": "引擎蓋視角",
+        "bird_s_eye": "高空鳥瞰",
+        "camera": "🎥 視角: ",
+        "drag_empty_screen_space_to_rotate_the_camera": "可在螢幕空白處拖曳旋轉鏡頭",
+        "day_night_cycle": "🌗 晝夜循環",
+        "time_flows_automatically_1_hour_40_seconds": "時間會自動流動 (1 小時 = 40 秒)",
+        "weather_2": "🌤️ 天氣光影: ",
+        "fixed_weather_keep_cycling_to_restore_day_night": "固定天氣，再按幾次可回到晝夜循環",
+        "delivery_cancelled": "📦 已取消配送",
+        "visit_a_depot_for_another_job_anytime": "可以隨時回配送站接新訂單",
+        "owned": "✅ 已擁有",
+        "tap_again_to_buy": "👉 再按一次購買 $",
+        "not_enough_cash": "💰 現金不足",
+        "costs": " 售價 $",
+        "you_need": "，還差 $",
+        "more_earn_money_from_deliveries_and_stunt_ramps": "。去送貨或飛躍特技跳台賺錢吧!",
+        "purchased": "🔑 購買成功!",
+        "is_in_your_garage_press_summon_to_drive_it": " 已加入你的車庫，按「立即召喚」就能開",
+        "turbo_gearing_stage": "⚡ 渦輪與齒比 Stage ",
+        "engine_torque_and_top_speed_increased": "RaycastVehicle 扭力與極速已提升",
+        "gpu": "顯示卡：",
+        "unknown": "未知",
+        "quality_profile": "　畫質組合：",
+        "physics_wireframe_on": "🕸️ 物理線框：開啟",
+        "physics_wireframe_off": "🕸️ 物理線框：關閉",
+        "cyan_static_colliders_pink_moving_bodies": "青色 = 靜態碰撞體，粉色 = 動態物體",
+        "average": "平均 ",
+        "fps_quality_lowered_to": " FPS → 畫質自動調為 ",
+        "open_game_hub": "開啟 Game Hub",
+        "vcpd_pursuit": "🚨 VCPD 追捕中",
+        "gain_distance_to_escape_the_police": "拉開距離以擺脫警車",
+        "close_game_hub": "關閉 Game Hub",
+        "map": "地圖",
+        "missions": "任務",
+        "garage": "車庫",
+        "world": "世界",
+        "settings": "設定",
+        "vice_horizon_map": "VICE HORIZON 地圖",
+        "drag_to_pan_pinch_scroll_to_zoom_tap_a_location": "拖曳移動・捏合 / 滾輪縮放・點選地點",
+        "centre": "回到我",
+        "close": "關閉",
+        "set_waypoint": "設為導航點",
+        "missions_fast_travel": "🎯 任務挑戰與區域傳送",
+        "start_a_challenge_or_travel_to_a_city_district": "點擊任務立即開始挑戰，或快速傳送至五大寫實城區。",
+        "delivery_jobs_always_available": "📦 配送工作 (隨時可接)",
+        "730_2_150_per_job_20_for_early_delivery": "每單 $730 ~ $2,150，超快送達再 +20%",
+        "drive_to_a_depot_then_stop_at_the_green_beam_to_unload_each_": "開車到地圖上的 📦 配送站接單，把貨送到隨機目的地 (綠色光柱) 停車卸貨。另外每座 🚀 特技跳台第一次飛越 +$900，之後每次也有獎金 (有冷卻時間)。",
+        "street_race": "🏁 街頭競速賽",
+        "reward_1_400": "獎金: +$1,400",
+        "pass_8_checkpoints_along_ocean_drive_and_the_winding_coastal": "沿海濱大道與 S 形海岸曲線公路，依序通過 8 個檢查點。",
+        "drift_challenge_2": "💨 甩尾積分賽",
+        "reward_1_200": "獎金: +$1,200",
+        "use_weight_transfer_and_the_handbrake_to_score_2_000_drift_p": "利用真實懸吊重心轉移與手煞車，在 60 秒內累積 2,000 甩尾分。",
+        "airport_stunt": "🚀 機場飛躍挑戰",
+        "reward_1_600": "獎金: +$1,600",
+        "travel_to_the_runway_and_launch_off_3_large_ramps": "傳送至機場跑道，高速衝上 3 座大型物理跳台！",
+        "fast_travel_2": "✈️ 快速傳送",
+        "ocean_drive_2": "🌴 海濱大道",
+        "santa_cruz_boardwalk_2": "🎢 聖塔克魯茲海濱樂園",
+        "downtown": "🏙️ 市中心摩天區",
+        "mount_chiliad_summit_2": "⛰️ 奇利亞德山頂",
+        "starlight_marina_2": "🛥️ 遊艇碼頭",
+        "stunt_airport_2": "✈️ 特技機場",
+        "old_town_3": "🏛️ 老城區",
+        "suburbs_2": "🏡 郊區",
+        "ring_expressway_2": "🛣️ 環狀高架",
+        "cancel_mission": "⏹️ 取消任務",
+        "garage_customization": "🔧 PBR 寫實改裝車庫",
+        "choose_or_buy_a_car_with_in_game_cash_repaint_it_and_upgrade": "選車、用遊戲幣買新車 (送貨與特技跳台都能賺錢)、烤漆與動力升級。",
+        "1_vehicle_chassis": "1. 選擇車體底盤設定",
+        "0_100_in_4_0_s_supercar": "0-100 4.0s 超跑",
+        "high_torque_rear_wheel_drive": "大扭力後驅調校",
+        "long_travel_off_road_suspension": "高行程越野懸吊",
+        "vcpd_patrol_car": "VCPD 警用巡邏車",
+        "carrera_4s_all_wheel_drive": "Carrera 4S 四驅",
+        "v8_convertible_gt": "V8 敞篷 GT",
+        "2_metallic_clearcoat_paint": "2. 金屬清漆車色 (Clearcoat PBR)",
+        "3_engine_suspension_upgrades": "3. 引擎扭力與懸吊強化",
+        "turbo_gearing_upgrade": "⚡ 渦輪與齒比升級 (",
+        "torque_top_speed_and_grip_1_000": "+引擎扭力、極速與輪胎抓地力 ($1,000)",
+        "summon_drive": "🚘 立即召喚並駕駛改裝車輛",
+        "game_settings": "⚙️ 遊戲設定",
+        "camera_sensitivity_invert_y_and_physics_wireframe": "鏡頭靈敏度、反轉 Y 軸與物理碰撞體線框。",
+        "quality_2": "畫質",
+        "camera_2": "視角",
+        "camera_sensitivity": "鏡頭靈敏度",
+        "invert_y_axis": "反轉 Y 軸 (Invert Y)",
+        "physics_wireframe_k_on_desktop": "🕸️ 顯示物理碰撞體線框 (電腦按 K)",
+        "frame_rate_cap": "🎞️ 幀率上限",
+        "30_fps_save_power": "30 FPS (省電)",
+        "unlimited": "不限",
+        "on_foot_use_the_left_stick_driving_steer_on_the_left_gas_bra": "操作方式：步行時左搖桿控制方向；開車時左側為左 / 右轉向鍵，右側為油門、煞車、氮氣、手煞車。在畫面空白處拖曳旋轉鏡頭，雙指捏合縮放。",
+        "police_chase": "警匪追逐",
+        "crates": "補給箱",
+        "keyboard_mouse": "⌨️ 鍵盤 / 滑鼠",
+        "move_drive": "移動 / 駕駛",
+        "sprint_nitro": "跑步 / 氮氣",
+        "jump_handbrake": "跳躍 / 手煞車",
+        "enter_exit": "上下車",
+        "mouse_drag": "滑鼠拖曳",
+        "rotate_camera": "旋轉鏡頭",
+        "mouse_wheel": "滾輪",
+        "zoom": "縮放",
+        "physics_wireframe": "碰撞線框",
+        "steer_left": "左轉",
+        "steer_right": "右轉",
+        "horn": "喇叭",
+        "enter_exit_or_summon_a_vehicle": "上車、下車或召喚車輛",
+        "enter_summon_car": "上車 / 召喚跑車",
+        "jump": "跳躍",
+        "sprint": "跑步",
+        "nitro": "氮氣",
+        "handbrake": "手煞車",
+        "brake_and_reverse": "煞車與倒車",
+        "brake": "煞車",
+        "reverse": "倒車",
+        "gas": "油門",
+        "install_game": "📲 安裝遊戲到主畫面",
+        "to_install_in_safari_tap": "📲 要安裝成 App：點 Safari 下方的",
+        "share": "分享",
+        "then_choose": "按鈕 → 選擇",
+        "add_to_home_screen": "加入主畫面",
+        "got_it": "知道了",
+        "label_game_hub": "遊戲中心",
+        "label_foot": "步行",
+        "label_street_race": "街頭競速",
+        "label_redline": "紅線轉速",
+        "label_santa_cruz": "聖塔克魯茲",
+        "label_ocean": "海洋",
+        "label_coastal_hwy": "海岸公路",
+        "label_vice_broadway": "Vice 大道",
+        "label_sunset_diagonal": "夕陽斜街",
+        "label_quality_lowered_for_smoother_gameplay": "已降低畫質以維持流暢度",
+        "label_device": "裝置：",
+        "label_quality": " · 畫質：",
+        "label_pts": " 分",
+        "label_custom": "自訂車款 ",
+        "label_ford_shelby_gt500_patrol": "Ford Shelby GT500 警車",
+        "label_lexus_lc_500_convertible": "Lexus LC 500 敞篷車",
+        "language": "語言",
+        "traditional_chinese": "繁體中文",
+        "english": "英文",
+        "description": "開放世界駕駛遊戲 (Three.js + cannon-es)",
+        "shared_vice_horizon_vi_realistic_pbr": "VICE HORIZON VI: Realistic PBR",
+        "shared_cannon_es_edition": "Cannon-es Edition",
+        "shared_n": "N",
+        "shared_vcpd": "VCPD",
+        "shared_km_h": "KM/H",
+        "shared_cp_1_6": "CP 1/6",
+        "shared_60_0s": "60.0s",
+        "shared_ferrari_gt": "Ferrari GT",
+        "shared_muscle_69": "Muscle '69",
+        "shared_apex_4x4": "Apex 4x4",
+        "shared_shelby_gt500": "Shelby GT500",
+        "shared_porsche_911": "Porsche 911",
+        "shared_lexus_lc_500": "Lexus LC 500",
+        "shared_lv_1_5": "Lv.1/5",
+        "shared_high": "高",
+        "shared_vice_fm": "VICE FM",
+        "shared_1_0x": "1.0x",
+        "shared_60_fps": "60 FPS",
+        "shared_850_rpm": "850 RPM",
+        "shared_wasd": "WASD",
+        "shared_shift": "Shift",
+        "shared_space": "Space",
+        "shared_f": "F",
+        "shared_m": "M",
+        "shared_k": "K",
+        "shared_vice_horizon_vi": "VICE HORIZON VI",
+        "shared_physical_sky_ferrari_glb_water_js_cannon_es_physics": "物理天空 • Ferrari 模型 • 動態水面 • Cannon-es 物理",
+        "radio_off": "關閉",
+        "quality_LOW": "低",
+        "quality_MED": "中",
+        "quality_HIGH": "高",
+        "quality_ULTRA": "極高",
+        "device_PHONE": "手機",
+        "device_TABLET": "平板",
+        "device_DESKTOP": "電腦",
+        "vcpd_unit": "VCPD 警車 #",
+        "road_suburb_main": "郊區主幹道",
+        "road_maple_ave": "楓樹大道",
+        "road_hillcrest_loop": "山頂環道",
+        "road_valley_loop": "山谷環道",
+        "road_chiliad_link_a": "奇利亞德連接道 A",
+        "road_chiliad_link_b": "奇利亞德連接道 B",
+        "device_IGPU": "內建顯示卡"
+    }
+};
+    // I18N_TABLE_END
+    const VH_I18N = (() => {
+        let raw = null, saved = {};
+        try {
+            raw = localStorage.getItem('vh_save');
+            const parsed = JSON.parse(raw || '{}');
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) saved = parsed;
+        } catch (e) {}
+        let language = saved.language === 'en' || saved.language === 'zh-TW' ? saved.language : (raw === null ? 'en' : 'zh-TW');
+        const reverse = new Map();
+        for (const key of Object.keys(STRINGS.en)) {
+            reverse.set(STRINGS.en[key], key); reverse.set(STRINGS['zh-TW'][key], key);
+        }
+        function text(key) { return STRINGS[language][key] ?? STRINGS.en[key] ?? key; }
+        // Resolve copied location/car labels on a language change, not in frame loops.
+        function name(value) {
+            for (const prefix of ['label_custom', 'vcpd_unit']) {
+                for (const lang of ['en', 'zh-TW']) {
+                    const old = STRINGS[lang][prefix];
+                    if (value.startsWith(old)) return text(prefix) + value.slice(old.length);
+                }
+            }
+            const key = reverse.get(value);
+            if (key) return text(key);
+            return value.split(/([・•])/).map(part => {
+                const trimmed = part.trim(), k = reverse.get(trimmed);
+                return k ? part.replace(trimmed, text(k)) : part;
+            }).join('');
+        }
+        function apply() {
+            document.documentElement.lang = language;
+            for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = text(el.dataset.i18n);
+            for (const attr of ['aria-label', 'title', 'placeholder', 'alt']) {
+                for (const el of document.querySelectorAll('[data-i18n-' + attr + ']')) el.setAttribute(attr, text(el.getAttribute('data-i18n-' + attr)));
+            }
+            const select = document.getElementById('language-select');
+            if (select) select.value = language;
+            const description = document.querySelector('meta[name="description"]');
+            if (description) description.content = text('description');
+            const manifest = document.querySelector('link[rel="manifest"]');
+            if (manifest) manifest.href = language === 'en' ? './manifest.webmanifest' : './manifest.zh-TW.webmanifest';
+        }
+        return { saved, get language() { return language; }, text, name, apply,
+            setLanguage(value) { if (value !== 'en' && value !== 'zh-TW') return false; language = value; apply(); return true; }
+        };
+    })();
+    function tr(key) { return VH_I18N.text(key); }
+    document.addEventListener('DOMContentLoaded', () => VH_I18N.apply());
+    </script>
 
     <!-- ES Module Importmap for Three.js v0.160.0 & Cannon-es v0.20.0 -->
     <script type="importmap">
@@ -310,14 +1005,14 @@
 
         <!-- 左上：即時雷達小地圖 + 區域 + 補給箱收集 -->
         <div id="radar-column" class="pointer-events-auto">
-            <button id="radar-container" type="button" aria-label="開啟 Game Hub" aria-haspopup="dialog" aria-controls="quick-actions" class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-sky-500 via-slate-600 to-rose-500 shadow-lg cursor-pointer">
+            <button id="radar-container" type="button" aria-label="Open Game Hub" data-i18n-aria-label="open_game_hub" aria-haspopup="dialog" aria-controls="quick-actions" class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-sky-500 via-slate-600 to-rose-500 shadow-lg cursor-pointer">
                 <canvas id="radar-canvas" width="140" height="140" class="w-full h-full rounded-full bg-[#090d16] block"></canvas>
                 <span class="absolute -right-0.5 top-1 w-6 h-6 rounded-full flex items-center justify-center border border-cyan-300/70" style="background: rgba(2,6,23,0.92); box-shadow: 0 0 10px rgba(34,211,238,0.5);">
                     <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none" stroke="#67e8f9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>
                 </span>
-                <span class="absolute top-0.5 left-1/2 -translate-x-1/2 text-[8px] font-vice font-black text-sky-300 bg-black/80 px-1 rounded">N</span>
+                <span class="absolute top-0.5 left-1/2 -translate-x-1/2 text-[8px] font-vice font-black text-sky-300 bg-black/80 px-1 rounded"><span data-i18n="shared_n">N</span></span>
                 <span id="radar-zone" class="absolute -bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-vice font-bold text-white bg-slate-900/95 px-2 py-0.5 rounded-full border border-white/30 shadow">
-                    OCEAN DRIVE
+                    <span data-i18n="ocean_drive">Ocean Drive</span>
                 </span>
             </button>
 
@@ -327,7 +1022,7 @@
         <div id="status-column" class="flex flex-col items-end gap-1.5 pointer-events-none">
             <div id="status-card" class="hud-glass rounded-2xl text-right">
                 <div id="wanted-row" class="flex items-center justify-end gap-1 mb-0.5">
-                    <span id="wanted-badge" class="text-[9px] font-vice font-bold px-1 rounded bg-red-500/40 text-red-200 hidden">VCPD</span>
+                    <span id="wanted-badge" class="text-[9px] font-vice font-bold px-1 rounded bg-red-500/40 text-red-200 hidden"><span data-i18n="shared_vcpd">VCPD</span></span>
                     <div id="hud-stars" class="flex items-center justify-end gap-0.5 text-xs sm:text-sm leading-none">
                         <span class="star text-white/25">★</span>
                         <span class="star text-white/25">★</span>
@@ -340,27 +1035,27 @@
                     $<span id="hud-cash">3,500</span>
                 </div>
                 <div class="flex items-baseline justify-end gap-1 border-t border-white/10 pt-0.5 mt-0.5">
-                    <span id="hud-gear" class="text-[10px] font-vice font-bold px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-300 mr-1">FOOT</span>
+                    <span id="hud-gear" class="text-[10px] font-vice font-bold px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-300 mr-1"><span data-i18n="label_foot">FOOT</span></span>
                     <span id="hud-speed" class="font-vice text-xl sm:text-2xl font-black text-sky-300 leading-none">0</span>
-                    <span class="text-[9px] font-bold text-gray-300">KM/H</span>
+                    <span class="text-[9px] font-bold text-gray-300"><span data-i18n="shared_km_h">KM/H</span></span>
                 </div>
 
             </div>
 
             <!-- 警方追捕狀態條 -->
             <div id="pursuit-hud-panel" class="hud-glass siren-border rounded-xl px-2.5 py-1 border border-red-500/80 text-right hidden min-w-[132px]">
-                <div id="pursuit-status-label" class="text-[9px] font-vice font-black text-red-400">🚨 VCPD 追捕中</div>
+                <div id="pursuit-status-label" class="text-[9px] font-vice font-black text-red-400"><span data-i18n="vcpd_pursuit">🚨 VCPD PURSUIT</span></div>
                 <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden mt-1">
                     <div id="pursuit-meter-bar" class="h-full bg-gradient-to-r from-red-500 to-yellow-300 w-0"></div>
                 </div>
-                <div class="text-[9px] font-bold text-gray-200 mt-0.5">拉開距離以擺脫警車</div>
+                <div class="text-[9px] font-bold text-gray-200 mt-0.5"><span data-i18n="gain_distance_to_escape_the_police">Gain distance to escape the police</span></div>
             </div>
 
             <!-- 任務進度面板 -->
             <div id="mission-panel" class="hud-glass rounded-xl px-2.5 py-1 border border-amber-400/60 text-right hidden">
-                <div id="mission-title" class="text-[9px] font-bold uppercase text-amber-300">STREET RACE</div>
-                <div id="mission-progress" class="font-vice text-xs font-black text-white">CP 1/6</div>
-                <div id="mission-timer" class="text-xs font-extrabold text-rose-400">60.0s</div>
+                <div id="mission-title" class="text-[9px] font-bold uppercase text-amber-300"><span data-i18n="label_street_race">STREET RACE</span></div>
+                <div id="mission-progress" class="font-vice text-xs font-black text-white"><span data-i18n="shared_cp_1_6">CP 1/6</span></div>
+                <div id="mission-timer" class="text-xs font-extrabold text-rose-400"><span data-i18n="shared_60_0s">60.0s</span></div>
             </div>
         </div>
     </div>
@@ -368,21 +1063,21 @@
     <!-- Interim actions entry; T-003D will replace this with the Game Hub. -->
     <dialog id="quick-actions" aria-labelledby="quick-actions-title">
         <header>
-            <h2 id="quick-actions-title">Game Hub</h2>
-            <button id="quick-actions-close" type="button" aria-label="關閉 Game Hub">✕</button>
+            <h2 id="quick-actions-title"><span data-i18n="label_game_hub">Game Hub</span></h2>
+            <button id="quick-actions-close" type="button" aria-label="Close Game Hub" data-i18n-aria-label="close_game_hub">✕</button>
         </header>
-        <nav id="quick-actions-list" role="tablist" aria-label="Game Hub"><button id="quick-actions-map" type="button" role="tab" aria-controls="world-map" aria-selected="false" tabindex="-1">地圖</button><button id="pill-mission" type="button" role="tab" aria-controls="missions-modal" aria-selected="false" tabindex="-1">任務</button><button id="pill-garage" type="button" role="tab" aria-controls="garage-modal" aria-selected="false" tabindex="-1">車庫</button><button id="hub-world-tab" type="button" role="tab" aria-controls="hub-world" aria-selected="false" tabindex="-1">世界</button><button id="pill-settings" type="button" role="tab" aria-controls="settings-modal" aria-selected="false" tabindex="-1">設定</button></nav>
+        <nav id="quick-actions-list" role="tablist" aria-label="Game Hub" data-i18n-aria-label="label_game_hub"><button id="quick-actions-map" type="button" role="tab" aria-controls="world-map" aria-selected="false" tabindex="-1"><span data-i18n="map">MAP</span></button><button id="pill-mission" type="button" role="tab" aria-controls="missions-modal" aria-selected="false" tabindex="-1"><span data-i18n="missions">MISSIONS</span></button><button id="pill-garage" type="button" role="tab" aria-controls="garage-modal" aria-selected="false" tabindex="-1"><span data-i18n="garage">GARAGE</span></button><button id="hub-world-tab" type="button" role="tab" aria-controls="hub-world" aria-selected="false" tabindex="-1"><span data-i18n="world">WORLD</span></button><button id="pill-settings" type="button" role="tab" aria-controls="settings-modal" aria-selected="false" tabindex="-1"><span data-i18n="settings">SETTINGS</span></button></nav>
         <div class="hub-content">
     <!-- ==================== 全螢幕世界地圖 (點左上雷達開啟)：拖曳平移、捏合 / 滾輪縮放、點選地點快速穿梭或設導航點 ==================== -->
     <div role="tabpanel" aria-labelledby="quick-actions-map" tabindex="0" id="world-map" class="hidden fixed inset-0 z-[60] flex flex-col" style="background: radial-gradient(120% 120% at 50% 0%, #0f172a, #020617);">
         <div class="flex items-center gap-2 px-3 sm:px-5 pt-3 pb-2">
-            <div class="font-vice font-black text-sm sm:text-base tracking-wider bg-gradient-to-r from-sky-300 via-fuchsia-300 to-amber-200 bg-clip-text text-transparent">VICE HORIZON 地圖</div>
-            <div class="text-[11px] text-slate-400 hidden sm:block">拖曳移動・捏合 / 滾輪縮放・點選地點</div>
+            <div class="font-vice font-black text-sm sm:text-base tracking-wider bg-gradient-to-r from-sky-300 via-fuchsia-300 to-amber-200 bg-clip-text text-transparent"><span data-i18n="vice_horizon_map">VICE HORIZON MAP</span></div>
+            <div class="text-[11px] text-slate-400 hidden sm:block"><span data-i18n="drag_to_pan_pinch_scroll_to_zoom_tap_a_location">Drag to pan • Pinch / scroll to zoom • Tap a location</span></div>
             <div class="ml-auto flex items-center gap-1.5">
                 <button id="wm-zoom-out" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sky)"><span class="vh-sub" style="font-size:14px">−</span></button>
                 <button id="wm-zoom-in" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sky)"><span class="vh-sub" style="font-size:14px">＋</span></button>
-                <button id="wm-center" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-lime)"><span>回到我</span></button>
-                <button id="wm-close" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-rose)"><span>關閉</span></button>
+                <button id="wm-center" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-lime)"><span><span data-i18n="centre">Centre</span></span></button>
+                <button id="wm-close" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-rose)"><span><span data-i18n="close">Close</span></span></button>
             </div>
         </div>
         <div id="wm-chips" class="flex gap-1.5 px-3 sm:px-5 pb-2 overflow-x-auto modal-scroll" style="touch-action: pan-x;"></div>
@@ -397,8 +1092,8 @@
                     </div>
                 </div>
                 <div class="flex gap-2 mt-3">
-                    <button id="wm-travel" type="button" class="touch-btn vh-btn vh-row h-11 rounded-xl flex-1" style="--acc: var(--vh-pink)"><span class="vh-lbl" style="color:#fff">⚡ 快速穿梭</span></button>
-                    <button id="wm-waypoint" type="button" class="touch-btn vh-btn vh-row h-11 rounded-xl flex-1" style="--acc: var(--vh-sun)"><span class="vh-lbl">設為導航點</span></button>
+                    <button id="wm-travel" type="button" class="touch-btn vh-btn vh-row h-11 rounded-xl flex-1" style="--acc: var(--vh-pink)"><span class="vh-lbl" style="color:#fff"><span data-i18n="fast_travel">⚡ Fast travel</span></span></button>
+                    <button id="wm-waypoint" type="button" class="touch-btn vh-btn vh-row h-11 rounded-xl flex-1" style="--acc: var(--vh-sun)"><span class="vh-lbl"><span data-i18n="set_waypoint">Set waypoint</span></span></button>
                 </div>
             </div>
         </div>
@@ -408,48 +1103,48 @@
         <div class="max-w-xl w-full hud-glass rounded-3xl p-4 sm:p-6 border border-emerald-400/50 shadow-2xl modal-scroll max-h-[88vh]">
             <div class="flex items-center justify-between border-b border-white/15 pb-3 mb-3">
                 <div>
-                    <h2 class="font-vice text-lg sm:text-xl font-black text-emerald-300">🎯 任務挑戰與區域傳送</h2>
-                    <p class="text-xs text-gray-300">點擊任務立即開始挑戰，或快速傳送至五大寫實城區。</p>
+                    <h2 class="font-vice text-lg sm:text-xl font-black text-emerald-300"><span data-i18n="missions_fast_travel">🎯 Missions &amp; fast travel</span></h2>
+                    <p class="text-xs text-gray-300"><span data-i18n="start_a_challenge_or_travel_to_a_city_district">Start a challenge or travel to a city district.</span></p>
                 </div>
                 <button id="close-missions-btn" type="button" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 font-bold text-lg flex items-center justify-center">✕</button>
             </div>
 
             <button data-mode="DELIVERY" type="button" class="mission-select-card w-full mb-2.5 p-3 rounded-2xl bg-gradient-to-br from-yellow-500/30 to-slate-900/60 border border-yellow-400/60 text-left">
-                <div class="font-vice font-black text-xs text-yellow-300">📦 配送工作 (隨時可接)</div>
-                <div class="text-[11px] font-bold text-white mt-0.5">每單 $730 ~ $2,150，超快送達再 +20%</div>
-                <p class="text-[11px] text-gray-300 mt-1">開車到地圖上的 📦 配送站接單，把貨送到隨機目的地 (綠色光柱) 停車卸貨。另外每座 🚀 特技跳台第一次飛越 +$900，之後每次也有獎金 (有冷卻時間)。</p>
+                <div class="font-vice font-black text-xs text-yellow-300"><span data-i18n="delivery_jobs_always_available">📦 Delivery jobs (always available)</span></div>
+                <div class="text-[11px] font-bold text-white mt-0.5"><span data-i18n="730_2_150_per_job_20_for_early_delivery">$730–$2,150 per job; +20% for early delivery</span></div>
+                <p class="text-[11px] text-gray-300 mt-1"><span data-i18n="drive_to_a_depot_then_stop_at_the_green_beam_to_unload_each_">Drive to a 📦 depot, then stop at the green beam to unload. Each 🚀 ramp pays $900 on its first clear; repeat jumps also pay, with cooldowns.</span></p>
             </button>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-left mb-3">
                 <button data-mode="RACE" type="button" class="mission-select-card p-3 rounded-2xl bg-gradient-to-br from-rose-600/30 to-slate-900/60 border border-rose-400/60 text-left">
-                    <div class="font-vice font-black text-xs text-rose-300">🏁 街頭競速賽</div>
-                    <div class="text-[11px] font-bold text-white mt-0.5">獎金: +$1,400</div>
-                    <p class="text-[11px] text-gray-300 mt-1">沿海濱大道與 S 形海岸曲線公路，依序通過 8 個檢查點。</p>
+                    <div class="font-vice font-black text-xs text-rose-300"><span data-i18n="street_race">🏁 Street race</span></div>
+                    <div class="text-[11px] font-bold text-white mt-0.5"><span data-i18n="reward_1_400">Reward: +$1,400</span></div>
+                    <p class="text-[11px] text-gray-300 mt-1"><span data-i18n="pass_8_checkpoints_along_ocean_drive_and_the_winding_coastal">Pass 8 checkpoints along Ocean Drive and the winding coastal road.</span></p>
                 </button>
                 <button data-mode="DRIFT" type="button" class="mission-select-card p-3 rounded-2xl bg-gradient-to-br from-amber-500/30 to-slate-900/60 border border-amber-400/60 text-left">
-                    <div class="font-vice font-black text-xs text-amber-300">💨 甩尾積分賽</div>
-                    <div class="text-[11px] font-bold text-white mt-0.5">獎金: +$1,200</div>
-                    <p class="text-[11px] text-gray-300 mt-1">利用真實懸吊重心轉移與手煞車，在 60 秒內累積 2,000 甩尾分。</p>
+                    <div class="font-vice font-black text-xs text-amber-300"><span data-i18n="drift_challenge_2">💨 Drift challenge</span></div>
+                    <div class="text-[11px] font-bold text-white mt-0.5"><span data-i18n="reward_1_200">Reward: +$1,200</span></div>
+                    <p class="text-[11px] text-gray-300 mt-1"><span data-i18n="use_weight_transfer_and_the_handbrake_to_score_2_000_drift_p">Use weight transfer and the handbrake to score 2,000 drift points in 60 seconds.</span></p>
                 </button>
                 <button data-mode="STUNT" type="button" class="mission-select-card p-3 rounded-2xl bg-gradient-to-br from-sky-500/30 to-slate-900/60 border border-sky-400/60 text-left">
-                    <div class="font-vice font-black text-xs text-sky-300">🚀 機場飛躍挑戰</div>
-                    <div class="text-[11px] font-bold text-white mt-0.5">獎金: +$1,600</div>
-                    <p class="text-[11px] text-gray-300 mt-1">傳送至機場跑道，高速衝上 3 座大型物理跳台！</p>
+                    <div class="font-vice font-black text-xs text-sky-300"><span data-i18n="airport_stunt">🚀 Airport stunt</span></div>
+                    <div class="text-[11px] font-bold text-white mt-0.5"><span data-i18n="reward_1_600">Reward: +$1,600</span></div>
+                    <p class="text-[11px] text-gray-300 mt-1"><span data-i18n="travel_to_the_runway_and_launch_off_3_large_ramps">Travel to the runway and launch off 3 large ramps!</span></p>
                 </button>
             </div>
 
             <div class="border-t border-white/15 pt-3">
-                <div class="text-xs font-vice font-bold text-sky-300 mb-2">✈️ 快速傳送</div>
+                <div class="text-xs font-vice font-bold text-sky-300 mb-2"><span data-i18n="fast_travel_2">✈️ Fast travel</span></div>
                 <div class="flex flex-wrap gap-1.5">
-                    <button data-tp="OCEAN" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15">🌴 海濱大道</button>
-                    <button data-tp="PIER" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15">🎢 聖塔克魯茲海濱樂園</button>
-                    <button data-tp="DOWNTOWN" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15">🏙️ 市中心摩天區</button>
-                    <button data-tp="CHILIAD" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-emerald-500/25 hover:bg-emerald-500/40 text-xs font-bold border border-emerald-400/50 text-emerald-200">⛰️ 奇利亞德山頂</button>
-                    <button data-tp="MARINA" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15">🛥️ 遊艇碼頭</button>
-                    <button data-tp="AIRPORT" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15">✈️ 特技機場</button>
-                    <button data-tp="OLDTOWN" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/35 text-xs font-bold border border-amber-400/50 text-amber-200">🏛️ 老城區</button>
-                    <button data-tp="SUBURBS" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/35 text-xs font-bold border border-emerald-400/50 text-emerald-200">🏡 郊區</button>
-                    <button data-tp="RING" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/35 text-xs font-bold border border-sky-400/50 text-sky-200">🛣️ 環狀高架</button>
-                    <button id="cancel-mission-btn" type="button" class="px-3 py-1.5 rounded-xl bg-red-500/30 text-xs font-bold border border-red-400/40 ml-auto">⏹️ 取消任務</button>
+                    <button data-tp="OCEAN" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15"><span data-i18n="ocean_drive_2">🌴 Ocean Drive</span></button>
+                    <button data-tp="PIER" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15"><span data-i18n="santa_cruz_boardwalk_2">🎢 Santa Cruz Boardwalk</span></button>
+                    <button data-tp="DOWNTOWN" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15"><span data-i18n="downtown">🏙️ Downtown</span></button>
+                    <button data-tp="CHILIAD" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-emerald-500/25 hover:bg-emerald-500/40 text-xs font-bold border border-emerald-400/50 text-emerald-200"><span data-i18n="mount_chiliad_summit_2">⛰️ Mount Chiliad Summit</span></button>
+                    <button data-tp="MARINA" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15"><span data-i18n="starlight_marina_2">🛥️ Starlight Marina</span></button>
+                    <button data-tp="AIRPORT" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-white/10 hover:bg-sky-500/30 text-xs font-bold border border-white/15"><span data-i18n="stunt_airport_2">✈️ Stunt Airport</span></button>
+                    <button data-tp="OLDTOWN" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/35 text-xs font-bold border border-amber-400/50 text-amber-200"><span data-i18n="old_town_3">🏛️ Old Town</span></button>
+                    <button data-tp="SUBURBS" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/35 text-xs font-bold border border-emerald-400/50 text-emerald-200"><span data-i18n="suburbs_2">🏡 Suburbs</span></button>
+                    <button data-tp="RING" type="button" class="tp-btn px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/35 text-xs font-bold border border-sky-400/50 text-sky-200"><span data-i18n="ring_expressway_2">🛣️ Ring Expressway</span></button>
+                    <button id="cancel-mission-btn" type="button" class="px-3 py-1.5 rounded-xl bg-red-500/30 text-xs font-bold border border-red-400/40 ml-auto"><span data-i18n="cancel_mission">⏹️ Cancel mission</span></button>
                 </div>
             </div>
         </div>
@@ -460,39 +1155,39 @@
         <div class="max-w-xl w-full hud-glass rounded-3xl p-4 sm:p-6 border border-sky-400/50 shadow-2xl modal-scroll max-h-[88vh]">
             <div class="flex items-center justify-between border-b border-white/15 pb-2.5 mb-3">
                 <div>
-                    <h2 class="font-vice text-lg sm:text-xl font-black text-sky-300">🔧 PBR 寫實改裝車庫</h2>
-                    <p class="text-xs text-gray-300">選車、用遊戲幣買新車 (送貨與特技跳台都能賺錢)、烤漆與動力升級。</p>
+                    <h2 class="font-vice text-lg sm:text-xl font-black text-sky-300"><span data-i18n="garage_customization">🔧 Garage &amp; customization</span></h2>
+                    <p class="text-xs text-gray-300"><span data-i18n="choose_or_buy_a_car_with_in_game_cash_repaint_it_and_upgrade">Choose or buy a car with in-game cash, repaint it and upgrade its power.</span></p>
                 </div>
                 <button id="close-garage-btn" type="button" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 font-bold text-lg flex items-center justify-center">✕</button>
             </div>
 
             <div class="mb-3">
-                <div class="text-xs font-vice font-bold text-sky-300 mb-1.5">1. 選擇車體底盤設定</div>
+                <div class="text-xs font-vice font-bold text-sky-300 mb-1.5"><span data-i18n="1_vehicle_chassis">1. Vehicle &amp; chassis</span></div>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                     <button data-car="SUPER" type="button" class="car-archetype-btn p-2 rounded-xl bg-rose-500/30 border border-rose-400 text-left">
-                        <div class="font-vice font-bold text-xs text-white">Ferrari GT</div>
-                        <div class="text-[10px] text-rose-200">0-100 4.0s 超跑</div>
+                        <div class="font-vice font-bold text-xs text-white"><span data-i18n="shared_ferrari_gt">Ferrari GT</span></div>
+                        <div class="text-[10px] text-rose-200"><span data-i18n="0_100_in_4_0_s_supercar">0–100 in 4.0 s • Supercar</span></div>
                     </button>
                     <button data-car="MUSCLE" type="button" class="car-archetype-btn p-2 rounded-xl bg-white/5 border border-white/15 text-left">
-                        <div class="font-vice font-bold text-xs text-white">Muscle '69</div>
-                        <div class="text-[10px] text-amber-300">大扭力後驅調校</div>
+                        <div class="font-vice font-bold text-xs text-white"><span data-i18n="shared_muscle_69">Muscle &#x27;69</span></div>
+                        <div class="text-[10px] text-amber-300"><span data-i18n="high_torque_rear_wheel_drive">High-torque rear-wheel drive</span></div>
                     </button>
                     <button data-car="MONSTER" type="button" class="car-archetype-btn p-2 rounded-xl bg-white/5 border border-white/15 text-left">
-                        <div class="font-vice font-bold text-xs text-white">Apex 4x4</div>
-                        <div class="text-[10px] text-emerald-300">高行程越野懸吊</div>
+                        <div class="font-vice font-bold text-xs text-white"><span data-i18n="shared_apex_4x4">Apex 4x4</span></div>
+                        <div class="text-[10px] text-emerald-300"><span data-i18n="long_travel_off_road_suspension">Long-travel off-road suspension</span></div>
                     </button>
                     <button data-car="POLICE" data-model="fordcop" type="button" class="car-archetype-btn p-2 rounded-xl bg-white/5 border border-white/15 text-left">
-                        <div class="font-vice font-bold text-xs text-white">Shelby GT500</div>
-                        <div class="text-[10px] text-sky-300">VCPD 警用巡邏車</div>
+                        <div class="font-vice font-bold text-xs text-white"><span data-i18n="shared_shelby_gt500">Shelby GT500</span></div>
+                        <div class="text-[10px] text-sky-300"><span data-i18n="vcpd_patrol_car">VCPD patrol car</span></div>
                     </button>
                     <button data-car="SUPER" data-model="porsche911" type="button" class="car-archetype-btn p-2 rounded-xl bg-white/5 border border-white/15 text-left">
-                        <div class="font-vice font-bold text-xs text-white">Porsche 911</div>
-                        <div class="text-[10px] text-violet-300">Carrera 4S 四驅</div>
+                        <div class="font-vice font-bold text-xs text-white"><span data-i18n="shared_porsche_911">Porsche 911</span></div>
+                        <div class="text-[10px] text-violet-300"><span data-i18n="carrera_4s_all_wheel_drive">Carrera 4S • All-wheel drive</span></div>
                         <div class="car-price text-[10px] font-black mt-0.5"></div>
                     </button>
                     <button data-car="SUPER" data-model="lexuslc500" type="button" class="car-archetype-btn p-2 rounded-xl bg-white/5 border border-white/15 text-left">
-                        <div class="font-vice font-bold text-xs text-white">Lexus LC 500</div>
-                        <div class="text-[10px] text-amber-200">V8 敞篷 GT</div>
+                        <div class="font-vice font-bold text-xs text-white"><span data-i18n="shared_lexus_lc_500">Lexus LC 500</span></div>
+                        <div class="text-[10px] text-amber-200"><span data-i18n="v8_convertible_gt">V8 convertible GT</span></div>
                         <div class="car-price text-[10px] font-black mt-0.5"></div>
                     </button>
                 </div>
@@ -500,7 +1195,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                 <div>
-                    <div class="text-xs font-vice font-bold text-rose-300 mb-1.5">2. 金屬清漆車色 (Clearcoat PBR)</div>
+                    <div class="text-xs font-vice font-bold text-rose-300 mb-1.5"><span data-i18n="2_metallic_clearcoat_paint">2. Metallic clearcoat paint</span></div>
                     <div class="flex flex-wrap gap-2" id="paint-swatches">
                         <button data-paint="0xdc2626" type="button" class="w-7 h-7 rounded-full bg-[#dc2626] border-2 border-white"></button>
                         <button data-paint="0x0284c7" type="button" class="w-7 h-7 rounded-full bg-[#0284c7] border-2 border-white/40"></button>
@@ -512,16 +1207,16 @@
                     </div>
                 </div>
                 <div>
-                    <div class="text-xs font-vice font-bold text-amber-300 mb-1.5">3. 引擎扭力與懸吊強化</div>
+                    <div class="text-xs font-vice font-bold text-amber-300 mb-1.5"><span data-i18n="3_engine_suspension_upgrades">3. Engine &amp; suspension upgrades</span></div>
                     <button id="upg-engine-btn" type="button" class="w-full p-2.5 rounded-xl bg-white/10 hover:bg-emerald-500/25 border border-emerald-400/50 text-left">
-                        <div class="font-vice font-bold text-xs text-emerald-300">⚡ 渦輪與齒比升級 (<span id="upg-lvl-text">Lv.1/5</span>)</div>
-                        <div class="text-[11px] text-gray-200">+引擎扭力、極速與輪胎抓地力 ($1,000)</div>
+                        <div class="font-vice font-bold text-xs text-emerald-300"><span data-i18n="turbo_gearing_upgrade">⚡ Turbo &amp; gearing upgrade (</span><span id="upg-lvl-text"><span data-i18n="shared_lv_1_5">Lv.1/5</span></span>)</div>
+                        <div class="text-[11px] text-gray-200"><span data-i18n="torque_top_speed_and_grip_1_000">+Torque, top speed and grip ($1,000)</span></div>
                     </button>
                 </div>
             </div>
 
             <button id="garage-deliver-btn" type="button" class="w-full mt-2 py-3 rounded-2xl font-vice font-black text-sm uppercase bg-gradient-to-r from-rose-600 via-sky-600 to-emerald-500 text-white shadow-lg">
-                🚘 立即召喚並駕駛改裝車輛
+                <span data-i18n="summon_drive">🚘 Summon &amp; drive</span>
             </button>
         </div>
     </div>
@@ -531,55 +1226,62 @@
         <div class="max-w-md w-full hud-glass rounded-3xl p-4 sm:p-6 border border-slate-400/50 shadow-2xl modal-scroll max-h-[88vh]">
             <div class="flex items-center justify-between border-b border-white/15 pb-2.5 mb-3">
                 <div>
-                    <h2 class="font-vice text-lg font-black text-slate-100">⚙️ 遊戲設定</h2>
-                    <p class="text-xs text-gray-300">鏡頭靈敏度、反轉 Y 軸與物理碰撞體線框。</p>
+                    <h2 class="font-vice text-lg font-black text-slate-100"><span data-i18n="game_settings">⚙️ Game settings</span></h2>
+                    <p class="text-xs text-gray-300"><span data-i18n="camera_sensitivity_invert_y_and_physics_wireframe">Camera sensitivity, invert Y and physics wireframe.</span></p>
                 </div>
                 <button id="close-settings-btn" type="button" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 font-bold text-lg flex items-center justify-center">✕</button>
             </div>
 <div class="hub-actions"><button id="pill-quality" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sun)">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path d="m9 10 2 2 4-4"/></svg><span>畫質</span><span id="pill-quality-label" class="vh-sub">HIGH</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path d="m9 10 2 2 4-4"/></svg><span><span data-i18n="quality_2">Quality</span></span><span id="pill-quality-label" class="vh-sub"><span data-i18n="shared_high">HIGH</span></span>
             </button><button id="pill-cam" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-sky)">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><rect x="2" y="7" width="14" height="10" rx="2"/><path d="m16 11 6-3.5v9L16 13"/></svg><span>視角</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><rect x="2" y="7" width="14" height="10" rx="2"/><path d="m16 11 6-3.5v9L16 13"/></svg><span><span data-i18n="camera_2">Camera</span></span>
             </button><button id="pill-radio" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-pink)">
                 <span id="radio-dot" class="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
-                <span id="hud-radio" class="vh-sub" style="color:#fbcfe8">VICE FM</span>
+                <span id="hud-radio" class="vh-sub" style="color:#fbcfe8"><span data-i18n="shared_vice_fm">VICE FM</span></span>
             </button></div>
-            <label class="block text-xs font-bold text-sky-300 mb-1">鏡頭靈敏度 <span id="cam-sens-value">1.0x</span></label>
+            <label class="flex items-center justify-between gap-3 text-sm mb-3" for="language-select">
+                <span data-i18n="language">Language</span>
+                <select id="language-select" class="bg-slate-800 rounded-lg px-2" aria-label="Language" data-i18n-aria-label="language">
+                    <option value="en" data-i18n="english">English</option>
+                    <option value="zh-TW" data-i18n="traditional_chinese">Traditional Chinese</option>
+                </select>
+            </label>
+            <label class="block text-xs font-bold text-sky-300 mb-1"><span data-i18n="camera_sensitivity">Camera sensitivity</span> <span id="cam-sens-value"><span data-i18n="shared_1_0x">1.0x</span></span></label>
             <input id="cam-sens" type="range" min="0.2" max="2.5" step="0.1" value="1.0" class="w-full mb-4">
             <label class="flex items-center justify-between text-sm font-bold text-white mb-3 p-2.5 rounded-xl bg-white/5 border border-white/10">
-                <span>反轉 Y 軸 (Invert Y)</span>
+                <span><span data-i18n="invert_y_axis">Invert Y axis</span></span>
                 <input id="cam-invert" type="checkbox" class="w-5 h-5">
             </label>
             <label class="flex items-center justify-between text-sm font-bold text-white mb-1 p-2.5 rounded-xl bg-white/5 border border-white/10">
-                <span>🕸️ 顯示物理碰撞體線框 (電腦按 K)</span>
+                <span><span data-i18n="physics_wireframe_k_on_desktop">🕸️ Physics wireframe (K on desktop)</span></span>
                 <input id="debug-wire" type="checkbox" class="w-5 h-5">
             </label>
             <label class="flex items-center justify-between text-sm font-bold text-white mt-3 p-2.5 rounded-xl bg-white/5 border border-white/10">
-                <span>🎞️ 幀率上限</span>
+                <span><span data-i18n="frame_rate_cap">🎞️ Frame rate cap</span></span>
                 <select id="fps-cap" class="bg-slate-800 text-white rounded-lg px-2 py-1 text-sm">
-                    <option value="30">30 FPS (省電)</option>
-                    <option value="60">60 FPS</option>
-                    <option value="0">不限</option>
+                    <option value="30" data-i18n="30_fps_save_power">30 FPS (save power)</option>
+                    <option value="60" data-i18n="shared_60_fps">60 FPS</option>
+                    <option value="0" data-i18n="unlimited">Unlimited</option>
                 </select>
             </label>
             <p id="gpu-info" class="text-[11px] text-gray-400 mt-2"></p>
-            <p class="text-[11px] text-gray-400 mt-3">操作方式：步行時左搖桿控制方向；開車時左側為左 / 右轉向鍵，右側為油門、煞車、氮氣、手煞車。在畫面空白處拖曳旋轉鏡頭，雙指捏合縮放。</p>
+            <p class="text-[11px] text-gray-400 mt-3"><span data-i18n="on_foot_use_the_left_stick_driving_steer_on_the_left_gas_bra">On foot: use the left stick. Driving: steer on the left; gas, brake, nitro and handbrake on the right. Drag empty space to rotate the camera; pinch to zoom.</span></p>
         </div>
     </div>
 
         <section id="hub-world" class="hidden hub-scroll" role="tabpanel" aria-labelledby="hub-world-tab" tabindex="0">
-            <h2>世界</h2>
+            <h2><span data-i18n="world">WORLD</span></h2>
             <div class="hub-actions"><button id="pill-sky" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-orange)">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="pill-sky-label">天氣</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="pill-sky-label"><span data-i18n="weather">Weather</span></span>
             </button><button id="pill-cop-chase" type="button" class="touch-btn vh-pill" style="--acc: var(--vh-rose)">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M7 18v-5a5 5 0 0 1 10 0v5"/><path d="M5 21h14v-3H5z"/><path d="M12 3v2M4.5 7l1.5 1.5M19.5 7 18 8.5"/></svg><span>警匪追逐</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M7 18v-5a5 5 0 0 1 10 0v5"/><path d="M5 21h14v-3H5z"/><path d="M12 3v2M4.5 7l1.5 1.5M19.5 7 18 8.5"/></svg><span><span data-i18n="police_chase">Police chase</span></span>
             </button></div>
-            <div class="vh-badge mt-0.5"><svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M10 3 8 9l4 12 4-12-2-6"/></svg>補給箱 <span id="hud-crates" class="font-vice text-[10px]">0/15</span></div>
+            <div class="vh-badge mt-0.5"><svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M10 3 8 9l4 12 4-12-2-6"/></svg><span data-i18n="crates">Crates</span> <span id="hud-crates" class="font-vice text-[10px]">0/15</span></div>
                 <!-- 引擎 RPM 轉速表與氮氣條 -->
                 <div id="hud-rpm-wrap" class="w-full mt-1 hidden">
                     <div class="flex justify-between text-[8px] font-vice text-gray-300 mb-0.5">
-                        <span id="hud-rpm-text">850 RPM</span>
-                        <span class="text-rose-400">REDLINE</span>
+                        <span id="hud-rpm-text"><span data-i18n="shared_850_rpm">850 RPM</span></span>
+                        <span class="text-rose-400"><span data-i18n="label_redline">REDLINE</span></span>
                     </div>
                     <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div id="hud-rpm-bar" class="h-full bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-500 w-1/6 transition-all duration-75"></div>
@@ -590,10 +1292,10 @@
                 </div>
     <!-- 電腦版鍵盤滑鼠提示 -->
     <div id="desktop-hints" class="hidden fixed bottom-3 left-3 z-30 hud-glass rounded-2xl px-3 py-2 text-[11px] leading-5 text-gray-200 border border-white/15 pointer-events-none">
-        <div class="font-vice font-bold text-sky-300 text-xs mb-0.5">⌨️ 鍵盤 / 滑鼠</div>
-        <div><b class="text-white">WASD</b> 移動 / 駕駛　<b class="text-white">Shift</b> 跑步 / 氮氣</div>
-        <div><b class="text-white">Space</b> 跳躍 / 手煞車　<b class="text-white">F</b> 上下車　<b class="text-white">M</b> 地圖</div>
-        <div><b class="text-white">滑鼠拖曳</b> 旋轉鏡頭　<b class="text-white">滾輪</b> 縮放　<b class="text-white">K</b> 碰撞線框</div>
+        <div class="font-vice font-bold text-sky-300 text-xs mb-0.5"><span data-i18n="keyboard_mouse">⌨️ Keyboard / mouse</span></div>
+        <div><b class="text-white"><span data-i18n="shared_wasd">WASD</span></b> <span data-i18n="move_drive">Move / drive</span>　<b class="text-white"><span data-i18n="shared_shift">Shift</span></b> <span data-i18n="sprint_nitro">Sprint / nitro</span></div>
+        <div><b class="text-white"><span data-i18n="shared_space">Space</span></b> <span data-i18n="jump_handbrake">Jump / handbrake</span>　<b class="text-white"><span data-i18n="shared_f">F</span></b> <span data-i18n="enter_exit">Enter / exit</span>　<b class="text-white"><span data-i18n="shared_m">M</span></b> <span data-i18n="map">MAP</span></div>
+        <div><b class="text-white"><span data-i18n="mouse_drag">Mouse drag</span></b> <span data-i18n="rotate_camera">Rotate camera</span>　<b class="text-white"><span data-i18n="mouse_wheel">Mouse wheel</span></b> <span data-i18n="zoom">Zoom</span>　<b class="text-white"><span data-i18n="shared_k">K</span></b> <span data-i18n="physics_wireframe">Physics wireframe</span></div>
     </div>
 
         </section>
@@ -604,10 +1306,10 @@
     <div id="notice-area" class="fixed z-10 pointer-events-none">
         <div id="center-banner" class="transition-all duration-300 opacity-0 transform -translate-y-3 text-center">
             <div id="banner-title" class="font-vice text-lg sm:text-2xl font-black italic uppercase bg-gradient-to-r from-amber-200 via-sky-300 to-rose-400 bg-clip-text text-transparent drop-shadow">
-                VICE HORIZON VI
+                <span data-i18n="shared_vice_horizon_vi">VICE HORIZON VI</span>
             </div>
             <div id="banner-sub" class="text-xs sm:text-sm font-bold text-white hud-glass px-3.5 py-0.5 rounded-full inline-block mt-0.5 border border-sky-400/40">
-                Physical Sky • Ferrari GLB • Water.js • Cannon-es Physics
+                <span data-i18n="shared_physical_sky_ferrari_glb_water_js_cannon_es_physics">Physical Sky • Ferrari GLB • Water.js • Cannon-es Physics</span>
             </div>
         </div>
     </div>
@@ -622,8 +1324,8 @@
                 <div id="joystick-knob" class="w-14 h-14 rounded-full bg-gradient-to-br from-sky-400 via-blue-600 to-rose-500 border-2 border-white shadow-lg pointer-events-none"></div>
             </div>
             <div id="steer-cluster" class="hidden flex items-end gap-3">
-                <button id="btn-steer-left" type="button" class="touch-btn vh-btn vh-steer" style="--acc: var(--vh-cyan)" aria-label="左轉"><svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m15 5-7 7 7 7"/></svg></button>
-                <button id="btn-steer-right" type="button" class="touch-btn vh-btn vh-steer" style="--acc: var(--vh-cyan)" aria-label="右轉"><svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m9 5 7 7-7 7"/></svg></button>
+                <button id="btn-steer-left" type="button" class="touch-btn vh-btn vh-steer" style="--acc: var(--vh-cyan)" aria-label="Steer left" data-i18n-aria-label="steer_left"><svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m15 5-7 7 7 7"/></svg></button>
+                <button id="btn-steer-right" type="button" class="touch-btn vh-btn vh-steer" style="--acc: var(--vh-cyan)" aria-label="Steer right" data-i18n-aria-label="steer_right"><svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m9 5 7 7-7 7"/></svg></button>
             </div>
         </div>
 
@@ -632,39 +1334,39 @@
 
             <!-- 喇叭 + 上下車按鈕 -->
             <div id="context-controls">
-                <button id="btn-horn" type="button" aria-label="喇叭" class="touch-btn vh-btn vh-row h-11 rounded-2xl" style="--acc: var(--vh-sun)">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M3 10v4h4l6 4V6L7 10z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12"/></svg><span class="vh-lbl">喇叭</span>
+                <button id="btn-horn" type="button" aria-label="Horn" data-i18n-aria-label="horn" class="touch-btn vh-btn vh-row h-11 rounded-2xl" style="--acc: var(--vh-sun)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M3 10v4h4l6 4V6L7 10z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12"/></svg><span class="vh-lbl"><span data-i18n="horn">Horn</span></span>
                 </button>
-                <button id="btn-car-action" type="button" aria-label="上車、下車或召喚車輛" class="touch-btn vh-btn vh-row h-11 rounded-2xl pulse-car-action" style="--acc: var(--vh-sky)">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M3 17v-4l2.2-5.2A2 2 0 0 1 7 6.5h10a2 2 0 0 1 1.8 1.3L21 13v4"/><path d="M3 13h18"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg><span id="btn-car-action-label" class="vh-lbl" style="color:#fff">上車 / 召喚跑車</span>
+                <button id="btn-car-action" type="button" aria-label="Enter, exit or summon a vehicle" data-i18n-aria-label="enter_exit_or_summon_a_vehicle" class="touch-btn vh-btn vh-row h-11 rounded-2xl pulse-car-action" style="--acc: var(--vh-sky)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M3 17v-4l2.2-5.2A2 2 0 0 1 7 6.5h10a2 2 0 0 1 1.8 1.3L21 13v4"/><path d="M3 13h18"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg><span id="btn-car-action-label" class="vh-lbl" style="color:#fff"><span data-i18n="enter_summon_car">Enter / summon car</span></span>
                 </button>
             </div>
 
             <!-- 步行控制群 (跳躍 & 衝刺) -->
             <div id="foot-controls-cluster" class="flex items-end gap-3">
-                <button id="btn-foot-jump" type="button" aria-label="跳躍" class="touch-btn vh-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full" style="--acc: var(--vh-sun)">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M12 19V5M5 12l7-7 7 7"/></svg><span class="vh-lbl">跳躍</span>
+                <button id="btn-foot-jump" type="button" aria-label="Jump" data-i18n-aria-label="jump" class="touch-btn vh-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full" style="--acc: var(--vh-sun)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M12 19V5M5 12l7-7 7 7"/></svg><span class="vh-lbl"><span data-i18n="jump">Jump</span></span>
                 </button>
-                <button id="btn-foot-sprint" type="button" aria-label="跑步" class="touch-btn vh-btn w-20 h-20 sm:w-24 sm:h-24 rounded-full" style="--acc: var(--vh-pink)">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span class="vh-lbl">跑步</span>
+                <button id="btn-foot-sprint" type="button" aria-label="Sprint" data-i18n-aria-label="sprint" class="touch-btn vh-btn w-20 h-20 sm:w-24 sm:h-24 rounded-full" style="--acc: var(--vh-pink)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span class="vh-lbl"><span data-i18n="sprint">Sprint</span></span>
                 </button>
             </div>
 
             <!-- 駕駛控制群 (氮氣、手煞車、煞車/倒車、油門) -->
             <div id="drive-controls-cluster" class="hidden flex items-end gap-2 sm:gap-2.5">
                 <div id="drive-secondary">
-                    <button id="btn-drive-nitro" type="button" aria-label="氮氣" class="touch-btn vh-btn w-16 h-14 sm:w-20 sm:h-16 rounded-2xl" style="--acc: var(--vh-sky)">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M12 22c4 0 7-2.8 7-7 0-4.2-3.2-6-4.2-10-2 3-3 4-3.8 4 0-2-1-3.8-2-5-1 4-5 6-5 11 0 4.2 3.4 7 8 7z"/></svg><span class="vh-lbl">氮氣</span>
+                    <button id="btn-drive-nitro" type="button" aria-label="Nitro" data-i18n-aria-label="nitro" class="touch-btn vh-btn w-16 h-14 sm:w-20 sm:h-16 rounded-2xl" style="--acc: var(--vh-sky)">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="M12 22c4 0 7-2.8 7-7 0-4.2-3.2-6-4.2-10-2 3-3 4-3.8 4 0-2-1-3.8-2-5-1 4-5 6-5 11 0 4.2 3.4 7 8 7z"/></svg><span class="vh-lbl"><span data-i18n="nitro">Nitro</span></span>
                     </button>
-                    <button id="btn-drive-drift" type="button" aria-label="手煞車" class="touch-btn vh-btn w-16 h-14 sm:w-20 sm:h-16 rounded-2xl" style="--acc: var(--vh-sun)">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="9"/><path d="M10 16.5v-9h3a2.6 2.6 0 0 1 0 5.2h-3"/></svg><span class="vh-lbl">手煞車</span>
+                    <button id="btn-drive-drift" type="button" aria-label="Handbrake" data-i18n-aria-label="handbrake" class="touch-btn vh-btn w-16 h-14 sm:w-20 sm:h-16 rounded-2xl" style="--acc: var(--vh-sun)">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class=""><circle cx="12" cy="12" r="9"/><path d="M10 16.5v-9h3a2.6 2.6 0 0 1 0 5.2h-3"/></svg><span class="vh-lbl"><span data-i18n="handbrake">Handbrake</span></span>
                     </button>
                 </div>
-                <button id="btn-drive-brake" type="button" aria-label="煞車與倒車" class="touch-btn vh-btn w-16 h-24 sm:w-20 sm:h-28 rounded-2xl" style="--acc: var(--vh-rose)">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m6 9 6 6 6-6"/></svg><span class="vh-lbl">煞車</span><span class="text-[9px] text-slate-300">倒車</span>
+                <button id="btn-drive-brake" type="button" aria-label="Brake and reverse" data-i18n-aria-label="brake_and_reverse" class="touch-btn vh-btn w-16 h-24 sm:w-20 sm:h-28 rounded-2xl" style="--acc: var(--vh-rose)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m6 9 6 6 6-6"/></svg><span class="vh-lbl"><span data-i18n="brake">BRAKE</span></span><span class="text-[9px] text-slate-300"><span data-i18n="reverse">REVERSE</span></span>
                 </button>
-                <button id="btn-drive-gas" type="button" aria-label="油門" class="touch-btn vh-btn vh-gas w-20 h-32 sm:w-24 sm:h-36 rounded-3xl">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m6 15 6-6 6 6"/><path d="m6 20 6-6 6 6" opacity=".55"/></svg><span class="vh-lbl">油門</span>
+                <button id="btn-drive-gas" type="button" aria-label="GAS" data-i18n-aria-label="gas" class="touch-btn vh-btn vh-gas w-20 h-32 sm:w-24 sm:h-36 rounded-3xl">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class=""><path d="m6 15 6-6 6 6"/><path d="m6 20 6-6 6 6" opacity=".55"/></svg><span class="vh-lbl"><span data-i18n="gas">GAS</span></span>
                 </button>
             </div>
         </div>
@@ -675,10 +1377,10 @@
 
 
     <!-- ==================== PWA：安裝按鈕與 iPhone/iPad 提示 ==================== -->
-    <button id="pwa-install-btn" type="button" class="hidden fixed z-50 left-1/2 -translate-x-1/2 bottom-24 px-5 py-3 rounded-2xl font-vice font-black text-sm bg-gradient-to-r from-rose-600 via-sky-600 to-emerald-500 text-white shadow-xl border-2 border-white/80">📲 安裝遊戲到主畫面</button>
+    <button id="pwa-install-btn" type="button" class="hidden fixed z-50 left-1/2 -translate-x-1/2 bottom-24 px-5 py-3 rounded-2xl font-vice font-black text-sm bg-gradient-to-r from-rose-600 via-sky-600 to-emerald-500 text-white shadow-xl border-2 border-white/80"><span data-i18n="install_game">📲 Install game</span></button>
     <div id="pwa-ios-hint" class="hidden fixed z-50 inset-x-3 bottom-24 hud-glass rounded-2xl p-3 text-sm text-white border border-sky-400/60 text-center">
-        📲 要安裝成 App：點 Safari 下方的 <b>分享</b> 按鈕 → 選擇 <b>加入主畫面</b>
-        <button id="pwa-ios-close" type="button" class="ml-2 px-2 py-0.5 rounded-lg bg-white/15">知道了</button>
+        <span data-i18n="to_install_in_safari_tap">📲 To install: in Safari, tap</span> <b><span data-i18n="share">Share</span></b> <span data-i18n="then_choose">then choose</span> <b><span data-i18n="add_to_home_screen">Add to Home Screen</span></b>
+        <button id="pwa-ios-close" type="button" class="ml-2 px-2 py-0.5 rounded-lg bg-white/15"><span data-i18n="got_it">Got it</span></button>
     </div>
     <script>
     (function () {
@@ -691,7 +1393,8 @@
                 if (!hadController || reloaded) return;
                 reloaded = true;
                 var n = document.createElement('div');
-                n.textContent = '已下載新版本，重新載入中…';
+                n.dataset.i18n = 'update_downloaded_reloading';
+                n.textContent = tr('update_downloaded_reloading');
                 n.style.cssText = 'position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:9999;padding:8px 16px;border-radius:999px;background:rgba(2,6,23,.92);color:#67e8f9;font:700 13px system-ui,sans-serif;border:1px solid rgba(34,211,238,.6)';
                 document.body.appendChild(n);
                 setTimeout(function () { location.reload(); }, 900);
@@ -859,7 +1562,7 @@
         // 存檔：現金、已購買車款、引擎升級、完成的跳台、配送單數
         const SAVE = (() => {
             const base = { owned: [], jumps: {}, deliveries: 0, collectedCrates: [], rewardCooldowns: {} };
-            try { return Object.assign(base, JSON.parse(localStorage.getItem('vh_save') || '{}')); } catch (e) { return base; }
+            return Object.assign(base, VH_I18N.saved, { language: VH_I18N.language });
         })();
         if (!Array.isArray(SAVE.collectedCrates)) SAVE.collectedCrates = [];
         if (!SAVE.rewardCooldowns || typeof SAVE.rewardCooldowns !== 'object' || Array.isArray(SAVE.rewardCooldowns)) SAVE.rewardCooldowns = {};
@@ -870,7 +1573,7 @@
         function claimReward(key, seconds, amount, shared = false) {
             const remaining = Math.max(cooldownLeft(key), shared ? cooldownLeft('airborne') : 0);
             if (remaining) {
-                showBanner('獎金冷卻中', remaining + ' 秒後可再次獲得獎金');
+                showBanner(() => (tr('reward_on_cooldown')), () => (remaining + tr('s_until_the_next_reward')));
                 return 0;
             }
             SAVE.rewardCooldowns[key] = Date.now() + seconds * 1000;
@@ -1025,9 +1728,9 @@
                 this.init();
                 this.stationIndex = (this.stationIndex + 1) % this.stations.length;
                 const name = this.stations[this.stationIndex];
-                document.getElementById('hud-radio').textContent = name;
+                document.getElementById('hud-radio').textContent = name === 'OFF' ? tr('radio_off') : name;
                 document.getElementById('radio-dot').style.opacity = name === 'OFF' ? '0.2' : '1';
-                showBanner('📻 電台切換: ' + name, name === 'OFF' ? '已靜音' : '合成波音樂播放中');
+                showBanner(() => (tr('radio') + (name === 'OFF' ? tr('radio_off') : name)), () => (name === 'OFF' ? tr('muted') : tr('synthwave_playing')));
             }
 
             startSequencer() {
@@ -1086,16 +1789,26 @@
         window.addEventListener('pointerdown', () => AUDIO.init(), { passive: true });
         window.addEventListener('touchstart', () => AUDIO.init(), { passive: true });
 
+        let bannerText = null;
+        function renderBannerText() {
+            if (!bannerText) return;
+            for (let i = 0; i < 2; i++) {
+                let value = bannerText[i];
+                while (typeof value === 'function') value = value();
+                document.getElementById(i === 0 ? 'banner-title' : 'banner-sub').textContent = value || '';
+            }
+        }
         function showBanner(title, sub) {
             const b = document.getElementById('center-banner');
-            document.getElementById('banner-title').textContent = title;
-            document.getElementById('banner-sub').textContent = sub || '';
+            bannerText = [title, sub];
+            renderBannerText();
             b.classList.remove('opacity-0', '-translate-y-3');
             b.classList.add('opacity-100', 'translate-y-0');
             if (STATE.bannerTimer) clearTimeout(STATE.bannerTimer);
             STATE.bannerTimer = setTimeout(() => {
                 b.classList.remove('opacity-100', 'translate-y-0');
                 b.classList.add('opacity-0', '-translate-y-3');
+                bannerText = null;
             }, 2600);
         }
 
@@ -1255,7 +1968,7 @@
         // 五種物理天空與天氣預設 (連動 Sky 參數、PMREM 反射、霧氣顏色、海水與夜間發光窗戶)
         const SKY_PRESETS = [
             {
-                name: '邁阿密夕陽 (Miami Sunset)',
+                get name() { return tr('miami_sunset'); },
                 turbidity: 8.5,
                 rayleigh: 2.8,
                 mieCoefficient: 0.005,
@@ -1271,7 +1984,7 @@
                 nightWindows: 0.35
             },
             {
-                name: '晴朗正午 (Sunny Noon)',
+                get name() { return tr('sunny_noon'); },
                 turbidity: 2.2,
                 rayleigh: 1.15,
                 mieCoefficient: 0.003,
@@ -1287,7 +2000,7 @@
                 nightWindows: 0.0
             },
             {
-                name: '黃金黃昏 (Golden Dusk)',
+                get name() { return tr('golden_dusk'); },
                 turbidity: 10.0,
                 rayleigh: 3.4,
                 mieCoefficient: 0.008,
@@ -1303,7 +2016,7 @@
                 nightWindows: 0.85
             },
             {
-                name: '霓虹午夜 (Neon Night)',
+                get name() { return tr('neon_night'); },
                 turbidity: 1.2,
                 rayleigh: 0.18,
                 mieCoefficient: 0.002,
@@ -1319,7 +2032,7 @@
                 nightWindows: 1.0
             },
             {
-                name: '陰雨風暴 (Overcast Storm)',
+                get name() { return tr('overcast_storm'); },
                 turbidity: 18.0,
                 rayleigh: 0.55,
                 mieCoefficient: 0.025,
@@ -1456,14 +2169,14 @@
             }
             return DAY_KEYS[0].p;
         }
-        const SKY_SHORT = ['夕陽', '正午', '黃昏', '午夜', '風暴'];
+        const SKY_SHORT = ['sunset', 'noon', 'dusk', 'midnight', 'storm'];
         function updateSkyLabel() {
             const el = document.getElementById('pill-sky-label');
             if (!el) return;
             if (STATE.dayCycle) {
                 const h = Math.floor(STATE.timeOfDay), m = Math.floor((STATE.timeOfDay - h) * 60);
                 el.textContent = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
-            } else el.textContent = SKY_SHORT[STATE.skyPreset] || '天氣';
+            } else el.textContent = tr(SKY_SHORT[STATE.skyPreset] || 'weather');
         }
         function updateDayCycle(dt) {
             if (!STATE.dayCycle) return;
@@ -1618,7 +2331,7 @@
                 ULTRA: 'text-fuchsia-300 border-fuchsia-400/80'
             };
             const qLabel = document.getElementById('pill-quality-label');
-            if (qLabel) qLabel.textContent = STATE.quality;
+            if (qLabel) qLabel.textContent = qualityLabel(STATE.quality);
             btn.style.setProperty('--acc', { LOW: 'var(--vh-slate)', MED: 'var(--vh-sky)', HIGH: 'var(--vh-sun)', ULTRA: 'var(--vh-violet)' }[STATE.quality] || 'var(--vh-sun)');
             if (sunLight.shadow.map) {
                 sunLight.shadow.map.dispose();
@@ -1977,7 +2690,7 @@
         // 1) 平面曲線道路 (延伸海岸公路與城市斜向大道)
         const RIBBON_DEFS = [
             {
-                name: 'COASTAL HWY',
+                get name() { return tr('label_coastal_hwy'); },
                 half: 8.5,
                 lanes: 2,
                 ctrl: [
@@ -1988,13 +2701,13 @@
                 ]
             },
             {
-                name: 'VICE BROADWAY',
+                get name() { return tr('label_vice_broadway'); },
                 half: 9,
                 lanes: 4,
                 ctrl: [[-420, -600], [-330, -480], [-240, -360], [-181, -297], [-120, -240], [-59, -183], [0, -120], [55, -60], [110, 0]]
             },
             {
-                name: 'SUNSET DIAGONAL',
+                get name() { return tr('label_sunset_diagonal'); },
                 half: 9,
                 lanes: 4,
                 ctrl: [[-240, 480], [-180, 360], [-120, 240], [-59, 183], [0, 120], [55, 60], [110, 0]]
@@ -2186,14 +2899,14 @@
         }
         ROAD_NET.terrainRoads = [ROAD_NET.hillRoad];
         ROAD_NET.suburbRoads = [
-            buildTerrainRoad('SUBURB MAIN', [[-642, -240], [-720, -241], [-800, -244], [-880, -250], [-1000, -232], [-1120, -262], [-1250, -240], [-1400, -221]], 6.5, { startH: 0 }),
-            buildTerrainRoad('MAPLE AVE', [[-642, -480], [-760, -500], [-900, -470], [-1000, -420], [-1062, -332], [-1118, -268]], 6.5, { startH: 0 }),
-            buildTerrainRoad('HILLCREST LOOP', [[-1000, -238], [-1022, -120], [-1100, -20], [-1220, 40], [-1340, 0], [-1402, -100], [-1400, -222]], 6.5),
-            buildTerrainRoad('VALLEY LOOP', [[-1250, -246], [-1262, -380], [-1320, -520], [-1200, -650], [-1050, -628], [-1004, -428]], 6.5)
+            buildTerrainRoad(tr('road_suburb_main'), [[-642, -240], [-720, -241], [-800, -244], [-880, -250], [-1000, -232], [-1120, -262], [-1250, -240], [-1400, -221]], 6.5, { startH: 0 }),
+            buildTerrainRoad(tr('road_maple_ave'), [[-642, -480], [-760, -500], [-900, -470], [-1000, -420], [-1062, -332], [-1118, -268]], 6.5, { startH: 0 }),
+            buildTerrainRoad(tr('road_hillcrest_loop'), [[-1000, -238], [-1022, -120], [-1100, -20], [-1220, 40], [-1340, 0], [-1402, -100], [-1400, -222]], 6.5),
+            buildTerrainRoad(tr('road_valley_loop'), [[-1250, -246], [-1262, -380], [-1320, -520], [-1200, -650], [-1050, -628], [-1004, -428]], 6.5)
         ];
         // 第 -420、-600 大道北端原本是死路：接到奇利亞德盤山公路
-        buildTerrainRoad('CHILIAD LINK A', [[-420, 290], [-421, 330], [-420, 368]], 6.5, { startH: 0 });
-        buildTerrainRoad('CHILIAD LINK B', [[-600, 290], [-601, 340], [-600, 392]], 6.5, { startH: 0 });
+        buildTerrainRoad(tr('road_chiliad_link_a'), [[-420, 290], [-421, 330], [-420, 368]], 6.5, { startH: 0 });
+        buildTerrainRoad(tr('road_chiliad_link_b'), [[-600, 290], [-601, 340], [-600, 392]], 6.5, { startH: 0 });
 
         function roadHeightOn(tr, x, z) {
             const nr = nearestOnPolyline(x, z, tr.pts);
@@ -4580,7 +5293,7 @@
             sctx.fillStyle = '#0f172a'; sctx.fillRect(0, 0, 512, 128);
             sctx.strokeStyle = '#38bdf8'; sctx.lineWidth = 8; sctx.strokeRect(6, 6, 500, 116);
             sctx.fillStyle = '#fbbf24'; sctx.font = 'bold 42px Orbitron, sans-serif'; sctx.textAlign = 'center';
-            sctx.fillText('SANTA CRUZ BOARDWALK', 256, 56, 480);
+            sctx.fillText(tr('santa_cruz_boardwalk'), 256, 56, 480);
             sctx.fillStyle = '#f43f5e'; sctx.font = 'bold 28px Orbitron, sans-serif';
             sctx.fillText('★ GIANT DIPPER • ARCADE • RIDES ★', 256, 98, 480);
             const signTex = new THREE.CanvasTexture(signCanvas);
@@ -4841,13 +5554,13 @@
             // 10. 物理特技斜坡跳台
             // 每座都實測過：起跳、飛行、落地路徑上沒有建築、高架、橋墩
             const rampList = [
-                { id: 'DT', name: '市中心廣場跳台', x: -60, z: -15, rotY: 0, len: 18, h: 4.2 },
-                { id: 'AP1', name: '機場跑道跳台 1', x: -420, z: -215, rotY: Math.PI, len: 22, h: 5.2 },
-                { id: 'AP2', name: '機場跑道跳台 2', x: -420, z: -55, rotY: Math.PI, len: 22, h: 5.5 },
-                { id: 'AP3', name: '機場跑道跳台 3', x: -420, z: 100, rotY: Math.PI, len: 22, h: 5.2 },
-                { id: 'N0', name: '北區第 0 大道跳台', x: 0, z: 640, rotY: Math.PI, len: 18, h: 4.2 },
-                { id: 'M600', name: '中城 600 街跳台', x: -150, z: 600, rotY: -Math.PI / 2, len: 18, h: 4.0 },
-                { id: 'OT', name: '老城區 720 街跳台', x: -330, z: -720, rotY: -Math.PI / 2, len: 18, h: 4.0 }
+                { id: 'DT', get name() { return tr('downtown_plaza_ramp'); }, x: -60, z: -15, rotY: 0, len: 18, h: 4.2 },
+                { id: 'AP1', get name() { return tr('airport_runway_ramp_1'); }, x: -420, z: -215, rotY: Math.PI, len: 22, h: 5.2 },
+                { id: 'AP2', get name() { return tr('airport_runway_ramp_2'); }, x: -420, z: -55, rotY: Math.PI, len: 22, h: 5.5 },
+                { id: 'AP3', get name() { return tr('airport_runway_ramp_3'); }, x: -420, z: 100, rotY: Math.PI, len: 22, h: 5.2 },
+                { id: 'N0', get name() { return tr('north_0_avenue_ramp'); }, x: 0, z: 640, rotY: Math.PI, len: 18, h: 4.2 },
+                { id: 'M600', get name() { return tr('midtown_600_street_ramp'); }, x: -150, z: 600, rotY: -Math.PI / 2, len: 18, h: 4.0 },
+                { id: 'OT', get name() { return tr('old_town_720_street_ramp'); }, x: -330, z: -720, rotY: -Math.PI / 2, len: 18, h: 4.0 }
             ];
             const rampMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.6, metalness: 0.3 });
             const railMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
@@ -5289,7 +6002,7 @@
 
                             // 若是玩家駕駛車輛撞擊行人，觸發警方注意提示
                             if (STATE.mode === 'CAR' && STATE.currentVehicle && otherBody === STATE.currentVehicle.chassisBody) {
-                                showBanner('⚠️ 擦撞行人!', '物理碰撞衝擊: ' + Math.round(vehicleSpeed * 3.6) + ' km/h');
+                                showBanner(() => (tr('pedestrian_collision')), () => (tr('impact_speed') + Math.round(vehicleSpeed * 3.6) + ' km/h'));
                             }
                         }
                     });
@@ -5654,14 +6367,14 @@
         const CAR_BASE_URLS = ['./models/cars/', './models/cars/'];
         const CAR_MODELS = {
             porsche911: { file: 'porsche911.glb', label: 'Porsche 911 Carrera 4S', price: 25000, power: 1.14, vmax: 295, paint: /^(coat|paint)$/i, glass: /^glass$/i, tire: /^rubber$/i },
-            lexuslc500: { file: 'lexuslc500.glb', label: 'Lexus LC 500 Convertible', price: 18000, power: 1.04, vmax: 270, paint: /Paint_Material/i, glass: /Window_Material/i, tire: null },
-            fordcop: { file: 'fordgt500cop.glb', label: 'Ford Shelby GT500 Patrol', power: 1.08, vmax: 265, paint: null, glass: /^windwos$/i, tire: /^tire$/i, copLights: /^CopLights$/i },
+            lexuslc500: { file: 'lexuslc500.glb', get label() { return tr('label_lexus_lc_500_convertible'); }, price: 18000, power: 1.04, vmax: 270, paint: /Paint_Material/i, glass: /Window_Material/i, tire: null },
+            fordcop: { file: 'fordgt500cop.glb', get label() { return tr('label_ford_shelby_gt500_patrol'); }, power: 1.08, vmax: 265, paint: null, glass: /^windwos$/i, tire: /^tire$/i, copLights: /^CopLights$/i },
             // Kenney Car Kit (CC0)：卡通比例偏寬偏短，依軸向縮放成真實尺寸 (輪子 y、z 同比例才會是圓的)
             kenney: { file: 'kenney_traffic.glb', scale: [1.25, 1.2, 1.75] }
         };
         const KENNEY_TYPES = [
-            ['sedan', 6, '轎車'], ['suv', 4, '休旅車'], ['hatchback-sports', 3, '掀背車'], ['taxi', 3, '計程車'], ['van', 3, '廂型車'],
-            ['sedan-sports', 2, '跑車'], ['suv-luxury', 2, '豪華休旅'], ['truck', 2, '皮卡'], ['delivery', 2, '貨車'], ['garbage-truck', 1, '垃圾車'], ['ambulance', 1, '救護車']
+            ['sedan', 6, tr('sedan')], ['suv', 4, tr('suv')], ['hatchback-sports', 3, tr('hatchback')], ['taxi', 3, tr('taxi')], ['van', 3, tr('van')],
+            ['sedan-sports', 2, tr('sports_car')], ['suv-luxury', 2, tr('luxury_suv')], ['truck', 2, tr('pickup')], ['delivery', 2, tr('delivery_truck')], ['garbage-truck', 1, tr('garbage_truck')], ['ambulance', 1, tr('ambulance')]
         ];
         function pickKenneyType(k) {
             const tot = KENNEY_TYPES.reduce((a, t) => a + t[1], 0);
@@ -6038,7 +6751,7 @@
                 this.bodyPivot.scale.set(r(), r(), r());
                 if (STATE.mode === 'CAR' && STATE.currentVehicle === this) {
                     AUDIO.playSFX('crash');
-                    showBanner('💥 車身受損 ' + Math.round(this.damage * 100) + '%', '到車庫換烤漆即可修復');
+                    showBanner(() => (tr('vehicle_damage') + Math.round(this.damage * 100) + '%'), () => (tr('repaint_in_the_garage_to_repair')));
                 }
             }
 
@@ -6515,7 +7228,7 @@
                             const bonus = claimReward('airborne', 90, Math.min(400, Math.round(this.airTime * 150)));
                             if (bonus) {
                                 AUDIO.playSFX('stunt');
-                                showBanner('🚀 飛躍特技成功!', '+$' + bonus + ' 滯空獎金');
+                                showBanner(() => (tr('airtime_stunt_landed')), () => ('+$' + bonus + tr('airtime_bonus')));
                             }
                         }
                         this.airTime = 0;
@@ -6626,7 +7339,7 @@
 
             for (let i = 0; i < 2; i++) {
                 const cop = new RealisticRaycastVehicle({
-                    name: 'VCPD Unit #' + (i + 1),
+                    name: tr('vcpd_unit') + (i + 1),
                     archetype: 'POLICE',
                     model: 'fordcop',
                     color: 0x0f172a,
@@ -6903,7 +7616,7 @@
                     addCash(400);
                     persistSave();
                     AUDIO.playSFX('stunt');
-                    showBanner('💎 獲得補給箱!', '+$400 現金獎勵');
+                    showBanner(() => (tr('crate_collected')), () => (tr('400_cash_reward')));
                 }
             });
 
@@ -6919,26 +7632,26 @@
 
                 if (minCopDist < 9.5 && activeSpd < 2.2) {
                     STATE.bustedProgress = Math.min(100, STATE.bustedProgress + dt * 35);
-                    document.getElementById('pursuit-status-label').textContent = '⚠️ 逮捕進度: ' + Math.round(STATE.bustedProgress) + '%';
+                    setPursuitText('arrest_progress', Math.round(STATE.bustedProgress));
                     document.getElementById('pursuit-meter-bar').style.width = STATE.bustedProgress + '%';
                     if (STATE.bustedProgress >= 100) {
                         addCash(-300);
                         togglePoliceChase(true);
-                        showBanner('🚔 遭警方逮捕!', '罰款 $300');
+                        showBanner(() => (tr('busted')), () => (tr('300_fine')));
                     }
                 } else if (minCopDist > 105) {
                     STATE.evadeTimer += dt;
                     const pct = Math.min(100, (STATE.evadeTimer / 8) * 100);
-                    document.getElementById('pursuit-status-label').textContent = '🕵️ 正在擺脫警方...';
+                    setPursuitText('evading_police');
                     document.getElementById('pursuit-meter-bar').style.width = pct + '%';
                     if (STATE.evadeTimer >= 8) {
                         const reward = claimReward('police', 600, 600);
                         togglePoliceChase(true);
-                        if (reward) showBanner('🏆 成功擺脫追捕!', '+$600 逃脫獎金');
+                        if (reward) showBanner(() => (tr('police_escaped')), () => (tr('600_escape_bonus')));
                     }
                 } else {
                     STATE.bustedProgress = Math.max(0, STATE.bustedProgress - dt * 20);
-                    document.getElementById('pursuit-status-label').textContent = '🚨 警車距離 (' + Math.round(minCopDist) + 'm)';
+                    setPursuitText('police_distance', Math.round(minCopDist));
                     document.getElementById('pursuit-meter-bar').style.width = STATE.bustedProgress + '%';
                 }
             }
@@ -6956,7 +7669,7 @@
                     c.chassisBody.position.set(-600, 1, -400);
                     c.chassisBody.velocity.set(0, 0, 0);
                 });
-                if (forceClear !== true) showBanner('🚓 通緝解除', '警方已停止追捕');
+                if (forceClear !== true) showBanner(() => (tr('wanted_level_cleared')), () => (tr('police_pursuit_ended')));
             } else {
                 STATE.wantedStars = Math.min(5, STATE.wantedStars + 2);
                 document.getElementById('wanted-badge').classList.remove('hidden');
@@ -6968,7 +7681,7 @@
                     c.chassisBody.velocity.set(0, 0, 0);
                     c.chassisBody.angularVelocity.set(0, 0, 0);
                 });
-                showBanner('🚨 通緝等級 ★' + STATE.wantedStars, 'VCPD 攔截警車已出動!');
+                showBanner(() => (tr('wanted_level') + STATE.wantedStars), () => (tr('vcpd_interceptors_deployed')));
             }
             document.querySelectorAll('#hud-stars .star').forEach((s, idx) => {
                 s.className = idx < STATE.wantedStars ? 'star text-rose-500' : 'star text-white/25';
@@ -7008,7 +7721,7 @@
                 if (!car) {
                     const pos = getActivePosition();
                     car = new RealisticRaycastVehicle({
-                        name: STATE.selectedModel ? CAR_MODELS[STATE.selectedModel].label : 'Custom ' + STATE.selectedArchetype,
+                        name: STATE.selectedModel ? CAR_MODELS[STATE.selectedModel].label : tr('label_custom') + STATE.selectedArchetype,
                         archetype: STATE.selectedArchetype,
                         model: STATE.selectedModel || undefined,
                         color: STATE.selectedPaint,
@@ -7026,7 +7739,7 @@
                 PLAYER.body.sleep();
                 syncControlUI();
                 AUDIO.playSFX('checkpoint');
-                showBanner('🚘 正在駕駛: ' + car.name.toUpperCase(), '0-100km/h 4.0s • 6速自排變速箱');
+                showBanner(() => (tr('driving') + car.name.toUpperCase()), () => (tr('0_100_km_h_in_4_0_s_6_speed_automatic')));
             } else {
                 const car = STATE.currentVehicle;
                 STATE.mode = 'FOOT';
@@ -7039,6 +7752,71 @@
                 STATE.currentVehicle = null;
                 syncControlUI();
             }
+        }
+
+        let refreshGarageLabels = () => {};
+        let pursuitTextKey = 'vcpd_pursuit', pursuitTextValue = 0;
+        function setPursuitText(key, value = 0) {
+            pursuitTextKey = key; pursuitTextValue = value;
+            document.getElementById('pursuit-status-label').textContent = tr(key) +
+                (key === 'arrest_progress' ? value + '%' : key === 'police_distance' ? value + 'm)' : '');
+        }
+        function missionLabel(mode) {
+            return tr(mode === 'RACE' ? 'street_race' : mode === 'DRIFT' ? 'drift_challenge' : mode === 'STUNT' ? 'airport_stunt' : 'delivery');
+        }
+        function refreshGpuLabel() {
+            document.getElementById('gpu-info').textContent = tr('gpu') + (GPU_NAME || tr('unknown')) + tr('quality_profile') + deviceLabel(PROFILE);
+        }
+        function qualityLabel(value) { return tr('quality_' + value); }
+        function deviceLabel(value) { return tr('device_' + value.toUpperCase()); }
+        function qualityDescription(q) {
+            const parts = [q.shadow + tr('shadows')];
+            if (q.bloom) parts.push('Bloom');
+            if (q.ssao) parts.push('SSAO');
+            if (q.smaa) parts.push('SMAA');
+            if (!q.bloom && !q.ssao) parts.push(tr('post_processing_off'));
+            return parts.join(' + ');
+        }
+        function refreshMissionLabels() {
+            if (DELIVERY.job) {
+                const job = DELIVERY.job, sec = Math.abs(Math.ceil(job.left));
+                document.getElementById('mission-title').textContent = tr('delivery');
+                document.getElementById('mission-timer').textContent = (job.left < 0 ? tr('late') : '') + Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+                const p = getActivePosition(), dist = Math.hypot(p.x - job.dest.x, p.z - job.dest.z);
+                document.getElementById('mission-progress').textContent = dist < 10 && STATE.mode !== 'CAR' ? tr('enter_a_vehicle_to_unload') :
+                    (dist > 1000 ? (dist / 1000).toFixed(2) + ' km' : Math.round(dist) + ' m') + ' • $' + (job.left < 0 ? Math.round(job.reward * 0.5 / 10) * 10 : job.reward).toLocaleString();
+            } else if (MISSION.active) {
+                document.getElementById('mission-title').textContent = missionLabel(MISSION.mode);
+                if (MISSION.mode === 'DRIFT') document.getElementById('mission-progress').textContent = Math.round(MISSION.score) + ' / 2000' + tr('label_pts');
+            }
+        }
+        function changeLanguage(language) {
+            if (!VH_I18N.setLanguage(language)) return;
+            SAVE.language = VH_I18N.language;
+            persistSave();
+            for (const row of KENNEY_TYPES) row[2] = VH_I18N.name(row[2]);
+            for (const v of WORLD.vehicles) v.name = VH_I18N.name(v.name);
+            for (const jump of STUNT.jumps) jump.name = VH_I18N.name(jump.name);
+            for (const road of ROAD_NET.ribbons) road.name = VH_I18N.name(road.name);
+            for (const road of ROAD_NET.terrainRoads) if (road.name) road.name = VH_I18N.name(road.name);
+            if (DELIVERY.job) DELIVERY.job.dest.name = VH_I18N.name(DELIVERY.job.dest.name);
+            if (STATE.waypoint) STATE.waypoint.name = VH_I18N.name(STATE.waypoint.name);
+            for (const el of document.querySelectorAll('[data-map-location]')) {
+                const location = FAST_TRAVEL.find(ft => ft.id === el.dataset.mapLocation);
+                if (location) el.textContent = location.name;
+            }
+            if (WMAP.sel) {
+                const blocked = WMAP.travelBlocked && DELIVERY.job;
+                WMAP.sel.name = VH_I18N.name(WMAP.sel.name); wmSelect(WMAP.sel);
+                if (blocked) { WMAP.travelBlocked = true; document.getElementById('wm-sel-sub').textContent = tr('fast_travel_blocked_complete_your_delivery_first'); }
+            }
+            else if (WMAP.open) drawWorldMap();
+            refreshGarageLabels(); refreshGpuLabel(); updateSkyLabel();
+            document.getElementById('pill-quality-label').textContent = qualityLabel(STATE.quality);
+            renderDrivingHUD(); refreshMissionLabels(); setPursuitText(pursuitTextKey, pursuitTextValue);
+            const radio = AUDIO.stations[AUDIO.stationIndex];
+            document.getElementById('hud-radio').textContent = radio === 'OFF' ? tr('radio_off') : radio;
+            renderBannerText();
         }
 
         const HUB_PANELS = ['world-map', 'missions-modal', 'garage-modal', 'hub-world', 'settings-modal'];
@@ -7108,19 +7886,19 @@
                     MISSION.checkpoints.push({ x: q.x, z: q.z });
                 }
                 MISSION.timer = 115;
-                showBanner('🏁 街頭競速開始!', '沿海岸曲線公路依序通過 8 個檢查點!');
+                showBanner(() => (tr('street_race_started')), () => (tr('pass_all_8_checkpoints_along_the_coastal_road')));
             } else if (mode === 'DRIFT') {
                 MISSION.checkpoints = [];
-                showBanner('💨 甩尾積分挑戰!', '按住手煞車過彎累積 2,000 分!');
+                showBanner(() => (tr('drift_challenge')), () => (tr('use_the_handbrake_in_corners_to_score_2_000_points')));
             } else if (mode === 'STUNT') {
                 teleportTo(-420, -345, 0);
                 MISSION.checkpoints = [
                     { x: -420, z: -215 }, { x: -420, z: -55 }, { x: -420, z: 100 }
                 ];
-                showBanner('🚀 機場飛躍挑戰!', '衝上 3 座跑道大型跳台!');
+                showBanner(() => (tr('airport_stunt_challenge')), () => (tr('hit_the_3_large_runway_ramps')));
             }
             document.getElementById('mission-panel').classList.remove('hidden');
-            document.getElementById('mission-title').textContent = mode;
+            document.getElementById('mission-title').textContent = missionLabel(mode);
             updateMissionVisual();
         }
 
@@ -7144,7 +7922,7 @@
             if (MISSION.marker && MISSION.marker.visible) MISSION.marker.rotation.y += dt * 2.5;
 
             if (MISSION.mode === 'DRIFT') {
-                document.getElementById('mission-progress').textContent = Math.round(MISSION.score) + ' / 2000 PTS';
+                document.getElementById('mission-progress').textContent = Math.round(MISSION.score) + ' / 2000' + tr('label_pts');
                 if (MISSION.score >= 2000) finishMission(1200);
             } else {
                 const pos = getActivePosition();
@@ -7163,7 +7941,7 @@
                 MISSION.active = false;
                 if (MISSION.marker) MISSION.marker.visible = false;
                 document.getElementById('mission-panel').classList.add('hidden');
-                showBanner('⏱️ 時間結束!', '點擊「🎯 任務」再次挑戰');
+                showBanner(() => (tr('time_is_up')), () => (tr('open_missions_to_try_again')));
             }
         }
 
@@ -7174,7 +7952,7 @@
             document.getElementById('mission-panel').classList.add('hidden');
             const paid = claimReward('mission-' + MISSION.mode, 300, reward);
             AUDIO.playSFX('stunt');
-            if (paid) showBanner('🏆 任務完成!', '+$' + paid.toLocaleString() + ' 獎金');
+            if (paid) showBanner(() => (tr('mission_complete')), () => ('+$' + paid.toLocaleString() + tr('reward')));
         }
 
         function teleportTo(x, z, heading = 0, y = null) {
@@ -7389,6 +8167,11 @@
             );
             sunLight.target.updateMatrixWorld();
 
+            renderDrivingHUD();
+        }
+
+        function renderDrivingHUD() {
+            const pos = getActivePosition(), spd = getActiveSpeed();
             // 更新 HUD 時速、6 速檔位與 RPM 轉速表
             const carLabel = document.getElementById('btn-car-action-label');
             if (STATE.mode === 'FOOT') {
@@ -7399,12 +8182,12 @@
                     if (d < minD) { minD = d; nearest = v; }
                 }
                 STATE.nearestVehicle = nearest;
-                carLabel.textContent = nearest ? ('上車: ' + nearest.name) : '召喚並駕駛跑車';
+                carLabel.textContent = nearest ? (tr('enter') + nearest.name) : tr('summon_sports_car');
                 document.getElementById('hud-speed').textContent = Math.round(spd * 3.6);
-                document.getElementById('hud-gear').textContent = 'FOOT';
+                document.getElementById('hud-gear').textContent = tr('label_foot');
             } else {
                 const car = STATE.currentVehicle;
-                carLabel.textContent = '下車步巡';
+                carLabel.textContent = tr('exit_vehicle');
                 const kmh = Math.round(spd * 3.6);
                 document.getElementById('hud-speed').textContent = kmh;
                 const gearStr = car.currentGear === -1 ? 'R' : (kmh < 1 ? 'N' : ('G' + car.currentGear));
@@ -7414,21 +8197,22 @@
                 document.getElementById('hud-nitro-bar').style.width = car.nitro + '%';
             }
 
-            let zone = 'MIDTOWN';
+            let zone = tr('midtown');
             const hlz = ROAD_NET.hill, sbz = ROAD_NET.suburb;
             const onElev = pos.y > 6 && [ROAD_NET.ring, ...ROAD_NET.spurs].some(r => nearestOnPolyline(pos.x, pos.z, r.pts).d < r.half + 2);
-            if (onElev) zone = 'RING EXPRESSWAY';
-            else if (pos.x > hlz.x0 && pos.x < hlz.x1 && pos.z > hlz.z0 && pos.z < hlz.z1) zone = 'MT. CHILIAD';
-            else if (pos.x > sbz.x0 && pos.x < sbz.x1 && pos.z > sbz.z0 && pos.z < sbz.z1) zone = 'VICE SUBURBS';
-            else if (pos.z < -420 && pos.x > -650 && pos.x < 100) zone = 'OLD TOWN';
-            else if (Math.abs(pos.z) <= 330 && pos.x > -250 && pos.x < 90) zone = 'DOWNTOWN CBD';
-            else if (Math.hypot(pos.x - ROAD_NET.roundabouts[0].x, pos.z - ROAD_NET.roundabouts[0].z) < 40) zone = 'VICE CIRCLE';
-            else if (pos.x > 235 && pos.z > 240) zone = 'STARLIGHT MARINA';
-            else if (pos.x > 235) zone = 'SANTA CRUZ BOARDWALK';
-            else if (pos.x > 80) zone = 'OCEAN DRIVE';
-            else if (pos.x < -360 && Math.abs(pos.z) < 260) zone = 'STUNT AIRPORT';
+            if (onElev) zone = tr('ring_expressway');
+            else if (pos.x > hlz.x0 && pos.x < hlz.x1 && pos.z > hlz.z0 && pos.z < hlz.z1) zone = tr('mount_chiliad');
+            else if (pos.x > sbz.x0 && pos.x < sbz.x1 && pos.z > sbz.z0 && pos.z < sbz.z1) zone = tr('suburbs');
+            else if (pos.z < -420 && pos.x > -650 && pos.x < 100) zone = tr('old_town');
+            else if (Math.abs(pos.z) <= 330 && pos.x > -250 && pos.x < 90) zone = tr('downtown_cbd');
+            else if (Math.hypot(pos.x - ROAD_NET.roundabouts[0].x, pos.z - ROAD_NET.roundabouts[0].z) < 40) zone = tr('vice_circle');
+            else if (pos.x > 235 && pos.z > 240) zone = tr('starlight_marina');
+            else if (pos.x > 235) zone = tr('santa_cruz_boardwalk');
+            else if (pos.x > 80) zone = tr('ocean_drive');
+            else if (pos.x < -360 && Math.abs(pos.z) < 260) zone = tr('stunt_airport');
             document.getElementById('radar-zone').textContent = zone;
         }
+
 
 
         // ==================== 賺錢玩法：配送工作 (配送站接單 → 地圖隨機地點送貨) 與每日特技跳台 ====================
@@ -7487,8 +8271,7 @@
                 persistSave();
                 AUDIO.playSFX('stunt');
                 const done = STUNT.jumps.filter(j => SAVE.jumps[j.id]).length;
-                if (reward) showBanner(first ? '🏆 新跳台完成! +$' + reward.toLocaleString() : '🚀 特技飛越 +$' + reward.toLocaleString(),
-                    a.j.name + ' • 飛行 ' + Math.round(dist) + ' m • 滯空 ' + a.air.toFixed(1) + ' s • 已完成 ' + done + '/' + STUNT.jumps.length + ' 座');
+                if (reward) showBanner(() => (first ? tr('first_ramp_clear') + reward.toLocaleString() : tr('stunt_jump') + reward.toLocaleString()), () => (a.j.name + tr('distance') + Math.round(dist) + tr('m_airtime') + a.air.toFixed(1) + tr('s_completed') + done + '/' + STUNT.jumps.length + tr('ramps')));
                 STUNT.active = null;
             } else if (a.t > 9 || (grounded && a.t > 1.0 && a.air < 0.3)) {
                 STUNT.active = null;
@@ -7498,12 +8281,12 @@
         // ---------- 配送工作 ----------
         const DELIVERY = {
             depots: [
-                { id: 'PORT', name: '碼頭貨運站', x: 236, z: -40 },
-                { id: 'CBD', name: '市中心物流中心', x: -120, z: 60 },
-                { id: 'OLD', name: '老城區郵局', x: -120, z: -660 },
-                { id: 'AIR', name: '機場貨運站', x: -480, z: -240 },
-                { id: 'SUB', name: '郊區倉庫', x: -900, z: -245 },
-                { id: 'NORTH', name: '北區倉庫', x: 60, z: 720 }
+                { id: 'PORT', get name() { return tr('port_freight_depot'); }, x: 236, z: -40 },
+                { id: 'CBD', get name() { return tr('downtown_logistics'); }, x: -120, z: 60 },
+                { id: 'OLD', get name() { return tr('old_town_post_office'); }, x: -120, z: -660 },
+                { id: 'AIR', get name() { return tr('airport_cargo_depot'); }, x: -480, z: -240 },
+                { id: 'SUB', get name() { return tr('suburban_warehouse'); }, x: -900, z: -245 },
+                { id: 'NORTH', get name() { return tr('north_warehouse'); }, x: 60, z: 720 }
             ],
             job: null,
             cooldown: 0
@@ -7541,7 +8324,7 @@
                 const d = Math.hypot(s.x - from.x, s.z - from.z);
                 if (d < 320 || d > 1500) continue;
                 if (DELIVERY.depots.some(dp => Math.hypot(dp.x - s.x, dp.z - s.z) < 60)) continue;
-                return { x: s.x, z: s.z, y: terrainHeight(s.x, s.z), name: districtName(s.x, s.z) + ' • ' + (s.name || '道路'), dist: d };
+                return { x: s.x, z: s.z, y: terrainHeight(s.x, s.z), name: districtName(s.x, s.z) + ' • ' + (s.name || tr('road')), dist: d };
             }
             return null;
         }
@@ -7557,24 +8340,24 @@
             DELIVERY.beam.visible = DELIVERY.pad.visible = true;
             if (STATE.waypoint) clearWaypoint();
             document.getElementById('mission-panel').classList.remove('hidden');
-            document.getElementById('mission-title').textContent = '📦 配送';
+            document.getElementById('mission-title').textContent = tr('delivery');
             AUDIO.playSFX('checkpoint');
-            showBanner('📦 接到配送訂單! 報酬 $' + reward.toLocaleString(), '送到 ' + dest.name + ' (' + (dest.dist / 1000).toFixed(1) + ' km)，時限 ' + Math.floor(limit / 60) + ':' + String(limit % 60).padStart(2, '0') + '，到綠色光柱停車卸貨');
+            showBanner(() => (tr('delivery_accepted_reward') + reward.toLocaleString()), () => (tr('deliver_to') + dest.name + ' (' + (dest.dist / 1000).toFixed(1) + tr('km_time_limit') + Math.floor(limit / 60) + ':' + String(limit % 60).padStart(2, '0') + tr('stop_at_the_green_beam_to_unload')));
         }
         function endDeliveryJob(msg) {
             DELIVERY.job = null;
             DELIVERY.cooldown = 4;
             DELIVERY.beam.visible = DELIVERY.pad.visible = false;
             if (!MISSION.active) document.getElementById('mission-panel').classList.add('hidden');
-            if (msg) showBanner(msg[0], msg[1]);
+            if (msg) showBanner(() => (msg[0]), () => (msg[1]));
         }
         function goToNearestDepot() {
             const pos = getActivePosition();
             const d = nearestDepot(pos.x, pos.z);
             closeModals();
-            if (DELIVERY.job) { showBanner('📦 配送進行中', '先把貨送到 ' + DELIVERY.job.dest.name); return; }
+            if (DELIVERY.job) { const dest = DELIVERY.job.dest; showBanner(() => (tr('delivery_in_progress')), () => (tr('first_deliver_to') + VH_I18N.name(dest.name))); return; }
             setWaypoint(d.x, d.z, '📦 ' + d.name);
-            showBanner('📦 前往 ' + d.name + ' 接單', '開車進入黃色圓圈就會接到訂單 (地圖上的 📦 都是配送站)');
+            showBanner(() => (tr('go_to') + d.name + tr('to_collect_a_job')), () => (tr('drive_into_a_yellow_circle_to_accept_a_job_on_the_map')));
         }
         function updateDelivery(dt) {
             const t = STATE.time;
@@ -7596,19 +8379,19 @@
             DELIVERY.pad.material.opacity = 0.35 + Math.sin(t * 5) * 0.12;
             const late = job.left < 0;
             const sec = Math.abs(Math.ceil(job.left));
-            document.getElementById('mission-timer').textContent = (late ? '逾時 +' : '') + Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+            document.getElementById('mission-timer').textContent = (late ? tr('late') : '') + Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
             document.getElementById('mission-progress').textContent = (dist > 1000 ? (dist / 1000).toFixed(2) + ' km' : Math.round(dist) + ' m') + ' • $' + (late ? Math.round(job.reward * 0.5 / 10) * 10 : job.reward).toLocaleString();
             if (dist < 10 && inCar && speed < 35) {
-                let pay = job.reward, note = '準時送達';
-                if (late) { pay = Math.round(job.reward * 0.5 / 10) * 10; note = '逾時送達 (報酬減半)'; }
-                else if (job.left > job.limit * 0.35) { pay = Math.round(job.reward * 1.2 / 10) * 10; note = '超快送達 +20% 獎金'; }
+                let pay = job.reward, note = tr('delivered_on_time');
+                if (late) { pay = Math.round(job.reward * 0.5 / 10) * 10; note = tr('late_delivery_half_pay'); }
+                else if (job.left > job.limit * 0.35) { pay = Math.round(job.reward * 1.2 / 10) * 10; note = tr('early_delivery_20_bonus'); }
                 addCash(pay);
                 SAVE.deliveries = (SAVE.deliveries || 0) + 1;
                 persistSave();
                 AUDIO.playSFX('stunt');
-                endDeliveryJob(['📦 配送完成! +$' + pay.toLocaleString(), note + ' • 累計 ' + SAVE.deliveries + ' 單 • 回任一 📦 配送站接下一單']);
+                endDeliveryJob([() => (tr('delivery_complete') + pay.toLocaleString()), () => (VH_I18N.name(note) + tr('total') + SAVE.deliveries + tr('deliveries_visit_any_depot_for_another_job'))]);
             } else if (dist < 10 && !inCar) {
-                document.getElementById('mission-progress').textContent = '上車才能卸貨';
+                document.getElementById('mission-progress').textContent = tr('enter_a_vehicle_to_unload');
             }
         }
         // 雷達與世界地圖上的配送站、目的地、特技跳台圖示
@@ -7810,16 +8593,16 @@
         // ==================== 世界地圖、快速穿梭與導航點 ====================
         // 快速穿梭地點 (傳送按鈕與世界地圖共用)；y 只在需要時給 (山頂、高架)
         const FAST_TRAVEL = [
-            { id: 'OCEAN', name: '海濱大道', icon: '🌴', x: 110, z: 20, h: 0 },
-            { id: 'PIER', name: '聖塔克魯茲海濱樂園', icon: '🎢', x: 242, z: 0, h: 0 },
-            { id: 'DOWNTOWN', name: '市中心 CBD', icon: '🏙️', x: -60, z: 0, h: 0 },
-            { id: 'OLDTOWN', name: '老城區', icon: '🏛️', x: -120, z: -540, h: 0 },
-            { id: 'SUBURBS', name: '郊區', icon: '🏡', x: -1060, z: -238, h: -Math.PI / 2 },
-            { id: 'RING', name: '環狀高架', icon: '🛣️', x: 104.8, z: -100, h: 0, y: () => ROAD_NET.elevH + 1.8 },
-            { id: 'CHILIAD', name: '奇利亞德山頂', icon: '⛰️', x: -605, z: 555, h: THREE.MathUtils.degToRad(145), y: () => terrainHeight(-605, 555) + 1.8 },
-            { id: 'MARINA', name: '遊艇碼頭', icon: '🛥️', x: 220, z: 340, h: 0 },
-            { id: 'AIRPORT', name: '特技機場', icon: '✈️', x: -420, z: -200, h: 0 },
-            { id: 'CIRCLE', name: 'Vice 圓環', icon: '⭕', x: -240, z: -60, h: Math.PI }
+            { id: 'OCEAN', get name() { return tr('ocean_drive'); }, icon: '🌴', x: 110, z: 20, h: 0 },
+            { id: 'PIER', get name() { return tr('santa_cruz_boardwalk'); }, icon: '🎢', x: 242, z: 0, h: 0 },
+            { id: 'DOWNTOWN', get name() { return tr('downtown_cbd'); }, icon: '🏙️', x: -60, z: 0, h: 0 },
+            { id: 'OLDTOWN', get name() { return tr('old_town'); }, icon: '🏛️', x: -120, z: -540, h: 0 },
+            { id: 'SUBURBS', get name() { return tr('suburbs'); }, icon: '🏡', x: -1060, z: -238, h: -Math.PI / 2 },
+            { id: 'RING', get name() { return tr('ring_expressway'); }, icon: '🛣️', x: 104.8, z: -100, h: 0, y: () => ROAD_NET.elevH + 1.8 },
+            { id: 'CHILIAD', get name() { return tr('mount_chiliad_summit'); }, icon: '⛰️', x: -605, z: 555, h: THREE.MathUtils.degToRad(145), y: () => terrainHeight(-605, 555) + 1.8 },
+            { id: 'MARINA', get name() { return tr('starlight_marina'); }, icon: '🛥️', x: 220, z: 340, h: 0 },
+            { id: 'AIRPORT', get name() { return tr('stunt_airport'); }, icon: '✈️', x: -420, z: -200, h: 0 },
+            { id: 'CIRCLE', get name() { return tr('vice_circle'); }, icon: '⭕', x: -240, z: -60, h: Math.PI }
         ];
         const WMAP = { open: false, cx: -300, cz: -100, scale: 0.35, sel: null, pointers: new Map(), dragged: false, pinch: 0, last: null };
         STATE.waypoint = null;
@@ -7834,28 +8617,28 @@
             ROAD_NET.avenuesX.forEach(ax => {
                 const zMax = ax < -340 ? ROAD_NET.hillAveZ : ROAD_NET.avenueZ;
                 const cz = THREE.MathUtils.clamp(z, -ROAD_NET.avenueZ + 10, zMax - 10);
-                consider(ax + 5, cz, 0, 1, undefined, '大道');
+                consider(ax + 5, cz, 0, 1, undefined, tr('avenue'));
             });
             ROAD_NET.crossZ.forEach(cz => {
                 const x0 = cz >= 360 ? -340 : ROAD_NET.crossX0;
                 const cx = THREE.MathUtils.clamp(x, x0 + 10, ROAD_NET.crossX1 - 10);
-                consider(cx, cz - 5, 1, 0, undefined, '街道');
+                consider(cx, cz - 5, 1, 0, undefined, tr('street'));
             });
             [...ROAD_NET.ribbons, ...ROAD_NET.terrainRoads].forEach(r => {
-                for (let i = 0; i < r.pts.length; i += 2) { const p = r.pts[i]; consider(p.x, p.z, p.tx, p.tz, undefined, r.name || '道路'); }
+                for (let i = 0; i < r.pts.length; i += 2) { const p = r.pts[i]; consider(p.x, p.z, p.tx, p.tz, undefined, r.name || tr('road')); }
             });
             return best && bd < 260 * 260 ? best : null;
         }
         function districtName(x, z) {
             const S = ROAD_NET.suburb, hl = ROAD_NET.hill;
-            if (x > hl.x0 && x < hl.x1 && z > hl.z0 && z < hl.z1) return '奇利亞德山';
-            if (x > S.x0 && x < S.x1 && z > S.z0 && z < S.z1) return '郊區';
-            if (x > 235) return z > 240 ? '遊艇碼頭' : '海濱樂園';
-            if (x > 80) return '海濱大道';
-            if (z < -420) return '老城區';
-            if (Math.abs(z) <= 330 && x > -250 && x < 90) return '市中心 CBD';
-            if (x < -360 && Math.abs(z) < 260) return '特技機場';
-            return '中城';
+            if (x > hl.x0 && x < hl.x1 && z > hl.z0 && z < hl.z1) return tr('mount_chiliad');
+            if (x > S.x0 && x < S.x1 && z > S.z0 && z < S.z1) return tr('suburbs');
+            if (x > 235) return z > 240 ? tr('starlight_marina') : tr('boardwalk');
+            if (x > 80) return tr('ocean_drive');
+            if (z < -420) return tr('old_town');
+            if (Math.abs(z) <= 330 && x > -250 && x < 90) return tr('downtown_cbd');
+            if (x < -360 && Math.abs(z) < 260) return tr('stunt_airport');
+            return tr('midtown');
         }
 
         function wmWorldToScreen(x, z, W, H) { return [(x - WMAP.cx) * WMAP.scale + W / 2, (z - WMAP.cz) * WMAP.scale + H / 2]; }
@@ -7908,7 +8691,7 @@
             ROAD_NET.spurs.forEach(sp => line(sp.pts, sp.half * 2, '#cbd5e1'));
             // 區域名稱
             g.textAlign = 'center'; g.textBaseline = 'middle';
-            [['VICE SUBURBS 郊區', -1120, -420], ['MT. CHILIAD', -620, 560], ['DOWNTOWN CBD', -60, -120], ['OLD TOWN 老城區', -240, -690], ['MIDTOWN 中城', -280, 420], ['SANTA CRUZ', 300, -120], ['OCEAN', 600, 0]].forEach(([t, x, z]) => {
+            [[tr('vice_suburbs'), -1120, -420], [tr('mount_chiliad'), -620, 560], [tr('downtown_cbd'), -60, -120], [tr('old_town_2'), -240, -690], [tr('midtown_2'), -280, 420], [tr('label_santa_cruz'), 300, -120], [tr('label_ocean'), 600, 0]].forEach(([t, x, z]) => {
                 const [a, b] = P(x, z);
                 g.font = `900 ${Math.max(10, Math.min(18, 34 * s))}px Orbitron, sans-serif`;
                 g.fillStyle = 'rgba(255,255,255,0.55)';
@@ -7966,14 +8749,14 @@
         }
 
         function wmSelect(sel) {
-            WMAP.sel = sel;
+            WMAP.sel = sel; WMAP.travelBlocked = false;
             const panel = document.getElementById('wm-panel');
             if (!sel) { panel.classList.add('hidden'); drawWorldMap(); return; }
             const pos = getActivePosition();
             const dist = Math.hypot(sel.x - pos.x, sel.z - pos.z);
             document.getElementById('wm-sel-icon').textContent = sel.icon || '📍';
             document.getElementById('wm-sel-name').textContent = sel.name;
-            document.getElementById('wm-sel-sub').textContent = districtName(sel.x, sel.z) + '・距離 ' + (dist >= 1000 ? (dist / 1000).toFixed(1) + ' km' : Math.round(dist) + ' m');
+            document.getElementById('wm-sel-sub').textContent = districtName(sel.x, sel.z) + tr('distance_2') + (dist >= 1000 ? (dist / 1000).toFixed(1) + ' km' : Math.round(dist) + ' m');
             panel.classList.remove('hidden');
             drawWorldMap();
         }
@@ -7983,7 +8766,7 @@
 
         // 快速穿梭：黑幕淡出 → 傳送 → 淡入
         function fastTravelTo(t) {
-            if (DELIVERY.job) { showBanner('配送中無法快速穿梭', '請先完成配送'); return; }
+            if (DELIVERY.job) { showBanner(() => (tr('fast_travel_unavailable_during_delivery')), () => (tr('complete_your_delivery_first'))); return; }
             const fade = document.getElementById('travel-fade');
             closeWorldMap();
             fade.style.opacity = '1';
@@ -7993,7 +8776,7 @@
                 teleportTo(t.x, t.z, t.h || 0, y);
                 if (STATE.waypoint && Math.hypot(STATE.waypoint.x - t.x, STATE.waypoint.z - t.z) < 40) clearWaypoint();
                 setTimeout(() => { fade.style.opacity = '0'; }, 120);
-                showBanner('⚡ 快速穿梭', t.name);
+                showBanner(() => (tr('fast_travel')), () => (VH_I18N.name(t.name)));
             }, 300);
         }
 
@@ -8008,7 +8791,7 @@
             const y0 = terrainHeight(x, z);
             WORLD.waypointBeam.position.set(x, y0 + 80, z);
             WORLD.waypointBeam.visible = true;
-            showBanner('📍 已設定導航點', name);
+            showBanner(() => (tr('waypoint_set')), () => (VH_I18N.name(name)));
         }
         function clearWaypoint() {
             STATE.waypoint = null;
@@ -8017,7 +8800,7 @@
         function updateWaypoint() {
             if (!STATE.waypoint) return;
             const p = getActivePosition();
-            if (Math.hypot(p.x - STATE.waypoint.x, p.z - STATE.waypoint.z) < 30) { showBanner('🏁 已抵達', STATE.waypoint.name); clearWaypoint(); }
+            if (Math.hypot(p.x - STATE.waypoint.x, p.z - STATE.waypoint.z) < 30) { const name = STATE.waypoint.name; showBanner(() => (tr('destination_reached')), () => (VH_I18N.name(name))); clearWaypoint(); }
             else if (WORLD.waypointBeam) WORLD.waypointBeam.material.opacity = 0.24 + Math.sin(STATE.time * 4) * 0.08;
         }
 
@@ -8029,7 +8812,7 @@
                 b.type = 'button';
                 b.className = 'touch-btn vh-pill';
                 b.style.setProperty('--acc', 'var(--vh-pink)');
-                b.innerHTML = `<span>${ft.icon}</span><span>${ft.name}</span>`;
+                b.innerHTML = `<span>${ft.icon}</span><span data-map-location="${ft.id}">${ft.name}</span>`;
                 b.addEventListener('click', () => { WMAP.cx = ft.x; WMAP.cz = ft.z; WMAP.scale = Math.max(WMAP.scale, 0.5); wmSelect(Object.assign({}, ft)); });
                 chips.appendChild(b);
             });
@@ -8088,7 +8871,7 @@
             document.getElementById('wm-close').addEventListener('click', closeWorldMap);
             document.getElementById('wm-travel').addEventListener('click', () => {
                 if (WMAP.sel) fastTravelTo(WMAP.sel);
-                if (DELIVERY.job) document.getElementById('wm-sel-sub').textContent = '配送中無法快速穿梭，請先完成配送';
+                if (DELIVERY.job) { WMAP.travelBlocked = true; document.getElementById('wm-sel-sub').textContent = tr('fast_travel_blocked_complete_your_delivery_first'); }
             });
             document.getElementById('wm-waypoint').addEventListener('click', () => { if (WMAP.sel) { setWaypoint(WMAP.sel.x, WMAP.sel.z, WMAP.sel.name); drawWorldMap(); } });
             window.addEventListener('resize', () => { if (WMAP.open) drawWorldMap(); });
@@ -8208,21 +8991,17 @@
                 applyQualitySetting();
                 saveSettings();
                 const q = currentPreset();
-                const parts = [q.shadow + ' 陰影'];
-                if (q.bloom) parts.push('Bloom');
-                if (q.ssao) parts.push('SSAO');
-                if (q.smaa) parts.push('SMAA');
-                if (!q.bloom && !q.ssao) parts.push('關閉後製');
-                showBanner('📺 畫質切換：' + STATE.quality + ' (' + PROFILE + ')', parts.join(' + '));
+                showBanner(() => (tr('quality') + qualityLabel(STATE.quality) + ' (' + deviceLabel(PROFILE) + ')'), () => (qualityDescription(q)));
             });
 
             document.getElementById('btn-car-action').addEventListener('click', toggleEnterExitCar);
             document.getElementById('btn-horn').addEventListener('click', () => {
                 AUDIO.playSFX('horn');
-                showBanner('📣 叭叭!', '喇叭音效已觸發');
+                showBanner(() => (tr('honk')), () => (tr('horn_sounded')));
             });
 
             releaseHubInputs = releaseHudControls;
+            document.getElementById('language-select').addEventListener('change', e => changeLanguage(e.target.value));
             document.getElementById('pill-mission').addEventListener('click', () => openGameHub('missions-modal'));
             document.getElementById('pill-garage').addEventListener('click', () => openGameHub('garage-modal'));
             document.getElementById('hub-world-tab').addEventListener('click', () => openGameHub('hub-world'));
@@ -8265,8 +9044,8 @@
             document.getElementById('pill-radio').addEventListener('click', () => AUDIO.toggleStation());
             document.getElementById('pill-cam').addEventListener('click', () => {
                 STATE.cameraMode = (STATE.cameraMode + 1) % 4;
-                const names = ['標準跟隨', '廣角遠景', '引擎蓋視角', '高空鳥瞰'];
-                showBanner('🎥 視角: ' + names[STATE.cameraMode], '可在螢幕空白處拖曳旋轉鏡頭');
+                const names = [tr('chase_near'), tr('chase_far'), tr('hood'), tr('bird_s_eye')];
+                showBanner(() => (tr('camera') + VH_I18N.name(names[STATE.cameraMode])), () => (tr('drag_empty_screen_space_to_rotate_the_camera')));
             });
 
             // 【升級 2】天氣按鈕同步更新 Physical Sky、PMREM 反射貼圖、霧氣與夜間窗戶
@@ -8278,11 +9057,11 @@
                 if (STATE.dayCycle) {
                     DAY.lastEnvTime = -99; DAY.acc = 1;
                     updateDayCycle(0);
-                    showBanner('🌗 晝夜循環', '時間會自動流動 (1 小時 = 40 秒)');
+                    showBanner(() => (tr('day_night_cycle')), () => (tr('time_flows_automatically_1_hour_40_seconds')));
                 } else {
                     applySkyPreset(STATE.skyPreset);
                     updateSkyLabel();
-                    showBanner('🌤️ 天氣光影: ' + SKY_PRESETS[STATE.skyPreset].name, '固定天氣，再按幾次可回到晝夜循環');
+                    showBanner(() => (tr('weather_2') + SKY_PRESETS[STATE.skyPreset].name), () => (tr('fixed_weather_keep_cycling_to_restore_day_night')));
                 }
             });
 
@@ -8297,7 +9076,7 @@
                 });
             });
             document.getElementById('cancel-mission-btn').addEventListener('click', () => {
-                if (DELIVERY.job) endDeliveryJob(['📦 已取消配送', '可以隨時回配送站接新訂單']);
+                if (DELIVERY.job) endDeliveryJob([() => (tr('delivery_cancelled')), () => (tr('visit_a_depot_for_another_job_anytime'))]);
                 MISSION.active = false;
                 if (MISSION.marker) MISSION.marker.visible = false;
                 document.getElementById('mission-panel').classList.add('hidden');
@@ -8305,12 +9084,12 @@
             });
 
             // 車款卡片：未擁有的車第一次點顯示價格，再點一次確認購買
-            const refreshGarageCards = () => {
+            refreshGarageLabels = () => {
                 document.querySelectorAll('.car-archetype-btn').forEach(b => {
                     const m = b.getAttribute('data-model'), def = m && CAR_MODELS[m], tag = b.querySelector('.car-price');
                     if (!tag || !def) return;
                     const owned = SAVE.owned.includes(m);
-                    tag.textContent = owned ? '✅ 已擁有' : (b.dataset.confirm ? '👉 再按一次購買 $' + def.price.toLocaleString() : '🔒 $' + def.price.toLocaleString());
+                    tag.textContent = owned ? tr('owned') : (b.dataset.confirm ? tr('tap_again_to_buy') + def.price.toLocaleString() : '🔒 $' + def.price.toLocaleString());
                     tag.className = 'car-price text-[10px] font-black mt-0.5 ' + (owned ? 'text-emerald-300' : (STATE.cash >= def.price ? 'text-yellow-300' : 'text-rose-300'));
                 });
             };
@@ -8320,13 +9099,13 @@
                     const def = model && CAR_MODELS[model];
                     if (def && def.price && !SAVE.owned.includes(model)) {
                         if (STATE.cash < def.price) {
-                            showBanner('💰 現金不足', def.label + ' 售價 $' + def.price.toLocaleString() + '，還差 $' + (def.price - STATE.cash).toLocaleString() + '。去送貨或飛躍特技跳台賺錢吧!');
+                            showBanner(() => (tr('not_enough_cash')), () => (def.label + tr('costs') + def.price.toLocaleString() + tr('you_need') + (def.price - STATE.cash).toLocaleString() + tr('more_earn_money_from_deliveries_and_stunt_ramps')));
                             return;
                         }
                         if (!btn.dataset.confirm) {
                             btn.dataset.confirm = '1';
-                            refreshGarageCards();
-                            setTimeout(() => { delete btn.dataset.confirm; refreshGarageCards(); }, 4000);
+                            refreshGarageLabels();
+                            setTimeout(() => { delete btn.dataset.confirm; refreshGarageLabels(); }, 4000);
                             return;
                         }
                         delete btn.dataset.confirm;
@@ -8334,7 +9113,7 @@
                         SAVE.owned.push(model);
                         saveGame();
                         AUDIO.playSFX('stunt');
-                        showBanner('🔑 購買成功!', def.label + ' 已加入你的車庫，按「立即召喚」就能開');
+                        showBanner(() => (tr('purchased')), () => (def.label + tr('is_in_your_garage_press_summon_to_drive_it')));
                         loadCarModel(model).catch(() => {});
                     }
                     STATE.selectedArchetype = btn.getAttribute('data-car');
@@ -8343,11 +9122,11 @@
                         b.className = 'car-archetype-btn p-2 rounded-xl bg-white/5 border border-white/15 text-left';
                     });
                     btn.className = 'car-archetype-btn p-2 rounded-xl bg-rose-500/30 border border-rose-400 text-left';
-                    refreshGarageCards();
+                    refreshGarageLabels();
                 });
             });
-            refreshGarageCards();
-            document.getElementById('pill-garage').addEventListener('click', refreshGarageCards);
+            refreshGarageLabels();
+            document.getElementById('pill-garage').addEventListener('click', refreshGarageLabels);
             document.getElementById('upg-lvl-text').textContent = 'Lv.' + STATE.upgradeLevel + '/5';
             addCash(0);
             document.querySelectorAll('#paint-swatches button').forEach(btn => {
@@ -8362,7 +9141,7 @@
                     STATE.upgradeLevel++;
                     document.getElementById('upg-lvl-text').textContent = 'Lv.' + STATE.upgradeLevel + '/5';
                     AUDIO.playSFX('stunt');
-                    showBanner('⚡ 渦輪與齒比 Stage ' + STATE.upgradeLevel, 'RaycastVehicle 扭力與極速已提升');
+                    showBanner(() => (tr('turbo_gearing_stage') + STATE.upgradeLevel), () => (tr('engine_torque_and_top_speed_increased')));
                 }
             });
             document.getElementById('garage-deliver-btn').addEventListener('click', () => {
@@ -8434,7 +9213,7 @@
                 STATE.resCheck = { elapsed: 0, frames: 0, good: 0 };
                 saveSettings();
             });
-            document.getElementById('gpu-info').textContent = '顯示卡：' + (GPU_NAME || '未知') + '　畫質組合：' + PROFILE;
+            refreshGpuLabel();
             document.getElementById('pill-settings').addEventListener('click', () => openGameHub('settings-modal'));
             document.getElementById('close-settings-btn').addEventListener('click', closeModals);
 
@@ -8575,7 +9354,7 @@
                     });
                 });
             }
-            showBanner(on ? '🕸️ 物理線框：開啟' : '🕸️ 物理線框：關閉', on ? '青色 = 靜態碰撞體，粉色 = 動態物體' : '');
+            showBanner(() => (on ? tr('physics_wireframe_on') : tr('physics_wireframe_off')), () => (on ? tr('cyan_static_colliders_pink_moving_bodies') : ''));
         }
         function updatePhysicsDebug() {
             if (!PHYS_DEBUG.on) return;
@@ -8618,7 +9397,7 @@
             window.addEventListener('touchstart', () => applyDeviceControls(true), { once: true, passive: true });
         }
 
-        showBanner('VICE HORIZON VI', 'Device: ' + DEVICE + ' · Quality: ' + STATE.quality);
+        showBanner(() => ('VICE HORIZON VI'), () => (tr('label_device') + deviceLabel(DEVICE) + tr('label_quality') + qualityLabel(STATE.quality)));
 
         const FIXED_TIME_STEP = 1 / 60;
         let lastTime = performance.now();
@@ -8650,7 +9429,7 @@
                     const target = STATE.fpsCap || 60;
                     // 低於目標的 60% 就降一級，並重新測量，直到夠順或已是最低畫質
                     if (!STATE.qualityManual && avgFps < target * 0.6 && stepQualityDown()) {
-                        showBanner('Quality lowered for smoother gameplay', '平均 ' + Math.round(avgFps) + ' FPS → 畫質自動調為 ' + STATE.quality);
+                        showBanner(() => (tr('label_quality_lowered_for_smoother_gameplay')), () => (tr('average') + Math.round(avgFps) + tr('fps_quality_lowered_to') + qualityLabel(STATE.quality)));
                         STATE.perfCheck = { active: true, elapsed: 0, frames: 0, done: false };
                     }
                 }
@@ -8715,7 +9494,7 @@
         requestAnimationFrame(animate);
 
         // 除錯用：在瀏覽器主控台輸入 __VH 可查看遊戲狀態
-        window.__VH = { __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
+        window.__VH = { changeLanguage, refreshMissionLabels, renderDrivingHUD, showBanner, VH_I18N, WMAP, openGameHub, closeModals, __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
     </script>
 </body>
 </html>
