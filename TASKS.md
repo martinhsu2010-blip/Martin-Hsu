@@ -4,35 +4,24 @@
 (none)
 
 ## Ready for Codex
-(none — T-004D starts after Martin accepts T-004C)
-## In review
-### T-004C Tree and existing house collision repair
+### T-004D Suburban variety (Option B) and increased structure density
 Owner: Codex
 Reviewer: Claude
 Priority: P1
-Depends on: T-004B (Done, Martin-accepted 2026-11-19)
-Base commit: `e9c8229b218946954e8d6d3a80dab096379fab76`
-Branch/PR: `codex/T-004C-collisions` / PR #28 (squash-merged 06e0514, released as `vh-2026-11-19-19`)
-Spec: `specs/T-004A-spec-v1.1.md` §3.5, §3.6, §4 (T-004C row), §5.1 items 4–7.
-Claude notes: prefer upright `CANNON.Box` trunks over `CANNON.Cylinder` (box chassis vs cylinder is a costly convex test); preallocated pool, add/remove only on the 0.5 s grid refresh, update AABBs after moving static bodies, immediate refresh on teleport; house compound bodies regrouped by spatial cell must not increase total body count.
-Claude note (T-004B context): ordinary traffic now freezes off screen and is woken by `updateTrafficPhysics()` (see HANDOFF "Traffic (T-004B)"). Tree trunk bodies must collide with active traffic too; a frozen traffic car is out of the world, so §3.5 "do not deactivate colliders near an AI car physically interacting with the tree" only concerns active cars. Keep the house-collider Y fix and spatial regrouping in this PR; do not change traffic rules.
-Verification: `code-reviewed` + headless full game (Chrome/SwiftShader, not a device). Status: released, awaiting Martin's device acceptance (stage 8).
-Claude review (2026-11-19): one preallocated upright Box per tree (693 phone / 1,216 desktop), 32-unit grid, 0.5 s refresh, 140/180 hysteresis, immediate refresh on init/teleport, occupancy deferral, retention near active cars; house bodies spatially regrouped (same body count, <=16 shapes) with the Y offset fixed; two trees on the Chiliad link moved off the road with their proxies. Claude fixed one defect (1f9634b): house boxes started at the foundation top, so on slopes (up to 2.49 units of grey foundation exposed; 70 of 130 houses > 0.8) the car went under the wall box and 1.1 units into the foundation; boxes now span y - 2.8 to the wall top with the foundation footprint. Full game: 6 steepest houses x 30/60/120 km/h stop outside the foundation, upright; 36/36 trunk runs (4 palm, 4 pine, 4 broadleaf x 20/60/120 km/h) hit with no pass-through; walking blocked; PHYS_DEBUG aligned; smoke and offline reload OK. Physics step + managers (headless median ms): PHONE_LOW 4.1 -> 4.2 spawn, 3.9 -> 4.3 suburb, 3.1 -> 3.5 hill; TABLET_MED within noise. NOT verified: device FPS/heat, feel of scraping along walls.
+Depends on: T-004C (Done, Martin-accepted 2026-11-19)
+Base commit: latest `main` (reported in the HANDOFF)
+Branch: `codex/T-004D-suburb-variety`
+Spec: `specs/T-004A-spec-v1.1.md` §3.3 Option B, §3.4, §3.6, §4 (T-004D row).
+Claude notes: (1) Every new structure needs a collider that covers its visible foundation on slopes, like the T-004C house fix (box from base bottom to wall top, base footprint); keep `house.collider`-style mapping for each structure so alignment can be tested, and extend `collision_check.mjs` to all seven types. (2) Keep `WORLD.suburbHouses` usable by the world map (§3.4.6) and keep the T-004C spatial grouping (<=16 shapes per body); report the new body count. (3) Trees: new parcels must not overlap existing tree trunks; drop or skip a parcel rather than moving trees unless the tree sits on a road. (4) Report placed counts per type and zone against the Option B shares and the >=1.40x baseline, draw calls added on PHONE_LOW and DESKTOP (limits +20 / +30), and headless physics step cost.
+Verification: `designed`.
 
+## In review
+(none)
 
 ## Doing (Claude)
 (none)
 
 ## Blocked
-### T-004D Suburban variety (Option B) and increased structure density
-Owner: Codex
-Reviewer: Claude
-Priority: P1
-Blocked by: Martin's acceptance of T-004C (released vh-2026-11-19-19)
-Branch: `codex/T-004D-suburb-variety`
-Spec: `specs/T-004A-spec-v1.1.md` §3.3 Option B, §3.4, §3.6, §4 (T-004D row).
-Verification: `designed`.
-
 ### T-004E City district infill
 Owner: Codex
 Reviewer: Claude
@@ -51,6 +40,19 @@ Why: archives had no license text; needed before any public sharing.
 (none)
 
 ## Done
+### T-004C Tree and existing house collision repair
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-004B (Done, Martin-accepted 2026-11-19)
+Base commit: `e9c8229b218946954e8d6d3a80dab096379fab76`
+Branch/PR: `codex/T-004C-collisions` / PR #28 (squash-merged 06e0514, released as `vh-2026-11-19-19`)
+Spec: `specs/T-004A-spec-v1.1.md` §3.5, §3.6, §4 (T-004C row), §5.1 items 4–7.
+Claude notes: prefer upright `CANNON.Box` trunks over `CANNON.Cylinder` (box chassis vs cylinder is a costly convex test); preallocated pool, add/remove only on the 0.5 s grid refresh, update AABBs after moving static bodies, immediate refresh on teleport; house compound bodies regrouped by spatial cell must not increase total body count.
+Claude note (T-004B context): ordinary traffic now freezes off screen and is woken by `updateTrafficPhysics()` (see HANDOFF "Traffic (T-004B)"). Tree trunk bodies must collide with active traffic too; a frozen traffic car is out of the world, so §3.5 "do not deactivate colliders near an AI car physically interacting with the tree" only concerns active cars. Keep the house-collider Y fix and spatial regrouping in this PR; do not change traffic rules.
+Verification: `Martin-accepted` (2026-11-19, S26 Ultra / Tab S11 device test) + `code-reviewed` + headless full game (Chrome/SwiftShader).
+Claude review (2026-11-19): one preallocated upright Box per tree (693 phone / 1,216 desktop), 32-unit grid, 0.5 s refresh, 140/180 hysteresis, immediate refresh on init/teleport, occupancy deferral, retention near active cars; house bodies spatially regrouped (same body count, <=16 shapes) with the Y offset fixed; two trees on the Chiliad link moved off the road with their proxies. Claude fixed one defect (1f9634b): house boxes started at the foundation top, so on slopes (up to 2.49 units of grey foundation exposed; 70 of 130 houses > 0.8) the car went under the wall box and 1.1 units into the foundation; boxes now span y - 2.8 to the wall top with the foundation footprint. Full game: 6 steepest houses x 30/60/120 km/h stop outside the foundation, upright; 36/36 trunk runs (4 palm, 4 pine, 4 broadleaf x 20/60/120 km/h) hit with no pass-through; walking blocked; PHYS_DEBUG aligned; smoke and offline reload OK. Physics step + managers (headless median ms): PHONE_LOW 4.1 -> 4.2 spawn, 3.9 -> 4.3 suburb, 3.1 -> 3.5 hill; TABLET_MED within noise. NOT verified: device FPS/heat, feel of scraping along walls.
+
 ### T-004B Traffic population + Ferrari exclusion
 Owner: Codex
 Reviewer: Claude
