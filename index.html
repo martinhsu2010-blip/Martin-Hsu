@@ -262,6 +262,18 @@
             #quick-actions-list { grid-template-columns: 1fr; }
             #world-map > div:first-child { flex-wrap: wrap; }
         }
+        /* Review fix: short landscape has no room for the pursuit bar in the right column (it covered horn/enter-exit at 800x360). */
+        @media (max-height: 429px) {
+            #pursuit-hud-panel { position: fixed; left: var(--left-edge); top: calc(var(--top-edge) + var(--radar-size) + 8px); width: var(--status-width); }
+        }
+        /* Review fix: on narrow screens keep mission line and notices clear of the right-hand status and control column. */
+        @media (orientation: portrait), (max-width: 599px) {
+            #mission-panel:not(.hidden), #notice-area { right: calc(var(--right-edge) + 156px); }
+        }
+        @media (max-height: 429px) and (max-width: 599px) {
+            #pursuit-hud-panel { top: calc(var(--top-edge) + var(--radar-size) + 60px); }
+            #notice-area { top: calc(var(--top-edge) + var(--radar-size) + 114px); }
+        }
 
     </style>
 </head>

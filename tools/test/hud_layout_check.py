@@ -10,7 +10,7 @@ import tempfile
 from pathlib import Path
 from playwright.async_api import async_playwright
 
-VIEWPORTS = [(1280, 800), (1024, 768), (960, 540), (844, 390), (800, 360), (640, 480), (540, 768)]
+VIEWPORTS = [(1280, 800), (1024, 768), (960, 540), (915, 412), (844, 390), (800, 360), (667, 375), (568, 320), (640, 480), (540, 768), (412, 915)]
 SEED = {"cash": 12345, "owned": ["lexuslc500"], "jumps": {"0": 50}, "deliveries": 7,
         "upgrade": 3, "collectedCrates": [0], "rewardCooldowns": {}}
 
@@ -22,7 +22,7 @@ async def layout(page, width, height):
         }
         const overlap=(a,b)=>Math.min(a.right,b.right)-Math.max(a.x,b.x)>1 && Math.min(a.bottom,b.bottom)-Math.max(a.y,b.y)>1;
         const buttons=['radar-container','btn-steer-left','btn-steer-right','btn-horn','btn-car-action','btn-drive-gas','btn-drive-brake','btn-drive-nitro','btn-drive-drift'].map(box);
-        const regions=['radar-container','status-card','pursuit-hud-panel','mission-panel','steering-controls','action-controls'].map(box);
+        const regions=['radar-container','status-card','pursuit-hud-panel','mission-panel','center-banner','steering-controls','action-controls'].map(box);
         const errors=[];
         for(const b of buttons) {
             if(b.w<43.9 || b.h<43.9) errors.push('small touch target: '+b.id);
@@ -79,6 +79,8 @@ async def main():
                     document.getElementById('wanted-badge').classList.remove('hidden');
                     document.getElementById('pursuit-hud-panel').classList.remove('hidden');
                     document.getElementById('pursuit-status-label').textContent=en?'Escaping pursuit (105 m)':'正在擺脫警方追捕';
+                    document.getElementById('banner-title').textContent=en?'Delivery complete':'配送完成';
+                    document.getElementById('banner-sub').textContent=en?'+$1,720 early bonus':'+$1,720 提早送達獎勵';
                 }""", language)
                 result = await layout(page, width, height)
                 assert not result["errors"], (width, height, language, result)
