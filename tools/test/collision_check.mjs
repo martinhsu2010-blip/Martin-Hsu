@@ -33,11 +33,13 @@ for (const preset of ['PHONE_LOW', 'DESKTOP_HIGH']) {
         for (const k of ['x','y','z','rot','big']) assert.equal(house[k], previous[k]);
         const { body, index, walls, instance } = house.collider;
         const m = new THREE.Matrix4(); walls.getMatrixAt(instance, m);
+        // Visible solid = walls (to 3.6 local, scaled) plus the unscaled foundation down to house.y - 2.8.
         const visual = new THREE.Vector3(0, 1.8, 0).applyMatrix4(m), physical = center(body, index);
+        visual.y = (new THREE.Vector3(0, 3.6, 0).applyMatrix4(m).y + house.y - 2.8) / 2;
         houseCenter = Math.max(houseCenter, visual.distanceTo(physical));
         const q = body.quaternion.mult(body.shapeOrientations[index]), half = body.shapes[index].halfExtents;
         for (const x of [-1,1]) for (const z of [-1,1]) {
-            const v = new THREE.Vector3(x * 5.5, 1.8, z * 4.25).applyMatrix4(m);
+            const v = new THREE.Vector3(x * 5.8, 1.8, z * 4.55).applyMatrix4(m); v.y = visual.y;
             const p = q.vmult(new CANNON.Vec3(x * half.x, 0, z * half.z)); p.vadd(physical, p);
             houseBoundary = Math.max(houseBoundary, distance(v, p));
         }

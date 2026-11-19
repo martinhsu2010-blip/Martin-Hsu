@@ -4502,8 +4502,11 @@
                     const s = h.big ? 1.25 : 1, sy = h.big ? 1.6 : 1;
                     const q = new CANNON.Quaternion(); q.setFromAxisAngle(up, h.rot);
                     h.collider = { body, index: body.shapes.length, walls, instance: houses.indexOf(h) };
-                    body.addShape(new CANNON.Box(new CANNON.Vec3(5.5 * s, 1.8 * sy, 4.25 * s)),
-                        new CANNON.Vec3(h.x - body.position.x, h.y - body.position.y + 1.8 * sy, h.z - body.position.z), q);
+                    // Review fix: cover the visible foundation (base 11.6 x 9.1, down to y - 2.8) as well as the walls;
+                    // on slopes up to 2.5 units of foundation are exposed below the walls.
+                    const top = 3.6 * sy, bottom = -2.8;
+                    body.addShape(new CANNON.Box(new CANNON.Vec3(5.8 * s, (top - bottom) / 2, 4.55 * s)),
+                        new CANNON.Vec3(h.x - body.position.x, h.y - body.position.y + (top + bottom) / 2, h.z - body.position.z), q);
                 }
                 body.updateAABB(); physicsWorld.addBody(body); bodies.push(body);
             }
