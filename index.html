@@ -4578,6 +4578,13 @@
                     });
                 }
             });
+            // Review fix: candidates were taken in road order, so the first road used up every quota and later
+            // zones lost houses (phone Maple Ave 39 -> 20). A golden-ratio stride spreads each type over all
+            // allowed roads and along each road; deterministic, initialization only.
+            for (const list of candidates) {
+                list.forEach((h, n) => { h.order = (n * 0.6180339887) % 1; });
+                list.sort((a, b) => a.order - b.order);
+            }
             const cap = PROFILE === 'DESKTOP' ? 390 : 210;
             let houses = [], quotas;
             // Try exact target shares (largest-remainder integer rounding), never filling rejected parcels.
