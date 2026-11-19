@@ -1,7 +1,7 @@
 # VICE HORIZON VI — Project Handoff
 
 Written for another AI assistant (e.g. ChatGPT) or developer picking up this project.
-Last updated: 2026-11-18, game version `vh-2026-11-19-17` (see `CACHE` in `sw.js`).
+Last updated: 2026-11-18, game version `vh-2026-11-19-18` (see `CACHE` in `sw.js`).
 Owner: martinhsu2010-blip (Traditional Chinese speaker, Taiwan). Explain things to the owner in Traditional Chinese; write prompts for Gemini in English.
 
 ## What this is
@@ -81,3 +81,6 @@ The permanent toolbar is gone: tapping the minimap (`radar-container`, now a but
 
 ## Language (T-003E)
 All player-visible text lives in one table, `STRINGS` = {en, zh-TW} (between `I18N_TABLE_*` markers near the top of `index.html`); use `tr('key')` (or `VH_I18N.text`). `VH_I18N` reads `vh_save` once at startup: no key = English, a save without a valid `language` = zh-TW, a valid choice wins. `changeLanguage(lang)` (selector `#language-select` in SETTINGS) writes `SAVE.language`, converts copied names through `VH_I18N.name`, and refreshes panels, aria/title via `data-i18n*` attributes, map chips/selection, garage, HUD, pursuit text and the active banner. Banners must be passed as callbacks (`showBanner(() => tr('k'), () => ...)`) so they re-render on a switch. New text must be added to both languages; CI (`tools/test/i18n_check.py`, `i18n_check.mjs`) fails on raw CJK outside the table or on mismatched keys. `manifest.webmanifest` is English, `manifest.zh-TW.webmanifest` Chinese; the `<link rel=manifest>` href follows the language.
+
+## Traffic (T-004B)
+Ordinary traffic pool sizes are `DENSITY.traffic` per preset (spec T-004A §3.1). Ordinary AI (`isAI && !isPolice`) is always `modelKey 'kenney'`; `setDetail`/`applyFerrariModel` return early for it, and a missing Kenney subtype keeps the geometric fallback. `TRAFFIC` holds the rules: spawn via `findInitialTrafficSlot` (20 units between cars, 25 from the player's car), `recycleTraffic` every 1.2 s moves at most 2 cars that are > 470 units away (or flagged `trafficRecovery`) and not on screen, to an off-screen slot 125-260 units away with 30-unit clearance, never within 120. `updateTrafficPhysics()` runs every frame before `physicsWorld.step`: a car wakes within 160 units or as soon as it is on screen; it freezes only beyond 200 units after `hideGrace` (2 s) off screen. "On screen" = camera frustum and within the 420-unit AI draw distance. Diagnostics: `__VH.trafficDiagnostics()`. Test: `node tools/test/traffic_check.mjs`.

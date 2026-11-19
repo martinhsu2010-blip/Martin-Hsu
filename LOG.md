@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-19 | vh-2026-11-19-18 | Claude (impl. Codex) | commit 89f1a18 | T-004B traffic: ordinary traffic pool about doubled per preset (phone 10->18, tablet MED 16->32), ordinary AI always Kenney (never Ferrari), safer spawn/recycle spacing, far off-screen cars pause physics and wake before reaching the player; Claude fixed on-screen cars standing still
 - 2026-11-19 | — | Martin | — | T-004A Living City 2.0 spec v1.1 approved (Option B suburbs, D-017); T-004B unlocked for Codex
 - 2026-11-19 | — | Martin | — | T-003E accepted on S26 Ultra / Tab S11 (vh-2026-11-19-17); T-003 (immersive UX) A-E all Done
 - 2026-11-19 | vh-2026-11-19-17 | Claude (impl. Codex) | commit a9de637 | T-003E bilingual UI: English / Traditional Chinese selector in Hub SETTINGS, 318-key string table, `vh_save.language` (new player English, existing save zh-TW), English manifest + zh-TW manifest precached, CI check for untranslated CJK
