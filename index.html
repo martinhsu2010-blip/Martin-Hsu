@@ -3503,6 +3503,7 @@
             const tuv = trunkGeo.attributes.uv;
             for (let i = 0; i < tuv.count; i++) tuv.setY(i, tuv.getY(i) * 6);
             trunkGeo.computeVertexNormals();
+            trunkGeo.userData.trunk = { height: H, r0: 0.36, r1: 0.2, palm: true };
 
             // 葉片貼圖 (中肋 + 兩側小葉，背景透明)
             const lc = document.createElement('canvas');
@@ -4140,7 +4141,32 @@
 
         // ==================== 樹木系統：程式產生的寫實樹 (樹幹 + 分枝 + 透明葉片叢 / 松針層)，全部用 InstancedMesh，葉子會隨風擺動 ====================
         const TREES = { list: [], uTime: { value: 0 } };
-        function addTree(type, x, y, z, scale = 1, rot = 0, tint = null) { TREES.list.push({ type, x, y, z, scale, rot, tint }); }
+        function addTree(type, x, y, z, scale = 1, rot = 0, tint = null) {
+            const tree = { type, x, y, z, scale, rot, tint };
+            // Legacy forest placement avoided only the switchback, leaving trunks on its links.
+            // Move the visible tree and its future proxy together, preserving the fixed tree count.
+            for (let pass = 0; pass < 4; pass++) {
+                let moved = false;
+                for (const road of ROAD_NET.terrainRoads) {
+                    const bb = road.bbox, margin = road.half + scale;
+                    if (tree.x < bb.x0 - margin || tree.x > bb.x1 + margin || tree.z < bb.z0 - margin || tree.z > bb.z1 + margin) continue;
+                    const hit = roadHeightOn(road, tree.x, tree.z);
+                    if (hit.d >= margin || Math.abs(tree.y - hit.h) > 2) continue;
+                    const nr = nearestOnPolyline(tree.x, tree.z, road.pts);
+                    const a = road.pts[nr.i], b = road.pts[nr.i + 1];
+                    const dx = b.x - a.x, dz = b.z - a.z, len = Math.hypot(dx, dz) || 1;
+                    const off = (nr.lat < 0 ? -1 : 1) * (road.half + 3 + scale);
+                    const embed = tree.y - terrainHeight(tree.x, tree.z);
+                    if (!tree.roadAdjustedFrom) tree.roadAdjustedFrom = { x, y, z };
+                    tree.x = a.x + dx * nr.t - dz / len * off;
+                    tree.z = a.z + dz * nr.t + dx / len * off;
+                    tree.y = terrainHeight(tree.x, tree.z) + embed;
+                    moved = true; break;
+                }
+                if (!moved) break;
+            }
+            TREES.list.push(tree);
+        }
 
         function makeLeafTexture(kind) {
             const c = document.createElement('canvas');
@@ -4231,6 +4257,7 @@
             });
             const g = mergeGeometries(parts.map(p => p.toNonIndexed()), false);
             g.computeVertexNormals();
+            g.userData.trunk = { height: h, r0, r1, bend, vertices: trunk.index.count };
             return g;
         }
         function broadleafVariant(seed, big) {
@@ -4325,6 +4352,7 @@
                 list.forEach((t, i) => {
                     dm.position.set(t.x, t.y, t.z); dm.rotation.set(0, t.rot, 0); dm.scale.setScalar(t.scale); dm.updateMatrix();
                     m.setMatrixAt(i, dm.matrix);
+                    if (geo.userData.trunk) { t.trunk = geo.userData.trunk; t.trunkMesh = m; t.trunkInstance = i; }
                     if (tinted) m.setColorAt(i, t.tint || col.setHSL(0.27 + ((i * 7) % 11) * 0.008, 0.25 + ((i * 3) % 5) * 0.05, 0.62 + ((i * 5) % 7) * 0.05));
                 });
                 m.castShadow = PROFILE === 'DESKTOP'; // 手機與內顯不投射樹影 (省一半三角形)
@@ -4343,6 +4371,144 @@
                 inst(palm.frondGeo, palm.frondMat, groups.palm, false);
             }
             console.log('[VH] 樹木：', TREES.list.length, '棵', Object.fromEntries(Object.entries(groups).map(([k, v]) => [k, v.length])));
+        }
+
+        // Static trunk proxies: one preallocated body per tree, no coverage cap or frame-time scans.
+        const TREE_COLLIDERS = { cell: 32, enter: 140, leave: 180, interval: 0.5, elapsed: 0,
+            ready: false, grid: new Map(), entries: [], active: [], deferred: 0, updates: 0 };
+        function treeCellKey(x, z) { return ((x & 65535) << 16) | (z & 65535); }
+        function trunkProxy(meta) {
+            const height = Math.min(6, Math.max(3, meta.height));
+            let lo = Infinity, hi = -Infinity;
+            for (let i = 0; i <= 64; i++) {
+                const y = height * i / 64, r = meta.r0 + (meta.r1 - meta.r0) * y / meta.height;
+                const bend = meta.palm ? 0.016 * y * y : Math.sin(y / meta.height * 2.2) * meta.bend;
+                lo = Math.min(lo, bend - r); hi = Math.max(hi, bend + r);
+            }
+            return { x: (lo + hi) / 2, y: height / 2,
+                hx: Math.min(0.65, Math.max(0.35, (hi - lo) / 2)), hy: height / 2,
+                hz: Math.min(0.65, Math.max(0.35, meta.r0)) };
+        }
+        function initTreeColliders() {
+            if (TREE_COLLIDERS.ready) return;
+            const up = new CANNON.Vec3(0, 1, 0);
+            for (const t of TREES.list) {
+                const p = trunkProxy(t.trunk), s = t.scale, c = Math.cos(t.rot), sn = Math.sin(t.rot);
+                const body = new CANNON.Body({ mass: 0, material: MAT_GROUND,
+                    shape: new CANNON.Box(new CANNON.Vec3(p.hx * s, p.hy * s, p.hz * s)),
+                    position: new CANNON.Vec3(t.x + c * p.x * s, t.y + p.y * s, t.z - sn * p.x * s) });
+                body.quaternion.setFromAxisAngle(up, t.rot);
+                body.updateAABB();
+                body.userData = { tree: t, collisionKind: 'trunk' };
+                const entry = { tree: t, body, active: false, blockedAt: -1 };
+                TREE_COLLIDERS.entries.push(entry);
+                const key = treeCellKey(Math.floor(body.position.x / 32), Math.floor(body.position.z / 32));
+                if (!TREE_COLLIDERS.grid.has(key)) TREE_COLLIDERS.grid.set(key, []);
+                TREE_COLLIDERS.grid.get(key).push(entry);
+            }
+            TREE_COLLIDERS.ready = true;
+            refreshTreeColliders(0, true);
+        }
+        function treeBodyNear(entry, body, margin) {
+            if (body.aabbNeedsUpdate) body.updateAABB();
+            const a = entry.body.aabb, b = body.aabb;
+            return a.lowerBound.x <= b.upperBound.x + margin && a.upperBound.x >= b.lowerBound.x - margin &&
+                a.lowerBound.y <= b.upperBound.y + margin && a.upperBound.y >= b.lowerBound.y - margin &&
+                a.lowerBound.z <= b.upperBound.z + margin && a.upperBound.z >= b.lowerBound.z - margin;
+        }
+        function treeOccupied(entry) {
+            // Include parked/frozen vehicles: activating inside their visible chassis is unsafe too.
+            for (const car of WORLD.vehicles) {
+                if (car.chassisGroup.visible && treeBodyNear(entry, car.chassisBody, 0.15)) return true;
+            }
+            return STATE.mode === 'FOOT' && treeBodyNear(entry, PLAYER.body, 0.15);
+        }
+        function treeInteracting(entry) {
+            for (const car of WORLD.vehicles) {
+                if (!car.chassisGroup.visible || car.chassisBody.world !== physicsWorld) continue;
+                // Keep colliders around active cars, including contact and the next refresh's approach.
+                if (treeBodyNear(entry, car.chassisBody, 2 + car.chassisBody.velocity.length() * 0.5)) return true;
+            }
+            return false;
+        }
+        function activateTreeCells(x, z, radius) {
+            const size = TREE_COLLIDERS.cell, r2 = radius * radius;
+            const x0 = Math.floor((x - radius) / size), x1 = Math.floor((x + radius) / size);
+            const z0 = Math.floor((z - radius) / size), z1 = Math.floor((z + radius) / size);
+            for (let cx = x0; cx <= x1; cx++) for (let cz = z0; cz <= z1; cz++) {
+                const cell = TREE_COLLIDERS.grid.get(treeCellKey(cx, cz));
+                if (!cell) continue;
+                for (const e of cell) {
+                    if (e.active) continue;
+                    const p = e.body.position, dx = p.x - x, dz = p.z - z;
+                    if (dx * dx + dz * dz > r2) continue;
+                    if (treeOccupied(e)) {
+                        if (e.blockedAt !== TREE_COLLIDERS.updates) { e.blockedAt = TREE_COLLIDERS.updates; TREE_COLLIDERS.deferred++; }
+                        continue;
+                    }
+                    e.body.aabbNeedsUpdate = true; e.body.updateAABB();
+                    physicsWorld.addBody(e.body); physicsWorld.broadphase.dirty = true;
+                    e.active = true; TREE_COLLIDERS.active.push(e);
+                }
+            }
+        }
+        function refreshTreeColliders(dt, immediate = false) {
+            if (!TREE_COLLIDERS.ready) return;
+            TREE_COLLIDERS.elapsed += dt;
+            if (!immediate && TREE_COLLIDERS.elapsed < TREE_COLLIDERS.interval) return;
+            TREE_COLLIDERS.elapsed = 0; TREE_COLLIDERS.deferred = 0; TREE_COLLIDERS.updates++;
+            const pos = STATE.mode === 'CAR' && STATE.currentVehicle ? STATE.currentVehicle.chassisBody.position : PLAYER.body.position;
+            // Teleports write positions directly; refresh their bounds before occupancy checks.
+            for (const car of WORLD.vehicles) if (car.chassisGroup.visible) car.chassisBody.updateAABB();
+            PLAYER.body.updateAABB();
+            const active = TREE_COLLIDERS.active;
+            for (let i = active.length - 1; i >= 0; i--) {
+                const e = active[i], dx = e.body.position.x - pos.x, dz = e.body.position.z - pos.z;
+                if (dx * dx + dz * dz <= TREE_COLLIDERS.leave * TREE_COLLIDERS.leave || treeInteracting(e)) continue;
+                physicsWorld.removeBody(e.body); physicsWorld.broadphase.dirty = true;
+                e.active = false; active[i] = active[active.length - 1]; active.pop();
+            }
+            activateTreeCells(pos.x, pos.z, TREE_COLLIDERS.enter);
+            for (const car of WORLD.vehicles) {
+                if (!car.chassisGroup.visible || car.chassisBody.world !== physicsWorld) continue;
+                const p = car.chassisBody.position;
+                activateTreeCells(p.x, p.z, car.chassisBody.boundingRadius + 2 + car.chassisBody.velocity.length() * 0.5);
+            }
+        }
+        function treeColliderDiagnostics() {
+            return { total: TREE_COLLIDERS.entries.length, active: TREE_COLLIDERS.active.length,
+                deferred: TREE_COLLIDERS.deferred, updates: TREE_COLLIDERS.updates,
+                trunks: TREE_COLLIDERS.entries.map(e => ({ type: e.tree.type, active: e.active,
+                    x: e.body.position.x, y: e.body.position.y, z: e.body.position.z })) };
+        }
+
+        // Balanced spatial cells: exactly ceil(houses / 16) bodies, at most 16 local shapes each.
+        function buildHouseColliders(houses, walls) {
+            const bodies = [], up = new CANNON.Vec3(0, 1, 0);
+            function partition(list, groups) {
+                if (groups > 1) {
+                    let x0 = Infinity, x1 = -Infinity, z0 = Infinity, z1 = -Infinity;
+                    for (const h of list) { x0 = Math.min(x0, h.x); x1 = Math.max(x1, h.x); z0 = Math.min(z0, h.z); z1 = Math.max(z1, h.z); }
+                    const axis = x1 - x0 > z1 - z0 ? 'x' : 'z';
+                    list.sort((a, b) => a[axis] - b[axis]);
+                    const left = Math.floor(groups / 2), split = left * 16;
+                    partition(list.slice(0, split), left); partition(list.slice(split), groups - left);
+                    return;
+                }
+                const body = new CANNON.Body({ mass: 0, material: MAT_GROUND });
+                // Center the body within its neighborhood to keep SAP bounds and shape offsets local.
+                for (const h of list) { body.position.x += h.x / list.length; body.position.y += h.y / list.length; body.position.z += h.z / list.length; }
+                for (const h of list) {
+                    const s = h.big ? 1.25 : 1, sy = h.big ? 1.6 : 1;
+                    const q = new CANNON.Quaternion(); q.setFromAxisAngle(up, h.rot);
+                    h.collider = { body, index: body.shapes.length, walls, instance: houses.indexOf(h) };
+                    body.addShape(new CANNON.Box(new CANNON.Vec3(5.5 * s, 1.8 * sy, 4.25 * s)),
+                        new CANNON.Vec3(h.x - body.position.x, h.y - body.position.y + 1.8 * sy, h.z - body.position.z), q);
+                }
+                body.updateAABB(); physicsWorld.addBody(body); bodies.push(body);
+            }
+            if (houses.length) partition(houses.slice(), Math.ceil(houses.length / 16));
+            WORLD.suburbBodies = bodies;
         }
 
         // ==================== 郊區住宅：沿著郊區道路兩側蓋獨棟房子 (牆、斜屋頂、地基都用 InstancedMesh) ====================
@@ -4420,8 +4586,6 @@
             const wallTints = [0xffffff, 0xfde7c8, 0xd9f0e3, 0xdbe7f5, 0xf6d6d6, 0xeee6ff];
             const roofTints = [0x9a3412, 0x374151, 0x7c2d12, 0x1e3a5f, 0x57534e, 0x7f1d1d];
             const col = new THREE.Color();
-            const bodies = [];
-            let cur = null;
             houses.forEach((h, i) => {
                 const s = h.big ? 1.25 : 1;
                 dmy.position.set(h.x, h.y, h.z);
@@ -4435,18 +4599,8 @@
                 dmy.scale.set(s, 1, s);
                 dmy.updateMatrix();
                 bases.setMatrixAt(i, dmy.matrix);
-                // 碰撞體：每 16 棟合成一個剛體
-                if (!cur || cur.shapes.length >= 16) {
-                    cur = new CANNON.Body({ mass: 0, material: MAT_GROUND });
-                    cur.position.set(h.x, h.y, h.z);
-                    bodies.push(cur);
-                }
-                const q = new CANNON.Quaternion();
-                q.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), h.rot);
-                const hh = (h.big ? 2.9 : 1.8) + 1.0;
-                cur.addShape(new CANNON.Box(new CANNON.Vec3(5.5 * s, hh, 4.25 * s)), new CANNON.Vec3(h.x - cur.position.x, hh - 1.0, h.z - cur.position.z), q);
             });
-            bodies.forEach(b => physicsWorld.addBody(b));
+            buildHouseColliders(houses, walls);
             [walls, roofs, bases].forEach(m => { m.castShadow = true; m.receiveShadow = true; scene.add(m); });
             walls.instanceColor.needsUpdate = true;
             roofs.instanceColor.needsUpdate = true;
@@ -7963,6 +8117,7 @@
                 PLAYER.body.velocity.set(0, 0, 0);
                 PLAYER.heading = heading;
             }
+            refreshTreeColliders(0, true);
             camera.position.set(x, groundY + 7, z - 12);
         }
 
@@ -9447,7 +9602,9 @@
             if (on) {
                 const matStatic = new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true });
                 const matDynamic = new THREE.MeshBasicMaterial({ color: 0xf472b6, wireframe: true });
-                physicsWorld.bodies.forEach(body => {
+                // Include inactive pooled trunks once; visibility follows registration without rebuilding meshes.
+                const bodies = physicsWorld.bodies.concat(TREE_COLLIDERS.entries.filter(e => !e.active).map(e => e.body));
+                bodies.forEach(body => {
                     body.shapes.forEach((shape, i) => {
                         const geo = debugGeometryForShape(shape);
                         if (!geo) return;
@@ -9462,6 +9619,8 @@
         function updatePhysicsDebug() {
             if (!PHYS_DEBUG.on) return;
             PHYS_DEBUG.items.forEach(it => {
+                it.mesh.visible = it.body.world === physicsWorld;
+                if (!it.mesh.visible) return;
                 it.body.quaternion.vmult(it.offset, _dbgOffset);
                 it.mesh.position.set(it.body.position.x + _dbgOffset.x, it.body.position.y + _dbgOffset.y, it.body.position.z + _dbgOffset.z);
                 it.body.quaternion.mult(it.orient, _dbgQuat);
@@ -9487,6 +9646,7 @@
         loadPolyHavenModels();
         loadPolyHavenTextures();
         spawnVehicles();
+        initTreeColliders();
         setupControlsAndEvents();
         setupWorldMap();
 
@@ -9564,6 +9724,7 @@
 
             // 1. 固定時間步長 1/60 之 Cannon-es 物理模擬
             updateTrafficPhysics(); // Activate before stepping, including immediately after teleports/entering a car.
+            refreshTreeColliders(dt);
             physicsWorld.step(FIXED_TIME_STEP, dt, 3);
 
             // 2. 更新玩家、RaycastVehicle 車輛、NPC 物理與世界特效
@@ -9598,7 +9759,7 @@
         requestAnimationFrame(animate);
 
         // 除錯用：在瀏覽器主控台輸入 __VH 可查看遊戲狀態
-        window.__VH = { TRAFFIC, updateTrafficPhysics, trafficDiagnostics, changeLanguage, refreshMissionLabels, renderDrivingHUD, showBanner, VH_I18N, WMAP, openGameHub, closeModals, __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
+        window.__VH = { TREE_COLLIDERS, refreshTreeColliders, treeColliderDiagnostics, PHYS_DEBUG, setPhysicsDebug, updatePhysicsDebug, TRAFFIC, updateTrafficPhysics, trafficDiagnostics, changeLanguage, refreshMissionLabels, renderDrivingHUD, showBanner, VH_I18N, WMAP, openGameHub, closeModals, __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
     </script>
 </body>
 </html>
