@@ -8417,7 +8417,7 @@
         // Ordinary traffic only. Reuse bodies, wheel callbacks, instances and visibility scratch objects.
         const TRAFFIC = {
             t: 0, cursor: 0, slotRoute: 0, slotIndex: 0,
-            activate: 160, deactivate: 200, protectedRadius: 120,
+            activate: 160, deactivate: 200, protectedRadius: 120, hideGrace: 2,
             insertMin: 125, insertMax: 260,
             frustum: new THREE.Frustum(), matrix: new THREE.Matrix4(), sphere: new THREE.Sphere(new THREE.Vector3(), 4)
         };
@@ -8450,12 +8450,16 @@
             }
         }
         function updateTrafficPhysics() {
-            const pos = trafficPlayerPosition();
+            const pos = trafficPlayerPosition(), now = STATE.time;
+            updateTrafficFrustum();
             for (const car of WORLD.vehicles) {
                 if (car.isPolice || (!car.isAI && !car.frozen)) continue;
                 const p = car.chassisBody.position, dx = p.x - pos.x, dz = p.z - pos.z, d2 = dx * dx + dz * dz;
+                // Review fix: cars on screen keep driving; only cars off screen for hideGrace seconds are frozen beyond 200 units.
+                const seen = car.isAI && trafficVisible(p.x, p.y, p.z);
+                if (seen) car.trafficSeenAt = now; else if (car.trafficSeenAt === undefined) car.trafficSeenAt = -Infinity;
                 if (car.frozen) {
-                    if (car === STATE.currentVehicle || !car.isAI || d2 <= TRAFFIC.activate * TRAFFIC.activate) {
+                    if (car === STATE.currentVehicle || !car.isAI || seen || d2 <= TRAFFIC.activate * TRAFFIC.activate) {
                         resetTrafficBody(car);
                         // Reattach the original callback; RaycastVehicle.addToWorld allocates a new closure.
                         physicsWorld.addBody(car.chassisBody);
@@ -8463,7 +8467,7 @@
                         car.vehicle.world = physicsWorld;
                         car.frozen = false; car.chassisBody.wakeUp();
                     }
-                } else if (car !== STATE.currentVehicle && d2 > TRAFFIC.deactivate * TRAFFIC.deactivate) {
+                } else if (car !== STATE.currentVehicle && d2 > TRAFFIC.deactivate * TRAFFIC.deactivate && now - car.trafficSeenAt > TRAFFIC.hideGrace) {
                     car.vehicle.removeFromWorld(physicsWorld); car.frozen = true;
                     resetTrafficBody(car);
                 }

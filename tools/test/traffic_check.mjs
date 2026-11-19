@@ -83,7 +83,7 @@ console.log('PASS: rejected/missing assets retain geometric fallback; missing or
 car.chassisBody.position.set(0, 1, 0); h.resetTrafficBody(car);
 const callback = car.vehicle.preStepCallback;
 for (let i = 0; i < 100; i++) {
-    h.movePlayer(250, 0); h.updateTrafficPhysics();
+    h.movePlayer(250, 0); h.STATE.time += 3; h.updateTrafficPhysics();
     assert.ok(car.frozen && !h.physicsWorld.bodies.includes(car.chassisBody));
     assert.ok(!h.physicsWorld.hasEventListener('preStep', callback));
     car.chassisBody.velocity.set(60, -80, 25); car.chassisBody.angularVelocity.set(40, 40, 40);
@@ -109,14 +109,20 @@ for (let x = 250; x >= 0; x -= 1.5) {
     if (x <= 100) assert.ok(!car.frozen && car.vehicle.world === h.physicsWorld);
 }
 // Teleport: deliberately stale visual anchor; manager must use the physical player body.
-h.movePlayer(250, 0); h.updateTrafficPhysics(); assert.ok(car.frozen);
+h.movePlayer(250, 0); h.STATE.time += 3; h.updateTrafficPhysics(); assert.ok(car.frozen);
 h.PLAYER.body.position.set(10, 1, 0); h.updateTrafficPhysics(); assert.ok(!car.frozen);
 // Entering a formerly frozen traffic car must also restore its wheels/body.
-h.movePlayer(250, 0); h.updateTrafficPhysics(); assert.ok(car.frozen);
+h.movePlayer(250, 0); h.STATE.time += 3; h.updateTrafficPhysics(); assert.ok(car.frozen);
 car.isAI = false; h.STATE.currentVehicle = car; h.STATE.mode = 'CAR'; h.updateTrafficPhysics();
 assert.ok(!car.frozen && car.vehicle.world === h.physicsWorld);
 car.isAI = true; h.STATE.currentVehicle = null; h.STATE.mode = 'FOOT';
 console.log('PASS: 100 freeze/wake cycles keep one callback; hysteresis, 90 m/s approach, teleport, captured car, force/wheel/AABB/interpolation reset');
+// Review fix: an on-screen car beyond 200 units keeps driving; a frozen car that comes on screen wakes.
+h.movePlayer(0, -300, 0); h.STATE.time += 3; h.updateTrafficPhysics(); assert.ok(!car.frozen, 'visible car at 300 units must stay active');
+h.movePlayer(0, -300, Math.PI); h.updateTrafficPhysics(); assert.ok(!car.frozen, 'freeze waits for the hide grace period');
+h.STATE.time += 3; h.updateTrafficPhysics(); assert.ok(car.frozen, 'off-screen car beyond 200 units freezes after the grace period');
+h.movePlayer(0, -300, 0); h.updateTrafficPhysics(); assert.ok(!car.frozen && car.vehicle.world === h.physicsWorld, 'frozen car wakes when it comes on screen');
+console.log('PASS: on-screen traffic stays active beyond 200 units; off-screen cars freeze after a 2 s grace and wake when seen');
 
 // Upside-down recovery must not bypass the 120-unit or visible-car protections.
 const p = await harness(); const protectedCar = p.ordinary()[0];
