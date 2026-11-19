@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { collisionHarness, html, root, THREE, CANNON } from './collision_harness.mjs';
-const base = execFileSync('git', ['show', 'e9c8229b218946954e8d6d3a80dab096379fab76:index.html'], { cwd: root, encoding: 'utf8', maxBuffer: 4e6 });
+const base = execFileSync('git', ['show', 'dab2ba607ac77e706e82a947c3ce171ef5c45311:index.html'], { cwd: root, encoding: 'utf8', maxBuffer: 4e6 });
 function distance(a, b) { return Math.hypot(a.x - b.x, a.z - b.z); }
 function center(body, i = 0) { return body.pointToWorldFrame(body.shapeOffsets[i]); }
 function clippedTrunkBounds(tree) {
@@ -22,33 +22,36 @@ function clippedTrunkBounds(tree) {
 const report = { alignment: [], populations: [], impacts: [], activation: {}, limits: 'Headless components; actual source geometry, placements and Cannon, no full city/browser/device claim' };
 for (const preset of ['PHONE_LOW', 'DESKTOP_HIGH']) {
     const h = await collisionHarness(html, preset), old = await collisionHarness(base, preset);
-    assert.equal(h.WORLD.suburbHouses.length, old.WORLD.suburbHouses.length);
+    assert.ok(h.WORLD.suburbHouses.length >= old.WORLD.suburbHouses.length * 1.4);
     assert.equal(h.TREES.list.length, old.TREES.list.length);
-    assert.equal(h.houseBodies.length, old.houseBodies.length);
+    assert.equal(h.houseBodies.length, Math.ceil(h.WORLD.suburbHouses.length / 16));
     assert.ok(h.houseBodies.every(b => b.shapes.length <= 16 && b.world === h.physicsWorld));
     const span = bodies => Math.max(...bodies.map(b => { b.updateAABB(); return distance(b.aabb.lowerBound, b.aabb.upperBound); }));
-    let houseCenter = 0, houseBoundary = 0, treeCenter = 0, treeBoundary = 0, oldHouseY = 0;
+    let houseCenter = 0, houseBoundary = 0, treeCenter = 0, treeBoundary = 0;
     for (let i = 0; i < h.WORLD.suburbHouses.length; i++) {
-        const house = h.WORLD.suburbHouses[i], previous = old.WORLD.suburbHouses[i];
-        for (const k of ['x','y','z','rot','big']) assert.equal(house[k], previous[k]);
+        const house = h.WORLD.suburbHouses[i];
         const { body, index, walls, instance } = house.collider;
         const m = new THREE.Matrix4(); walls.getMatrixAt(instance, m);
-        // Visible solid = walls (to 3.6 local, scaled) plus the unscaled foundation down to house.y - 2.8.
-        const visual = new THREE.Vector3(0, 1.8, 0).applyMatrix4(m), physical = center(body, index);
-        visual.y = (new THREE.Vector3(0, 3.6, 0).applyMatrix4(m).y + house.y - 2.8) / 2;
+        const bm = new THREE.Matrix4(); house.baseMesh.getMatrixAt(house.baseInstance, bm);
+        // Measure actual rendered foundation and shell bounds, independently of parcel dimensions.
+        walls.geometry.computeBoundingBox(); house.baseMesh.geometry.computeBoundingBox();
+        const top = walls.geometry.boundingBox.max.y;
+        const bottom = new THREE.Vector3(0, -.5, 0).applyMatrix4(bm).y;
+        const visual = new THREE.Vector3(0, top, 0).applyMatrix4(m), physical = center(body, index);
+        visual.y = (visual.y + bottom) / 2;
         houseCenter = Math.max(houseCenter, visual.distanceTo(physical));
         const q = body.quaternion.mult(body.shapeOrientations[index]), half = body.shapes[index].halfExtents;
         for (const x of [-1,1]) for (const z of [-1,1]) {
-            const v = new THREE.Vector3(x * 5.8, 1.8, z * 4.55).applyMatrix4(m); v.y = visual.y;
+            const v = new THREE.Vector3(x * .5, 0, z * .5).applyMatrix4(bm); v.y = visual.y;
             const p = q.vmult(new CANNON.Vec3(x * half.x, 0, z * half.z)); p.vadd(physical, p);
             houseBoundary = Math.max(houseBoundary, distance(v, p));
         }
-        oldHouseY = Math.max(oldHouseY, Math.abs(center(old.houseBodies[Math.floor(i / 16)], i % 16).y - visual.y));
+        assert.ok(Math.abs(physical.y - half.y - bottom) < .001, 'foundation bottom fully solid');
     }
     for (let i = 0; i < h.TREES.list.length; i++) {
         const t = h.TREES.list[i], prev = old.TREES.list[i], entry = h.TREE_COLLIDERS.entries[i];
         for (const k of ['rot','scale','type']) assert.equal(t[k], prev[k]);
-        for (const k of ['x','y','z']) assert.equal(t.roadAdjustedFrom ? t.roadAdjustedFrom[k] : t[k], prev[k]);
+        for (const k of ['x','y','z']) assert.equal(t[k], prev[k]);
         const bounds = clippedTrunkBounds(t), m = new THREE.Matrix4(); t.trunkMesh.getMatrixAt(t.trunkInstance, m);
         const physical = entry.body.position, visual = bounds.getCenter(new THREE.Vector3()).applyMatrix4(m);
         treeCenter = Math.max(treeCenter, visual.distanceTo(physical));
@@ -61,7 +64,7 @@ for (const preset of ['PHONE_LOW', 'DESKTOP_HIGH']) {
     }
     assert.ok(houseCenter <= .35 && treeCenter <= .35 && houseBoundary <= .5 && treeBoundary <= .5);
     report.alignment.push({ preset, houses: h.WORLD.suburbHouses.length, houseBodies: h.houseBodies.length, trees: h.TREES.list.length,
-        houseCenter, houseBoundary, treeCenter, treeBoundary, baselineHouseMaxYError: oldHouseY,
+        houseCenter, houseBoundary, treeCenter, treeBoundary,
         roadAdjusted: h.TREES.list.filter(t => t.roadAdjustedFrom).map(t => ({ type:t.type, before:t.roadAdjustedFrom, after:{x:t.x,y:t.y,z:t.z} })),
         maxCompoundHorizontalSpan: { before: span(old.houseBodies), after: span(h.houseBodies) } });
     // Audit actual road surfaces, not onCurvedRoad(), which also marks the entire mountain
@@ -122,7 +125,7 @@ for (const preset of ['PHONE_LOW', 'DESKTOP_HIGH']) {
         report.populations.push(row);
     }
 }
-console.log('PASS: unchanged house placements/tree counts, road-conflicting trunks relocated with their visuals; exact instance alignment; <=16 shapes/body without extra house bodies; complete uncapped near-tree coverage at 10 locations x 4 headings');
+console.log('PASS: Option B density; unchanged tree placements; rendered foundation/shell alignment; <=16 shapes/body; uncapped near-tree coverage at 10 locations x 4 headings');
 
 const h = await collisionHarness();
 // Isolate activation fixtures without changing any production geometry/rules.
@@ -236,13 +239,24 @@ for (const type of ['palm','pine','broad']) {
     for (let i = 0; i < 4; i++) trunks.push(matching[Math.floor(i * matching.length / 4)]);
 }
 const houses = sim.WORLD.suburbHouses;
-const sloped = houses.filter(house => {
-    const dx = Math.sin(house.rot) * 5, dz = Math.cos(house.rot) * 5;
-    return Math.abs(sim.terrainHeight(house.x + dx, house.z + dz) - sim.terrainHeight(house.x - dx, house.z - dz)) > .6;
-});
-assert.ok(sloped.length >= 5);
-const wallSamples = sloped.slice(0, 5);
-for (const house of houses) if (!wallSamples.includes(house) && wallSamples.length < 10) wallSamples.push(house);
+// Two walls per new type, each approached from its downhill side at an actual sloped parcel.
+const wallSamples = [];
+for (const type of ['bungalow','detached','duplex','townhouse','walkup','store','workshop']) {
+    const ranked = houses.filter(h => h.type === type).map(house => {
+        const {body,index} = house.collider, half = body.shapes[index].halfExtents;
+        let best = null;
+        for (let face=0;face<4;face++) {
+            const heading = house.rot + face * Math.PI/2;
+            const r = face%2 ? half.x : half.z;
+            const ground = sim.terrainHeight(house.x-Math.sin(heading)*r, house.z-Math.cos(heading)*r);
+            const exposed = house.y-ground;
+            if (!best || exposed > best.exposed) best = { house, heading, exposed };
+        }
+        return best;
+    }).sort((a,b) => b.exposed-a.exposed);
+    assert.ok(ranked.length>=2 && ranked[1].exposed > .2, `${type}: two downhill foundation fixtures`);
+    wallSamples.push(...ranked.slice(0,2));
+}
 const absent = impact(sim, { body:trunks[0].body, groundY:trunks[0].tree.y }, 60, trunks[0].tree.rot, 0, false, true);
 assert.ok(absent.passed && absent.contacts === 0, 'negative control must detect the original pass-through');
 for (const speed of [20,60,120,180]) {
@@ -253,17 +267,15 @@ for (const speed of [20,60,120,180]) {
         assert.ok(result.contacts > 0 && !result.passed, `trunk ${i} @ ${speed}: ${JSON.stringify(result)}`);
     }
     for (let i = 0; i < wallSamples.length; i++) {
-        const house = wallSamples[i];
-        const dx = Math.sin(house.rot) * 5, dz = Math.cos(house.rot) * 5;
-        const slope = Math.atan((sim.terrainHeight(house.x + dx, house.z + dz) - sim.terrainHeight(house.x - dx, house.z - dz)) / 10);
-        const result = impact(sim, { ...house.collider, groundY: house.y }, speed, house.rot, slope);
+        const { house, heading, exposed } = wallSamples[i];
+        const result = impact(sim, { ...house.collider, groundY: house.y }, speed, heading);
         wallContacts += result.contacts > 0; tunnels += result.passed; impactSpeeds.push(result.firstImpactKmh);
-        assert.ok(result.contacts > 0 && !result.passed, `wall ${i} @ ${speed}: ${JSON.stringify(result)}`);
+        assert.ok(result.contacts > 0 && !result.passed, `${house.type} downhill ${exposed} @ ${speed}: ${JSON.stringify(result)}`);
     }
-    report.impacts.push({ speedKmh: speed, trunks: trunks.length, trunkContacts, walls: 10, wallContacts, actualSlopedSites: 5, tunnels, firstImpactKmh: [Math.min(...impactSpeeds), Math.max(...impactSpeeds)] });
+    report.impacts.push({ speedKmh: speed, trunks: trunks.length, trunkContacts, walls: wallSamples.length, wallContacts, downhillFoundations: wallSamples.map(s => ({type:s.house.type, exposed:s.exposed})), tunnels, firstImpactKmh: [Math.min(...impactSpeeds), Math.max(...impactSpeeds)] });
 }
 for (const e of [trunks[0], trunks[4], trunks[8]]) { const r = impact(sim, { body: e.body, groundY: e.tree.y }, 6, e.tree.rot, 0, true); assert.ok(r.contacts > 0 && !r.passed, JSON.stringify(r)); }
-for (const house of wallSamples.slice(0, 3)) { const r = impact(sim, { ...house.collider, groundY: house.y }, 6, house.rot, 0, true); assert.ok(r.contacts > 0 && !r.passed, JSON.stringify(r)); }
-console.log('PASS: real 1/60 Cannon impacts, 12 trunks (all 3 types), 10 walls (>=5 actual sloped sites) at 20/60/120 km/h; 180 km/h separate; walking capsule contact');
+for (const { house, heading } of wallSamples.filter((_,i)=>i%2===0)) { const r = impact(sim, { ...house.collider, groundY: house.y }, 6, heading, 0, true); assert.ok(r.contacts > 0 && !r.passed, JSON.stringify(r)); }
+console.log('PASS: real 1/60 Cannon impacts, 12 trunks (all 3 types), 14 downhill foundations (all 7 types) at 20/60/120 km/h; 180 km/h separate; walking capsule contact');
 console.log('REPORT ' + JSON.stringify(report));
 console.log('RESULT: PASS (headless geometry/physics components, not full-game browser or device testing)');

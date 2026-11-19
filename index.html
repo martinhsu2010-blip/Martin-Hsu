@@ -4483,7 +4483,7 @@
         }
 
         // Balanced spatial cells: exactly ceil(houses / 16) bodies, at most 16 local shapes each.
-        function buildHouseColliders(houses, walls) {
+        function buildHouseColliders(houses) {
             const bodies = [], up = new CANNON.Vec3(0, 1, 0);
             function partition(list, groups) {
                 if (groups > 1) {
@@ -4499,13 +4499,12 @@
                 // Center the body within its neighborhood to keep SAP bounds and shape offsets local.
                 for (const h of list) { body.position.x += h.x / list.length; body.position.y += h.y / list.length; body.position.z += h.z / list.length; }
                 for (const h of list) {
-                    const s = h.big ? 1.25 : 1, sy = h.big ? 1.6 : 1;
+                    const type = SUBURB_TYPES[h.ti];
                     const q = new CANNON.Quaternion(); q.setFromAxisAngle(up, h.rot);
-                    h.collider = { body, index: body.shapes.length, walls, instance: houses.indexOf(h) };
-                    // Review fix: cover the visible foundation (base 11.6 x 9.1, down to y - 2.8) as well as the walls;
-                    // on slopes up to 2.5 units of foundation are exposed below the walls.
-                    const top = 3.6 * sy, bottom = -2.8;
-                    body.addShape(new CANNON.Box(new CANNON.Vec3(5.8 * s, (top - bottom) / 2, 4.55 * s)),
+                    h.collider = { body, index: body.shapes.length, walls: h.wallMesh, instance: h.wallInstance };
+                    // One solid box covers the visible foundation all the way to the wall top.
+                    const top = type.h, bottom = h.bottom;
+                    body.addShape(new CANNON.Box(new CANNON.Vec3((type.w + .6) / 2, (top - bottom) / 2, (type.d + .6) / 2)),
                         new CANNON.Vec3(h.x - body.position.x, h.y - body.position.y + (top + bottom) / 2, h.z - body.position.z), q);
                 }
                 body.updateAABB(); physicsWorld.addBody(body); bodies.push(body);
@@ -4514,9 +4513,166 @@
             WORLD.suburbBodies = bodies;
         }
 
-        // ==================== 郊區住宅：沿著郊區道路兩側蓋獨棟房子 (牆、斜屋頂、地基都用 InstancedMesh) ====================
+        // Option B: shared geometry/material batches, generated once at world initialization.
+        const SUBURB_TYPES = [
+            { id: 'bungalow', share: 30, w: 10, d: 7.5, h: 3.6, floors: 1, units: 1, roof: 'gable' },
+            { id: 'detached', share: 20, w: 9, d: 8, h: 6.6, floors: 2, units: 1, roof: 'gable' },
+            { id: 'duplex', share: 15, w: 10.5, d: 7, h: 3.6, floors: 1, units: 2, roof: 'gable' },
+            { id: 'townhouse', share: 12, w: 10.5, d: 7, h: 6.6, floors: 2, units: 3, roof: 'gable' },
+            { id: 'walkup', share: 10, w: 10, d: 9, h: 9.6, floors: 3, units: 2, roof: 'flat' },
+            { id: 'store', share: 8, w: 10, d: 8, h: 4, floors: 1, units: 1, roof: 'flat' },
+            { id: 'workshop', share: 5, w: 10, d: 8, h: 4.8, floors: 1, units: 1, roof: 'gable' }
+        ];
+        // SAT with a 3-unit separating gap is conservative even for diagonal corners.
+        function suburbSeparated(a, b, gap = 3) {
+            const dx = b.x - a.x, dz = b.z - a.z;
+            for (const axis of [[a.c, -a.s], [a.s, a.c], [b.c, -b.s], [b.s, b.c]]) {
+                const [x, z] = axis;
+                const ra = a.hx * Math.abs(x * a.c - z * a.s) + a.hz * Math.abs(x * a.s + z * a.c);
+                const rb = b.hx * Math.abs(x * b.c - z * b.s) + b.hz * Math.abs(x * b.s + z * b.c);
+                if (Math.abs(dx * x + dz * z) >= ra + rb + gap) return true;
+            }
+            return false;
+        }
+        function suburbQuotas(total) {
+            const counts = SUBURB_TYPES.map(t => Math.floor(total * t.share / 100));
+            const order = SUBURB_TYPES.map((t, i) => ({ i, remainder: total * t.share % 100 }))
+                .sort((a, b) => b.remainder - a.remainder || a.i - b.i);
+            for (let n = total - counts.reduce((a, b) => a + b, 0), i = 0; i < n; i++) counts[order[i].i]++;
+            return counts;
+        }
+        function buildSuburbParcels(baselineCount) {
+            const S = ROAD_NET.suburb, candidates = SUBURB_TYPES.map(() => []);
+            ROAD_NET.suburbRoads.forEach((road, zone) => {
+                for (let i = 4; i < road.pts.length - 4; i += 5) for (const side of [-1, 1]) for (const setback of [12, 28]) {
+                    const p = road.pts[i], rot = Math.atan2(p.tz * side, -p.tx * side), c = Math.cos(rot), sn = Math.sin(rot);
+                    SUBURB_TYPES.forEach((type, ti) => {
+                        // Main routes are the two city connectors; loops are the minor residential roads.
+                        if ((ti >= 5 && zone > 1) || (ti === 0 && zone < 2)) return;
+                        const hx = (type.w + 1) / 2, hz = (type.d + 1) / 2;
+                        const off = road.half + setback;
+                        const x = p.x - p.tz * off * side, z = p.z + p.tx * off * side;
+                        const ex = Math.abs(c) * hx + Math.abs(sn) * hz, ez = Math.abs(sn) * hx + Math.abs(c) * hz;
+                        if (x - ex < S.x0 + 30 || x + ex > S.x1 - 60 || z - ez < S.z0 + 30 || z + ez > S.z1 - 30) return;
+                        if (nearestTerrainRoadDist(x, z) < 8.5 || rectHitsElevated(x, z, ex * 2, ez * 2, 4)) return;
+                        const otherRoad = Math.min(...ROAD_NET.suburbRoads.filter(r => r !== road).map(r => nearestOnPolyline(x, z, r.pts).d));
+                        if ((ti === 2 || ti === 3) && otherRoad > 130) return;
+                        let low = Infinity, high = -Infinity, safe = true;
+                        // Corners, edge midpoints and centre protect the full rotated parcel, not only its origin.
+                        for (const u of [-1, 0, 1]) for (const v of [-1, 0, 1]) {
+                            const px = x + c * hx * u + sn * hz * v, pz = z - sn * hx * u + c * hz * v;
+                            const y = terrainHeight(px, pz); low = Math.min(low, y); high = Math.max(high, y);
+                            if (nearestTerrainRoadDist(px, pz) < 3) safe = false;
+                        }
+                        if (!safe || high - low > 3.5 || (ti >= 4 && high - low > 1.5)) return;
+                        // Preserve the existing suburban fast-travel pad and depot approaches.
+                        if (Math.hypot(x + 1060, z + 238) < 18 + Math.hypot(hx, hz) ||
+                            Math.hypot(x + 900, z + 245) < 18 + Math.hypot(hx, hz)) return;
+                        // Existing trunks remain in place, including their bend and maximum proxy width.
+                        if (TREES.list.some(t => {
+                            const dx = t.x - x, dz = t.z - z, margin = 2 * t.scale;
+                            return Math.abs(dx * c - dz * sn) < hx + margin && Math.abs(dx * sn + dz * c) < hz + margin;
+                        })) return;
+                        candidates[ti].push({ x, z, y: high, bottom: low - high - .3, rot, c, s: sn, hx, hz,
+                            type: type.id, ti, zone, terrainRange: high - low, k: i + zone * 7 });
+                    });
+                }
+            });
+            // Review fix: candidates were taken in road order, so the first road used up every quota and later
+            // zones lost houses (phone Maple Ave 39 -> 20). A golden-ratio stride spreads each type over all
+            // allowed roads and along each road; deterministic, initialization only.
+            for (const list of candidates) {
+                list.forEach((h, n) => { h.order = (n * 0.6180339887) % 1; });
+                list.sort((a, b) => a.order - b.order);
+            }
+            const cap = PROFILE === 'DESKTOP' ? 390 : 210;
+            let houses = [], quotas;
+            // Try exact target shares (largest-remainder integer rounding), never filling rejected parcels.
+            // Cached candidates make the bounded initialization-only retry cheap; no frame-time work.
+            for (let total = cap; total >= Math.ceil(baselineCount * 1.4); total--) {
+                quotas = suburbQuotas(total); houses = [];
+                const order = [5, 6, 2, 3, 4, 0, 1];
+                let complete = true;
+                for (const ti of order) {
+                    let count = 0;
+                    for (const h of candidates[ti]) {
+                        if (houses.some(other => !suburbSeparated(h, other))) continue;
+                        houses.push(h); if (++count === quotas[ti]) break;
+                    }
+                    if (count !== quotas[ti]) { complete = false; break; }
+                }
+                if (complete) break;
+            }
+            WORLD.suburbStats = { baseline: baselineCount, cap, placed: houses.length,
+                types: Object.fromEntries(SUBURB_TYPES.map(t => [t.id, houses.filter(h => h.type === t.id).length])),
+                zones: ROAD_NET.suburbRoads.map((_, zone) => Object.fromEntries(SUBURB_TYPES.map(t => [t.id, houses.filter(h => h.zone === zone && h.type === t.id).length]))) };
+            console.log('[VH] Suburb Option B:', WORLD.suburbStats);
+            return houses;
+        }
+        function buildSuburbMeshes(houses) {
+            const opaque = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: .85 });
+            const foundation = new THREE.MeshStandardMaterial({ color: 0x9ca3af, roughness: .9 });
+            const roofMat = new THREE.MeshStandardMaterial({ roughness: .8 });
+            const box = new THREE.BoxGeometry(1, 1, 1), dm = new THREE.Object3D(), color = new THREE.Color();
+            const meshes = [], roofLists = { gable: [], flat: [] };
+            const tint = [0xffffff, 0xfde7c8, 0xd9f0e3, 0xdbe7f5, 0xf6d6d6, 0xeee6ff];
+            function batch(geo, mat, list, transform, palette = null) {
+                const mesh = new THREE.InstancedMesh(geo, mat, list.length);
+                list.forEach((h, i) => { dm.position.set(h.x, h.y, h.z); dm.rotation.set(0, h.rot, 0); dm.scale.set(1, 1, 1);
+                    transform(h, dm); dm.updateMatrix(); mesh.setMatrixAt(i, dm.matrix);
+                    if (palette) mesh.setColorAt(i, color.setHex(palette[h.k % palette.length]));
+                });
+                mesh.castShadow = true; mesh.receiveShadow = true; scene.add(mesh); meshes.push(mesh); return mesh;
+            }
+            SUBURB_TYPES.forEach((type, ti) => {
+                const list = houses.filter(h => h.ti === ti), parts = [];
+                if (!list.length) return;
+                function part(w, height, d, x, y, z, hex) {
+                    const geo = new THREE.BoxGeometry(w, height, d); geo.translate(x, y, z);
+                    const rgb = new THREE.Color(hex), colors = [];
+                    for (let n = 0; n < geo.attributes.position.count; n++) colors.push(rgb.r, rgb.g, rgb.b);
+                    geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3)); parts.push(geo);
+                }
+                part(type.w, type.h, type.d, 0, type.h / 2, 0, 0xf3efe6);
+                for (let floor = 0; floor < type.floors; floor++) {
+                    const y = floor * 3 + 2;
+                    for (let unit = 0; unit < type.units; unit++) {
+                        const ux = (unit + .5) * type.w / type.units - type.w / 2;
+                        if (floor === 0) part(ti === 6 ? 5 : 1.2, 2.4, .08, ux, 1.2, type.d / 2 + .04, ti === 6 ? 0x475569 : 0x7c2d12);
+                        for (const side of [-1, 1]) {
+                            const wx = ux + side * type.w / type.units * .3;
+                            part(ti === 5 ? 2.5 : .95, ti === 5 ? 2 : 1.2, .1, wx, y, type.d / 2 + .05, 0x34506b);
+                            part(.95, 1.2, .1, wx, y, -type.d / 2 - .05, 0x34506b);
+                        }
+                    }
+                    if (floor) part(type.w + .12, .15, type.d + .12, 0, floor * 3 + .2, 0, 0xb7aaa0);
+                }
+                if (ti === 5) part(type.w, .45, .25, 0, 3.5, type.d / 2 + .12, 0x276749);
+                if (ti === 6) for (let y = .4; y < 2.4; y += .4) part(5, .05, .12, 0, y, type.d / 2 + .06, 0x94a3b8);
+                const geo = mergeGeometries(parts, false); parts.forEach(g => g.dispose());
+                const walls = batch(geo, opaque, list, () => {}, tint);
+                list.forEach((h, instance) => { h.wallMesh = walls; h.wallInstance = instance; roofLists[type.roof].push(h); });
+            });
+            const bases = batch(box, foundation, houses, (h, o) => {
+                const t = SUBURB_TYPES[h.ti]; o.position.y += (h.bottom + .2) / 2;
+                o.scale.set(t.w + .6, .2 - h.bottom, t.d + .6);
+            });
+            houses.forEach((h, i) => { h.baseMesh = bases; h.baseInstance = i; });
+            const roofGeo = new THREE.BufferGeometry();
+            roofGeo.setAttribute('position', new THREE.Float32BufferAttribute([
+                -.5,0,.5, .5,0,.5, .5,1,0, -.5,0,.5, .5,1,0, -.5,1,0,
+                .5,0,-.5, -.5,0,-.5, -.5,1,0, .5,0,-.5, -.5,1,0, .5,1,0,
+                -.5,0,-.5, -.5,0,.5, -.5,1,0, .5,0,.5, .5,0,-.5, .5,1,0
+            ], 3)); roofGeo.computeVertexNormals();
+            for (const kind of ['gable', 'flat']) batch(kind === 'gable' ? roofGeo : box, roofMat, roofLists[kind], (h, o) => {
+                const t = SUBURB_TYPES[h.ti]; o.position.y += t.h + (kind === 'flat' ? .2 : 0);
+                o.scale.set(t.w + 1, kind === 'flat' ? .4 : 2.2, t.d + 1);
+            }, [0x9a3412, 0x374151, 0x7c2d12, 0x1e3a5f, 0x57534e, 0x7f1d1d]);
+            WORLD.suburbMeshes = meshes;
+            buildHouseColliders(houses);
+        }
         function buildSuburbs() {
-            const dmy = new THREE.Object3D();
+            // Preserve the old parcel exclusion used to seed existing trees, byte-for-byte placements.
             const maxHouses = PROFILE === 'DESKTOP' ? 260 : 130;
             const S = ROAD_NET.suburb;
             const houses = [];
@@ -4540,74 +4696,6 @@
                     }
                 }
             });
-            WORLD.suburbHouses = houses;
-            if (!houses.length) return;
-
-            // 房屋外牆貼圖：米白壁板 + 窗戶 + 門 (正面)
-            const c = document.createElement('canvas');
-            c.width = 256; c.height = 128;
-            const g = c.getContext('2d');
-            g.fillStyle = '#f3efe6'; g.fillRect(0, 0, 256, 128);
-            for (let y = 0; y < 128; y += 6) { g.fillStyle = 'rgba(0,0,0,0.05)'; g.fillRect(0, y, 256, 1); }
-            const win = (x, y, w, h) => {
-                g.fillStyle = '#e2e8f0'; g.fillRect(x - 3, y - 3, w + 6, h + 6);
-                g.fillStyle = '#34506b'; g.fillRect(x, y, w, h);
-                g.fillStyle = 'rgba(255,255,255,0.35)'; g.fillRect(x + 2, y + 2, w * 0.35, h - 4);
-                g.fillStyle = '#e2e8f0'; g.fillRect(x + w / 2 - 1, y, 2, h); g.fillRect(x, y + h / 2 - 1, w, 2);
-            };
-            win(26, 34, 44, 40); win(186, 34, 44, 40);
-            g.fillStyle = '#7c2d12'; g.fillRect(112, 44, 32, 84);
-            g.fillStyle = '#fbbf24'; g.fillRect(137, 86, 4, 4);
-            const wallTex = new THREE.CanvasTexture(c);
-            wallTex.colorSpace = THREE.SRGBColorSpace;
-            wallTex.anisotropy = 4;
-
-            const wallGeo = new THREE.BoxGeometry(11, 3.6, 8.5);
-            wallGeo.translate(0, 1.8, 0);
-            const roofGeo = (() => {
-                // 三角柱斜屋頂 (屋脊沿 x 方向)，四周出簷 0.5 m
-                const w = 12, d = 9.6, h = 2.8, hw = w / 2, hd = d / 2;
-                const v = [
-                    -hw, 0, hd, hw, 0, hd, hw, h, 0, -hw, 0, hd, hw, h, 0, -hw, h, 0,
-                    hw, 0, -hd, -hw, 0, -hd, -hw, h, 0, hw, 0, -hd, -hw, h, 0, hw, h, 0,
-                    -hw, 0, -hd, -hw, 0, hd, -hw, h, 0,
-                    hw, 0, hd, hw, 0, -hd, hw, h, 0,
-                    -hw, 0, -hd, hw, 0, -hd, hw, 0, hd, -hw, 0, -hd, hw, 0, hd, -hw, 0, hd
-                ];
-                const geo = new THREE.BufferGeometry();
-                geo.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
-                geo.computeVertexNormals();
-                geo.translate(0, 3.6, 0);
-                return geo;
-            })();
-            const baseGeo = new THREE.BoxGeometry(11.6, 3.0, 9.1);
-            baseGeo.translate(0, -1.3, 0);
-            const n = houses.length;
-            const walls = new THREE.InstancedMesh(wallGeo, new THREE.MeshStandardMaterial({ map: wallTex, roughness: 0.85 }), n);
-            const roofs = new THREE.InstancedMesh(roofGeo, new THREE.MeshStandardMaterial({ roughness: 0.75 }), n);
-            const bases = new THREE.InstancedMesh(baseGeo, new THREE.MeshStandardMaterial({ color: 0x9ca3af, roughness: 0.9 }), n);
-            const wallTints = [0xffffff, 0xfde7c8, 0xd9f0e3, 0xdbe7f5, 0xf6d6d6, 0xeee6ff];
-            const roofTints = [0x9a3412, 0x374151, 0x7c2d12, 0x1e3a5f, 0x57534e, 0x7f1d1d];
-            const col = new THREE.Color();
-            houses.forEach((h, i) => {
-                const s = h.big ? 1.25 : 1;
-                dmy.position.set(h.x, h.y, h.z);
-                dmy.rotation.set(0, h.rot, 0);
-                dmy.scale.set(s, h.big ? 1.6 : 1, s);
-                dmy.updateMatrix();
-                walls.setMatrixAt(i, dmy.matrix);
-                walls.setColorAt(i, col.setHex(wallTints[(h.k * 7) % wallTints.length]));
-                roofs.setMatrixAt(i, dmy.matrix);
-                roofs.setColorAt(i, col.setHex(roofTints[(h.k * 5) % roofTints.length]));
-                dmy.scale.set(s, 1, s);
-                dmy.updateMatrix();
-                bases.setMatrixAt(i, dmy.matrix);
-            });
-            buildHouseColliders(houses, walls);
-            [walls, roofs, bases].forEach(m => { m.castShadow = true; m.receiveShadow = true; scene.add(m); });
-            walls.instanceColor.needsUpdate = true;
-            roofs.instanceColor.needsUpdate = true;
-
             // 行道樹與庭院樹 (闊葉樹)
             const treeMax = PROFILE === 'DESKTOP' ? 520 : 260;
             let nTrees = 0;
@@ -4620,7 +4708,10 @@
                 addTree(k % 9 === 0 ? 'pine' : 'broad', x, terrainHeight(x, z) - 0.15, z, 0.8 + (k % 7) * 0.07, k * 2.399);
                 nTrees++;
             }
-            console.log('[VH] 郊區：', houses.length, '棟房子、', nTrees, '棵樹');
+
+            const placed = buildSuburbParcels(houses.length);
+            WORLD.suburbHouses = placed;
+            buildSuburbMeshes(placed);
         }
 
         // ==================== 環狀高架快速道路 (柏油貼圖、紐澤西護欄、中央分隔、橋墩、4 條匝道) ====================
