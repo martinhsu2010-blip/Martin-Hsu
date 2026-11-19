@@ -4,36 +4,25 @@
 (none)
 
 ## Ready for Codex
-(none — T-004C starts after Martin accepts T-004B)
-## In review
-### T-004B Traffic population + Ferrari exclusion
+### T-004C Tree and existing house collision repair
 Owner: Codex
 Reviewer: Claude
 Priority: P1
-Depends on: T-004A (approved, D-017); no other active code PR
-Base commit: `5dd882ac9c1cf66ed910c600f6f619f4dfa2a5a7`
-Branch/PR: `codex/T-004B-traffic` / PR #25 (squash-merged 89f1a18, released as `vh-2026-11-19-18`)
-Spec: `specs/T-004A-spec-v1.1.md` §3.1, §3.6, §4 (T-004B row), §5.1 items 1–3 and 8.
-Acceptance (spec §4): §3.1 pool table exactly; 0 ordinary AI Ferrari; 5 fresh / 5 recycled loads; spawn separation (>=20 units between cars, >=25 from player's car) and 30-unit insertion clearance; no recycle within 120 units; syntax + offline; measured nearby/visible counts at 10 viewpoints vs baseline.
-Claude notes: (1) Every ordinary AI car is a full `RaycastVehicle` (4 wheel raycasts per physics step); doubling the pool is the main phone-CPU risk, so §3.1 item 5 (physics active only near the player, safe re-activation of frozen far cars) must be implemented, and the PR must report `physicsWorld.step` cost before/after (headless numbers labelled as headless). (2) Current code already gives ordinary traffic `model: 'kenney'`; find and fix the real path where Ferrari appears on NPC traffic (or show none exists) instead of assuming. Parked/selectable cars and the player Ferrari stay unchanged. (3) No per-frame allocations in traffic loops; saves, missions, police and controls unchanged.
-Verification: `code-reviewed` + headless full game (Chrome/SwiftShader, not a device). Status: released, awaiting Martin's device acceptance (stage 8).
-Claude review (2026-11-19): pool table exact; ordinary AI forced to Kenney with both Ferrari paths guarded (Ferrari investigation: no current ordinary-AI Ferrari path; 0 Ferrari in every run); spawn 20/25, insertion 30, no recycle within 120 or while visible; freeze/wake reuses the preStep callback and resets body/wheel state. Claude fixed one defect (19b4a97): freezing every car beyond 200 units froze most cars the player could see (TABLET_MED downtown: 10 of 13 on screen standing still); now cars beyond 200 freeze only after 2 s off screen and wake when they come on screen (`TRAFFIC.hideGrace`). Full game, 10 viewpoints summed: nearby cars PHONE_LOW 8 -> 51, TABLET_MED 12 -> 97; on screen 8 -> 19 / 10 -> 24, none frozen. Full-city physics step + vehicle updates (headless, median ms): PHONE_LOW about equal to baseline (4.7 -> 4.6 downtown), TABLET_MED +7-28% (6.2 -> 6.6 downtown). Smoke: driving, fast travel (no frozen car within 160), race, delivery, police, garage, save reload, offline reload, no errors. Suburbs/highway still show little traffic on screen. NOT verified: device FPS/heat (spec §3.6 routes), visible wake-up pop-in, rendering cost of more cars on screen.
+Depends on: T-004B (Done, Martin-accepted 2026-11-19)
+Base commit: latest `main` (reported in the HANDOFF)
+Branch: `codex/T-004C-collisions`
+Spec: `specs/T-004A-spec-v1.1.md` §3.5, §3.6, §4 (T-004C row), §5.1 items 4–7.
+Claude notes: prefer upright `CANNON.Box` trunks over `CANNON.Cylinder` (box chassis vs cylinder is a costly convex test); preallocated pool, add/remove only on the 0.5 s grid refresh, update AABBs after moving static bodies, immediate refresh on teleport; house compound bodies regrouped by spatial cell must not increase total body count.
+Claude note (T-004B context): ordinary traffic now freezes off screen and is woken by `updateTrafficPhysics()` (see HANDOFF "Traffic (T-004B)"). Tree trunk bodies must collide with active traffic too; a frozen traffic car is out of the world, so §3.5 "do not deactivate colliders near an AI car physically interacting with the tree" only concerns active cars. Keep the house-collider Y fix and spatial regrouping in this PR; do not change traffic rules.
+Verification: `designed`.
 
+## In review
+(none)
 
 ## Doing (Claude)
 (none)
 
 ## Blocked
-### T-004C Tree and existing house collision repair
-Owner: Codex
-Reviewer: Claude
-Priority: P1
-Blocked by: Martin's acceptance of T-004B (released vh-2026-11-19-18)
-Branch: `codex/T-004C-collisions`
-Spec: `specs/T-004A-spec-v1.1.md` §3.5, §3.6, §4 (T-004C row), §5.1 items 4–7.
-Claude notes: prefer upright `CANNON.Box` trunks over `CANNON.Cylinder` (box chassis vs cylinder is a costly convex test); preallocated pool, add/remove only on the 0.5 s grid refresh, update AABBs after moving static bodies, immediate refresh on teleport; house compound bodies regrouped by spatial cell must not increase total body count.
-Verification: `designed`.
-
 ### T-004D Suburban variety (Option B) and increased structure density
 Owner: Codex
 Reviewer: Claude
@@ -61,6 +50,19 @@ Why: archives had no license text; needed before any public sharing.
 (none)
 
 ## Done
+### T-004B Traffic population + Ferrari exclusion
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-004A (approved, D-017); no other active code PR
+Base commit: `5dd882ac9c1cf66ed910c600f6f619f4dfa2a5a7`
+Branch/PR: `codex/T-004B-traffic` / PR #25 (squash-merged 89f1a18, released as `vh-2026-11-19-18`)
+Spec: `specs/T-004A-spec-v1.1.md` §3.1, §3.6, §4 (T-004B row), §5.1 items 1–3 and 8.
+Acceptance (spec §4): §3.1 pool table exactly; 0 ordinary AI Ferrari; 5 fresh / 5 recycled loads; spawn separation (>=20 units between cars, >=25 from player's car) and 30-unit insertion clearance; no recycle within 120 units; syntax + offline; measured nearby/visible counts at 10 viewpoints vs baseline.
+Claude notes: (1) Every ordinary AI car is a full `RaycastVehicle` (4 wheel raycasts per physics step); doubling the pool is the main phone-CPU risk, so §3.1 item 5 (physics active only near the player, safe re-activation of frozen far cars) must be implemented, and the PR must report `physicsWorld.step` cost before/after (headless numbers labelled as headless). (2) Current code already gives ordinary traffic `model: 'kenney'`; find and fix the real path where Ferrari appears on NPC traffic (or show none exists) instead of assuming. Parked/selectable cars and the player Ferrari stay unchanged. (3) No per-frame allocations in traffic loops; saves, missions, police and controls unchanged.
+Verification: `Martin-accepted` (2026-11-19, S26 Ultra / Tab S11 device test) + `code-reviewed` + headless full game (Chrome/SwiftShader).
+Claude review (2026-11-19): pool table exact; ordinary AI forced to Kenney with both Ferrari paths guarded (Ferrari investigation: no current ordinary-AI Ferrari path; 0 Ferrari in every run); spawn 20/25, insertion 30, no recycle within 120 or while visible; freeze/wake reuses the preStep callback and resets body/wheel state. Claude fixed one defect (19b4a97): freezing every car beyond 200 units froze most cars the player could see (TABLET_MED downtown: 10 of 13 on screen standing still); now cars beyond 200 freeze only after 2 s off screen and wake when they come on screen (`TRAFFIC.hideGrace`). Full game, 10 viewpoints summed: nearby cars PHONE_LOW 8 -> 51, TABLET_MED 12 -> 97; on screen 8 -> 19 / 10 -> 24, none frozen. Full-city physics step + vehicle updates (headless, median ms): PHONE_LOW about equal to baseline (4.7 -> 4.6 downtown), TABLET_MED +7-28% (6.2 -> 6.6 downtown). Smoke: driving, fast travel (no frozen car within 160), race, delivery, police, garage, save reload, offline reload, no errors. Suburbs/highway still show little traffic on screen. NOT verified: device FPS/heat (spec §3.6 routes), visible wake-up pop-in, rendering cost of more cars on screen.
+
 ### T-004A Living City 2.0 Specification v1.1
 Owner: ChatGPT
 Reviewer: Claude
