@@ -4,20 +4,10 @@
 (none)
 
 ## Ready for Codex
-(none — the T-004 series ends with T-004E; the next task depends on Martin's acceptance)
+(none — T-004 series complete; next task comes from ChatGPT specs)
 
 ## In review
-### T-004E City district infill
-Owner: Codex
-Reviewer: Claude
-Priority: P1
-Depends on: T-004D (Done, Martin-accepted 2026-11-20)
-Base commit: `5a8041d8177e38af14215a282082395fba798700`
-Branch/PR: `codex/T-004E-urban-infill` / PR #34 (squash-merged dd4918d, released as `vh-2026-11-20-02`)
-Spec: `specs/T-004A-spec-v1.1.md` §3.2, §3.6, §4 (T-004E row).
-Claude notes: (1) Report placed building counts per district (CBD / Midtown / Old Town) for the exact same baseline build and the new build, and the increase vs the +20 / +40 / +35 % targets; record shortfalls instead of forcing overlaps (§3.2.2). (2) Every new building needs a static collider matching its visible shell down to its visible base (as in T-004C/D) and must appear in `WORLD.buildings` (map, camera blockers, facade LOD) like existing buildings; extend `collision_check.mjs` with impacts on new city buildings. (3) Clearance audit for every addition: `rectHitsElevated`, `rectHitsCurvedRoad`, grid roads and intersections with >= 3 units, depots, mission checkpoints, ramps (takeoff and landing), garage access, fast-travel arrivals, spawn and the CBD plaza. (4) Reuse the existing facade/window batching; report draw calls added on PHONE_LOW (<= 8) and DESKTOP_HIGH (<= 16) for city infill, measured with `renderer.info.render.calls` if a browser works, otherwise a structural count clearly labelled. (5) Traffic, trees, suburbs, camera, HUD, Hub, localization, economy and saves unchanged.
-Verification: `code-reviewed` + headless full game (Chrome/SwiftShader, not a device). Status: released, awaiting Martin's device acceptance (stage 8).
-Claude review (2026-11-20): infill is a separate initialization-only parcel pass over vacant parts of the original blocks (original `blockSpecs()` results untouched): 10x10 shells, heights CBD 16 / Midtown 20 / Old Town 12, one static box each from ground to wall top, registered in `WORLD.buildings`, `WORLD.roofs` (map, facade, camera blockers); three instanced shell batches reusing existing wall materials. Placed counts, PHONE_LOW: CBD 10->12 (+20.0%), Midtown 12->17 (+41.7%), Old Town 30->41 (+36.7%); DESKTOP_HIGH: CBD 27->33 (+22.2%), Midtown 18->26 (+44.4%), **Old Town 87->89 (+2.3%, 29 short of the +35% target)**. The desktop Old Town shortfall is real: of the candidates tried, 2259 failed the 3-unit gap to an original building, 773 the 10-unit street-tree/sidewalk strip, 225 had no facade cell, 116 hit elevated/curved road; no clearance was relaxed (§3.2.2). Claude fixed one defect (1af0de3): infill facades were flush with the shell wall and z-fought on tablet/desktop quality (the facade kit is skipped on PHONE_LOW); infill facade offset is now 0.06. Real `renderer.info.render.calls`, PR minus base at the same pose: DESKTOP_HIGH +1..+2, TABLET/MED +1..+3 (budget +8 / +16). 216 full-game impacts on all 18 PHONE_LOW shells (4 axes x 20/60/120 km/h): 0 runs without contact, 0 pass-through; no prop, lamp or tree inside any footprint; smoke + offline OK. NOT verified: device FPS/heat, real-device look, PWA update on an installed app. Cosmetic: facade window frames on infill show the flat shell colour (no interior-mapped glass) and 16/20 m shells have a plain wall above the 12 m facade band.
+(none)
 
 ## Doing (Claude)
 (none)
@@ -32,6 +22,18 @@ Why: archives had no license text; needed before any public sharing.
 (none)
 
 ## Done
+### T-004E City district infill
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-004D (Done, Martin-accepted 2026-11-20)
+Base commit: `5a8041d8177e38af14215a282082395fba798700`
+Branch/PR: `codex/T-004E-urban-infill` / PR #34 (squash-merged dd4918d, released as `vh-2026-11-20-02`)
+Spec: `specs/T-004A-spec-v1.1.md` §3.2, §3.6, §4 (T-004E row).
+Claude notes: (1) Report placed building counts per district (CBD / Midtown / Old Town) for the exact same baseline build and the new build, and the increase vs the +20 / +40 / +35 % targets; record shortfalls instead of forcing overlaps (§3.2.2). (2) Every new building needs a static collider matching its visible shell down to its visible base (as in T-004C/D) and must appear in `WORLD.buildings` (map, camera blockers, facade LOD) like existing buildings; extend `collision_check.mjs` with impacts on new city buildings. (3) Clearance audit for every addition: `rectHitsElevated`, `rectHitsCurvedRoad`, grid roads and intersections with >= 3 units, depots, mission checkpoints, ramps (takeoff and landing), garage access, fast-travel arrivals, spawn and the CBD plaza. (4) Reuse the existing facade/window batching; report draw calls added on PHONE_LOW (<= 8) and DESKTOP_HIGH (<= 16) for city infill, measured with `renderer.info.render.calls` if a browser works, otherwise a structural count clearly labelled. (5) Traffic, trees, suburbs, camera, HUD, Hub, localization, economy and saves unchanged.
+Verification: `code-reviewed` + headless full game (Chrome/SwiftShader, not a device). Status: Done. Martin accepted on S26 Ultra / Tab S11 on 2026-11-20 (verdict "通過", no numbers reported), including the desktop Old Town shortfall (+2.3% vs +35% target) which the release report asked him to accept or reject.
+Claude review (2026-11-20): infill is a separate initialization-only parcel pass over vacant parts of the original blocks (original `blockSpecs()` results untouched): 10x10 shells, heights CBD 16 / Midtown 20 / Old Town 12, one static box each from ground to wall top, registered in `WORLD.buildings`, `WORLD.roofs` (map, facade, camera blockers); three instanced shell batches reusing existing wall materials. Placed counts, PHONE_LOW: CBD 10->12 (+20.0%), Midtown 12->17 (+41.7%), Old Town 30->41 (+36.7%); DESKTOP_HIGH: CBD 27->33 (+22.2%), Midtown 18->26 (+44.4%), **Old Town 87->89 (+2.3%, 29 short of the +35% target)**. The desktop Old Town shortfall is real: of the candidates tried, 2259 failed the 3-unit gap to an original building, 773 the 10-unit street-tree/sidewalk strip, 225 had no facade cell, 116 hit elevated/curved road; no clearance was relaxed (§3.2.2). Claude fixed one defect (1af0de3): infill facades were flush with the shell wall and z-fought on tablet/desktop quality (the facade kit is skipped on PHONE_LOW); infill facade offset is now 0.06. Real `renderer.info.render.calls`, PR minus base at the same pose: DESKTOP_HIGH +1..+2, TABLET/MED +1..+3 (budget +8 / +16). 216 full-game impacts on all 18 PHONE_LOW shells (4 axes x 20/60/120 km/h): 0 runs without contact, 0 pass-through; no prop, lamp or tree inside any footprint; smoke + offline OK. NOT verified: device FPS/heat, real-device look, PWA update on an installed app. Cosmetic: facade window frames on infill show the flat shell colour (no interior-mapped glass) and 16/20 m shells have a plain wall above the 12 m facade band.
+
 ### T-004D Suburban variety (Option B) and increased structure density
 Owner: Codex
 Reviewer: Claude

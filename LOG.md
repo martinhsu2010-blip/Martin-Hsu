@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-20 | — | Martin | — | T-004E accepted on S26 Ultra / Tab S11 (vh-2026-11-20-02); T-004 Living City 2.0 (B-E) all Done
 - 2026-11-20 | vh-2026-11-20-02 | Claude (impl. Codex) | commit dd4918d | T-004E city infill: 10x10 low-rise shells in vacant parts of the CBD / Midtown / Old Town blocks (phone +20 / +42 / +37 %, desktop +22 / +44 / +2 %; desktop Old Town is dense and 29 buildings short of the +35 % target), solid colliders, shared render batches; Claude fixed facade z-fighting on tablet/desktop
 - 2026-11-20 | — | Martin | — | T-004D accepted on S26 Ultra / Tab S11 (vh-2026-11-20-01); T-004E unlocked for Codex
 - 2026-11-20 | vh-2026-11-20-01 | Claude (impl. Codex) | commit 17c16b3 | T-004D suburbs (Option B): seven building types (bungalow, 2-story, duplex, townhouse, walk-up, corner store, workshop), 130 -> 210 structures on phones / 215 -> 390 desktop, solid colliders including foundations; Claude spread the types evenly over all four suburban roads
