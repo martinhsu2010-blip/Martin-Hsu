@@ -4,21 +4,20 @@
 (none)
 
 ## Ready for Codex
-(none — T-005B is queued in Inbox until Martin accepts T-005A)
-
-## In review
-### T-005A Spawn cleanup + legal, denser traffic
+### T-005B Suburb frontage + city infill coverage
 Owner: Codex
-Implementer: Codex (traffic/spawn/world, never Gemini)
+Implementer: Codex (world generation, never Gemini)
 Reviewer: Claude
 Priority: P1
-Depends on: T-004E (Done)
-Base commit: `4c0d8db8bc603fa5786fe0a2e52ed035951a7e07`
-Branch/PR: `codex/T-005A-traffic-legal` / #43 (merged d57d0db, released vh-2026-11-20-03)
-Spec: `specs/T-005-spec-v1.md` Parts 1-2 (approved by Martin 2026-11-20 14:06; D-019).
-Claude notes: (1) Audit script first (`tools/test/route_legality.mjs`): report route violations with coordinates before fixing; legality before density. (2) The yellow "Ferrari" is the parked Muscle 69 at (103, -14), remove only that parked car; keep the garage Muscle '69 option, saves and i18n; update `traffic_check.mjs` (vehicle list) and every fixed `WORLD.vehicles` index. (3) Traffic table in Part 2 is approved; the performance guard (+12 draw calls / +25 % physics step per preset) lets a preset keep its old count, say so in the PR. (4) Do not edit `sw.js` CACHE or docs; spec causes marked "hypothesis" must be confirmed by the audit. Martin attaches his screenshots to the Codex task.
-Verification: code-reviewed + headless/real-Chrome checks by Claude (see LOG); NOT measured on a real device yet; waiting for Martin's acceptance on S26 Ultra / Tab S11. Review: round 1 found R1's z=240 leg blocked by ring ramps (car stalled at x -153 and -339); fixed by Codex in e3cd24d (R1 rerouted, audit models ring/spur clearance); round 2 clean. Known pre-existing, not fixed here: R4 stalls near (-4, 629), R5 (elevated ring lane) near (-572, 228). Five presets keep their old traffic count under the +12-draw guard (TABLET_MED, DESKTOP_MED/HIGH/ULTRA, IGPU_LOW).
+Base commit: `12d25ab28d0b7c5e35bd50291e4009c4f1089a38` (+ later docs-only commits)
+Branch/PR: `codex/T-005B-coverage` / (not opened)
+Depends on: T-005A (Done, Martin-accepted 2026-11-20)
+Spec: `specs/T-005-spec-v1.md` Parts 3-4 (approved by Martin 2026-11-20 14:06; D-019).
+Claude notes: audits first (suburb bare-frontage runs, legal empty city lots); relax only the soft rules in the order given; no silent cap increase (caps stay 210 phone / 390 desktop unless Martin approves a new one); collider, facade offset and draw-call rules as T-004D/E, budgets counted from the current build.
+Verification: pending.
 
+## In review
+(none)
 
 ## Doing (Claude)
 (none)
@@ -30,18 +29,22 @@ Priority: P2
 Why: archives had no license text; needed before any public sharing.
 
 ## Inbox
-### T-005B Suburb frontage + city infill coverage
-Owner: Codex
-Implementer: Codex (world generation, never Gemini)
-Reviewer: Claude
-Priority: P1
-Status: queued; do NOT start until T-005A is Done (one code PR at a time).
-Depends on: T-005A (Done)
-Spec: `specs/T-005-spec-v1.md` Parts 3-4 (approved by Martin 2026-11-20 14:06; D-019).
-Claude notes: audits first (suburb bare-frontage runs, legal empty city lots); relax only the soft rules in the order given; no silent cap increase (caps stay 210 phone / 390 desktop unless Martin approves a new one); collider, facade offset and draw-call rules as T-004D/E, budgets counted from the current build.
-Verification: pending.
+(none)
 
 ## Done
+### T-005A Spawn cleanup + legal, denser traffic
+Owner: Codex
+Implementer: Codex (traffic/spawn/world, never Gemini)
+Reviewer: Claude
+Priority: P1
+Depends on: T-004E (Done)
+Base commit: `4c0d8db8bc603fa5786fe0a2e52ed035951a7e07`
+Branch/PR: `codex/T-005A-traffic-legal` / #43 (merged d57d0db, released vh-2026-11-20-03)
+Spec: `specs/T-005-spec-v1.md` Parts 1-2 (approved by Martin 2026-11-20 14:06; D-019).
+Claude notes: (1) Audit script first (`tools/test/route_legality.mjs`): report route violations with coordinates before fixing; legality before density. (2) The yellow "Ferrari" is the parked Muscle 69 at (103, -14), remove only that parked car; keep the garage Muscle '69 option, saves and i18n; update `traffic_check.mjs` (vehicle list) and every fixed `WORLD.vehicles` index. (3) Traffic table in Part 2 is approved; the performance guard (+12 draw calls / +25 % physics step per preset) lets a preset keep its old count, say so in the PR. (4) Do not edit `sw.js` CACHE or docs; spec causes marked "hypothesis" must be confirmed by the audit. Martin attaches his screenshots to the Codex task.
+Verification: Martin accepted on S26 Ultra / Tab S11 on 2026-11-20 ("通過", no numbers reported). Earlier: code-reviewed + headless/real-Chrome checks by Claude, round 1 R1 ramp stall fixed in e3cd24d. Known pre-existing, not fixed: R4 stall near (-4, 629), R5 (elevated ring lane) near (-572, 228). Five presets keep their old traffic count under the +12-draw guard.
+
+
 ### T-004E City district infill
 Owner: Codex
 Reviewer: Claude
