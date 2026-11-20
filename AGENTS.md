@@ -35,6 +35,19 @@ node tools/test/suburb_check.mjs && node tools/test/urban_check.mjs
 All must pass (CI runs syntax, i18n, traffic, collision, suburb and urban; `hud_check` and `camera_check` are run by hand; `camera_check` and `collision_check` need the full git history). If a check cannot run in your environment, say so; never claim a PASS you did not see.
 If you can run a headless browser, also load `index.html` via a local static server and confirm there are no console errors on startup; otherwise say that you could not. The reviewer runs the real game test; do not claim performance numbers you did not measure.
 
+## Token Efficiency Guidelines
+These save tokens, never quality. They sit on top of the workflow, constraints and checks above and never weaken them.
+1. **Targeted code reading:** use `HANDOFF.md` as the code map; locate functions with `rg`/`grep`, then read small line ranges instead of re-reading the whole `index.html`.
+2. **No redundant exploration:** do not re-inspect files, functions or docs you already understand unless new evidence requires it.
+3. **Focused execution:** stay inside the approved task scope; no unrelated refactoring, speculative improvements or dependency exploration.
+4. **Efficient testing:** run every mandatory check from this file and the task spec. Keep complete output for any failure; summarize long successful output (command and PASS line are enough).
+5. **Concise reporting:** do not restate plans or progress. The final PR report covers changes made, root causes, test results, performance evidence and remaining risks.
+6. **Reuse context:** read the collaboration docs and the approved spec once at the start, then refer back to them instead of reloading them.
+7. **Batch coherent edits:** once the root cause is known, make related changes together when safe instead of repeatedly editing the same function.
+8. **Correctness first:** token efficiency never overrides required audits, tests, performance measurements, acceptance criteria or safety checks.
+9. **No arbitrary token limits:** do not set fixed reasoning budgets that could stop you from solving complex physics, traffic, collision or world-generation problems.
+10. **Report blockers:** if the spec is materially ambiguous or a required verification cannot be completed, say so in the PR description instead of guessing.
+
 ## Language
 Code and PR text in English. Explanations to Martin (the owner) in Traditional Chinese.
 
