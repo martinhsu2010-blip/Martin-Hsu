@@ -22,7 +22,7 @@ for(const preset of ['PHONE_LOW','DESKTOP_HIGH']){
   for(const o of [...h.city.map(o=>({...o,w:o.w+4,d:o.d+4})),...added.slice(0,i)])minBuilding=Math.min(minBuilding,gap({...b,w:b.w+1,d:b.d+1},{...o,w:o.w+1,d:o.d+1}));
   for(const x of h.ROAD_NET.avenuesX)minRoad=Math.min(minRoad,Math.abs(b.x-x)-b.w/2-h.ROAD_NET.avenueHalf);
   for(const z of h.ROAD_NET.crossZ)minRoad=Math.min(minRoad,Math.abs(b.z-z)-b.d/2-h.ROAD_NET.crossHalf);
-  for(const p of [...h.arrivals,...h.depots,...h.WORLD.vehicles.slice(0,4).map(v=>v.chassisBody.position)])minPoint=Math.min(minPoint,gap(b,{...p,w:0,d:0}));
+  for(const p of [...h.arrivals,...h.depots,...h.WORLD.vehicles.filter(v => !v.isAI && !v.isPolice).map(v=>v.chassisBody.position)])minPoint=Math.min(minPoint,gap(b,{...p,w:0,d:0}));
   for(const e of h.TREE_COLLIDERS.entries){const p=e.body.position,a=e.body.aabb;minTree=Math.min(minTree,gap(b,{x:p.x,z:p.z,w:a.upperBound.x-a.lowerBound.x,d:a.upperBound.z-a.lowerBound.z}));}
   for(const r of h.ramps){const theta=r.rotY+Math.PI,dx=b.x-r.x,dz=b.z-r.z,along=dx*Math.sin(theta)+dz*Math.cos(theta),side=Math.abs(dx*Math.cos(theta)-dz*Math.sin(theta));if(along> -r.len-12&&along<61)assert.ok(side>Math.hypot(b.w,b.d)/2+8,'stunt corridor');}
   const matrix=new THREE.Matrix4();b.mesh.getMatrixAt(b.instance,matrix);const box=new THREE.Box3(new THREE.Vector3(-.5,-.5,-.5),new THREE.Vector3(.5,.5,.5)).applyMatrix4(matrix);b.body.updateAABB();

@@ -12,7 +12,7 @@ export function section(source, start, end) {
 }
 const threeURL = 'data:text/javascript;base64,' + fs.readFileSync(new URL('libs/three/build/three.module.js', root)).toString('base64');
 const utils = fs.readFileSync(new URL('libs/three/examples/jsm/utils/BufferGeometryUtils.js', root), 'utf8').replace("from 'three'", `from '${threeURL}'`);
-const { mergeGeometries } = await import('data:text/javascript;base64,' + Buffer.from(utils).toString('base64'));
+export const { mergeGeometries } = await import('data:text/javascript;base64,' + Buffer.from(utils).toString('base64'));
 export async function collisionHarness(source = html, preset = 'PHONE_LOW') {
     const h = await trafficHarness(source, preset);
     h.PROFILE = preset.startsWith('DESKTOP') ? 'DESKTOP' : 'MOBILE'; h.DETAIL_LAYER = 1;

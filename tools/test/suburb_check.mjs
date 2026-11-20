@@ -24,7 +24,7 @@ for(const preset of ['PHONE_LOW','DESKTOP_HIGH']){
     assert.equal(JSON.stringify(h.city),JSON.stringify(old.city),'city placements unchanged');
     assert.equal(JSON.stringify(h.TREES.list.map(({x,y,z,rot,scale,type})=>({x,y,z,rot,scale,type}))),JSON.stringify(old.TREES.list.map(({x,y,z,rot,scale,type})=>({x,y,z,rot,scale,type}))),'all trees unchanged');
     let minGap=Infinity,minTrunkGap=Infinity,minRoadGap=Infinity,minProtectedGap=Infinity,maxTerrainRange=0;
-    const points=[...h.arrivals,...h.depots,...h.WORLD.vehicles.slice(0,4).map(v=>v.chassisBody.position)];
+    const points=[...h.arrivals,...h.depots,...h.WORLD.vehicles.filter(v => !v.isAI && !v.isPolice).map(v=>v.chassisBody.position)];
     for(let i=0;i<houses.length;i++){
         const house=houses[i],poly=polys[i];
         for(let j=0;j<i;j++)minGap=Math.min(minGap,polyDist(poly,polys[j]));
