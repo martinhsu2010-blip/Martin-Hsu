@@ -2821,8 +2821,12 @@
                 { pts: broadway, offset: 4.5 },
                 { pts: denseLine([0, -120], [0, 120], 20), offset: 4.5 },
                 { pts: sunset.filter(p => p[1] <= 240).reverse(), offset: 4.5 },
-                { pts: denseLine([-120, 240], [-420, 240], 20), offset: 4.5 },
-                { pts: denseLine([-420, 240], [-420, -360], 20), offset: 7 },
+                // Cross under the high ring at the -240 avenue junction, between the low spurs.
+                { pts: denseLine([-120, 240], [-120, 360], 16), offset: 4.5 },
+                { pts: denseLine([-120, 360], [-240, 360], 16), offset: 4.5 },
+                { pts: denseLine([-240, 360], [-240, 120], 16), offset: 4.5 },
+                { pts: denseLine([-240, 120], [-420, 120], 20), offset: 4.5 },
+                { pts: denseLine([-420, 120], [-420, -360], 20), offset: 7 },
                 { pts: denseLine([-420, -360], [-240, -360], 20), offset: 4.5 }
             ]));
             // R2：第 -240 大道南下 (繞行圓環) → 東行 → 第 0 大道北上 → 西行
@@ -3168,6 +3172,51 @@
                 }
             }
             return true;
+        }
+
+        // Ground traffic must fit below the elevated structures as well as on asphalt.
+        // Build the clearance query once from the same boxes used by the world builder.
+        function elevatedTrafficClearance(bodies, pillars) {
+            const roof = 3.17; // tallest Kenney is 2.16 above the road; retain one unit of clearance
+            const low = [];
+            function obstacle(shape, pos, rotation, undersideAllowance = 0) {
+                const min = new CANNON.Vec3(), max = new CANNON.Vec3();
+                shape.calculateWorldAABB(pos, rotation, min, max);
+                if (min.y - undersideAllowance > roof || max.y < 0) return;
+                low.push({ shape, pos, rotation, min, max, undersideAllowance });
+            }
+            for (const body of bodies) {
+                body.shapes.forEach((shape, i) => {
+                    const pos = body.pointToWorldFrame(body.shapeOffsets[i]);
+                    // The physical slab is 0.6 thick; the rendered underside sits up to 0.3 lower.
+                    obstacle(shape, pos, body.quaternion.mult(body.shapeOrientations[i]),
+                        shape.halfExtents.y === 0.3 ? 0.3 : 0);
+                });
+            }
+            for (const p of pillars) {
+                const rotation = new CANNON.Quaternion();
+                rotation.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), p.yaw);
+                obstacle(new CANNON.Box(new CANNON.Vec3(p.half * 0.8, 0.55, 1.2)),
+                    new CANNON.Vec3(p.x, p.top - 0.55, p.z), rotation);
+            }
+            const hull = height => new CANNON.Box(new CANNON.Vec3(2.01, height / 2, 4.07)).convexPolyhedronRepresentation;
+            const car = hull(roof), belowSlab = hull(roof + 0.3);
+            const rotation = new CANNON.Quaternion(), center = new CANNON.Vec3();
+            const up = new CANNON.Vec3(0, 1, 0), axis = new CANNON.Vec3();
+            return function clear(p) {
+                const hx = 2.01 * Math.abs(p.tz) + 4.07 * Math.abs(p.tx);
+                const hz = 2.01 * Math.abs(p.tx) + 4.07 * Math.abs(p.tz);
+                for (const box of low) {
+                    if (p.x + hx < box.min.x || p.x - hx > box.max.x ||
+                        p.z + hz < box.min.z || p.z - hz > box.max.z) continue;
+                    rotation.setFromAxisAngle(up, Math.atan2(p.tx, p.tz));
+                    center.set(p.x, (roof + box.undersideAllowance) / 2, p.z);
+                    const envelope = box.undersideAllowance ? belowSlab : car;
+                    if (envelope.findSeparatingAxis(box.shape.convexPolyhedronRepresentation,
+                        center, rotation, box.pos, box.rotation, axis)) return false;
+                }
+                return true;
+            };
         }
 
         (function markTrafficSlots() {
@@ -5101,6 +5150,11 @@
                 addShape(p.x, (p.top - 1.1) / 2, p.z, 0.9, (p.top - 1.1) / 2, 0.9, q);
             });
             [cols, caps].forEach(m => { m.castShadow = true; m.receiveShadow = true; scene.add(m); });
+            const clear = elevatedTrafficClearance(bodies, pil);
+            for (const route of ROAD_NET.routes) {
+                if (route.surface) continue; // Elevated lanes have their own deck; suburban roads are outside the city.
+                for (const p of route) p.trafficLegal = p.trafficLegal && clear(p);
+            }
             bodies.forEach(b => physicsWorld.addBody(b));
             console.log('[VH] 環狀高架：', rp.length, '點、', spurs.length, '條匝道、', pil.length, '座橋墩、', bodies.length, '個剛體');
         }
