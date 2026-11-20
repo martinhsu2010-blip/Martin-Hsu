@@ -66,7 +66,7 @@ Debug handle: `window.__VH` exposes internals (SAVE, STUNT, DELIVERY, CAR_MODELS
 - Mobile performance matters most; check any added feature on the PHONE_* presets.
 
 ## Working agreement
-See `COLLAB.md` (v3.2) and `AGENTS.md`. Code changes arrive as Pull Requests from Codex (or Gemini/Jules for simple tasks) and are reviewed/integrated/released by Claude.
+See `COLLAB.md` (v3.4) and `AGENTS.md`. Code changes arrive as Pull Requests from Codex (or Gemini via Antigravity Remote Agents for low-risk tasks) and are reviewed/integrated/released by Claude.
 
 ## Release process (how updates are shipped)
 1. Edit `index.html` (and assets if needed).

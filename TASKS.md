@@ -1,4 +1,4 @@
-# Task board (rules: COLLAB.md v3.3). One Owner per task. One active code PR at a time.
+# Task board (rules: COLLAB.md v3.4). One Owner per task. One active code PR at a time, shared by Codex and Antigravity; each code task carries `Implementer: Codex|Gemini`.
 
 ## Ready for ChatGPT
 (none)
@@ -6,6 +6,7 @@
 ## Ready for Codex
 ### T-005A Spawn cleanup + legal, denser traffic
 Owner: Codex
+Implementer: Codex (traffic/spawn/world, never Gemini)
 Reviewer: Claude
 Priority: P1
 Depends on: T-004E (Done)
@@ -31,6 +32,7 @@ Why: archives had no license text; needed before any public sharing.
 ## Inbox
 ### T-005B Suburb frontage + city infill coverage
 Owner: Codex
+Implementer: Codex (world generation, never Gemini)
 Reviewer: Claude
 Priority: P1
 Status: queued; do NOT start until T-005A is Done (one code PR at a time).
