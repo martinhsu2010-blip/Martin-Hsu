@@ -4,7 +4,17 @@
 (none)
 
 ## Ready for Codex
-(none — T-004 series complete; next task comes from ChatGPT specs)
+### T-005A Spawn cleanup + legal, denser traffic
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Depends on: T-004E (Done)
+Base commit: `4c0d8db8bc603fa5786fe0a2e52ed035951a7e07`
+Branch/PR: `codex/T-005A-traffic-legal` / (not opened)
+Spec: `specs/T-005-spec-v1.md` Parts 1-2 (approved by Martin 2026-11-20 14:06; D-019).
+Claude notes: (1) Audit script first (`tools/test/route_legality.mjs`): report route violations with coordinates before fixing; legality before density. (2) The yellow "Ferrari" is the parked Muscle 69 at (103, -14), remove only that parked car; keep the garage Muscle '69 option, saves and i18n; update `traffic_check.mjs` (vehicle list) and every fixed `WORLD.vehicles` index. (3) Traffic table in Part 2 is approved; the performance guard (+12 draw calls / +25 % physics step per preset) lets a preset keep its old count, say so in the PR. (4) Do not edit `sw.js` CACHE or docs; spec causes marked "hypothesis" must be confirmed by the audit. Martin attaches his screenshots to the Codex task.
+Verification: pending.
+
 
 ## In review
 (none)
@@ -19,7 +29,15 @@ Priority: P2
 Why: archives had no license text; needed before any public sharing.
 
 ## Inbox
-(none)
+### T-005B Suburb frontage + city infill coverage
+Owner: Codex
+Reviewer: Claude
+Priority: P1
+Status: queued; do NOT start until T-005A is Done (one code PR at a time).
+Depends on: T-005A (Done)
+Spec: `specs/T-005-spec-v1.md` Parts 3-4 (approved by Martin 2026-11-20 14:06; D-019).
+Claude notes: audits first (suburb bare-frontage runs, legal empty city lots); relax only the soft rules in the order given; no silent cap increase (caps stay 210 phone / 390 desktop unless Martin approves a new one); collider, facade offset and draw-call rules as T-004D/E, budgets counted from the current build.
+Verification: pending.
 
 ## Done
 ### T-004E City district infill
