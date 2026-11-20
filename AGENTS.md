@@ -1,6 +1,6 @@
-# AGENTS.md — rules for Codex and Gemini/Jules (and any coding agent) working on VICE HORIZON VI
+# AGENTS.md — rules for Codex and Antigravity/Gemini (and any coding agent) working on VICE HORIZON VI
 
-Read `COLLAB.md` (v3.3) first; this file is the short version for the coding agent. Your spec is the file named in your task message under `specs/` plus the task entry in `TASKS.md`; if either is missing or contradicts the other, stop and say so in the PR description.
+Read `COLLAB.md` (v3.4) first; this file is the short version for the coding agent. Your spec is the file named in your task message under `specs/` plus the task entry in `TASKS.md`; if either is missing or contradicts the other, stop and say so in the PR description.
 
 ## Project
 Open-world driving browser game: Three.js r160 + cannon-es 0.20, one file `index.html` (~9,900 lines, search for `// ====` banners; function/section map in `HANDOFF.md`), PWA served by GitHub Pages from `main`. Architecture and current systems: `HANDOFF.md`. Task you are working on: `TASKS.md`. Decisions you must respect: `DECISIONS.md`.
@@ -11,10 +11,17 @@ Implement ONE approved task at a time exactly as specified in `TASKS.md` / the l
 ## Workflow rules
 - Work on a branch named `codex/T-<id>-<short-name>` (Codex) or `gemini/T-<id>-<short-name>` (Gemini; if the tool picks its own name, say which in the PR) from the latest `main`. Never push to `main`. Never merge your own PR. Open a PR using the template and keep it small.
 - One active code PR at a time. If another PR is open, wait. One task = one session = one PR; never start a second task in the same PR.
-- Gemini routing is suspended (COLLAB.md, "Implementer routing"); if it is ever re-enabled, Gemini only takes simple tasks. If your task turns out to touch physics, traffic, collisions, world generation, save format, camera or more than one or two systems, **stop and say so in the PR description**; do not push through.
+- Gemini (Antigravity) only takes the low-risk tasks in "Secondary implementer" below. If your task turns out to touch physics, traffic, collisions, world generation, save format, camera or more than one or two systems, **stop and say so in the PR description**; do not push through.
 - Do NOT edit `sw.js` `CACHE` or the docs (`TASKS.md`, `DECISIONS.md`, `LOG.md`, `HANDOFF.md`, `COLLAB.md`, `specs/`); the maintainer (Claude) does that when integrating.
 - Do not add or change binary assets (models, textures, fonts, libs). List what you would need in the PR instead.
 - Do not reformat or reorder unrelated code; the file is large and diffs must stay reviewable.
+
+## Secondary implementer (Antigravity / Gemini) — D-020
+Applies only when `TASKS.md` says `Implementer: Gemini`; everything else in this file applies to you too.
+- **Allowed (whole task only):** zh/en UI strings and translations (`STRINGS`/`tr()`); wording polish of missions/UI text; purely static HUD/menu CSS tweaks; documentation or copy fixes with no logic change.
+- **Forbidden, stop and report instead of opening a PR:** `cannon-es` physics, collisions, vehicle handling, traffic/police AI, world generation, draw calls/rendering performance, save format. If the spec touches any of these, say so and do nothing else.
+- **Branch and diff:** branch `gemini/<task-id>` from the latest `main`; minimal diff to `index.html` only; no reformatting, reordering or "cleanup" of unrelated code; PR to `main` with the template; never merge, never push to `main`.
+- The one-active-code-PR lock is shared with Codex: if any code PR is open, wait.
 
 ## Hard constraints (the reviewer checks these)
 - Mobile performance first: no per-frame allocations in hot loops, keep draw calls low (use InstancedMesh / merged static meshes), keep physics cost low (cannon-es `step` is the main cost). Say how your change affects phones.
