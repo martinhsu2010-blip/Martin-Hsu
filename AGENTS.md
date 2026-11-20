@@ -1,6 +1,6 @@
 # AGENTS.md — rules for Codex and Gemini/Jules (and any coding agent) working on VICE HORIZON VI
 
-Read `COLLAB.md` (v3.2) first; this file is the short version for the coding agent. Your spec is the file named in your task message under `specs/` plus the task entry in `TASKS.md`; if either is missing or contradicts the other, stop and say so in the PR description.
+Read `COLLAB.md` (v3.3) first; this file is the short version for the coding agent. Your spec is the file named in your task message under `specs/` plus the task entry in `TASKS.md`; if either is missing or contradicts the other, stop and say so in the PR description.
 
 ## Project
 Open-world driving browser game: Three.js r160 + cannon-es 0.20, one file `index.html` (~9,900 lines, search for `// ====` banners; function/section map in `HANDOFF.md`), PWA served by GitHub Pages from `main`. Architecture and current systems: `HANDOFF.md`. Task you are working on: `TASKS.md`. Decisions you must respect: `DECISIONS.md`.
@@ -11,7 +11,7 @@ Implement ONE approved task at a time exactly as specified in `TASKS.md` / the l
 ## Workflow rules
 - Work on a branch named `codex/T-<id>-<short-name>` (Codex) or `gemini/T-<id>-<short-name>` (Gemini; if the tool picks its own name, say which in the PR) from the latest `main`. Never push to `main`. Never merge your own PR. Open a PR using the template and keep it small.
 - One active code PR at a time. If another PR is open, wait. One task = one session = one PR; never start a second task in the same PR.
-- Gemini only takes simple tasks (COLLAB.md, "Implementer routing"). If your task turns out to touch physics, traffic, collisions, world generation, save format, camera or more than one or two systems, **stop and say so in the PR description**; do not push through.
+- Gemini routing is suspended (COLLAB.md, "Implementer routing"); if it is ever re-enabled, Gemini only takes simple tasks. If your task turns out to touch physics, traffic, collisions, world generation, save format, camera or more than one or two systems, **stop and say so in the PR description**; do not push through.
 - Do NOT edit `sw.js` `CACHE` or the docs (`TASKS.md`, `DECISIONS.md`, `LOG.md`, `HANDOFF.md`, `COLLAB.md`, `specs/`); the maintainer (Claude) does that when integrating.
 - Do not add or change binary assets (models, textures, fonts, libs). List what you would need in the PR instead.
 - Do not reformat or reorder unrelated code; the file is large and diffs must stay reviewable.
