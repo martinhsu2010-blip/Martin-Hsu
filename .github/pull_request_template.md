@@ -1,5 +1,5 @@
 ## Task
-Task ID: T-xxx   (one PR = one task; branch name `codex/T-xxx-short-name`)
+Task ID: T-xxx   (one PR = one task; branch name `codex/T-xxx-short-name` or `gemini/T-xxx-short-name`; implementer: Codex | Gemini)
 Base commit (main SHA this branch started from):
 
 ## What changed and why
