@@ -3839,7 +3839,8 @@
             const M = () => new THREE.Matrix4();
 
             roofs.forEach((r, bi) => {
-                const off = r.infill ? 0 : FACADE.off;
+                // 新增建築的外牆只離牆面 0.06，避免與建築本體牆面共平面造成 z-fighting
+                const off = r.infill ? 0.06 : FACADE.off;
                 const tint = TINTS[(bi * 5 + 1) % TINTS.length];
                 const ck = Math.floor((r.x + 240) / 120) + '_' + Math.floor((r.z + 360) / 120);
                 if (!chunks.has(ck)) chunks.set(ck, { list: [], sx: 0, sz: 0, n: 0, r: 0 });
