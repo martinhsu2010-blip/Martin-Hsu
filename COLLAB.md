@@ -10,7 +10,7 @@ v3 adopted 2026-11-18 (D-011). v3.1 (2026-11-19, D-016) fixes the pipeline: ever
 - **Martin**: requirements, priorities, final acceptance. Starts Codex tasks and tells Claude when a PR is ready. Only Martin/Claude merge; nobody merges from inside Codex.
 
 ## Files (repo root is the only official location; ignore any old `records/` path)
-`COLLAB.md` this protocol · `specs/` full approved specs (`T-xxx-spec-vN.md`, template in `specs/TEMPLATE.md`) · `AGENTS.md` rules for Codex · `HANDOFF.md` how the project works · `TASKS.md` board · `DECISIONS.md` register · `LOG.md` releases · `tools/` scripts · `.github/` CI + PR template.
+`COLLAB.md` this protocol · `specs/` full approved specs (`T-xxx-spec-vN.md`, template in `specs/TEMPLATE.md`) · `AGENTS.md` rules for Codex · `CLAUDE.md` Claude's working notes · `HANDOFF.md` how the project works · `TASKS.md` board · `DECISIONS.md` register · `LOG.md` releases · `tools/` scripts · `.github/` CI + PR template.
 Re-read at the start of each session: `https://martinhsu2010-blip.github.io/Martin-Hsu/<FILE>` (Pages refreshes ~2 min after a push; Claude reads GitHub directly).
 
 ## Fixed pipeline (every feature, same order, no skipping)
