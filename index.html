@@ -2809,21 +2809,22 @@
             const coastal = ROAD_NET.ribbons[0].pts.map(p => [p.x, p.z]);
             const broadway = ROAD_NET.ribbons[1].pts.filter(p => p.x >= -240 && p.x <= 0).map(p => [p.x, p.z]);
             const sunset = ROAD_NET.ribbons[2].pts.filter(p => p.x >= -240 && p.x <= 0).map(p => [p.x, p.z]);
-            // R0：海濱大道北上 → 曲線海岸公路南下
+            // Close the coastal loop at paved intersections within the cross-street limits.
             ROAD_NET.routes.push(buildRoute([
-                { pts: denseLine([110, 480], [110, -480], 20), offset: 7 },
-                { pts: coastal.filter(p => p[1] > -480 && p[1] < 480), offset: 4 }
+                { pts: denseLine([110, 240], [110, -240], 16), offset: 4 },
+                { pts: denseLine([110, -240], [220, -240], 16), offset: 4 },
+                { pts: coastal.filter(p => p[1] >= -240 && p[1] <= 240), offset: 4 },
+                { pts: denseLine([220, 240], [110, 240], 16), offset: 4 }
             ]));
-            // R1：Broadway 斜向大道 → 第 0 大道南下 → Sunset 斜向大道 → 西行 → 第 -420 大道北上 → 東行回到 Broadway
             ROAD_NET.routes.push(buildRoute([
                 { pts: broadway, offset: 4.5 },
                 { pts: denseLine([0, -120], [0, 120], 20), offset: 4.5 },
-                { pts: sunset.slice().reverse(), offset: 4.5 },
-                { pts: denseLine([-240, 360], [-420, 360], 20), offset: 4.5 },
-                { pts: denseLine([-420, 360], [-420, -360], 20), offset: 7 },
+                { pts: sunset.filter(p => p[1] <= 240).reverse(), offset: 4.5 },
+                { pts: denseLine([-120, 240], [-420, 240], 20), offset: 4.5 },
+                { pts: denseLine([-420, 240], [-420, -360], 20), offset: 7 },
                 { pts: denseLine([-420, -360], [-240, -360], 20), offset: 4.5 }
             ]));
-            // R2：第 -240 大道南下 (繞行圓環) → 東行 → 第 -120 大道北上 (經過高架橋) → 西行
+            // R2：第 -240 大道南下 (繞行圓環) → 東行 → 第 0 大道北上 → 西行
             const ring = [];
             for (let a = 100; a <= 260; a += 10) {
                 const r = THREE.MathUtils.degToRad(a);
@@ -2833,9 +2834,9 @@
                 { pts: denseLine([-240, -360], [-240, -40], 20), offset: 4.5 },
                 { pts: ring, offset: 0 },
                 { pts: denseLine([-240, 40], [-240, 360], 20), offset: 4.5 },
-                { pts: denseLine([-240, 360], [-120, 360], 20), offset: 4.5 },
-                { pts: denseLine([-120, 360], [-120, -360], 20), offset: 4.5 },
-                { pts: denseLine([-120, -360], [-240, -360], 20), offset: 4.5 }
+                { pts: denseLine([-240, 360], [0, 360], 20), offset: 4.5 },
+                { pts: denseLine([0, 360], [0, -360], 20), offset: 4.5 },
+                { pts: denseLine([0, -360], [-240, -360], 20), offset: 4.5 }
             ]));
             // R3：西南區環線 (第 -120 大道南下 → z -720 西行 → 第 -600 大道北上 → z -480 東行)
             ROAD_NET.routes.push(buildRoute([
@@ -3062,17 +3063,109 @@
                 { pts: denseLine([-420, -880], [-420, -480], 20), offset: 4.5 },
                 { pts: denseLine([-420, -480], [0, -480], 20), offset: 4.5 }
             ]));
-            // 郊區：主幹道 + 山丘環線來回
-            const sm = ROAD_NET.suburbRoads[0].pts.filter(p => p.x <= -1000 && p.x >= -1400);
-            const hl = ROAD_NET.suburbRoads[2].pts;
-            const loop = sm.slice().reverse().concat(hl.slice(1));
-            ROAD_NET.routes.push(laneRoute(loop.map((p, i) => {
-                const a = loop[Math.max(0, i - 1)], b = loop[Math.min(loop.length - 1, i + 1)];
-                const tx = b.x - a.x, tz = b.z - a.z, L = Math.hypot(tx, tz) || 1;
-                return { x: p.x, z: p.z, y: p.y, tx: tx / L, tz: tz / L };
-            }), 3.2, true));
+            // The two suburban roadbeds end at different elevations. Stay on each
+            // continuous strip and turn inside the paved width before its end.
+            for (const road of [ROAD_NET.suburbRoads[0], ROAD_NET.suburbRoads[2]]) {
+                const spine = road.pts.slice(3, -3), lane = 2.8;
+                const loop = [];
+                for (let pass = 0; pass < 2; pass++) {
+                    const sign = pass ? -1 : 1;
+                    for (let i = 0; i < spine.length; i++) {
+                        const p = spine[pass ? spine.length - 1 - i : i];
+                        loop.push({ x: p.x - sign*p.tz*lane, z: p.z + sign*p.tx*lane,
+                            tx: sign*p.tx, tz: sign*p.tz, y: p.y });
+                    }
+                    const p = spine[pass ? 0 : spine.length - 1];
+                    for (let k = 1; k < 8; k++) {
+                        const a = k*Math.PI/8, c = Math.cos(a)*sign, t = Math.sin(a)*sign;
+                        const x = p.x + lane*(t*p.tx - c*p.tz), z = p.z + lane*(t*p.tz + c*p.tx);
+                        loop.push({x, z, tx:c*p.tx + t*p.tz, tz:c*p.tz - t*p.tx, y:roadHeightOn(road,x,z).h});
+                    }
+                }
+                ROAD_NET.routes.push(loop);
+            }
         })();
 
+
+        function trafficSurfaceIndex(net) {
+            // Index the two triangles of each rendered road-strip segment in 32-unit cells.
+            const cells = new Map();
+            const cell = (x, z) => (Math.floor(x / 32) + 128) * 256 + Math.floor(z / 32) + 128;
+            function triangle(kind, a, b, c) {
+                const den = (b.z-c.z)*(a.x-c.x) + (c.x-b.x)*(a.z-c.z);
+                if (!den) return;
+                const t = {kind, a, b, c, den};
+                for (let x = Math.floor(Math.min(a.x,b.x,c.x)/32); x <= Math.floor(Math.max(a.x,b.x,c.x)/32); x++)
+                    for (let z = Math.floor(Math.min(a.z,b.z,c.z)/32); z <= Math.floor(Math.max(a.z,b.z,c.z)/32); z++) {
+                        const key = cell(x*32,z*32);
+                        if (!cells.has(key)) cells.set(key, []);
+                        cells.get(key).push(t);
+                    }
+            }
+            function strip(road, kind, left = -road.half, right = road.half) {
+                const edge = (p, side) => ({x:p.x - p.tz*side, z:p.z + p.tx*side, y:p.y || 0});
+                const pts = road.pts;
+                for (let i=0; i < pts.length - (road.closed ? 0 : 1); i++) {
+                    const p=pts[i], q=pts[(i+1)%pts.length];
+                    const a=edge(p,left), b=edge(p,right), c=edge(q,left), d=edge(q,right);
+                    triangle(kind,a,b,c); triangle(kind,b,d,c);
+                }
+            }
+            for (const road of net.ribbons) strip(road,'city');
+            strip(net.ring,'ring', -net.ring.half + 0.5, -0.3);
+            strip(net.ring,'ring', 0.3, net.ring.half - 0.5);
+            for (const road of net.suburbRoads) strip(road,'suburb');
+            return function supported(kind,x,z,y,tolerance) {
+                if (kind === 'city') {
+                    // The approach ramps physically occupy the surface of the -120 avenue.
+                    const az = Math.abs(z);
+                    if (Math.abs(x + 120) <= 9 && az >= 90 && az <= 142) {
+                        const t = (142 - az) / 52;
+                        return Math.abs(y - 7*t*t*(3-2*t)) <= tolerance;
+                    }
+                    const rb=net.roundabouts[0], r=Math.hypot(x-rb.x,z-rb.z);
+                    if (r < rb.rIn) return false;
+                    if (Math.abs(y) <= tolerance) {
+                        if (r <= rb.rOut) return true;
+                        if (z >= -net.avenueZ && net.avenuesX.some(v => Math.abs(v-x)<=net.avenueHalf && z <= (v < -340 ? net.hillAveZ : net.avenueZ))) return true;
+                        if (x<=225 && net.crossZ.some(v => Math.abs(v-z)<=net.crossHalf && x >= (v>=360 ? -340 : -620))) return true;
+                    }
+                }
+                const candidates=cells.get(cell(x,z));
+                if (!candidates) return false;
+                for (const t of candidates) {
+                    if (t.kind !== kind) continue;
+                    const {a,b,c,den}=t;
+                    const u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/den;
+                    const v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/den;
+                    if (u >= -1e-7 && v >= -1e-7 && u+v <= 1.0000001 &&
+                        Math.abs(y-(u*a.y+v*b.y+(1-u-v)*c.y))<=tolerance) return true;
+                }
+                return false;
+            };
+        }
+        function trafficSampleLegal(surface,kind,p,width,length,y) {
+            if (!surface(kind,p.x,p.z,y,0.25)) return false;
+            for (const side of [-width,0,width]) {
+                for (const end of [-length,-length/2,0,length/2,length]) {
+                    if (!surface(kind,p.x+p.tz*side+p.tx*end,p.z-p.tx*side+p.tz*end,y,0.65)) return false;
+                }
+            }
+            return true;
+        }
+
+        // The audited largest Kenney half extents rounded upward, plus one unit of pavement.
+        function markTrafficSlots() {
+            const surface = trafficSurfaceIndex(ROAD_NET);
+            for (const [rid, route] of ROAD_NET.routes.entries()) {
+                const kind = rid === 5 || rid === 6 ? 'ring' : rid >= 9 ? 'suburb' : 'city';
+                for (const p of route) {
+                    const y = p.y ?? terrainHeight(p.x, p.z);
+                    p.trafficLegal = trafficSampleLegal(surface, kind, p, 2.01, 4.02, y);
+                }
+            }
+        }
+        markTrafficSlots();
 
         // ---------- 道路視覺建模 ----------
         function createTwoLaneRoadTexture() {
@@ -7284,6 +7377,8 @@
                 const n = route.length;
                 const p = route[((idx % n) + n) % n];
                 this.routeId = routeId;
+                this.nextRouteCheck = 0;
+                this.offRouteSince = null;
                 this.routeIdx = ((idx % n) + n) % n;
                 const gy = p.y !== undefined ? p.y : terrainHeight(p.x, p.z);
                 this.chassisBody.position.set(p.x, gy + 1.0, p.z);
@@ -7631,7 +7726,6 @@
         function spawnVehicles() {
             [
                 { name: 'Ferrari GT', archetype: 'SUPER', color: 0xdc2626, x: 103, z: 26, heading: 0 },
-                { name: 'Muscle 69', archetype: 'MUSCLE', color: 0xeab308, livery: 'stripes', color2: 0x0b0d12, x: 103, z: -14, heading: 0 },
                 { name: 'Apex 4x4', archetype: 'MONSTER', color: 0x059669, x: 235, z: 10, heading: -Math.PI / 2 },
                 { name: 'VCPD Shelby GT500', archetype: 'POLICE', model: 'fordcop', color: 0x111827, x: -45, z: 12, heading: 0 }
             ].forEach(cfg => WORLD.vehicles.push(new RealisticRaycastVehicle(cfg)));
@@ -8775,6 +8869,13 @@
             for (const car of WORLD.vehicles) {
                 if (car.isPolice || (!car.isAI && !car.frozen)) continue;
                 const p = car.chassisBody.position, dx = p.x - pos.x, dz = p.z - pos.z, d2 = dx * dx + dz * dz;
+                if (car.isAI && now >= car.nextRouteCheck) {
+                    car.nextRouteCheck = now + 0.2;
+                    if (outsideTrafficRoute(car)) {
+                        if (car.offRouteSince === null) car.offRouteSince = now;
+                        if (now - car.offRouteSince > 2) car.trafficRecovery = true;
+                    } else car.offRouteSince = null;
+                }
                 // Review fix: cars on screen keep driving; only cars off screen for hideGrace seconds are frozen beyond 200 units.
                 const seen = car.isAI && trafficVisible(p.x, p.y, p.z);
                 if (seen) car.trafficSeenAt = now; else if (car.trafficSeenAt === undefined) car.trafficSeenAt = -Infinity;
@@ -8792,6 +8893,21 @@
                     resetTrafficBody(car);
                 }
             }
+        }
+        // Fast path for cars close to their tracked sample. After a shove, test the
+        // entire closed polyline, including the seam, before scheduling recovery.
+        function outsideTrafficRoute(car) {
+            const route = ROAD_NET.routes[car.routeId], p = car.chassisBody.position;
+            const nearest = route[car.routeIdx];
+            if ((p.x-nearest.x)**2 + (p.z-nearest.z)**2 <= 64) return false;
+            let a = route[route.length-1];
+            for (const b of route) {
+                const dx = b.x-a.x, dz = b.z-a.z;
+                const t = Math.max(0, Math.min(1, ((p.x-a.x)*dx + (p.z-a.z)*dz)/(dx*dx+dz*dz || 1)));
+                if ((p.x-a.x-t*dx)**2 + (p.z-a.z-t*dz)**2 <= 64) return false;
+                a = b;
+            }
+            return true;
         }
         function trafficSlotClear(x, z, car, separation, playerClearance) {
             const player = trafficPlayerPosition();
@@ -8811,7 +8927,7 @@
                 const rid = (routeId + r) % routes.length, route = routes[rid];
                 for (let j = 0; j < route.length; j++) {
                     const idx = (preferred + j) % route.length, p = route[idx];
-                    if (!trafficSlotClear(p.x, p.z, null, 20, 25)) continue;
+                    if (!p.trafficLegal || !trafficSlotClear(p.x, p.z, null, 20, 25)) continue;
                     TRAFFIC.slotRoute = rid; TRAFFIC.slotIndex = idx;
                     return true;
                 }
@@ -8847,6 +8963,7 @@
                 for (let tries = 0; tries < 64; tries++) {
                     const rid = Math.floor(Math.random() * routes.length), route = routes[rid];
                     const idx = Math.floor(Math.random() * route.length), q = route[idx];
+                    if (!q.trafficLegal) continue;
                     const qx = q.x - pos.x, qz = q.z - pos.z, qd2 = qx * qx + qz * qz;
                     if (qd2 < TRAFFIC.insertMin * TRAFFIC.insertMin || qd2 > TRAFFIC.insertMax * TRAFFIC.insertMax) continue;
                     const y = (q.y !== undefined ? q.y : terrainHeight(q.x, q.z)) + 1;
@@ -8861,11 +8978,12 @@
         function trafficDiagnostics() {
             const pos = trafficPlayerPosition();
             updateTrafficFrustum();
-            let total = 0, nearby = 0, visibleNearby = 0, active = 0, ferrari = 0;
+            let total = 0, nearby = 0, visibleNearby = 0, active = 0, ferrari = 0, offRoute = 0;
             for (const v of WORLD.vehicles) {
                 if (!v.isAI || v.isPolice) continue;
                 total++;
                 if (!v.frozen) active++;
+                if (outsideTrafficRoute(v)) offRoute++;
                 if (v.modelKey !== 'kenney' || v.modelTemplate) ferrari++;
                 const p = v.chassisBody.position, dx = p.x - pos.x, dz = p.z - pos.z;
                 if (dx * dx + dz * dz <= 200 * 200) {
@@ -8873,7 +8991,7 @@
                     if (v.chassisGroup.visible && trafficVisible(p.x, p.y, p.z)) visibleNearby++;
                 }
             }
-            return { total, nearby, visibleNearby, active, ferrari };
+            return { total, nearby, visibleNearby, active, ferrari, offRoute };
         }
 
         // Cache DOM/context once; visibility observers do no work in the animation hot path.

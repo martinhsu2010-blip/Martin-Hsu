@@ -83,7 +83,7 @@ for (const preset of ['PHONE_LOW', 'DESKTOP_HIGH']) {
         return false;
     }
     let minArrivalClearance = Infinity, roadIntrusions = 0;
-    const protectedPoints = [...h.arrivals, ...h.depots, ...h.WORLD.vehicles.slice(0,4).map(v => v.chassisBody.position)];
+    const protectedPoints = [...h.arrivals, ...h.depots, ...h.WORLD.vehicles.filter(v => !v.isAI && !v.isPolice).map(v => v.chassisBody.position)];
     for (const e of h.TREE_COLLIDERS.entries) {
         const half = e.body.shapes[0].halfExtents;
         for (const x of [-1,0,1]) for (const z of [-1,0,1]) {

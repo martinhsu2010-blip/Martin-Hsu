@@ -25,8 +25,8 @@ for (const [preset, count] of Object.entries(expected)) {
         const h = await harness(html, preset, seed), cars = h.ordinary();
         assert.equal(cars.length, count); noFerrari(h); fresh++;
         assert.deepEqual(Array.from(h.KENNEY_TYPES, t => [t[0], t[1]]), types.map((t, i) => [t, [6,4,3,3,3,2,2,2,2,1,1][i]]));
-        assert.deepEqual(Array.from(h.WORLD.vehicles.slice(0, 4), v => [v.name, v.modelKey]),
-            [['Ferrari GT', null], ['Muscle 69', null], ['Apex 4x4', null], ['VCPD Shelby GT500', 'fordcop']]);
+        assert.deepEqual(Array.from(h.WORLD.vehicles.filter(v => !v.isAI && !v.isPolice), v => [v.name, v.modelKey]),
+            [['Ferrari GT', null], ['Apex 4x4', null], ['VCPD Shelby GT500', 'fordcop']]);
         assert.equal(h.WORLD.policeUnits.length, 2);
         assert.ok(h.WORLD.policeUnits.every(v => v.modelKey === 'fordcop' && !v.chassisGroup.visible));
         for (const v of cars) {
