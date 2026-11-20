@@ -3070,13 +3070,13 @@
                     for (let i = 0; i < spine.length; i++) {
                         const p = spine[pass ? spine.length - 1 - i : i];
                         loop.push({ x: p.x - sign * p.tz * lane, z: p.z + sign * p.tx * lane,
-                            tx: sign * p.tx, tz: sign * p.tz, y: p.y });
+                            tx: sign * p.tx, tz: sign * p.tz, tightTurn: i >= spine.length - 9 || i < 4 });
                     }
                     const p = spine[pass ? 0 : spine.length - 1];
                     for (let k = 1; k < 8; k++) {
                         const a = k * Math.PI / 8, c = Math.cos(a) * sign, t = Math.sin(a) * sign;
                         const x = p.x + lane * (t * p.tx - c * p.tz), z = p.z + lane * (t * p.tz + c * p.tx);
-                        loop.push({ x, z, tx: c * p.tx + t * p.tz, tz: c * p.tz - t * p.tx });
+                        loop.push({ x, z, tx: c * p.tx + t * p.tz, tz: c * p.tz - t * p.tx, tightTurn: true });
                     }
                 }
                 loop.surface = 'suburb';
@@ -7412,7 +7412,10 @@
                 const n = route.length;
                 const p = this.chassisBody.position;
                 let best = this.routeIdx || 0, bestD = Infinity;
-                for (let k = -6; k < 45; k++) {
+                // Follow the current leg through a hairpin. The return lane is only
+                // a few units away and can otherwise win the forward sample search.
+                const searchAhead = route[best].tightTurn ? 7 : 45;
+                for (let k = -6; k < searchAhead; k++) {
                     const j = ((this.routeIdx || 0) + k + n) % n;
                     const q = route[j];
                     const dd = (q.x - p.x) * (q.x - p.x) + (q.z - p.z) * (q.z - p.z);
@@ -7420,12 +7423,15 @@
                 }
                 this.routeIdx = best;
                 const speed = Math.abs(forwardSpeed);
-                const tgt = route[(best + Math.round((7 + speed * 0.55) / 2)) % n];
+                const tightTurn = route[best].tightTurn;
+                const lookAhead = tightTurn ? 2 : Math.round((7 + speed * 0.55) / 2);
+                const tgt = route[(best + lookAhead) % n];
                 const curH = this.getForwardHeading();
                 let diff = Math.atan2(tgt.x - p.x, tgt.z - p.z) - curH;
                 while (diff > Math.PI) diff -= Math.PI * 2;
                 while (diff < -Math.PI) diff += Math.PI * 2;
-                const steer = THREE.MathUtils.clamp(diff * 1.25, -0.5, 0.5);
+                const steerLimit = tightTurn ? 0.9 : 0.5;
+                const steer = THREE.MathUtils.clamp(diff * 1.25, -steerLimit, steerLimit);
                 this.vehicle.setSteeringValue(steer, 0);
                 this.vehicle.setSteeringValue(steer, 1);
 
@@ -7433,7 +7439,7 @@
                 let turn = Math.atan2(b.tx, b.tz) - Math.atan2(a.tx, a.tz);
                 while (turn > Math.PI) turn -= Math.PI * 2;
                 while (turn < -Math.PI) turn += Math.PI * 2;
-                let targetSpeed = THREE.MathUtils.lerp(15, 6.5, Math.min(1, Math.abs(turn) / 1.2));
+                let targetSpeed = tightTurn ? 3 : THREE.MathUtils.lerp(15, 6.5, Math.min(1, Math.abs(turn) / 1.2));
 
                 const fx = Math.sin(curH), fz = Math.cos(curH);
                 for (const o of WORLD.vehicles) {

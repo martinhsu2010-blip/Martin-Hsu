@@ -6,6 +6,10 @@ import { harness, html, presets } from './traffic_harness.mjs';
 
 for (const preset of process.argv.slice(2).length ? process.argv.slice(2) : Object.keys(presets(html))) {
     const h = await harness(html, preset);
+    // The pure projection routine is called for every wheel/terrain probe.
+    // Compile its exact game source in Node's native realm to avoid millions
+    // of cross-context Math calls; the input points and arithmetic are identical.
+    h.nearestOnPolyline = vm.runInThisContext('(' + h.nearestOnPolyline.toString() + ')');
     // Execute the game's own terrain triangulation and ring collision builder.
     // Rendering, spur ramps, props, traffic lights and parked vehicles are excluded.
     const part = (from, to) => {
