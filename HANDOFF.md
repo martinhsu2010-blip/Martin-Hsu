@@ -1,13 +1,13 @@
 # VICE HORIZON VI — Project Handoff
 
 Written for another AI assistant (e.g. ChatGPT) or developer picking up this project.
-Last updated: 2026-11-18, game version `vh-2026-11-20-01` (see `CACHE` in `sw.js`).
+Last updated: 2026-11-20, game version `vh-2026-11-20-02` (see `CACHE` in `sw.js`).
 Owner: martinhsu2010-blip (Traditional Chinese speaker, Taiwan). Explain things to the owner in Traditional Chinese; write prompts for Gemini in English.
 
 ## What this is
 An open-world driving browser game (GTA-style): on-foot + vehicles, city, police chase, missions, radio, day/night.
 - Live: https://martinhsu2010-blip.github.io/Martin-Hsu/ (GitHub Pages, installable PWA, works offline)
-- Stack: Three.js r160 + cannon-es 0.20, no build step for the game itself. **Everything is in one file: `index.html`** (~8,300 lines). All libs, models, textures and fonts are vendored locally (`libs/`, `models/`, `textures/`, `fonts/`) so it runs offline.
+- Stack: Three.js r160 + cannon-es 0.20, no build step for the game itself. **Everything is in one file: `index.html`** (~9,900 lines). All libs, models, textures and fonts are vendored locally (`libs/`, `models/`, `textures/`, `fonts/`) so it runs offline.
 - History: prototyped in Gemini Canvas, then developed with Claude.
 
 ## Repo layout
@@ -47,6 +47,17 @@ Debug handle: `window.__VH` exposes internals (SAVE, STUNT, DELIVERY, CAR_MODELS
 
 **World**: large city with CBD skyscrapers, old town, midtown, hotels, suburbs/hills, Mount Chiliad road, elevated ring road, coastal road, sea. Roads are all connected. Map screen with fast travel and waypoints.
 
+## Code map (function/section names; line numbers as of `vh-2026-11-20-02` drift, so `grep -n` the name)
+- Quality/device: `detectDevice` (~1509), `QUALITY_CONFIG` (~1473), `DENSITY` (~1560), `SAVE` (~1563). Preset names `PHONE_LOW`, `TABLET_MED`, `DESKTOP_HIGH`, `IGPU_*`. Poly Haven models (facade kit, lamps) are skipped on PHONE+LOW.
+- Language: `STRINGS` table at the top (~20, a separate `<script>`), `tr()`, `changeLanguage` (~8102).
+- World/physics helpers: `WORLD` (~2052), `ROAD_NET` (~2577), `addStaticBoxCollider` (~2479), `onCurvedRoad`/`rectHitsCurvedRoad` (~2643/2657), `rectHitsElevated` (~3023).
+- City: `buildKitFacades` + `updateFacadeLOD` (~3779/3957), `blockSpecs` (~4060), `cityInfillParcels`/`buildCityInfill` (~4096/4137), `cityParcels` collected in the city build (~5200-5400).
+- Trees and suburbs: `addTree` (~4211), `buildTrees` (~4381), `initTreeColliders`/`refreshTreeColliders` (~4459/4522), `buildHouseColliders` (~4553), `buildSuburbParcels`/`buildSuburbMeshes` (~4611/4679).
+- Vehicles and traffic: `spawnVehicles` (~7631), `TRAFFIC` (~8738), `updateTrafficPhysics` (~8772), `recycleTraffic` (~8833); vehicle class has `supportOnTerrain` (~7367).
+- Gameplay: `startMission` (~8174), `teleportTo` (~8267), `CAM` + `updateCameraAndLights` (~8308/8350), `STUNT`/`DELIVERY` (~8543/8592), `startDeliveryJob` (~8641).
+- Map/Hub: `drawWorldMap` (~9070), `fastTravelTo` (~9191); HUD/Hub/touch controls live in section 11 (~9307); startup and main loop in section 12 (~9796).
+- Tests: `tools/test/` (one `*_check.mjs` per system plus `*_harness.mjs`; `hud_layout_check.py` needs a browser). Headless Chrome can reach DESKTOP/HIGH only with a spoofed discrete GPU name (see City infill notes).
+
 ## Pitfalls already learned
 - cannon-es `Box` chassis does not collide with `Trimesh` terrain → handled by `supportOnTerrain()`.
 - Don't use `isInContact`; use `raycastResult.hasHit`.
@@ -55,7 +66,7 @@ Debug handle: `window.__VH` exposes internals (SAVE, STUNT, DELIVERY, CAR_MODELS
 - Mobile performance matters most; check any added feature on the PHONE_* presets.
 
 ## Working agreement
-See `COLLAB.md` (v3) and `AGENTS.md`. Code changes arrive as Pull Requests from Codex and are reviewed/integrated/released by Claude.
+See `COLLAB.md` (v3.2) and `AGENTS.md`. Code changes arrive as Pull Requests from Codex (or Gemini/Jules for simple tasks) and are reviewed/integrated/released by Claude.
 
 ## Release process (how updates are shipped)
 1. Edit `index.html` (and assets if needed).
