@@ -32,6 +32,8 @@ jobs:
         run: python3 tools/test/i18n_check.py
       - name: Check locale defaults and live refresh
         run: node tools/test/i18n_check.mjs
+      - name: Check traffic route footprints and road heights
+        run: node tools/test/route_legality.mjs
       - name: Check traffic pools, exclusion, spacing and reactivation
         run: node tools/test/traffic_check.mjs
       - name: Check tree and house collider alignment, activation and impacts

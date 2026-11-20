@@ -1486,17 +1486,17 @@
             // pixelRatio: 最高像素比 | shadow: 陰影貼圖解析度 | bloom / ssao / smaa: 後製開關
             // fog: 霧氣濃度 (越小看越遠) | npcs / traffic: 行人與車流數量 | props: 物理道具數量倍率
             presets: {
-                PHONE_LOW:     { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 18, props: 0.5 },
-                PHONE_MED:     { pixelRatio: 1.5,  shadow: 1024, bloom: true,  ssao: false, smaa: false, fog: 0.0014, npcs: 10, traffic: 24, props: 0.75 },
-                TABLET_LOW:    { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 22, props: 0.5 },
+                PHONE_LOW:     { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 22, props: 0.5 },
+                PHONE_MED:     { pixelRatio: 1.5,  shadow: 1024, bloom: true,  ssao: false, smaa: false, fog: 0.0014, npcs: 10, traffic: 30, props: 0.75 },
+                TABLET_LOW:    { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0019, npcs: 8,  traffic: 28, props: 0.5 },
                 TABLET_MED:    { pixelRatio: 1.5,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 32, props: 0.75 },
-                TABLET_HIGH:   { pixelRatio: 1.75, shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0011, npcs: 14, traffic: 36, props: 1.0 },
+                TABLET_HIGH:   { pixelRatio: 1.75, shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0011, npcs: 14, traffic: 46, props: 1.0 },
                 DESKTOP_MED:   { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0011, npcs: 16, traffic: 40, props: 1.0 },
                 DESKTOP_HIGH:  { pixelRatio: 2.0,  shadow: 2048, bloom: true,  ssao: true,  smaa: false, fog: 0.0010, npcs: 16, traffic: 52, props: 1.0 },
                 DESKTOP_ULTRA: { pixelRatio: 2.0,  shadow: 4096, bloom: true,  ssao: true,  smaa: true,  fog: 0.0006, npcs: 24, traffic: 68, props: 1.0 },
                 IGPU_LOW:      { pixelRatio: 1.0,  shadow: 1024, bloom: false, ssao: false, smaa: false, fog: 0.0016, npcs: 8,  traffic: 20, props: 0.6 },
-                IGPU_MED:      { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 28, props: 0.8 },
-                IGPU_HIGH:     { pixelRatio: 1.25, shadow: 2048, bloom: true,  ssao: false, smaa: true,  fog: 0.0011, npcs: 14, traffic: 36, props: 1.0 }
+                IGPU_MED:      { pixelRatio: 1.0,  shadow: 2048, bloom: true,  ssao: false, smaa: false, fog: 0.0012, npcs: 12, traffic: 34, props: 0.8 },
+                IGPU_HIGH:     { pixelRatio: 1.25, shadow: 2048, bloom: true,  ssao: false, smaa: true,  fog: 0.0011, npcs: 14, traffic: 44, props: 1.0 }
             },
             // 陰影範圍 (公尺) 與行人顯示距離：等級越低越近，省下大量繪製
             shadowRange: { LOW: 60, MED: 85, HIGH: 110, ULTRA: 130 },
@@ -2577,6 +2577,7 @@
         const ROAD_NET = {
             avenuesX: [-600, -420, -240, -120, 0, 110], avenueHalf: 12, avenueZ: 892, hillAveZ: 300,
             crossZ: [-880, -720, -600, -480, -360, -240, -120, 0, 120, 240, 360, 480, 600, 720, 880], crossHalf: 11, crossX0: -640, crossX1: 232,
+            pavedCrossWest: z => z >= 360 ? -340 : -620, pavedCrossEast: 225,
             ribbons: [],       // 平面曲線道路 { name, pts, half, lanes }
             roundabouts: [{ x: -240, z: 0, rIn: 16, rOut: 28, island: 14 }],
             hill: { cx: -620, cz: 560, rx: 280, rz: 240, h: 115, x0: -910, x1: -330, z0: 310, z1: 810, es: 10 },
@@ -2811,10 +2812,10 @@
             const sunset = ROAD_NET.ribbons[2].pts.filter(p => p.x >= -240 && p.x <= 0).map(p => [p.x, p.z]);
             // Close the coastal loop at paved intersections within the cross-street limits.
             ROAD_NET.routes.push(buildRoute([
-                { pts: denseLine([110, 240], [110, -240], 16), offset: 4 },
-                { pts: denseLine([110, -240], [220, -240], 16), offset: 4 },
-                { pts: coastal.filter(p => p[1] >= -240 && p[1] <= 240), offset: 4 },
-                { pts: denseLine([220, 240], [110, 240], 16), offset: 4 }
+                { pts: denseLine([110, 720], [110, -720], 16), offset: 4 },
+                { pts: denseLine([110, -720], [220, -720], 16), offset: 4 },
+                { pts: coastal.filter(p => p[1] >= -720 && p[1] <= 720), offset: 4 },
+                { pts: denseLine([220, 720], [110, 720], 16), offset: 4 }
             ]));
             ROAD_NET.routes.push(buildRoute([
                 { pts: broadway, offset: 4.5 },
@@ -3037,19 +3038,15 @@
 
         // 高架與郊區的 AI 車流路線 (路線點帶高度 y，AI 車直接放在高架上)
         (function buildExtraRoutes() {
-            const laneRoute = (pts, offset, closed) => {
-                const out = pts.map(p => ({ x: p.x - p.tz * offset, z: p.z + p.tx * offset, tx: p.tx, tz: p.tz, y: p.y }));
-                if (!closed) {
-                    // 開放路線：折返成來回一圈
-                    const back = pts.slice().reverse().map(p => ({ x: p.x + p.tz * offset, z: p.z - p.tx * offset, tx: -p.tx, tz: -p.tz, y: p.y }));
-                    return out.concat(back);
-                }
-                return out;
+            const ringLane = (pts, offset) => {
+                const route = pts.map(p => ({ x: p.x - p.tz * offset, z: p.z + p.tx * offset, tx: p.tx, tz: p.tz, y: p.y }));
+                route.surface = 'ring';
+                return route;
             };
             const ring = ROAD_NET.ring.pts;
-            ROAD_NET.routes.push(laneRoute(ring, 5.2, true));
+            ROAD_NET.routes.push(ringLane(ring, 5.2));
             const rev = ring.slice().reverse().map(p => ({ x: p.x, z: p.z, tx: -p.tx, tz: -p.tz, y: p.y, s: p.s }));
-            ROAD_NET.routes.push(laneRoute(rev, 5.2, true));
+            ROAD_NET.routes.push(ringLane(rev, 5.2));
             // 北區環線 (第 -120 大道 → z 880 → 第 110 大道 → z 480) 與南區環線 (第 0 大道 → z -880 → 第 -420 大道 → z -480)
             ROAD_NET.routes.push(buildRoute([
                 { pts: denseLine([-120, 480], [-120, 880], 20), offset: 4.5 },
@@ -3066,106 +3063,125 @@
             // The two suburban roadbeds end at different elevations. Stay on each
             // continuous strip and turn inside the paved width before its end.
             for (const road of [ROAD_NET.suburbRoads[0], ROAD_NET.suburbRoads[2]]) {
-                const spine = road.pts.slice(3, -3), lane = 2.8;
+                const spine = road.pts.slice(6, -6), lane = 2.8;
                 const loop = [];
                 for (let pass = 0; pass < 2; pass++) {
                     const sign = pass ? -1 : 1;
                     for (let i = 0; i < spine.length; i++) {
                         const p = spine[pass ? spine.length - 1 - i : i];
-                        loop.push({ x: p.x - sign*p.tz*lane, z: p.z + sign*p.tx*lane,
-                            tx: sign*p.tx, tz: sign*p.tz, y: p.y });
+                        loop.push({ x: p.x - sign * p.tz * lane, z: p.z + sign * p.tx * lane,
+                            tx: sign * p.tx, tz: sign * p.tz, y: p.y });
                     }
                     const p = spine[pass ? 0 : spine.length - 1];
                     for (let k = 1; k < 8; k++) {
-                        const a = k*Math.PI/8, c = Math.cos(a)*sign, t = Math.sin(a)*sign;
-                        const x = p.x + lane*(t*p.tx - c*p.tz), z = p.z + lane*(t*p.tz + c*p.tx);
-                        loop.push({x, z, tx:c*p.tx + t*p.tz, tz:c*p.tz - t*p.tx, y:roadHeightOn(road,x,z).h});
+                        const a = k * Math.PI / 8, c = Math.cos(a) * sign, t = Math.sin(a) * sign;
+                        const x = p.x + lane * (t * p.tx - c * p.tz), z = p.z + lane * (t * p.tz + c * p.tx);
+                        loop.push({ x, z, tx: c * p.tx + t * p.tz, tz: c * p.tz - t * p.tx });
                     }
                 }
+                loop.surface = 'suburb';
+                for (const p of loop) p.y = terrainHeight(p.x, p.z);
                 ROAD_NET.routes.push(loop);
             }
         })();
 
 
+        // Temporary spatial index of the triangles used to draw curved road strips.
+        // Discard it after initialization; placement only reads a boolean on each sample.
         function trafficSurfaceIndex(net) {
-            // Index the two triangles of each rendered road-strip segment in 32-unit cells.
             const cells = new Map();
-            const cell = (x, z) => (Math.floor(x / 32) + 128) * 256 + Math.floor(z / 32) + 128;
+            const key = (i, j) => (i + 128) * 256 + j + 128;
             function triangle(kind, a, b, c) {
-                const den = (b.z-c.z)*(a.x-c.x) + (c.x-b.x)*(a.z-c.z);
-                if (!den) return;
-                const t = {kind, a, b, c, den};
-                for (let x = Math.floor(Math.min(a.x,b.x,c.x)/32); x <= Math.floor(Math.max(a.x,b.x,c.x)/32); x++)
-                    for (let z = Math.floor(Math.min(a.z,b.z,c.z)/32); z <= Math.floor(Math.max(a.z,b.z,c.z)/32); z++) {
-                        const key = cell(x*32,z*32);
-                        if (!cells.has(key)) cells.set(key, []);
-                        cells.get(key).push(t);
+                const determinant = (b.z - c.z) * (a.x - c.x) + (c.x - b.x) * (a.z - c.z);
+                if (!determinant) return;
+                const face = { kind, a, b, c, determinant };
+                const x0 = Math.floor(Math.min(a.x, b.x, c.x) / 32), x1 = Math.floor(Math.max(a.x, b.x, c.x) / 32);
+                const z0 = Math.floor(Math.min(a.z, b.z, c.z) / 32), z1 = Math.floor(Math.max(a.z, b.z, c.z) / 32);
+                for (let i = x0; i <= x1; i++) {
+                    for (let j = z0; j <= z1; j++) {
+                        const id = key(i, j);
+                        if (!cells.has(id)) cells.set(id, []);
+                        cells.get(id).push(face);
                     }
-            }
-            function strip(road, kind, left = -road.half, right = road.half) {
-                const edge = (p, side) => ({x:p.x - p.tz*side, z:p.z + p.tx*side, y:p.y || 0});
-                const pts = road.pts;
-                for (let i=0; i < pts.length - (road.closed ? 0 : 1); i++) {
-                    const p=pts[i], q=pts[(i+1)%pts.length];
-                    const a=edge(p,left), b=edge(p,right), c=edge(q,left), d=edge(q,right);
-                    triangle(kind,a,b,c); triangle(kind,b,d,c);
                 }
             }
-            for (const road of net.ribbons) strip(road,'city');
-            strip(net.ring,'ring', -net.ring.half + 0.5, -0.3);
-            strip(net.ring,'ring', 0.3, net.ring.half - 0.5);
-            for (const road of net.suburbRoads) strip(road,'suburb');
-            return function supported(kind,x,z,y,tolerance) {
+            function strip(road, kind, left = -road.half, right = road.half) {
+                const edge = (p, side) => ({ x: p.x - p.tz * side, z: p.z + p.tx * side, y: p.y || 0 });
+                const points = road.pts, count = road.closed ? points.length : points.length - 1;
+                for (let i = 0; i < count; i++) {
+                    const p = points[i], q = points[(i + 1) % points.length];
+                    const a = edge(p, left), b = edge(p, right), c = edge(q, left), d = edge(q, right);
+                    triangle(kind, a, b, c);
+                    triangle(kind, b, d, c);
+                }
+            }
+            for (const road of net.ribbons) strip(road, 'city');
+            strip(net.ring, 'ring', -net.ring.half + 0.5, -0.3);
+            strip(net.ring, 'ring', 0.3, net.ring.half - 0.5);
+            for (const road of net.suburbRoads) strip(road, 'suburb');
+
+            return function supported(kind, x, z, y, tolerance) {
                 if (kind === 'city') {
-                    // The approach ramps physically occupy the surface of the -120 avenue.
+                    // Both approach ramps occupy the ground lane along the -120 avenue.
                     const az = Math.abs(z);
                     if (Math.abs(x + 120) <= 9 && az >= 90 && az <= 142) {
                         const t = (142 - az) / 52;
-                        return Math.abs(y - 7*t*t*(3-2*t)) <= tolerance;
+                        return Math.abs(y - 7 * t * t * (3 - 2 * t)) <= tolerance;
                     }
-                    const rb=net.roundabouts[0], r=Math.hypot(x-rb.x,z-rb.z);
-                    if (r < rb.rIn) return false;
+                    const rb = net.roundabouts[0], radius = Math.hypot(x - rb.x, z - rb.z);
+                    if (radius < rb.rIn) return false;
                     if (Math.abs(y) <= tolerance) {
-                        if (r <= rb.rOut) return true;
-                        if (z >= -net.avenueZ && net.avenuesX.some(v => Math.abs(v-x)<=net.avenueHalf && z <= (v < -340 ? net.hillAveZ : net.avenueZ))) return true;
-                        if (x<=225 && net.crossZ.some(v => Math.abs(v-z)<=net.crossHalf && x >= (v>=360 ? -340 : -620))) return true;
+                        if (radius <= rb.rOut) return true;
+                        for (const ax of net.avenuesX) {
+                            const end = ax < -340 ? net.hillAveZ : net.avenueZ;
+                            if (Math.abs(x - ax) <= net.avenueHalf && z >= -net.avenueZ && z <= end) return true;
+                        }
+                        for (const cz of net.crossZ) {
+                            const west = net.pavedCrossWest(cz);
+                            if (Math.abs(z - cz) <= net.crossHalf && x >= west && x <= net.pavedCrossEast) return true;
+                        }
                     }
                 }
-                const candidates=cells.get(cell(x,z));
-                if (!candidates) return false;
-                for (const t of candidates) {
-                    if (t.kind !== kind) continue;
-                    const {a,b,c,den}=t;
-                    const u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/den;
-                    const v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/den;
-                    if (u >= -1e-7 && v >= -1e-7 && u+v <= 1.0000001 &&
-                        Math.abs(y-(u*a.y+v*b.y+(1-u-v)*c.y))<=tolerance) return true;
+                const faces = cells.get(key(Math.floor(x / 32), Math.floor(z / 32)));
+                if (!faces) return false;
+                for (const { kind: layer, a, b, c, determinant } of faces) {
+                    if (layer !== kind) continue;
+                    const u = ((b.z - c.z) * (x - c.x) + (c.x - b.x) * (z - c.z)) / determinant;
+                    const v = ((c.z - a.z) * (x - c.x) + (a.x - c.x) * (z - c.z)) / determinant;
+                    if (u < -1e-7 || v < -1e-7 || u + v > 1.0000001) continue;
+                    const height = u * a.y + v * b.y + (1 - u - v) * c.y;
+                    if (Math.abs(y - height) <= tolerance) return true;
                 }
                 return false;
             };
         }
-        function trafficSampleLegal(surface,kind,p,width,length,y) {
-            if (!surface(kind,p.x,p.z,y,0.25)) return false;
-            for (const side of [-width,0,width]) {
-                for (const end of [-length,-length/2,0,length/2,length]) {
-                    if (!surface(kind,p.x+p.tz*side+p.tx*end,p.z-p.tx*side+p.tz*end,y,0.65)) return false;
+
+        function trafficSampleLegal(surface, kind, p, width, length, y) {
+            if (!surface(kind, p.x, p.z, y, 0.25)) return false;
+            // Include the inflated perimeter and interior. Allow the uphill/downhill
+            // ends to follow the grade while enforcing the tighter height at the center.
+            for (let across = -1; across <= 1; across++) {
+                for (let along = -2; along <= 2; along++) {
+                    const side = across * width, end = along * length / 2;
+                    const x = p.x + p.tz * side + p.tx * end, z = p.z - p.tx * side + p.tz * end;
+                    if (!surface(kind, x, z, y, 0.65)) return false;
                 }
             }
             return true;
         }
 
-        // The audited largest Kenney half extents rounded upward, plus one unit of pavement.
-        function markTrafficSlots() {
+        (function markTrafficSlots() {
+            // Largest origin-relative Kenney visual/collision extents, rounded up, plus 1 unit.
             const surface = trafficSurfaceIndex(ROAD_NET);
-            for (const [rid, route] of ROAD_NET.routes.entries()) {
-                const kind = rid === 5 || rid === 6 ? 'ring' : rid >= 9 ? 'suburb' : 'city';
+            for (const route of ROAD_NET.routes) {
+                const kind = route.surface || 'city';
                 for (const p of route) {
                     const y = p.y ?? terrainHeight(p.x, p.z);
-                    p.trafficLegal = trafficSampleLegal(surface, kind, p, 2.01, 4.02, y);
+                    p.trafficLegal = (kind !== 'suburb' || Math.abs(y - terrainHeight(p.x, p.z)) <= 0.25) &&
+                        trafficSampleLegal(surface, kind, p, 2.01, 4.07, y);
                 }
             }
-        }
-        markTrafficSlots();
+        })();
 
         // ---------- 道路視覺建模 ----------
         function createTwoLaneRoadTexture() {
@@ -5206,8 +5222,8 @@
 
             ROAD_NET.crossZ.forEach(z => {
                 // 南側橫街若進入奇利亞德山區則縮短至山腳東側
-                const westX = (z >= 360) ? -340 : -620;
-                const eastX = 225;
+                const westX = ROAD_NET.pavedCrossWest(z);
+                const eastX = ROAD_NET.pavedCrossEast;
                 const len = eastX - westX;
                 const cx = (westX + eastX) / 2;
                 const cr = new THREE.Mesh(new THREE.PlaneGeometry(len, 22), crossRoadMat);
@@ -8899,12 +8915,13 @@
         function outsideTrafficRoute(car) {
             const route = ROAD_NET.routes[car.routeId], p = car.chassisBody.position;
             const nearest = route[car.routeIdx];
-            if ((p.x-nearest.x)**2 + (p.z-nearest.z)**2 <= 64) return false;
-            let a = route[route.length-1];
-            for (const b of route) {
-                const dx = b.x-a.x, dz = b.z-a.z;
-                const t = Math.max(0, Math.min(1, ((p.x-a.x)*dx + (p.z-a.z)*dz)/(dx*dx+dz*dz || 1)));
-                if ((p.x-a.x-t*dx)**2 + (p.z-a.z-t*dz)**2 <= 64) return false;
+            if ((p.x - nearest.x) ** 2 + (p.z - nearest.z) ** 2 <= 64) return false;
+            let a = route[route.length - 1];
+            for (let i = 0; i < route.length; i++) {
+                const b = route[i], dx = b.x - a.x, dz = b.z - a.z;
+                const px = p.x - a.x, pz = p.z - a.z;
+                const t = Math.max(0, Math.min(1, (px * dx + pz * dz) / (dx * dx + dz * dz || 1)));
+                if ((px - t * dx) ** 2 + (pz - t * dz) ** 2 <= 64) return false;
                 a = b;
             }
             return true;

@@ -1,9 +1,10 @@
 // Run: node tools/test/traffic_check.mjs
 // Source/component regressions, not browser startup, rendered-model or real-device certification.
 import assert from 'node:assert/strict';
+import vm from 'node:vm';
 import { harness, html, presets, kenney, CANNON, THREE } from './traffic_harness.mjs';
-const expected = { PHONE_LOW: 18, PHONE_MED: 24, TABLET_LOW: 22, TABLET_MED: 32, TABLET_HIGH: 36,
-    DESKTOP_MED: 40, DESKTOP_HIGH: 52, DESKTOP_ULTRA: 68, IGPU_LOW: 20, IGPU_MED: 28, IGPU_HIGH: 36 };
+const expected = { PHONE_LOW: 22, PHONE_MED: 30, TABLET_LOW: 28, TABLET_MED: 32, TABLET_HIGH: 46,
+    DESKTOP_MED: 40, DESKTOP_HIGH: 52, DESKTOP_ULTRA: 68, IGPU_LOW: 20, IGPU_MED: 34, IGPU_HIGH: 44 };
 assert.deepEqual(presets(html), expected);
 const types = ['sedan', 'suv', 'hatchback-sports', 'taxi', 'van', 'sedan-sports', 'suv-luxury', 'truck', 'delivery', 'garbage-truck', 'ambulance'];
 assert.deepEqual(kenney.scenes.map(s => s.name).sort(), [...types].sort());
@@ -27,6 +28,10 @@ for (const [preset, count] of Object.entries(expected)) {
         assert.deepEqual(Array.from(h.KENNEY_TYPES, t => [t[0], t[1]]), types.map((t, i) => [t, [6,4,3,3,3,2,2,2,2,1,1][i]]));
         assert.deepEqual(Array.from(h.WORLD.vehicles.filter(v => !v.isAI && !v.isPolice), v => [v.name, v.modelKey]),
             [['Ferrari GT', null], ['Apex 4x4', null], ['VCPD Shelby GT500', 'fordcop']]);
+        const parkedNearSpawn = h.WORLD.vehicles.filter(v => !v.isAI && !v.isPolice &&
+            distance(v.chassisBody.position, h.PLAYER.body.position) <= 60);
+        assert.deepEqual(Array.from(parkedNearSpawn, v => [v.name, v.color, v.modelKey]),
+            [['Ferrari GT', 0xdc2626, null]]);
         assert.equal(h.WORLD.policeUnits.length, 2);
         assert.ok(h.WORLD.policeUnits.every(v => v.modelKey === 'fordcop' && !v.chassisGroup.visible));
         for (const v of cars) {
@@ -138,6 +143,51 @@ p.updateTrafficFrustum(); assert.ok(p.trafficVisible(0, 1, 300));
 for (let i = 0; i < 20; i++) p.recycleTraffic(1.2);
 assert.equal(protectedCar.chassisBody.position.z, 300);
 console.log('PASS: nearby upside-down recovery and distant visible vehicles never teleport');
+
+// Drift alone must persist for >2 s, even if the car freezes while displaced.
+const drift = await harness(), displaced = drift.ordinary()[0];
+displaced.chassisBody.position.set(700, 1, 700);
+for (const now of [0, 1, 2]) {
+    drift.STATE.time = now;
+    drift.updateTrafficPhysics();
+    assert.ok(!displaced.trafficRecovery);
+}
+drift.STATE.time = 2.25;
+drift.updateTrafficPhysics();
+assert.ok(displaced.frozen && displaced.trafficRecovery);
+assert.equal(drift.trafficDiagnostics().offRoute, 1);
+for (let i = 0; i < 100 && displaced.trafficRecovery; i++) drift.recycleTraffic(1.2);
+assert.ok(!displaced.trafficRecovery);
+assert.equal(drift.trafficDiagnostics().offRoute, 0);
+
+// Deny even an otherwise-clear slot when its init-time legality flag is false.
+for (const route of drift.ROAD_NET.routes) for (const q of route) q.trafficLegal = false;
+assert.equal(drift.findInitialTrafficSlot(0, 0), false);
+displaced.chassisBody.position.set(700, 1, 700);
+displaced.trafficRecovery = true;
+for (let i = 0; i < 10; i++) drift.recycleTraffic(1.2);
+assert.equal(displaced.chassisBody.position.x, 700);
+console.log('PASS: sustained off-route detection, gated recovery, illegal initial and recycle slot rejection');
+
+// Exercise the real enter/exit and garage selection handlers with audio/UI stubs.
+const game = await harness();
+Object.assign(game, { syncControlUI() {}, AUDIO: { playSFX() {} }, showBanner() {}, refreshGarageLabels() {} });
+const slice = (from, to) => html.slice(html.indexOf(from), html.indexOf(to, html.indexOf(from)));
+const select = { getAttribute: key => key === 'data-car' ? 'MUSCLE' : null,
+    addEventListener(_, fn) { this.click = fn; } };
+game.document = { querySelectorAll: () => [select] };
+assert.match(html, /<button data-car="MUSCLE"/);
+vm.runInContext(slice("document.querySelectorAll('.car-archetype-btn').forEach(btn", '\n            });') + '\n            });', game, {timeout:1000});
+vm.runInContext(slice('function toggleEnterExitCar()', '        let refreshGarageLabels'), game);
+game.STATE.nearestVehicle = game.WORLD.vehicles[0];
+game.toggleEnterExitCar();
+assert.equal(game.STATE.currentVehicle.name, 'Ferrari GT');
+game.toggleEnterExitCar();
+select.click();
+game.STATE.nearestVehicle = null;
+game.toggleEnterExitCar();
+assert.equal(game.STATE.currentVehicle.archetype, 'MUSCLE');
+console.log('PASS: Ferrari GT enter/exit and garage Muscle summon');
 
 // Real Cannon contact after thaw: a box launched into a stationary traffic chassis must collide.
 const c = await harness(), target = c.ordinary()[0];
