@@ -1,4 +1,4 @@
-# Task board (rules: COLLAB.md v3.2). One Owner per task. One active code PR at a time.
+# Task board (rules: COLLAB.md v3.3). One Owner per task. One active code PR at a time.
 
 ## Ready for ChatGPT
 (none)
