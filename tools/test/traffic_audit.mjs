@@ -1,4 +1,4 @@
-// Run: node tools/test/traffic_audit.mjs [baseline-commit]
+// Run: node tools/test/traffic_audit.mjs [baseline-commit] [--guard] [--proposed]
 // Reproducible HEADLESS COMPONENT comparison, not a full-city/browser/device benchmark.
 // Counts are source-generated placements + 60 s of recycle-manager calls while stationary.
 // "Visible" means a radius-4 sphere intersects a 60-degree, 16:9 frustum within 200 units;
@@ -6,6 +6,7 @@
 // Timing uses real Cannon.step and actual Kenney wheel/chassis bounds on the game's flat box
 // ground. Cars are braked, all bodies start at y=1; city/decks/NPCs/props/rendering are absent.
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { performance } from 'node:perf_hooks';
 import { harness, html, root, THREE, presets } from './traffic_harness.mjs';
@@ -35,12 +36,25 @@ function counts(h) {
 // --guard compares all quality presets against the same main commit. One loaded
 // GLB primitive is one opaque color-pass submission (shadows/postFX are excluded).
 const guard = process.argv.includes('--guard');
+// Replay the approved target for a preset even after its guard kept the old value.
+let candidate = html;
+if (process.argv.includes('--proposed')) {
+    const spec = fs.readFileSync(new URL('specs/T-005-spec-v1.md', root), 'utf8');
+    const targets = Object.fromEntries([...spec.matchAll(/^\| ([A-Z]+_[A-Z]+) \| \d+ \| (\d+) \|$/gm)]
+        .map(([, name, count]) => [name, Number(count)]));
+    for (const name of Object.keys(presets(html))) {
+        assert.ok(Number.isInteger(targets[name]), 'missing approved target for ' + name);
+        const field = new RegExp('(' + name + ':\\s*\\{[^\\n]*?traffic:\\s*)\\d+');
+        candidate = candidate.replace(field, (_, prefix) => prefix + targets[name]);
+    }
+    assert.deepEqual(presets(candidate), targets);
+}
 const selected = guard ? Object.keys(presets(html)) : ['PHONE_LOW', 'TABLET_MED', 'DESKTOP_HIGH'];
 function structuralCalls(h) {
     let calls = 0;
     for (const v of h.ordinary()) {
         const p = v.chassisBody.position;
-        if (!h.trafficVisible(p.x,p.y,p.z)) continue;
+        if (!h.trafficVisible(p.x, p.y, p.z)) continue;
         for (const group of [v.carModel, ...v.wheelClones]) {
             group.traverseVisible(obj => { if (obj.isMesh) calls++; });
         }
@@ -51,7 +65,7 @@ const records = [];
 for (const preset of selected) {
     for (const [label, x, z, degrees] of viewpoints) {
         const record = { preset, view: label, x, z, heading: degrees };
-        for (const [version, source] of [['baseline', baseline], ['candidate', html]]) {
+        for (const [version, source] of [['baseline', baseline], ['candidate', candidate]]) {
             const fresh = { nearby: 0, visible: 0, active: 0 }, recycled = { ...fresh };
             const seeds = guard ? 1 : 5;
             for (let seed = 1; seed <= seeds; seed++) {
@@ -77,7 +91,7 @@ for (const preset of selected) {
 function quantile(values, fraction) { return values[Math.floor((values.length - 1) * fraction)]; }
 const timings = [];
 for (const preset of selected) {
-    for (const [version, source] of [['baseline', baseline], ['candidate', html]]) {
+    for (const [version, source] of [['baseline', baseline], ['candidate', candidate]]) {
         const samples = [], populations = [];
         for (let round = 0; round < 3; round++) {
             const h = await harness(source, preset, 1 + round);
@@ -104,7 +118,7 @@ for (const preset of selected) {
             medianMs: +quantile(samples, .5).toFixed(4), p95Ms: +quantile(samples, .95).toFixed(4) });
     }
 }
-console.log(JSON.stringify({ baselineCommit, environment: { node: process.version, platform: process.platform, architecture: process.arch },
+console.log(JSON.stringify({ baselineCommit, candidatePools: presets(candidate), environment: { node: process.version, platform: process.platform, architecture: process.arch },
     limits: 'HEADLESS traffic component only. Spatial/frustum counts without occlusion or motion. Flat-ground physics without city/decks/NPCs/props. No browser startup/offline/device/FPS claim.',
     method: { countSeeds: guard ? [1] : [1,2,3,4,5], recycleCalls: 50, recycleDt: 1.2, nearbyRadius: 200, fov: 60, aspect: '16:9',
         physicsRounds: 3, warmupStepsPerRound: 600, sampleStepsPerRound: 1200, physicsDt: 1 / 60 },
