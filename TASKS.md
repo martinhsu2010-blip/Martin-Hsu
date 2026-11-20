@@ -4,6 +4,9 @@
 (none)
 
 ## Ready for Codex
+(none — T-005B is queued in Inbox until Martin accepts T-005A)
+
+## In review
 ### T-005A Spawn cleanup + legal, denser traffic
 Owner: Codex
 Implementer: Codex (traffic/spawn/world, never Gemini)
@@ -11,14 +14,11 @@ Reviewer: Claude
 Priority: P1
 Depends on: T-004E (Done)
 Base commit: `4c0d8db8bc603fa5786fe0a2e52ed035951a7e07`
-Branch/PR: `codex/T-005A-traffic-legal` / (not opened)
+Branch/PR: `codex/T-005A-traffic-legal` / #43 (merged d57d0db, released vh-2026-11-20-03)
 Spec: `specs/T-005-spec-v1.md` Parts 1-2 (approved by Martin 2026-11-20 14:06; D-019).
 Claude notes: (1) Audit script first (`tools/test/route_legality.mjs`): report route violations with coordinates before fixing; legality before density. (2) The yellow "Ferrari" is the parked Muscle 69 at (103, -14), remove only that parked car; keep the garage Muscle '69 option, saves and i18n; update `traffic_check.mjs` (vehicle list) and every fixed `WORLD.vehicles` index. (3) Traffic table in Part 2 is approved; the performance guard (+12 draw calls / +25 % physics step per preset) lets a preset keep its old count, say so in the PR. (4) Do not edit `sw.js` CACHE or docs; spec causes marked "hypothesis" must be confirmed by the audit. Martin attaches his screenshots to the Codex task.
-Verification: pending.
+Verification: code-reviewed + headless/real-Chrome checks by Claude (see LOG); NOT measured on a real device yet; waiting for Martin's acceptance on S26 Ultra / Tab S11. Review: round 1 found R1's z=240 leg blocked by ring ramps (car stalled at x -153 and -339); fixed by Codex in e3cd24d (R1 rerouted, audit models ring/spur clearance); round 2 clean. Known pre-existing, not fixed here: R4 stalls near (-4, 629), R5 (elevated ring lane) near (-572, 228). Five presets keep their old traffic count under the +12-draw guard (TABLET_MED, DESKTOP_MED/HIGH/ULTRA, IGPU_LOW).
 
-
-## In review
-(none)
 
 ## Doing (Claude)
 (none)
