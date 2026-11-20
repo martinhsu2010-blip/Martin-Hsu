@@ -3839,6 +3839,7 @@
             const M = () => new THREE.Matrix4();
 
             roofs.forEach((r, bi) => {
+                const off = r.infill ? 0 : FACADE.off;
                 const tint = TINTS[(bi * 5 + 1) % TINTS.length];
                 const ck = Math.floor((r.x + 240) / 120) + '_' + Math.floor((r.z + 360) / 120);
                 if (!chunks.has(ck)) chunks.set(ck, { list: [], sx: 0, sz: 0, n: 0, r: 0 });
@@ -3895,7 +3896,7 @@
                     const ext = 0.33, sxc = (f.L + 2 * ext) / (3 * n);
                     for (let c = 0; c < n; c++) put('CROWN', -ext + c * 3 * sxc, 11.4, sxc, 1);
                     // 屋簷頂部的蓋板，遮住外牆模組與原本建築之間的縫隙
-                    const capKey = f.L.toFixed(2);
+                    const capKey = f.L.toFixed(2) + '_' + off;
                     if (!capPart[capKey]) capPart[capKey] = facadeBoxPart(f.L + 2 * ext, 0.1, off + 0.43);
                     base.trim_02.push([capPart[capKey], faceM.clone().multiply(M().makeTranslation(f.L / 2, 12.2, (0.33 - off - 0.1) / 2)), tint]);
                 });
@@ -4089,6 +4090,71 @@
                 }
             }
             return specs;
+        }
+        // T-004E: infill only in vacant parts of the original blocks; existing exclusions stay intact.
+        function cityInfillParcels(original) {
+            const added = [], stats = {};
+            const points = [[98,22],[110,20],[242,0],[-60,0],[-120,-540],[-1060,-238],[104.8,-100],[-605,555],[220,340],[-420,-200],[-240,-60],
+                [236,-40],[-120,60],[-120,-660],[-480,-240],[-900,-245],[60,720]];
+            const clear = (x,z,w,d,b,gap) => Math.abs(x-b.x) >= (w+b.w)/2+gap || Math.abs(z-b.z) >= (d+b.d)/2+gap;
+            const smallKey = (x,z) => Math.floor((x+240)/120)+'_'+Math.floor((z+360)/120);
+            const bigKey = (x,z) => Math.floor((x+400)/240)+'_'+Math.floor((z+720)/240);
+            const small = new Set(original.map(b=>smallKey(b.x,b.z))), big = new Set(original.map(b=>bigKey(b.x,b.z)));
+            for (const [district,ratio,height] of [['CBD',.2,16],['MID',.4,20],['OLD',.35,12]]) {
+                const baseline = original.filter(b=>b.district===district).length, target = Math.ceil(baseline*ratio);
+                let placed = 0;
+                for (const bx of [-510,-330,-180,-60,55]) for (const bz of [-660,-540,-420,-300,-180,-60,60,180,300,420,540,660]) {
+                    if (cityDistrict(bx,bz)!==district || (bx===-60&&Math.abs(bz)===60) || (bx<=-180&&bz>=300) || (bx===-510&&bz>-300)) continue;
+                    for (let ox=-36;ox<=36;ox+=6) for (let oz=-36;oz<=36;oz+=6) {
+                        if (placed>=target) continue;
+                        const x=bx+ox,z=bz+oz,w=10,d=10,h=height;
+                        // Reuse existing facade spatial batches, including their near/far LOD registration.
+                        if (!small.has(smallKey(x,z)) || !big.has(bigKey(x,z))) continue;
+                        if (rectHitsElevated(x,z,w,d,3) || rectHitsCurvedRoad(x,z,w,d,3.5)) continue;
+                        // Ten units beyond grid lanes also preserve the existing street-tree/sidewalk strips.
+                        if (ROAD_NET.avenuesX.some(ax=>Math.abs(x-ax)<w/2+ROAD_NET.avenueHalf+10) ||
+                            ROAD_NET.crossZ.some(cz=>Math.abs(z-cz)<d/2+ROAD_NET.crossHalf+10)) continue;
+                        if (!clear(x,z,w,d,{x:-60,z:0,w:100,d:200},3)) continue;
+                        if (points.some(([px,pz])=>!clear(x,z,w,d,{x:px,z:pz,w:24,d:24},3))) continue;
+                        // Entire airport runway and the three non-airport stunt corridors remain vacant.
+                        if (!clear(x,z,w,d,{x:-420,z:-55,w:40,d:410},3) ||
+                            !clear(x,z,w,d,{x:0,z:675,w:22,d:110},3) ||
+                            !clear(x,z,w,d,{x:-115,z:600,w:110,d:22},3) ||
+                            !clear(x,z,w,d,{x:-295,z:-720,w:110,d:22},3)) continue;
+                        // Reserve another unit for the shared facade cornices on both structures.
+                        if (original.some(b=>!clear(x,z,w,d,{...b,w:b.w+4,d:b.d+4},4)) || added.some(b=>!clear(x,z,w,d,b,4))) continue;
+                        if (TREES.list.some(t=>Math.abs(t.x-x)<w/2+2*t.scale+3 && Math.abs(t.z-z)<d/2+2*t.scale+3)) continue;
+                        added.push({x,z,w,d,h,district,infill:true}); placed++;
+                    }
+                }
+                stats[district]={baseline,target,added:placed,after:baseline+placed,increase:baseline?placed/baseline:0,shortfall:target-placed};
+            }
+            WORLD.cityInfillStats=stats;
+            console.log('[VH] City infill:',stats);
+            return added;
+        }
+        function buildCityInfill(original, wallMaterials, windowData, nightWindowData) {
+            const parcels=cityInfillParcels(original), unit=new THREE.BoxGeometry(1,1,1), dm=new THREE.Object3D();
+            WORLD.cityInfill=parcels; WORLD.cityInfillMeshes=[];
+            for (const [district,material] of [['CBD',wallMaterials[1]],['MID',wallMaterials[1]],['OLD',wallMaterials[0]]]) {
+                const list=parcels.filter(b=>b.district===district);
+                if (!list.length) continue;
+                const mesh=new THREE.InstancedMesh(unit,material,list.length);
+                list.forEach((b,i)=>{
+                    dm.position.set(b.x,b.h/2,b.z);dm.rotation.set(0,0,0);dm.scale.set(b.w,b.h,b.d);dm.updateMatrix();mesh.setMatrixAt(i,dm.matrix);
+                    b.body=addStaticBoxCollider(b.x,b.h/2,b.z,b.w/2,b.h/2,b.d/2); b.mesh=mesh;b.instance=i;
+                    WORLD.buildings.push({minX:b.x-b.w/2,maxX:b.x+b.w/2,minZ:b.z-b.d/2,maxZ:b.z+b.d/2});
+                    WORLD.roofs.push({x:b.x,z:b.z,w:b.w,d:b.d,h:b.h,penthouse:false,infill:true});
+                    for(let floor=0;floor<Math.floor((b.h-6)/4.6);floor++) for(let face=0;face<4;face++) {
+                        const angle=face*Math.PI/2;
+                        dm.position.set(b.x+Math.sin(angle)*(b.w/2+.09),6.2+floor*4.6,b.z+Math.cos(angle)*(b.d/2+.09));
+                        dm.rotation.set(0,angle,0);dm.scale.set(1,1,1);dm.updateMatrix();
+                        windowData.push({matrix:dm.matrix.clone(),brightness:.65});
+                        if((i+floor+face)%4===0) nightWindowData.push({matrix:dm.matrix.clone(),color:0xffe49e});
+                    }
+                });
+                mesh.castShadow=true;mesh.receiveShadow=true;scene.add(mesh);WORLD.cameraBlockers.push(mesh);WORLD.cityInfillMeshes.push(mesh);
+            }
         }
         // 玻璃帷幕牆貼圖：深色反光玻璃 + 鋁框直條 + 樓層橫帶；夜晚自發光貼圖隨機點亮辦公室
         function createCurtainWallTextures(tint) {
@@ -5152,6 +5218,7 @@
             });
             const blockZ = [-660, -540, -420, -300, -180, -60, 60, 180, 300, 420, 540, 660];
 
+            const cityParcels = [];
             blockX.forEach((bx, ix) => {
                 blockZ.forEach((bz, iz) => {
                     if (bx === -60 && Math.abs(bz) === 60) return; // 中央廣場 (道具區)
@@ -5178,6 +5245,7 @@
                             if (!placed) { addPocketPark(px, pz, w, d); continue; }
                         }
 
+                        cityParcels.push({x:px,z:pz,w,d,h,district});
                         const bGroup = new THREE.Group();
                         bGroup.position.set(px, 0, pz);
 
@@ -5316,6 +5384,8 @@
                     }
                 });
             });
+
+            buildCityInfill(cityParcels, wallMaterials, windowData, nightWindowData);
 
             // 四面反光玻璃窗戶 InstancedMesh (含隨機每扇窗明暗色調)
             const winGeo = new THREE.PlaneGeometry(2.2, 2.4);

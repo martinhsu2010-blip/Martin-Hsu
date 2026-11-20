@@ -22,7 +22,8 @@ export async function collisionHarness(source = html, preset = 'PHONE_LOW') {
     h.document = { createElement: () => ({ getContext: () => ctx }) };
     h.showBanner = noop; h.closeModals = noop; h.STUNT = { active: null };
     h.console = { log: noop, warn: noop };
-    vm.runInContext(section(source, '        const TREES =', '        // ==================== 環狀高架') +
+    vm.runInContext(section(source, '        function addStaticBoxCollider(', '        // ---------- 平滑坡道') +
+        section(source, '        const TREES =', '        // ==================== 環狀高架') +
         section(source, '        function buildPalmAssets()', '        // ---------- Poly Haven') +
         section(source, '        function addPocketPark(', '        // ---------- 程式產生的寫實棕櫚樹') +
         section(source, '        function cityDistrict(', '        // 玻璃帷幕牆貼圖') +
@@ -45,7 +46,12 @@ export async function collisionHarness(source = html, preset = 'PHONE_LOW') {
     h.city = [];
     let city = section(source, '            blockX.forEach((bx, ix) => {', '                        const bGroup = new THREE.Group();');
     const bx = source.match(/const blockX = ([^;]+);/)[0], bz = source.match(/const blockZ = ([^;]+);/)[0];
-    vm.runInContext('{ ' + bx + bz + city + 'this.city.push({x:px,z:pz,w,d,h});\n} }); }); }', h);
+    vm.runInContext('{ const cityParcels = []; ' + bx + bz + city + 'this.city.push({x:px,z:pz,w,d,h,district});\n} }); }); }', h);
+    const infillTrees = h.TREES.list.slice();
+    h.buildTestCityInfill = (...args) => {
+        const allTrees = h.TREES.list; h.TREES.list = infillTrees;
+        try { return h.buildCityInfill(...args); } finally { h.TREES.list = allTrees; }
+    };
     vm.runInContext('{ const dummy = new THREE.Object3D();' + section(source, '            const palmMatrices = [];', '            const lampMatrices = [];') + '}', h);
     vm.runInContext(section(source, '            [-240, -120, 0].forEach((ax, ai) => {', '            WORLD.lampPositions ='), h);
     h.buildTrees();

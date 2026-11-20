@@ -277,5 +277,20 @@ for (const speed of [20,60,120,180]) {
 for (const e of [trunks[0], trunks[4], trunks[8]]) { const r = impact(sim, { body: e.body, groundY: e.tree.y }, 6, e.tree.rot, 0, true); assert.ok(r.contacts > 0 && !r.passed, JSON.stringify(r)); }
 for (const { house, heading } of wallSamples.filter((_,i)=>i%2===0)) { const r = impact(sim, { ...house.collider, groundY: house.y }, 6, heading, 0, true); assert.ok(r.contacts > 0 && !r.passed, JSON.stringify(r)); }
 console.log('PASS: real 1/60 Cannon impacts, 12 trunks (all 3 types), 14 downhill foundations (all 7 types) at 20/60/120 km/h; 180 km/h separate; walking capsule contact');
+// City additions use the same real-car impact fixture as trees and foundations.
+report.cityImpacts=[];
+for(const preset of ['PHONE_LOW','DESKTOP_HIGH']) {
+    const citySim = preset==='PHONE_LOW' ? sim : await collisionHarness(html,preset);
+    citySim.WORLD.buildings=[];citySim.WORLD.roofs=[];citySim.WORLD.cameraBlockers=[];
+    citySim.buildTestCityInfill(citySim.city,[new THREE.MeshStandardMaterial(),new THREE.MeshStandardMaterial()],[],[]);
+    for(const speed of [20,60,120]){
+        let contacts=0;
+        for(const b of citySim.WORLD.cityInfill) for(const heading of [0,Math.PI/2]) {
+            const result=impact(citySim,{body:b.body,groundY:0},speed,heading);
+            assert.ok(result.contacts>0&&!result.passed,JSON.stringify({district:b.district,speed,result}));contacts++;
+        }
+        report.cityImpacts.push({preset,speed,contacts,buildings:citySim.WORLD.cityInfill.length,tunnels:0});
+    }
+}
 console.log('REPORT ' + JSON.stringify(report));
 console.log('RESULT: PASS (headless geometry/physics components, not full-game browser or device testing)');
