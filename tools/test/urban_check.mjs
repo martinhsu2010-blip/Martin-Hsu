@@ -40,6 +40,18 @@ for(const preset of ['PHONE_LOW','DESKTOP_HIGH']){
  const small=b=>`${Math.floor((b.x+240)/120)}_${Math.floor((b.z+360)/120)}`,big=b=>`${Math.floor((b.x+400)/240)}_${Math.floor((b.z+720)/240)}`;
  for(const key of [small,big]){const keys=new Set(h.city.map(key));assert.ok(added.filter(b=>!b.coverage).every(b=>keys.has(key(b))),'no added facade batch/LOD cell');}
  assert.ok(h.WORLD.cityInfillMeshes.length<=3&&h.WORLD.cityInfillMeshes.every(m=>m.isInstancedMesh&&!Array.isArray(m.material)));
+ // Query the actual world's broadphase, including boxes which straddle a cell boundary.
+ const sweep=h.physicsWorld.broadphase, probe=new CANNON.Body({mass:1,shape:new CANNON.Sphere(.35)});
+ h.physicsWorld.addBody(probe);
+ for(const b of added){
+  probe.position.set(b.x+b.w/2-.1,b.h/2,b.z);
+  probe.updateAABB(); sweep.dirty=true;
+  assert.ok(sweep.aabbQuery(h.physicsWorld,probe.aabb,[]).includes(b.body),'ray candidate missing');
+  const left=[],right=[];
+  sweep.collisionPairs(h.physicsWorld,left,right);
+  assert.ok(left.some((a,i)=>(a===probe && right[i]===b.body)||(a===b.body && right[i]===probe)),'contact candidate missing');
+ }
+ h.physicsWorld.removeBody(probe);
  // Matched headless workloads: same stationary cars, baseline city boxes and pooled trunks.
  h.selectObserver(-60,-180);h.freeze();
  for(const car of h.WORLD.vehicles){car.chassisBody.velocity.setZero();car.chassisBody.angularVelocity.setZero();for(let w=0;w<4;w++){car.vehicle.applyEngineForce(0,w);car.vehicle.setBrake(35,w);}}

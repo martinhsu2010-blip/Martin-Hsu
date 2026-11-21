@@ -29,7 +29,24 @@ RENDER = """([label,x,z,tx,tz]) => {
     r.render(scene,c);
     const image=r.domElement.toDataURL('image/png').split(',')[1];
     const calls=r.info.render.calls;
-    return {image,calls};
+    let uniformCalls=calls;
+    if(w.coveragePark){
+        const saved=w.cityInfillMeshes.map(m=>[m,m.instanceMatrix.array.slice(),m.instanceColor.array.slice()]);
+        for(const b of w.cityInfill){
+            if(!b.coverage)continue;
+            const H={CBD:16,MID:20,OLD:12}[b.district], i=b.instance*16;
+            b.mesh.instanceMatrix.array[i+5]=H;b.mesh.instanceMatrix.array[i+13]=H/2;
+            b.mesh.instanceColor.array.fill(1,b.instance*3,b.instance*3+3);
+        }
+        for(const [m] of saved){m.instanceMatrix.needsUpdate=true;m.instanceColor.needsUpdate=true;m.computeBoundingSphere();}
+        r.render(scene,c);
+        uniformCalls=r.info.render.calls;
+        for(const [m,mat,col] of saved){
+            m.instanceMatrix.array.set(mat);m.instanceColor.array.set(col);
+            m.instanceMatrix.needsUpdate=true;m.instanceColor.needsUpdate=true;m.computeBoundingSphere();
+        }
+    }
+    return {image,calls,uniformCalls};
 }"""
 INIT = """([device,quality]) => {
     let seed=5019;
@@ -76,6 +93,7 @@ def capture(browser, url, source, name, preset, output):
             data = p.evaluate(RENDER, [view, *pos])
             (output/f'{preset}-{view}-{name}.png').write_bytes(base64.b64decode(data['image']))
             result[view] = data['calls']
+            assert data['calls']==data['uniformCalls'],(view,data['calls'],data['uniformCalls'])
         assert not errors, errors
         return result
 

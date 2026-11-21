@@ -86,6 +86,18 @@ function checkShells(h,windows,preset) {
     for(const [district,[hs,cs]] of Object.entries(spec)){
         const hash=b=>Buffer.from([5019,district,b.x,b.z,b.w,b.d].join('|')).reduce((v,c)=>Math.imul(v^c,16777619)>>>0,2166136261);
         const list=buildings.filter(b=>b.district===district).sort((a,b)=>hash(a)-hash(b)||a.x-b.x||a.z-b.z||a.w-b.w||a.d-b.d);
+        const batch=h.WORLD.cityCoverageFacades[0];
+        const doorBases=new Map();
+        for(let j=0;j<batch.count;j++){
+            batch.getMatrixAt(j,matrix);
+            if(Math.abs(matrix.elements[5]-2.7)>.001) continue;
+            const e=matrix.elements;
+            assert.ok(Math.abs(e[13]-1.35)<.001,'door base height');
+            const b=buildings.find(b=>Math.abs(e[12]-b.x)<.01 && Math.abs(Math.abs(e[14]-b.z)-b.d/2-.10)<.01);
+            assert.ok(b,'door facade offset');
+            doorBases.set(b,(doorBases.get(b)||0)+1);
+        }
+        assert.ok(list.every(b=>doorBases.get(b)===2));
         const histogram=Array(20).fill(0), heightCounts={},colorCounts={};
         for(const [i,b] of list.entries()){
             const ci=(Math.floor(i/4)+i%4)%5, H=hs[i%4];
@@ -122,27 +134,44 @@ function parkAudit(h,centers,counts,preset) {
     assert.ok(mesh?.visible && mesh.parent===h.scene && mesh.layers.test(h.camera.layers));
     assert.deepEqual([mesh.material.visible,mesh.material.polygonOffset,mesh.material.polygonOffsetFactor,mesh.material.polygonOffsetUnits],[true,true,-2,-4]);
     const pos=mesh.geometry.attributes.position, color=mesh.geometry.attributes.color;
+    const walks=[];
+    for(const x of h.ROAD_NET.avenuesX) h.visitAvenueSidewalks(x,(sx,z0,z1)=>walks.push({sx,z0,z1}));
     const rects=[];
     for(let k=0;k<pos.count;k+=6){
         const x=pos.getX(k),z=pos.getZ(k),X=pos.getX(k+2),Z=pos.getZ(k+2);
         const corners=[[x,z],[x,Z],[X,Z],[x,z],[X,Z],[X,z]];
+        const raised=walks.some(w=>Math.abs((x+X)/2-w.sx)<2.5 && (z+Z)/2>=w.z0 && (z+Z)/2<w.z1);
         corners.forEach(([u,v],i)=>{
             assert.deepEqual([pos.getX(k+i),pos.getZ(k+i)],[u,v]);
-            assert.ok(Math.abs(pos.getY(k+i)-.03)<1e-6);
+            assert.ok(Math.abs(pos.getY(k+i)-(raised ? .21 : .03))<1e-6);
         });
         assert.ok(X>x && Z>z);
         const tint=new THREE.Color().fromBufferAttribute(color,k).getHex();
         assert.ok([0x71865b,0xb9ae94].includes(tint));
         assert.ok(!rects.some(b=>Math.min(X,b.X)>Math.max(x,b.x) && Math.min(Z,b.Z)>Math.max(z,b.z)),'overlapping park triangles');
-        rects.push({x,z,X,Z});
+        rects.push({x,z,X,Z,tint});
+    }
+    const unvisited=new Set(rects);
+    for(const first of rects){
+        if(!unvisited.delete(first))continue;
+        const patch=[first],tints=new Set();
+        for(const a of patch){
+            a.patch=first.x+','+first.z;
+            tints.add(a.tint);
+            for(const b of unvisited){
+                const dx=Math.min(a.X,b.X)-Math.max(a.x,b.x), dz=Math.min(a.Z,b.Z)-Math.max(a.z,b.z);
+                if((dx===0&&dz>0)||(dz===0&&dx>0)){unvisited.delete(b);patch.push(b);}
+            }
+        }
+        assert.equal(tints.size,2,'each connected park must have a lawn and a path');
     }
     function coverage(x,z,faces){
-        let area=0,inside=false;
+        let area=0,inside=false,patch;
         for(const b of faces){
             area+=Math.max(0,Math.min(x+5,b.X)-Math.max(x-5,b.x))*Math.max(0,Math.min(z+5,b.Z)-Math.max(z-5,b.z));
-            inside ||= x>=b.x && x<=b.X && z>=b.z && z<=b.Z;
+            if(x>=b.x && x<=b.X && z>=b.z && z<=b.Z){inside=true;patch=b.patch;}
         }
-        return {area,inside};
+        return {area,inside,patch};
     }
     const expected=preset==='PHONE_LOW'?[17,101,27]:[27,101,43];
     let failed=0;
@@ -163,8 +192,12 @@ function parkAudit(h,centers,counts,preset) {
                     p.z-5<=z && p.z+5>=Math.min(Math.floor(z)+1,r.Z)),'HARD_OVERLAP');
     }
     console.log('HARD_OVERLAP',0);
-    const first=centers[0], removed=rects.filter(r=>r.X<=first.x-5||r.x>=first.x+5||r.Z<=first.z-5||r.z>=first.z+5);
+    const first=centers[0], patch=coverage(first.x,first.z,rects).patch;
+    const removed=rects.filter(r=>r.patch!==patch);
     assert.equal(coverage(first.x,first.z,removed).inside,false);
+    const desktop=preset==='DESKTOP_HIGH';
+    assert.deepEqual(['CBD','MID','OLD'].map(d=>h.WORLD.cityInfillStats[d].after),desktop?[186,296,204]:[225,327,276]);
+    assert.equal(Object.values(counts).reduce((n,c)=>n+(c['continuous road clearance']||0),0),desktop?55:61);
     assert.equal(failed,0);
 }
 
@@ -279,8 +312,23 @@ for(const preset of ['PHONE_LOW','DESKTOP_HIGH']){
     if(process.argv.includes('--front'))continue;
     h.WORLD.roofs=[];h.WORLD.buildings=[];h.WORLD.cameraBlockers=[];
     const windows=[];
+    const bodyCount=h.physicsWorld.bodies.length;
     h.buildTestCityInfill(h.city,[new THREE.MeshStandardMaterial(),new THREE.MeshStandardMaterial()],windows,[]);
-    if(ref<0)checkShells(h,windows,preset);
+    if(ref<0){
+        checkShells(h,windows,preset);
+        const added=h.WORLD.cityInfill, cityBodies=new Set(added.map(b=>b.body));
+        assert.equal(h.physicsWorld.bodies.length-bodyCount,cityBodies.size);
+        assert.equal([...cityBodies].reduce((n,b)=>n+b.shapes.length,0),added.length);
+        assert.equal(h.WORLD.roofs.length,added.length);
+        assert.equal(h.WORLD.buildings.length,added.length);
+        assert.ok(!h.WORLD.cameraBlockers.includes(h.WORLD.coveragePark));
+        const reviewed=execFileSync('git',['show','c8e395f:index.html'],{cwd:root,encoding:'utf8',maxBuffer:4e6});
+        const old=await collisionHarness(reviewed,preset);
+        old.WORLD.roofs=[];old.WORLD.buildings=[];old.WORLD.cameraBlockers=[];
+        old.buildTestCityInfill(old.city,[new THREE.MeshStandardMaterial(),new THREE.MeshStandardMaterial()],[],[]);
+        const footprint=list=>Array.from(list,b=>[b.district,b.x,b.z,b.w,b.d,b.coverage?null:b.h]);
+        assert.deepEqual(footprint(added),footprint(old.WORLD.cityInfill));
+    }
     city(h,preset);
 }
 

@@ -1829,18 +1829,26 @@
         physicsWorld.gravity.set(0, -9.82, 0);
         // Fixed city boxes never move. Keep these compounds in their construction
         // cells for both contact pairs and wheel rays; all other bodies use normal SAP.
+        const {min:cellMin,max:cellMax,floor:cellFloor}=Math;
         class CitySweepBroadphase extends CANNON.SAPBroadphase {
             constructor(world) {
                 super();
                 this.blocks=new Map();
                 this.minX=Infinity; this.maxX=-Infinity; this.minZ=Infinity; this.maxZ=-Infinity;
                 this.margin=0;
+                this.blockCount=0;
                 this.nearby=[];
+                this.moving=new Set();
                 const add=this._addBodyHandler, remove=this._removeBodyHandler;
                 this._addBodyHandler=e=>{
                     const b=e.body;
-                    if (!b.cityBlock) { add(e); return; }
+                    if (!b.cityBlock) {
+                        add(e);
+                        if (b.type!==CANNON.Body.STATIC) this.moving.add(b);
+                        return;
+                    }
                     const {x,z}=b.cityBlock;
+                    this.blockCount++;
                     this.minX=Math.min(this.minX,x); this.maxX=Math.max(this.maxX,x);
                     this.minZ=Math.min(this.minZ,z); this.maxZ=Math.max(this.maxZ,z);
                     this.margin=Math.max(this.margin,b.cityBlock.margin);
@@ -1852,18 +1860,19 @@
                 };
                 this._removeBodyHandler=e=>{
                     const b=e.body;
-                    if (!b.cityBlock) { remove(e); return; }
+                    if (!b.cityBlock) { remove(e); this.moving.delete(b); return; }
                     const {x,z}=b.cityBlock, cell=this.blocks.get(x).get(z);
                     cell.splice(cell.indexOf(b),1);
+                    this.blockCount--;
                 };
                 this.setWorld(world);
             }
             cityQuery(box,out) {
                 // Each shell center belongs to one cell; its footprint extends at most 5 m.
-                const x0=Math.max(this.minX,Math.floor((box.lowerBound.x-this.margin)/120));
-                const x1=Math.min(this.maxX,Math.floor((box.upperBound.x+this.margin)/120));
-                const z0=Math.max(this.minZ,Math.floor((box.lowerBound.z-this.margin)/120));
-                const z1=Math.min(this.maxZ,Math.floor((box.upperBound.z+this.margin)/120));
+                const x0=cellMax(this.minX,cellFloor((box.lowerBound.x-this.margin)/120));
+                const x1=cellMin(this.maxX,cellFloor((box.upperBound.x+this.margin)/120));
+                const z0=cellMax(this.minZ,cellFloor((box.lowerBound.z-this.margin)/120));
+                const z1=cellMin(this.maxZ,cellFloor((box.upperBound.z+this.margin)/120));
                 for(let x=x0;x<=x1;x++) {
                     const row=this.blocks.get(x);
                     if (!row) continue;
@@ -1875,13 +1884,14 @@
             }
             aabbQuery(world,box,result=[]) {
                 super.aabbQuery(world,box,result);
-                this.cityQuery(box,result);
+                if (this.blockCount) this.cityQuery(box,result);
                 return result;
             }
             collisionPairs(world,p1,p2) {
                 super.collisionPairs(world,p1,p2);
-                for(const b of this.axisList) {
-                    if (b.type===CANNON.Body.STATIC || b.sleepState===CANNON.Body.SLEEPING) continue;
+                if (!this.blockCount) return;
+                for(const b of this.moving) {
+                    if (b.sleepState===CANNON.Body.SLEEPING) continue;
                     if (b.aabbNeedsUpdate) b.updateAABB();
                     this.nearby.length=0;
                     this.cityQuery(b.aabb,this.nearby);
@@ -4619,7 +4629,25 @@
             }
         }
 
+        function visitAvenueSidewalks(x,visit) {
+            [-14.5, 14.5].forEach(off => {
+                const sx = x + off;
+                let segStart = null;
+                const flushSeg = (z0, z1) => {
+                    if (z1 - z0 < 6) return;
+                    visit(sx,z0,z1);
+                };
+                for (let z = -876; z <= 876; z += 4) {
+                    const atCross = sx > ROAD_NET.crossX0 && sx < ROAD_NET.crossX1 && ROAD_NET.crossZ.some(c => Math.abs(z - c) < ROAD_NET.crossHalf + 1.5);
+                    const blocked = atCross || onCurvedRoad(sx, z, 3.0);
+                    if (!blocked && segStart === null) segStart = z;
+                    if ((blocked || z === 876) && segStart !== null) { flushSeg(segStart, z); segStart = null; }
+                }
+            });
+        }
         function buildCoverageParks(original, parcels) {
+            const sidewalks=[];
+            for (const x of ROAD_NET.avenuesX) visitAvenueSidewalks(x,(sx,z0,z1)=>sidewalks.push({sx,z0,z1}));
             const rows=PARK_ROWS[PROFILE==='DESKTOP'?'desktop':'mobile'];
             const tiles=new Map(), key=(x,z)=>x+','+z;
             const occupied=original.map(b=>({...b,w:b.w+4,d:b.d+4})).concat(parcels);
@@ -4627,11 +4655,12 @@
             for (const [z,first,last] of rows) for (let x=first;x<=last;x+=2) {
                 if (TREES.list.some(t=>Math.abs(x-t.x)<8+2*t.scale && Math.abs(z-t.z)<8+2*t.scale)) continue;
                 if (hitsRoad(x,z,5) || occupied.some(b=>Math.abs(x-b.x)<5+b.w/2 && Math.abs(z-b.z)<5+b.d/2)) continue;
+                const edges=parcels.filter(b=>Math.abs(x-b.x)<5.25+b.w/2 && Math.abs(z-b.z)<5.25+b.d/2);
                 for (let dz=-5;dz<5;dz++) for (let dx=-5;dx<5;dx++) {
                     const u=x+dx, v=z+dz;
                     // Clip projecting facade trim from the horizontal park footprint.
 
-                    if (parcels.some(b=>Math.abs(u+.5-b.x)<b.w/2+.75 && Math.abs(v+.5-b.z)<b.d/2+.75)) continue;
+                    if (edges.some(b=>Math.abs(u+.5-b.x)<b.w/2+.75 && Math.abs(v+.5-b.z)<b.d/2+.75)) continue;
                     tiles.set(key(u,v),[u,v]);
                 }
             }
@@ -4655,7 +4684,7 @@
                     minX=Math.min(minX,x); maxX=Math.max(maxX,x);
                     minZ=Math.min(minZ,z); maxZ=Math.max(maxZ,z);
                     if (!spans.has(z)) spans.set(z,[]);
-                    const raised=WORLD.avenueSidewalks?.some(s=>Math.abs(x+.5-s.sx)<2.5 && z>=s.z0 && z<s.z1);
+                    const raised=sidewalks.some(s=>Math.abs(x+.5-s.sx)<2.5 && z>=s.z0 && z<s.z1);
                     spans.get(z).push({x,y:raised ? .18 : 0});
                     for (const [u,v] of [[x-1,z],[x+1,z],[x,z-1],[x,z+1]]) {
                         if (tiles.delete(key(u,v))) component.push([u,v]);
@@ -4735,8 +4764,8 @@
             buildCoverageParks(original,parcels);
             styleCoverage(parcels);
             coverageColliders(parcels);
-            for (const [district,material] of [['CBD',wallMaterials[1]],['MID',wallMaterials[1]],['OLD',wallMaterials[0]]]) {
-                const list=parcels.filter(b=>b.district===district);
+            for (const [historic,material] of [[false,wallMaterials[1]],[true,wallMaterials[0]]]) {
+                const list=parcels.filter(b=>(b.district==='OLD')===historic);
                 if (!list.length) continue;
                 const mesh=new THREE.InstancedMesh(unit,material,list.length);
                 list.forEach((b,i)=>{
@@ -4759,9 +4788,9 @@
                         if((i+floor+face)%4===0) nightWindowData.push({matrix:dm.matrix.clone(),color:0xffe49e});
                     }
                 });
-                buildCoverageFacades(list.filter(b=>b.coverage),unit,trim);
                 mesh.castShadow=true;mesh.receiveShadow=true;scene.add(mesh);WORLD.cameraBlockers.push(mesh);WORLD.cityInfillMeshes.push(mesh);
             }
+            buildCoverageFacades(parcels.filter(b=>b.coverage),unit,trim);
         }
         // 玻璃帷幕牆貼圖：深色反光玻璃 + 鋁框直條 + 樓層橫帶；夜晚自發光貼圖隨機點亮辦公室
         function createCurtainWallTextures(tint) {
@@ -5795,25 +5824,13 @@
                 scene.add(r);
 
                 // 人行道依路口分段：橫向路口、圓環、曲線道路與山區自動留空
-                [-14.5, 14.5].forEach(off => {
-                    const sx = x + off;
-                    let segStart = null;
-                    const flushSeg = (z0, z1) => {
-                        if (z1 - z0 < 6) return;
-                        const len = z1 - z0, cz = (z0 + z1) / 2;
-                        const sw = new THREE.Mesh(new THREE.BoxGeometry(5.0, 0.18, len), sidewalkMat);
-                        (WORLD.avenueSidewalks ??= []).push({sx,z0,z1});
-                        sw.position.set(sx, 0.09, cz);
-                        sw.receiveShadow = true;
-                        scene.add(sw);
-                        addStaticBoxCollider(sx, 0.08, cz, 2.5, 0.08, len / 2);
-                    };
-                    for (let z = -876; z <= 876; z += 4) {
-                        const atCross = sx > ROAD_NET.crossX0 && sx < ROAD_NET.crossX1 && ROAD_NET.crossZ.some(c => Math.abs(z - c) < ROAD_NET.crossHalf + 1.5);
-                        const blocked = atCross || onCurvedRoad(sx, z, 3.0);
-                        if (!blocked && segStart === null) segStart = z;
-                        if ((blocked || z === 876) && segStart !== null) { flushSeg(segStart, z); segStart = null; }
-                    }
+                visitAvenueSidewalks(x,(sx,z0,z1)=>{
+                    const len = z1 - z0, cz = (z0 + z1) / 2;
+                    const sw = new THREE.Mesh(new THREE.BoxGeometry(5.0, 0.18, len), sidewalkMat);
+                    sw.position.set(sx, 0.09, cz);
+                    sw.receiveShadow = true;
+                    scene.add(sw);
+                    addStaticBoxCollider(sx, 0.08, cz, 2.5, 0.08, len / 2);
                 });
             });
 
