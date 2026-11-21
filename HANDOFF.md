@@ -68,6 +68,8 @@ Debug handle: `window.__VH` exposes internals (SAVE, STUNT, DELIVERY, CAR_MODELS
 ## Working agreement
 See `COLLAB.md` (v3.4) and `AGENTS.md`. Code changes arrive as Pull Requests from Codex (or Gemini via Antigravity Remote Agents for low-risk tasks) and are reviewed/integrated/released by Claude.
 
+T-006 (zh-TW `shared_space` label) is the first Gemini Stage 1 trial; see `TASKS.md` and `specs/T-006-spec-v1.md`.
+
 ## Release process (how updates are shipped)
 1. Edit `index.html` (and assets if needed).
 2. Bump `CACHE` in `sw.js`.
