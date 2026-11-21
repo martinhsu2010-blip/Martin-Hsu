@@ -26,7 +26,18 @@ RENDER = """([label,x,z,tx,tz]) => {
     const aerial=label.startsWith('Park');
     c.position.set(x,height(x,z)+(aerial?55:4),z); c.lookAt(tx,height(tx,tz)+(aerial?0:3),tz);
     c.updateMatrixWorld(); updateFacadeLOD(true);
+    const draws={}, hooks=[];
+    scene.traverse(o=>{
+        if(!o.isMesh)return;
+        const fn=o.onBeforeRender;
+        let kind=w.cityInfillMeshes?.includes(o)?'shell':w.cityCoverageFacades?.includes(o)?'trim':
+            o===w.coveragePark?'park':o===w.suburbVerge?'verge':o===w.winInstanced?'windows':
+            o.isInstancedMesh?'other instances':o.geometry.type;
+        hooks.push([o,fn]);
+        o.onBeforeRender=function(...args){draws[kind]=(draws[kind]||0)+1;return fn.apply(this,args)};
+    });
     r.render(scene,c);
+    for(const [o,fn] of hooks)o.onBeforeRender=fn;
     const image=r.domElement.toDataURL('image/png').split(',')[1];
     const calls=r.info.render.calls;
     let uniformCalls=calls;
@@ -46,9 +57,11 @@ RENDER = """([label,x,z,tx,tz]) => {
             m.instanceMatrix.needsUpdate=true;m.instanceColor.needsUpdate=true;m.computeBoundingSphere();
         }
     }
-    return {image,calls,uniformCalls};
+    return {image,calls,uniformCalls,draws};
 }"""
 INIT = """([device,quality]) => {
+    let worldSeed=5019;
+    window.__fixtureRandom=()=>((worldSeed=(Math.imul(1664525,worldSeed)+1013904223)>>>0)/4294967296);
     let seed=5019;
     Math.random=()=>((seed=(Math.imul(1664525,seed)+1013904223)>>>0)/4294967296);
     localStorage.setItem('vh_settings', JSON.stringify({qualityDevice:device,quality}));
@@ -73,12 +86,16 @@ def capture(browser, url, source, name, preset, output):
         options['user_agent'] = 'Mozilla/5.0 (Linux; Android 14; Mobile) AppleWebKit/537.36 Chrome/130.0 Mobile Safari/537.36'
     with browser.new_context(**options) as ctx:
         ctx.add_init_script(f'({INIT})({json.dumps([device, quality])})')
+        # Three.js UUID allocation consumes random numbers when geometry changes.
+        # Give game placements an independent, identical stream in every matched document.
+        source=source.replace(b'Math.random()',b'window.__fixtureRandom()')
         ctx.route('**/index.html', lambda route: route.fulfill(body=source, content_type='text/html'))
         p = ctx.new_page()
         errors = []
         p.on('pageerror', lambda e: errors.append(str(e)))
         p.goto(url + '/index.html', wait_until='domcontentloaded', timeout=180000)
         p.wait_for_function('window.__VH && window.__VH.WORLD.cityInfill', timeout=180000)
+        p.wait_for_function("window.__VH.WORLD.vehicles.every(v=>v.customApplied || v.hasFerrariMesh)",timeout=180000)
         if not mobile:
             p.wait_for_function('window.__phDone', timeout=240000)
         settings = p.evaluate('''() => [__VH.STATE.quality,__VH.WORLD.suburbHouses.length]''')
@@ -93,6 +110,7 @@ def capture(browser, url, source, name, preset, output):
             data = p.evaluate(RENDER, [view, *pos])
             (output/f'{preset}-{view}-{name}.png').write_bytes(base64.b64decode(data['image']))
             result[view] = data['calls']
+            print('DRAW',preset,name,view,json.dumps(data['draws']),flush=True)
             assert data['calls']==data['uniformCalls'],(view,data['calls'],data['uniformCalls'])
         assert not errors, errors
         return result
