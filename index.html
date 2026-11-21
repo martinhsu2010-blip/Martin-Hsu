@@ -339,7 +339,14 @@
         "road_valley_loop": "VALLEY LOOP",
         "road_chiliad_link_a": "CHILIAD LINK A",
         "road_chiliad_link_b": "CHILIAD LINK B",
-        "device_IGPU": "Integrated GPU"
+        "device_IGPU": "Integrated GPU",
+        "explore_picks_heading": "🧭 Next Stop",
+        "explore_picks_note": "Just an idea; no waypoint or mission is started.",
+        "explore_picks_next": "Next idea",
+        "explore_tip_ocean": "Cruise along the palm-lined coast at dusk.",
+        "explore_tip_marina": "Visit the marina for a relaxed waterfront drive.",
+        "explore_tip_chiliad": "Follow the winding mountain road toward the summit.",
+        "explore_tip_ring": "Try one complete lap of the elevated ring road."
     },
     "zh-TW": {
         "update_downloaded_reloading": "已下載新版本，重新載入中…",
@@ -662,7 +669,14 @@
         "road_valley_loop": "山谷環道",
         "road_chiliad_link_a": "奇利亞德連接道 A",
         "road_chiliad_link_b": "奇利亞德連接道 B",
-        "device_IGPU": "內建顯示卡"
+        "device_IGPU": "內建顯示卡",
+        "explore_picks_heading": "🧭 下一站靈感",
+        "explore_picks_note": "純探索建議；不會設定導航或開始任務。",
+        "explore_picks_next": "換個地點",
+        "explore_tip_ocean": "沿著棕櫚樹林立的海岸大道欣賞黃昏。",
+        "explore_tip_marina": "前往遊艇碼頭，沿著水岸輕鬆兜風。",
+        "explore_tip_chiliad": "沿著蜿蜒山路往山頂前進。",
+        "explore_tip_ring": "試著沿高架環線完整兜風一圈。"
     }
 };
     // I18N_TABLE_END
@@ -942,6 +956,18 @@
         #quick-actions .hub-scroll { touch-action: pan-y; overflow-y: auto; padding: 16px; }
         .hub-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
         .hub-actions .vh-pill { flex: 1 1 140px; }
+        #quick-actions #explore-picks { width: 100%; max-width: 440px; margin-top: 14px; padding: 12px; border-radius: 16px; border: 1px solid rgba(103, 232, 249, 0.28); background: rgba(15, 23, 42, 0.72); box-sizing: border-box; }
+        @media (min-width: 640px) { #quick-actions #explore-picks { padding: 16px; } }
+        #explore-picks .explore-picks-heading { margin: 0 0 4px; font-size: 14px; font-weight: 800; color: #67e8f9; line-height: 1.35; overflow-wrap: break-word; }
+        #explore-picks .explore-picks-note { margin: 0 0 10px; font-size: 12px; line-height: 1.45; color: #cbd5e1; overflow-wrap: break-word; }
+        #explore-picks [data-explore-card] { padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.05); }
+        #explore-picks [data-explore-card].hidden, #explore-picks [data-explore-card][hidden] { display: none; }
+        #explore-picks .explore-card-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 10px; margin-bottom: 6px; }
+        #explore-picks .explore-card-title { margin: 0; font-size: 15px; font-weight: 800; color: #f8fafc; line-height: 1.35; overflow-wrap: break-word; }
+        #explore-picks .explore-card-step { font-size: 12px; font-weight: 700; color: #fbbf24; white-space: nowrap; }
+        #explore-picks .explore-card-desc { margin: 0; font-size: 13px; line-height: 1.5; color: #e2e8f0; overflow-wrap: break-word; }
+        #explore-picks .explore-picks-footer { margin-top: 12px; display: flex; }
+        #explore-picks .explore-next-btn { min-height: 44px; min-width: 44px; padding: 10px 16px; border-radius: 12px; font-size: 13px; font-weight: 700; color: #f8fafc; background: linear-gradient(135deg, rgba(14, 116, 144, 0.88), rgba(190, 24, 93, 0.78)); border: 1px solid rgba(103, 232, 249, 0.5); cursor: pointer; max-width: 100%; overflow-wrap: break-word; }
         /* Review fix: banners (cash, purchase, quality, sky...) must stay visible above the Hub's top layer. */
         #quick-actions #notice-area { position: fixed; top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); left: 12px; right: 12px; z-index: 80; }
         #quick-actions #world-map { padding: 0; }
@@ -1296,6 +1322,43 @@
                 <div id="hud-nitro-wrap" class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mt-1 hidden">
                     <div id="hud-nitro-bar" class="h-full bg-gradient-to-r from-rose-500 to-sky-400 w-full"></div>
                 </div>
+            <div id="explore-picks" class="hud-glass explore-picks" role="region" aria-labelledby="explore-picks-title">
+                <h3 id="explore-picks-title" class="explore-picks-heading font-vice"><span data-i18n="explore_picks_heading">🧭 Next Stop</span></h3>
+                <p class="explore-picks-note"><span data-i18n="explore_picks_note">Just an idea; no waypoint or mission is started.</span></p>
+                <div id="explore-picks-live" class="explore-picks-cards" aria-live="polite" aria-atomic="true">
+                    <article class="explore-card" data-explore-card="0" aria-hidden="false">
+                        <div class="explore-card-head">
+                            <h4 class="explore-card-title font-vice"><span data-i18n="ocean_drive">Ocean Drive</span></h4>
+                            <span class="explore-card-step font-vice">1 / 4</span>
+                        </div>
+                        <p class="explore-card-desc"><span data-i18n="explore_tip_ocean">Cruise along the palm-lined coast at dusk.</span></p>
+                    </article>
+                    <article class="explore-card hidden" data-explore-card="1" hidden aria-hidden="true">
+                        <div class="explore-card-head">
+                            <h4 class="explore-card-title font-vice"><span data-i18n="starlight_marina">Starlight Marina</span></h4>
+                            <span class="explore-card-step font-vice">2 / 4</span>
+                        </div>
+                        <p class="explore-card-desc"><span data-i18n="explore_tip_marina">Visit the marina for a relaxed waterfront drive.</span></p>
+                    </article>
+                    <article class="explore-card hidden" data-explore-card="2" hidden aria-hidden="true">
+                        <div class="explore-card-head">
+                            <h4 class="explore-card-title font-vice"><span data-i18n="mount_chiliad_summit">Mount Chiliad Summit</span></h4>
+                            <span class="explore-card-step font-vice">3 / 4</span>
+                        </div>
+                        <p class="explore-card-desc"><span data-i18n="explore_tip_chiliad">Follow the winding mountain road toward the summit.</span></p>
+                    </article>
+                    <article class="explore-card hidden" data-explore-card="3" hidden aria-hidden="true">
+                        <div class="explore-card-head">
+                            <h4 class="explore-card-title font-vice"><span data-i18n="ring_expressway">Ring Expressway</span></h4>
+                            <span class="explore-card-step font-vice">4 / 4</span>
+                        </div>
+                        <p class="explore-card-desc"><span data-i18n="explore_tip_ring">Try one complete lap of the elevated ring road.</span></p>
+                    </article>
+                </div>
+                <div class="explore-picks-footer">
+                    <button id="explore-next" type="button" class="touch-btn explore-next-btn"><span data-i18n="explore_picks_next">Next idea</span></button>
+                </div>
+            </div>
     <!-- 電腦版鍵盤滑鼠提示 -->
     <div id="desktop-hints" class="hidden fixed bottom-3 left-3 z-30 hud-glass rounded-2xl px-3 py-2 text-[11px] leading-5 text-gray-200 border border-white/15 pointer-events-none">
         <div class="font-vice font-bold text-sky-300 text-xs mb-0.5"><span data-i18n="keyboard_mouse">⌨️ Keyboard / mouse</span></div>
@@ -10420,6 +10483,36 @@
                 camera.updateProjectionMatrix();
                 applyResolution();
             });
+
+            setupExplorePicks();
+        }
+
+        function setupExplorePicks() {
+            const root = document.getElementById('explore-picks');
+            const nextBtn = document.getElementById('explore-next');
+            if (!root || !nextBtn || nextBtn.dataset.exploreBound) return null;
+            const cards = typeof root.querySelectorAll === 'function'
+                ? [...root.querySelectorAll('[data-explore-card]')]
+                : [...document.querySelectorAll('#explore-picks [data-explore-card]')];
+            if (!cards.length) return null;
+            cards.sort((a, b) => Number(a.getAttribute('data-explore-card')) - Number(b.getAttribute('data-explore-card')));
+            let currentIndex = 0;
+            const render = () => {
+                for (let i = 0; i < cards.length; i++) {
+                    const active = i === currentIndex;
+                    cards[i].classList.toggle('hidden', !active);
+                    cards[i].hidden = !active;
+                    cards[i].setAttribute('aria-hidden', active ? 'false' : 'true');
+                }
+                root.dataset.exploreIndex = String(currentIndex);
+            };
+            nextBtn.dataset.exploreBound = '1';
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % cards.length;
+                render();
+            });
+            render();
+            return { getIndex: () => currentIndex, count: cards.length };
         }
 
         // ---------- 靜態物件合併：同材質、不會動的網格合成一個，大幅減少每幀繪製次數 ----------
