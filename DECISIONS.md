@@ -94,3 +94,6 @@ D-022 | 2026-11-21 | done | Martin accepted T-006 (vh-2026-11-21-02) on his devi
 
 ## D-023 Gemini promoted to Stage 2
 D-023 | 2026-11-21 | agreed | Martin ("升2", 2026-11-21 16:09, replying to Claude's request for the COLLAB v3.5 §7.4 promotion sentence; his own words, accepted as the explicit promotion) promoted Gemini from Stage 1 to Stage 2 on evidence PR #53 (T-006, accepted). Scope per COLLAB v3.5 §4.2 / AGENTS.md: whole non-critical features, no save-schema/physics/collisions/vehicle/world/traffic/police/render-perf; each task needs an approved spec; the first Stage 2 task is a trial. Stage 3 needs a separate promotion and the §4.3 test gate.
+
+## D-024 T-007 approved as Gemini's first Stage 2 trial
+D-024 | 2026-11-21 | agreed | Martin ("批准", 2026-11-21 16:36, after Claude's review) approved `specs/T-007-spec-v1.md` (ChatGPT; stored verbatim): WORLD-tab "Next Stop" card, four fixed bilingual destination suggestions, in-memory only, no save/physics/render changes. Implementer Gemini (Antigravity), branch `gemini/T-007`; mandatory Stage 2 trial under COLLAB v3.5 §4.2 with a failing-capable regression test; Claude re-checks D-013 and wires CI. Passing it is the first of the two distinct-category Stage 2 evidences needed before any Stage 3 request.
