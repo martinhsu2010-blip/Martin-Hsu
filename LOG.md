@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-21 | — | Martin | — | Gemini promoted to Stage 2 (D-023, "升2"); first Stage 2 trial spec pending from ChatGPT
 - 2026-11-21 | — | Martin | — | T-006 accepted on devices (vh-2026-11-21-02); Gemini stays Stage 1; code-PR lock free
 - 2026-11-21 | vh-2026-11-21-02 | Claude (impl. Gemini) | commit ffbe3f4 | T-006: zh-TW `shared_space` label "Space" -> "空白鍵" (PR #53); awaiting Martin's device acceptance
 - 2026-11-21 | — | Martin | — | T-006 spec v1 approved (D-022): Gemini Stage 1 trial, zh-TW `shared_space` label; spec registered, task in Ready for Implementer
