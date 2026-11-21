@@ -11,7 +11,17 @@ Rollback / blockers: none. Stage 2 is provisional until the first Stage 2 trial 
 (none)
 
 ## Ready for Implementer
-(none)
+### T-007 Game Hub WORLD "Next Stop" card (Gemini Stage 2 first trial)
+Owner: Gemini
+Implementer: Gemini (Stage 2 trial; single small non-persistent UI feature)
+Reviewer: Claude
+Priority: P2
+Base commit: latest `main` at start (spec baseline `20a793a5c37cf85d161532e1b683911c7ae4f5d6`)
+Branch/PR: `gemini/T-007` / (none yet)
+Spec: `specs/T-007-spec-v1.md` (approved by Martin 2026-11-21 16:36; D-024).
+Scope: `index.html` + new `tools/test/explore_picks_check.mjs` only. Claude wires the new test into `.github/workflows/pwa-cache-check.yml` at release (A11).
+Required Gemini stage: 2 (Stage 2 trial)
+
 
 ## In review
 (none)
