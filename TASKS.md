@@ -11,17 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-009 Midtown crosswalk pilot (Gemini Stage 3 first task; world/render) (Ready; pre-start calibration done (all six valid); Claude confirms (-120,-408) view then hands Gemini the prompt)
-Owner: Gemini
-Implementer: Gemini (Stage 3)
-Reviewer: Claude
-Priority: P2
-Base commit: spec baseline `182a09e227049f99e3b46c4a76e3d27671cc1595` (re-record latest main at start)
-Branch/PR: `gemini/T-009-crosswalks`
-Spec: `specs/T-009-spec-v1.3.md` (v1.3 replaces the second intersection (-240,-360) with (-120,-360); approved by Martin 2026-11-21 23:26; D-030). Earlier: v1.2 (§6.2 physics gate, D-029) and v1.1 (D-028) stay in force otherwise.
-Scope: `index.html` + new `tools/test/midtown_crosswalk_check.mjs` only (optional bench file only if Claude pre-approves). Claude wires the new test into CI at release.
-Required Gemini stage: 3
-Claude notes: COLLAB v3.6 §4.3 gate: Claude completes baseline calibration (5 baseline-vs-baseline pairs per preset x scene), scene/visibility screenshots and test-completeness check BEFORE Gemini starts; Claude alone runs all section 6 measurements.
+(none)
 
 ## In review
 (none)
@@ -39,6 +29,18 @@ Why: archives had no license text; needed before any public sharing.
 (none)
 
 ## Done
+### T-009 Midtown crosswalk pilot (Gemini Stage 3 first task; world/render) (Released, awaiting Martin's device acceptance)
+Owner: Gemini
+Implementer: Gemini (Stage 3)
+Reviewer: Claude
+Priority: P2
+Base commit: spec baseline `182a09e227049f99e3b46c4a76e3d27671cc1595` (re-record latest main at start)
+Branch/PR: `gemini/T-009-crosswalks` / #71 (merged b729942, released vh-2026-11-22-05)
+Spec: `specs/T-009-spec-v1.3.md` (v1.3 replaces the second intersection (-240,-360) with (-120,-360); approved by Martin 2026-11-21 23:26; D-030). Earlier: v1.2 (§6.2 physics gate, D-029) and v1.1 (D-028) stay in force otherwise.
+Scope: `index.html` + new `tools/test/midtown_crosswalk_check.mjs` only (optional bench file only if Claude pre-approves). Claude wires the new test into CI at release.
+Required Gemini stage: 3
+Claude notes: Stage 3 trial verdict PASS (PR comment). 13 AGENTS checks re-run; 11 mutations red; physics medians (cap 1.25) PHONE_LOW 1.186/1.051, TABLET_MED 1.023/1.045, DESKTOP_HIGH 0.966/1.047, bodies/shapes +0; draw calls near +1 on all presets (limits +2/+4/+6), control +0. Device acceptance (A12: day/night drive-through at both intersections, `?fps=1` >= 30 on S26 Ultra and Tab S11) pending Martin.
+
 ### T-008 Zone Arrival HUD (Gemini Stage 2 task 2 of 2; general HUD behavior) (Done, accepted)
 Owner: Gemini
 Implementer: Gemini (Stage 2; passive HUD notice using existing zone logic)
