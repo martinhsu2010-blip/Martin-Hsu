@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-21 | — | Martin | — | T-009 spec v1.2 approved (D-029): physics gate revised to fixed 1.25 + validity-only calibration; spec registered; pre-start audit still pending
 - 2026-11-21 | — | Martin | — | T-009 spec v1.1 approved (D-028): Gemini's first Stage 3 task (Midtown crosswalk pilot); spec registered, pre-start audit pending
 - 2026-11-21 | — | Martin | — | COLLAB v3.6 approved (D-027): task routing (risk overrides volume) and phased small tasks; AGENTS.md, CLAUDE.md, HANDOFF.md, TASKS.md version refs synced
 - 2026-11-21 | — | Martin | — | Gemini promoted to Stage 3 (D-026, evidence PR #59, #63)

@@ -18,7 +18,7 @@ Reviewer: Claude
 Priority: P2
 Base commit: spec baseline `182a09e227049f99e3b46c4a76e3d27671cc1595` (re-record latest main at start)
 Branch/PR: `gemini/T-009-crosswalks`
-Spec: `specs/T-009-spec-v1.1.md` (v1.1 replaces v1 §4/§6 only; approved by Martin 2026-11-21 19:57; D-028).
+Spec: `specs/T-009-spec-v1.2.md` (v1.2 changes only §6.2 of v1.1; approved by Martin 2026-11-21 21:28; D-029). Earlier: v1.1 approved 19:57 (D-028), superseded by v1.2 for §6.2.
 Scope: `index.html` + new `tools/test/midtown_crosswalk_check.mjs` only (optional bench file only if Claude pre-approves). Claude wires the new test into CI at release.
 Required Gemini stage: 3
 Claude notes: COLLAB v3.6 §4.3 gate: Claude completes baseline calibration (5 baseline-vs-baseline pairs per preset x scene), scene/visibility screenshots and test-completeness check BEFORE Gemini starts; Claude alone runs all section 6 measurements.
