@@ -4492,7 +4492,7 @@
             const groups=new Map();
             for (const b of parcels) {
                 if (!b.coverage) continue;
-                const key=Math.floor(b.x/40)+','+Math.floor(b.z/40);
+                const key=Math.floor(b.x/120)+','+Math.floor(b.z/120);
                 let body=groups.get(key);
                 if (!body || body.shapes.length===16) {
                     body=new CANNON.Body({mass:0,material:MAT_GROUND,position:new CANNON.Vec3(b.x,0,b.z)});
@@ -5162,13 +5162,60 @@
                 if (!heights.has(key)) heights.set(key, terrainHeight(region.x0+i*grid,region.z0+j*grid));
                 return heights.get(key);
             }
-            // Interpolate the same b-c triangle diagonal as the rendered terrain.
-            function surface(x,z) {
-                const gx=(x-region.x0)/grid, gz=(z-region.z0)/grid;
-                const i=Math.floor(gx), j=Math.floor(gz), u=gx-i, v=gz-j;
-                const b=vertexHeight(i+1,j), c=vertexHeight(i,j+1);
-                return u+v<=1 ? vertexHeight(i,j)*(1-u-v)+b*u+c*v :
-                    b*(1-v)+c*(1-u)+vertexHeight(i+1,j+1)*(u+v-1);
+            // Clip the ribbon at each terrain edge so no lawn triangle bridges a slope break.
+            function clip(poly, distance) {
+                const out = [];
+                for (let i=0; i<poly.length; i++) {
+                    const a=poly[i], b=poly[(i+1)%poly.length];
+                    const da=distance(a), db=distance(b);
+                    if (da>=0) out.push(a);
+                    if ((da<0 && db>0) || (da>0 && db<0)) {
+                        const t=da/(da-db);
+                        out.push({x:a.x+t*(b.x-a.x), z:a.z+t*(b.z-a.z)});
+                    }
+                }
+                return out;
+            }
+            function emit(poly, height) {
+                if (poly.length<3) return;
+                // Round before testing area so near-coincident Float32 vertices cannot flip a face.
+                const verts=poly.map(p=>({x:Math.fround(p.x), z:Math.fround(p.z)}));
+                const ids=[];
+                function index(k) {
+                    if (ids[k]===undefined) {
+                        const p=verts[k];
+                        ids[k]=positions.length/3;
+                        positions.push(p.x,height(p)+0.04,p.z);
+                    }
+                    return ids[k];
+                }
+                for (let k=1;k+1<verts.length;k++) {
+                    const a=verts[0], b=verts[k], c=verts[k+1];
+                    if ((b.z-a.z)*(c.x-a.x)-(b.x-a.x)*(c.z-a.z)>0)
+                        indices.push(index(0),index(k),index(k+1));
+                }
+            }
+            const nx=Math.round((region.x1-region.x0)/grid), nz=Math.round((region.z1-region.z0)/grid);
+            function addQuad(quad) {
+                const xs=quad.map(p=>(p.x-region.x0)/grid), zs=quad.map(p=>(p.z-region.z0)/grid);
+                for (let i=Math.floor(Math.min(...xs));i<=Math.floor(Math.max(...xs));i++) {
+                    const x=region.x0+i*grid;
+                    const strip=clip(clip(quad,p=>p.x-x),p=>x+grid-p.x);
+                    for (let j=Math.floor(Math.min(...zs));j<=Math.floor(Math.max(...zs));j++) {
+                        const z=region.z0+j*grid;
+                        const cell=clip(clip(strip,p=>p.z-z),p=>z+grid-p.z);
+                        if (cell.length<3) continue;
+                        const a=vertexHeight(i,j), b=vertexHeight(i+1,j);
+                        const c=vertexHeight(i,j+1), d=vertexHeight(i+1,j+1);
+                        if (i<0 || i>=nx || j<0 || j>=nz || Math.max(a,b,c,d)<0.08) {
+                            emit(cell,()=>0); // makeTerrain leaves the city ground exposed here.
+                            continue;
+                        }
+                        const diagonal=p=>grid-(p.x-x)-(p.z-z);
+                        emit(clip(cell,diagonal),p=>a+((p.x-x)*(b-a)+(p.z-z)*(c-a))/grid);
+                        emit(clip(cell,p=>-diagonal(p)),p=>d+((x+grid-p.x)*(c-d)+(z+grid-p.z)*(b-d))/grid);
+                    }
+                }
             }
             for (const road of ROAD_NET.suburbRoads) for (const side of [-1,1]) {
                 const others=ROAD_NET.terrainRoads.filter(r=>r!==road);
@@ -5176,17 +5223,14 @@
                 for (const p of road.pts) {
                     const row=[0.2,3.5,7].map(offset => {
                         const x=p.x-side*p.tz*(road.half+offset), z=p.z+side*p.tx*(road.half+offset);
-                        return {x,z,y:surface(x,z)+0.08};
+                        return {x,z};
                     });
                     if (previous) for(let band=0;band<2;band++) {
                         const quad=[previous[band],row[band],row[band+1],previous[band+1]];
                         const x=(quad[0].x+quad[2].x)/2,z=(quad[0].z+quad[2].z)/2;
                         const radius=Math.max(...quad.map(v=>Math.hypot(v.x-x,v.z-z)));
                         if (others.some(r=>nearestOnPolyline(x,z,r.pts).d <= r.half+radius+.2)) continue;
-                        const n=positions.length/3;
-                        for(const v of quad) positions.push(v.x,v.y,v.z);
-                        if(side>0) indices.push(n,n+2,n+1,n,n+3,n+2);
-                        else indices.push(n,n+1,n+2,n,n+2,n+3);
+                        addQuad(side>0 ? quad.reverse() : quad);
                     }
                     previous=row;
                 }

@@ -126,6 +126,33 @@ function city(h) {
     }
     console.log('CITY',JSON.stringify(counts),'placed',JSON.stringify(Object.fromEntries(Object.keys(counts).map(d=>[d,h.city.filter(b=>b.district===d).length+added.filter(b=>b.district===d).length]))));
 }
+// Sample inside every lawn triangle against makeTerrain's indexed ground faces.
+function checkVergeHeight(h, mesh, grid) {
+    const {x0,z0,x1,z1}=h.ROAD_NET.suburb;
+    const pos=mesh.geometry.attributes.position, idx=mesh.geometry.index;
+    const cache=new Map();
+    function height(i,j) {
+        const key=i+','+j;
+        if (!cache.has(key)) cache.set(key,Math.fround(h.terrainHeight(x0+i*grid,z0+j*grid)));
+        return cache.get(key);
+    }
+    let min=Infinity,max=-Infinity;
+    for (let k=0;k<idx.count;k+=3) {
+        const a=idx.getX(k), b=idx.getX(k+1), c=idx.getX(k+2);
+        const mean=get=>(get(a)+get(b)+get(c))/3;
+        const gx=(mean(v=>pos.getX(v))-x0)/grid, gz=(mean(v=>pos.getZ(v))-z0)/grid;
+        const i=Math.floor(gx), j=Math.floor(gz), u=gx-i, v=gz-j;
+        const A=height(i,j), B=height(i+1,j), C=height(i,j+1), D=height(i+1,j+1);
+        let ground=0;
+        if (i>=0 && j>=0 && i<Math.round((x1-x0)/grid) && j<Math.round((z1-z0)/grid) && Math.max(A,B,C,D)>=.08)
+            ground=u+v<=1 ? (1-u-v)*A+u*B+v*C : (1-v)*B+(1-u)*C+(u+v-1)*D;
+        const gap=mean(v=>pos.getY(v))-ground;
+        min=Math.min(min,gap); max=Math.max(max,gap);
+    }
+    console.log('VERGE',idx.count/3,'triangle centers; clearance (m)',min,max);
+    assert.ok(min>=.039 && max<=.041,'verge must follow the rendered ground');
+}
+
 for(const preset of ['PHONE_LOW','DESKTOP_HIGH']){
     console.log('PRESET',preset);
     const h=await collisionHarness(observeParcels(source),preset);
@@ -147,6 +174,7 @@ for(const preset of ['PHONE_LOW','DESKTOP_HIGH']){
         const verge=h.WORLD.suburbVerge, normals=verge.geometry.attributes.normal;
         assert.ok(verge.isMesh&&!Array.isArray(verge.material)&&!verge.castShadow);
         for(let i=0;i<normals.count;i++)assert.ok(normals.getY(i)>0,'lawn triangle faces down');
+        if (ref<0) checkVergeHeight(h,verge,preset==='PHONE_LOW'?10:8);
         console.log('HOUSES',houses.length,'front',houses.filter(b=>b.row===1).length,'rear',houses.filter(b=>b.row===2).length);
     }
     if(process.argv.includes('--front'))continue;
