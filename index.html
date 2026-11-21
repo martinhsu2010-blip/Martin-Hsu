@@ -346,7 +346,8 @@
         "explore_tip_ocean": "Cruise along the palm-lined coast at dusk.",
         "explore_tip_marina": "Visit the marina for a relaxed waterfront drive.",
         "explore_tip_chiliad": "Follow the winding mountain road toward the summit.",
-        "explore_tip_ring": "Try one complete lap of the elevated ring road."
+        "explore_tip_ring": "Try one complete lap of the elevated ring road.",
+        "zone_arrival_label": "NOW ENTERING"
     },
     "zh-TW": {
         "update_downloaded_reloading": "已下載新版本，重新載入中…",
@@ -676,7 +677,8 @@
         "explore_tip_ocean": "沿著棕櫚樹林立的海岸大道欣賞黃昏。",
         "explore_tip_marina": "前往遊艇碼頭，沿著水岸輕鬆兜風。",
         "explore_tip_chiliad": "沿著蜿蜒山路往山頂前進。",
-        "explore_tip_ring": "試著沿高架環線完整兜風一圈。"
+        "explore_tip_ring": "試著沿高架環線完整兜風一圈。",
+        "zone_arrival_label": "正在進入"
     }
 };
     // I18N_TABLE_END
@@ -862,6 +864,15 @@
         #radar-container { width: var(--radar-size); height: var(--radar-size); border: 1px solid #858c96; padding: 3px; background: #24282e; }
         #radar-container:focus-visible, #quick-actions button:focus-visible { outline: 2px solid #67e8f9; outline-offset: 3px; }
         #radar-zone { max-width: var(--radar-size); overflow: hidden; text-overflow: ellipsis; }
+        #zone-arrival {
+            position: fixed; left: var(--left-edge); top: calc(var(--top-edge) + var(--radar-size) + 8px);
+            width: max-content; max-width: min(220px, calc(100vw - var(--left-edge) - var(--right-edge) - var(--status-width) - 12px));
+            padding: 8px 10px; border-radius: 12px; border: 1px solid rgba(103, 232, 249, 0.45);
+            background: rgba(15, 23, 42, 0.82); pointer-events: none; box-sizing: border-box;
+        }
+        #zone-arrival.hidden { display: none; }
+        #zone-arrival-caption { font-size: 10px; line-height: 1.25; font-weight: 700; letter-spacing: 0.08em; color: #67e8f9; }
+        #zone-arrival-name { font-size: 13px; line-height: 1.3; font-weight: 800; color: #f8fafc; margin-top: 2px; overflow-wrap: break-word; }
         #status-column { width: var(--status-width); gap: 8px; }
         #status-card { width: 100%; min-width: 0; padding: 8px 10px; box-shadow: none; }
         #status-card > div { min-width: 0; }
@@ -1048,6 +1059,10 @@
                 </span>
             </button>
 
+        </div>
+        <div id="zone-arrival" class="hud-glass hidden pointer-events-none" role="status" aria-live="polite" aria-atomic="true">
+            <div id="zone-arrival-caption" class="font-vice" data-i18n="zone_arrival_label">NOW ENTERING</div>
+            <div id="zone-arrival-name" class="font-vice"></div>
         </div>
 
         <!-- 右上：通緝星數、金錢、6速檔位、RPM轉速條、時速表與氮氣條 -->
@@ -9297,20 +9312,75 @@
                 document.getElementById('hud-nitro-bar').style.width = car.nitro + '%';
             }
 
-            let zone = tr('midtown');
+            let zoneKey = 'midtown';
             const hlz = ROAD_NET.hill, sbz = ROAD_NET.suburb;
             const onElev = pos.y > 6 && [ROAD_NET.ring, ...ROAD_NET.spurs].some(r => nearestOnPolyline(pos.x, pos.z, r.pts).d < r.half + 2);
-            if (onElev) zone = tr('ring_expressway');
-            else if (pos.x > hlz.x0 && pos.x < hlz.x1 && pos.z > hlz.z0 && pos.z < hlz.z1) zone = tr('mount_chiliad');
-            else if (pos.x > sbz.x0 && pos.x < sbz.x1 && pos.z > sbz.z0 && pos.z < sbz.z1) zone = tr('suburbs');
-            else if (pos.z < -420 && pos.x > -650 && pos.x < 100) zone = tr('old_town');
-            else if (Math.abs(pos.z) <= 330 && pos.x > -250 && pos.x < 90) zone = tr('downtown_cbd');
-            else if (Math.hypot(pos.x - ROAD_NET.roundabouts[0].x, pos.z - ROAD_NET.roundabouts[0].z) < 40) zone = tr('vice_circle');
-            else if (pos.x > 235 && pos.z > 240) zone = tr('starlight_marina');
-            else if (pos.x > 235) zone = tr('santa_cruz_boardwalk');
-            else if (pos.x > 80) zone = tr('ocean_drive');
-            else if (pos.x < -360 && Math.abs(pos.z) < 260) zone = tr('stunt_airport');
+            if (onElev) zoneKey = 'ring_expressway';
+            else if (pos.x > hlz.x0 && pos.x < hlz.x1 && pos.z > hlz.z0 && pos.z < hlz.z1) zoneKey = 'mount_chiliad';
+            else if (pos.x > sbz.x0 && pos.x < sbz.x1 && pos.z > sbz.z0 && pos.z < sbz.z1) zoneKey = 'suburbs';
+            else if (pos.z < -420 && pos.x > -650 && pos.x < 100) zoneKey = 'old_town';
+            else if (Math.abs(pos.z) <= 330 && pos.x > -250 && pos.x < 90) zoneKey = 'downtown_cbd';
+            else if (Math.hypot(pos.x - ROAD_NET.roundabouts[0].x, pos.z - ROAD_NET.roundabouts[0].z) < 40) zoneKey = 'vice_circle';
+            else if (pos.x > 235 && pos.z > 240) zoneKey = 'starlight_marina';
+            else if (pos.x > 235) zoneKey = 'santa_cruz_boardwalk';
+            else if (pos.x > 80) zoneKey = 'ocean_drive';
+            else if (pos.x < -360 && Math.abs(pos.z) < 260) zoneKey = 'stunt_airport';
+            const zone = tr(zoneKey);
             document.getElementById('radar-zone').textContent = zone;
+            updateZoneArrival(zoneKey, zone);
+        }
+
+        const ZONE_ARRIVAL = {
+            lastKey: null,
+            visible: false,
+            timer: null,
+            shownCaption: '',
+            shownName: '',
+            el: null,
+            captionEl: null,
+            nameEl: null,
+        };
+        function updateZoneArrival(zoneKey, zoneName) {
+            if (!ZONE_ARRIVAL.el) {
+                ZONE_ARRIVAL.el = document.getElementById('zone-arrival');
+                ZONE_ARRIVAL.captionEl = document.getElementById('zone-arrival-caption');
+                ZONE_ARRIVAL.nameEl = document.getElementById('zone-arrival-name');
+            }
+            if (!ZONE_ARRIVAL.el || !ZONE_ARRIVAL.el.classList || !ZONE_ARRIVAL.captionEl || !ZONE_ARRIVAL.nameEl) return;
+            if (ZONE_ARRIVAL.lastKey === null) {
+                ZONE_ARRIVAL.lastKey = zoneKey;
+                return;
+            }
+            if (zoneKey !== ZONE_ARRIVAL.lastKey) {
+                ZONE_ARRIVAL.lastKey = zoneKey;
+                const caption = tr('zone_arrival_label');
+                const name = zoneName !== undefined ? zoneName : tr(zoneKey);
+                ZONE_ARRIVAL.shownCaption = caption;
+                ZONE_ARRIVAL.shownName = name;
+                ZONE_ARRIVAL.captionEl.textContent = caption;
+                ZONE_ARRIVAL.nameEl.textContent = name;
+                ZONE_ARRIVAL.el.classList.remove('hidden');
+                ZONE_ARRIVAL.visible = true;
+                if (ZONE_ARRIVAL.timer !== null) clearTimeout(ZONE_ARRIVAL.timer);
+                ZONE_ARRIVAL.timer = setTimeout(() => {
+                    ZONE_ARRIVAL.timer = null;
+                    ZONE_ARRIVAL.visible = false;
+                    ZONE_ARRIVAL.el.classList.add('hidden');
+                }, 2500);
+                return;
+            }
+            if (ZONE_ARRIVAL.visible) {
+                const caption = tr('zone_arrival_label');
+                const name = zoneName !== undefined ? zoneName : tr(zoneKey);
+                if (caption !== ZONE_ARRIVAL.shownCaption) {
+                    ZONE_ARRIVAL.shownCaption = caption;
+                    ZONE_ARRIVAL.captionEl.textContent = caption;
+                }
+                if (name !== ZONE_ARRIVAL.shownName) {
+                    ZONE_ARRIVAL.shownName = name;
+                    ZONE_ARRIVAL.nameEl.textContent = name;
+                }
+            }
         }
 
 
