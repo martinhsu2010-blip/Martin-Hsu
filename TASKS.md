@@ -3,7 +3,7 @@
 ## Gemini qualification
 Current stage: 1
 Last approved by Martin: 2026-11-21 (COLLAB v3.5; starting stage)
-Evidence PRs: none (T-006 spec pending)
+Evidence PRs: none yet (T-006 approved, awaiting Gemini PR)
 Promotion candidate: none
 Rollback / blockers: none
 
@@ -11,7 +11,16 @@ Rollback / blockers: none
 (none)
 
 ## Ready for Implementer
-(none)
+### T-006 zh-TW label fix: `shared_space` "Space" -> "空白鍵" (Gemini Stage 1 trial)
+Owner: Gemini
+Implementer: Gemini (Stage 1 trial; strings only)
+Reviewer: Claude
+Priority: P3
+Base commit: latest `main` at start (spec baseline `6b669b8f4f796bd6e6cd6dcf07e1517f2804843d`)
+Branch/PR: `gemini/T-006` / (none yet)
+Spec: `specs/T-006-spec-v1.md` (approved by Martin 2026-11-21 15:32; D-022).
+Scope: index.html only, +1/-1: zh-TW `shared_space` value. en table and HTML fallback unchanged.
+Required Gemini stage: 1
 
 ## In review
 (none)

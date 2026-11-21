@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-21 | — | Martin | — | T-006 spec v1 approved (D-022): Gemini Stage 1 trial, zh-TW `shared_space` label; spec registered, task in Ready for Implementer
 - 2026-11-21 | — | Martin | — | COLLAB v3.5 approved (D-021): Gemini staged authorization (Stage 1 now); AGENTS.md, TASKS.md, CLAUDE.md synced; board column `Ready for Implementer`
 - 2026-11-21 | — | Martin | — | T-005B accepted on S26 Ultra / Tab S11 (vh-2026-11-21-01); T-005 done; code-PR lock free
 - 2026-11-21 | vh-2026-11-21-01 | Claude (impl. Codex) | commit be87c2f | T-005B: suburb first-row frontage fill and terrain-following lawn verge; city coverage shells (776 phone / 554 desktop incl. 758/538 new) with deterministic height and colour variety (seed 5019, 4 heights x 5 colours per district, windows follow height), pocket parks over all residual empty lots (one shared batch, no bodies), coverage colliders grouped per 120x120 cell, opt-in `?fps=1` readout (average FPS, lowest 1 s FPS in the last minute, preset; auto quality off only while active). Claude headless checks (not device): physics ratio 1.13 phone / 1.06 desktop, draw calls suburb <= +3, city <= +5. Device acceptance pending.
