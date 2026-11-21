@@ -1,12 +1,23 @@
-# COLLAB v3.5 — ChatGPT × Codex × Antigravity (Gemini) × Claude protocol (VICE HORIZON VI)
+# COLLAB v3.6 — ChatGPT × Codex × Antigravity (Gemini) × Claude protocol (VICE HORIZON VI)
 
-> **狀態：v3.5，已由 Martin 批准（2026-11-21 15:21，「批准」，依 ChatGPT 草案 COLLAB-v3.5-DRAFT-2.md）。** 作者：ChatGPT；登錄：Claude。取代 v3.4；D-021。
+> **狀態：v3.6，已由 Martin 批准（2026-11-21 19:04，「批准」，依 Claude 起草的 COLLAB-v3.6-DRAFT.md；Martin 決定不經 ChatGPT 交叉審查）。** 起草／登錄：Claude。取代 v3.5；D-027。
 
 ## 0. 沿革及本版目的
 
 v3（2026-11-18，D-011）確立固定協作流程；v3.1（D-016）固定各階段、閘門及訊息模板；v3.2（D-018）建立第二實作者；v3.3 曾暫停第二實作者；v3.4（D-020）以 Antigravity Remote Agents 恢復 Gemini，**僅准低風險任務**。
 
-**v3.5 的唯一新增政策目標**：建立可審計的三階段能力升級制度，使 Gemini 在通過實績與測試閘門後，最終可被指派與 Codex **同等範圍**的程式任務；但**同等範圍不等於自動獲得任務、不等於較少測試，更不等於可以同時開第二個程式 PR**。
+v3.5（D-021）建立可審計的三階段能力升級制度，使 Gemini 在通過實績與測試閘門後，可被指派與 Codex **同等範圍**的程式任務；但**同等範圍不等於自動獲得任務、不等於較少測試，更不等於可以同時開第二個程式 PR**。實績：T-006（階段 1，PR #53）、T-007（階段 2，PR #59）、T-008（階段 2，PR #63）皆已由 Martin 實機驗收；Martin 於 2026-11-21 批准 Gemini 升至階段 3（D-026）。
+
+**v3.6 的新增政策目標**：在 Gemini 已達階段 3 的前提下，加入**任務路由規則**（§5.1）與**分段任務規則**（§5.2），使耗 token 的大量、低風險、可測試的工作預設由 Gemini 承擔，需要判斷力的高風險小任務預設由 Codex 承擔，並把審查瓶頸（Claude）納入考量。**v3.6 不放寬任何既有閘門。**
+
+### v3.6 變更摘要（相對 v3.5）
+
+1. **新增 §5.1 任務路由規則**：依「風險」與「量」兩軸決定預設實作者；**風險優先於量**。
+2. **新增 §5.2 分段任務規則**：大型任務必須由 ChatGPT 拆成分階段小任務／小 PR，附建議上限及每段獨立回歸測試。
+3. **§5 路由表**更新為與 §5.1 一致（Gemini 已達階段 3 的現況）。
+4. **清理 v3.5 過渡性文字**：移除「僅在 v3.5 正式生效後」、「T-006 待批准」、「Ready for Codex 改名須同 PR 同步」、`Gemini qualification` 範例中的「pending」等已過期的描述；T-006／T-007／T-008 改為歷史實績。
+5. **更新訊息模板**（§7）與批准用語（§7.4、§4.4）為 v3.6；§11 ChatGPT 專案設定文字更新為現況。
+6. **未改動（逐字保留語意）**：唯一共享程式 PR 鎖、一任務一實作者、只有 Martin 明示才可升降階、階段 2→3 門檻（連續 2 項不同範疇、零違規、實機驗收）、§4.3 階段 3 測試閘門與 Claude 獨立量測、D-013 `main` 保護逐 PR 重驗、`sw.js`／協作文件／CI 接線僅限 Claude。
 
 Martin 在 ChatGPT、Claude、Codex 與 Antigravity 間傳遞訊息；AI 不共享其他 AI 的私人對話。**GitHub repo `martinhsu2010-blip/Martin-Hsu` 是唯一共同事實來源**。當 repo 規則與未批准草案衝突時，repo 現行規則優先。
 
@@ -14,7 +25,7 @@ Martin 在 ChatGPT、Claude、Codex 與 Antigravity 間傳遞訊息；AI 不共�
 
 - **ChatGPT（設計／分析）**：提出功能設計、數值、規格、效能預算、bug 分析及設計審查；不直接撰寫遊戲程式碼。所有程式任務在規格及 `TASKS.md` 均標註 `Implementer: Codex|Gemini` 與選擇理由。
 - **Codex（實作者）**：預設實作人，依已批准規格完成一整項任務、執行檢查、從最新 `main` 開 `codex/T-xxx-name` 分支並提交 PR；不得合併、直推 `main`、修改 `sw.js` 或協作文件。
-- **Antigravity／Gemini（分階段授權實作者）**：於 `antigravity.google.com` 的 Remote Agents 執行整項任務，分支 `gemini/T-xxx-name`（工具改名須如實記錄）；其**可觸及的系統依 §4 現行階段**，其餘 PR、CI、誠實報告與禁止修改檔案規則與 Codex 相同。未獲升級批准時僅有階段 1 權限。
+- **Antigravity／Gemini（分階段授權實作者）**：於 `antigravity.google.com` 的 Remote Agents 執行整項任務，分支 `gemini/T-xxx-name`（工具改名須如實記錄）；其**可觸及的系統依 §4 與 `TASKS.md` 中 Martin 批准的現行階段**，其餘 PR、CI、誠實報告與禁止修改檔案規則與 Codex 相同。階段以 `TASKS.md` 的 `Gemini qualification` 為準；沒有該紀錄就視為階段 1。
 - **Claude（獨立審查／整合／發布）**：從 GitHub 讀取 PR 及規格，獨立跑測試、對照 baseline、檢查差異與效能、提出 review，經適當核准後 squash merge／發布。**只有 Claude 修改 `sw.js` CACHE 及協作文件**（`COLLAB.md`、`AGENTS.md`、`HANDOFF.md`、`TASKS.md`、`DECISIONS.md`、`LOG.md`、`specs/` 等）；Claude 自身修改仍須走 branch → PR → merge。小缺陷修復須公開說明；較大修復退回原實作者。
 - **Martin（Owner／最終閘門）**：決定規格、優先順序、每次 Gemini 升階／降階和任務歸屬；在實機上驗收並以自己的話批准。只有 Martin／Claude 可以執行合併；Codex／Gemini 不合併。
 
@@ -28,7 +39,7 @@ Repo root 是唯一正式位置；忽略舊 `records/` 路徑。
 - `AGENTS.md`：兩名實作者共同的強制限制，升階時由 Claude 配套更新，禁止其與 `COLLAB.md` 相矛盾。
 - `specs/T-xxx-spec-vN.md`：經 Martin 批准後原文存檔，格式以 `specs/TEMPLATE.md` 為準。
 - `TASKS.md`：任務唯一狀態／單一 Owner／實作者／審查／驗收紀錄。
-- `DECISIONS.md`：不可覆寫的決策事件；D-013 保護 `main`，D-020 是 v3.4 的 Gemini 低風險授權。新規則經批准應另增新決策並標明取代 D-020 的部分路由限制；不得改寫 D-020 歷史。
+- `DECISIONS.md`：不可覆寫的決策事件；D-013 保護 `main`，D-021 是 v3.5 的三階段授權，D-023／D-026 是 Gemini 的升階紀錄。新規則經批准應另增新決策並標明取代的範圍；不得改寫既有決策歷史。
 - `LOG.md`、`HANDOFF.md`、`CLAUDE.md`、`tools/`、`.github/`：既有用途保持不變。
 
 開始每一項任務前，讀取 GitHub 上的 `COLLAB.md`、`TASKS.md`、`DECISIONS.md`、`AGENTS.md` 及相關 spec；Pages 可能有部署延遲，不能用未刷新頁面代替 GitHub 最新檔案。
@@ -55,21 +66,21 @@ Repo root 是唯一正式位置；忽略舊 `records/` 路徑。
 5. `index.html` 是單檔 Three.js + cannon-es 遊戲；保持既有存檔 `vh_save`、離線 PWA、單一 renderer 與行動裝置性能優先。除非核准規格明定，任何任務不增加 CDN 或執行時網路依賴。
 6. `Verification` 清楚區分 `designed`、`code-reviewed`、`headless-measured` 和 `device-measured`；Claude 的 headless 數據**不得**冒充 Martin 實機數據。
 
-## 4. Gemini 三階段授權制度（取代 v3.4 的固定低風險路由；僅在 v3.5 正式生效後）
+## 4. Gemini 三階段授權制度（D-021 起生效）
 
-**起始狀態：階段 1。** 階段紀錄由 Claude 在 `TASKS.md` 的獨立 `Gemini qualification` 區塊或等效明確欄位維護，至少包含 `Current stage`、核准人、日期、證據 PR、測試結果、最新一次回退原因。**Claude 可建議升降階，但只有 Martin 明確批准升階。** 降階若命中保護條件立即停止新任務，交 Martin 確認後由 Claude 登記；不得藉由選擇另一 task 繞過限制。
+**起始狀態：階段 1；現況以 `TASKS.md` 為準（截至本草案：階段 3，D-026）。** 階段紀錄由 Claude 在 `TASKS.md` 的獨立 `Gemini qualification` 區塊或等效明確欄位維護，至少包含 `Current stage`、核准人、日期、證據 PR、測試結果、最新一次回退原因。**Claude 可建議升降階，但只有 Martin 明確批准升階。** 降階若命中保護條件立即停止新任務，交 Martin 確認後由 Claude 登記；不得藉由選擇另一 task 繞過限制。
 
 ### 4.1 階段 1 — 限定文字與純靜態 UI（試跑）
 
-**允許整項任務：** `STRINGS`／`tr()` 既有中英文字串、翻譯、任務文字與描述、純靜態 HUD／選單 CSS；只改顯示文字或沒有行為變更的樣式。**T-006 一行字串修改是首項試跑候選，仍須完成該任務獨立的規格批准、註冊與開工閘門。**
+**允許整項任務：** `STRINGS`／`tr()` 既有中英文字串、翻譯、任務文字與描述、純靜態 HUD／選單 CSS；只改顯示文字或沒有行為變更的樣式。**（歷史：首項試跑為 T-006 一行字串修改，PR #53，已驗收。）**
 
 **禁止：** JavaScript 邏輯變更、事件、DOM 結構行為、儲存、物理／碰撞、車輛、世界生成、交通／警察 AI、渲染及效能，以及新增檔案／資產。試跑必須是完整獨立任務，不得藉「順手清理」擴大修改。預設程式 PR 僅改 `index.html`。
 
-**階段 1 驗收要求：** PR diff 僅包含核准行；分支與 PR 模板正確；`syntax_check`、`i18n_check`、受影響的 `hud_check`／既有回歸測試 PASS；Claude 核對原始檔案、實際修改、功能及誠實報告，並確認未觸碰 `sw.js`／文件。發布後由 Martin 實機驗收。T-006 必須具體查核**恰好一行字串**，不得因工具生成大面積重排。
+**階段 1 驗收要求：** PR diff 僅包含核准行；分支與 PR 模板正確；`syntax_check`、`i18n_check`、受影響的 `hud_check`／既有回歸測試 PASS；Claude 核對原始檔案、實際修改、功能及誠實報告，並確認未觸碰 `sw.js`／文件。發布後由 Martin 實機驗收。階段 1 的試跑任務須具體查核**恰好核准的行數**，不得因工具生成大面積重排。
 
-**升至階段 2（缺一不可）：** T-006 的規格先獲 Martin 核准；符合階段 1 的 PR 經 Claude 獨立審核通過、CI 綠燈、正式發布、Martin 實機接受；無越權檔案、無多餘 diff、無不實測試宣稱、無規則違反；Claude 記錄 PR/SHA/驗收依據並提出升階建議；Martin **另外明確批准「Gemini 升至階段 2」**。T-006 通過本身**不等於自動升階**。
+**升至階段 2（缺一不可）：** 該階段 1 試跑任務的規格先獲 Martin 核准；符合階段 1 的 PR 經 Claude 獨立審核通過、CI 綠燈、正式發布、Martin 實機接受；無越權檔案、無多餘 diff、無不實測試宣稱、無規則違反；Claude 記錄 PR/SHA/驗收依據並提出升階建議；Martin **另外明確批准「Gemini 升至階段 2」**。試跑通過本身**不等於自動升階**。
 
-**退回條件：** 階段 1 如發生越權修改、繞過分支保護／PR 鎖、隱瞞失敗或不實量測、重複無法遵守單行 diff，立即**暫停 Gemini 實作資格（階段 0／paused）**；由 Codex 承接後續尚未開始的任務。若只是可修正的一般失誤，依原 PR 最多修正兩輪；無法過關則停止該 PR，仍停在階段 1、T-006 重試需重新批准或重新安排。恢復資格須 Martin 明確同意並重新試跑階段 1。
+**退回條件：** 階段 1 如發生越權修改、繞過分支保護／PR 鎖、隱瞞失敗或不實量測、重複無法遵守單行 diff，立即**暫停 Gemini 實作資格（階段 0／paused）**；由 Codex 承接後續尚未開始的任務。若只是可修正的一般失誤，依原 PR 最多修正兩輪；無法過關則停止該 PR，仍停在階段 1，試跑重試需重新批准或重新安排。恢復資格須 Martin 明確同意並重新試跑階段 1。
 
 ### 4.2 階段 2 — 完整、但不涉及高風險系統的新功能
 
@@ -109,41 +120,64 @@ Repo root 是唯一正式位置；忽略舊 `records/` 路徑。
 
 ### 4.4 共通升降階紀錄與權限安全
 
-- 只有 **Martin 的獨立明示授權**可以升階；Claude 的建議、綠燈 CI、試跑完成都不是授權。建議用語：「批准 Gemini 升至階段 N，依 COLLAB v3.5，證據 PR #...」。
+- 只有 **Martin 的獨立明示授權**可以升階；Claude 的建議、綠燈 CI、試跑完成都不是授權。固定用語：「批准 Gemini 升至階段 N，依 COLLAB v3.6，證據 PR #...」（v3.6 生效前沿用 v3.5 字樣）。升降階都由 Martin 以此句式明示；Claude 不以「可以」「好」之類模糊回應代為記錄，會先請 Martin 說出固定句式。
 - 執行前，Claude 在 docs-only PR 同步 `COLLAB.md`、`AGENTS.md`、`TASKS.md` 的許可範圍及級別，並於 `DECISIONS.md` 追加決策事件；**規則在 docs PR 合併前不可先行擴權**。
 - 禁區、未授權分支操作、偷偷修改 baseline、刪除測試、不實測量屬 hard violation；立即凍結新增 Gemini 任務，交 Martin 裁決。普通可修正缺陷不等同違規，但仍受到 review 回合限制。
 - 若 Antigravity 平台暫停、不支援 repo／PR、權限設置不可確認，該次任務**不得**自行轉成未受管理的另一個代理平台。v3.4 的聊天前後對照替代法只可用於經核准的階段 1 微小修改，且由 Claude 明記實際代套者；不得用它執行階段 2/3。
 
-## 5. 任務分配：降低排隊，而非同時寫 `index.html`
+## 5. 任務分配：路由、分段與排隊
 
-**共用鎖代表 Codex 與 Gemini 不會同時寫程式；分工的價值是當一方額度不足或平台不可用時有替手，而不是兩名實作者並行加速。**
+**共用鎖代表 Codex 與 Gemini 不會同時寫程式；分工的價值是依風險與工作量選擇適合的實作者，並在一方額度不足或平台不可用時有替手，而不是兩名實作者並行加速。**
 
-**建議分工，不是永久排他制度：**
+### 5.1 任務路由規則（v3.6 新增；Gemini 已達階段 3 為前提）
 
-| 任務系統 | 優先實作者 | 原因與例外 |
+每份 spec 與 `TASKS.md` 條目都必須標明 `Implementer`、**Risk（high／low）**、**Volume（large／small）**與一行選擇理由，由 ChatGPT 提出、Claude 審查、Martin 批准。預設規則：
+
+1. **量大、低風險、規格明確、可自動測試 → Gemini。** 例：大量內容／資料表、批次 i18n、有測試覆蓋的機械式重構、測試撰寫、整個 UI／HUD 系統。
+2. **量小、高風險、靠判斷力 → Codex（預設）。** 例：物理手感、碰撞、交通／警察 AI 調校、存檔格式變更。Gemini 僅在已達階段 3 **且**滿足 §4.3 全部前置條件與 Claude 獨立量測時才可承擔，且須在 spec 的選擇理由中說明為何不給 Codex。
+3. **量大且高風險 → 不整包派發。** 由 ChatGPT 依 §5.2 拆成分階段小任務，每個小任務各自套用規則 1 或 2。
+4. **風險優先於量。** 任務只要觸及任一高風險系統（物理、碰撞、車輛、世界生成／地形／道路、交通／警察 AI、renderer／draw calls／效能關鍵路徑、存檔／`vh_save` schema），即屬高風險，適用規則 2／3 與 §4.3；不得把高風險部分藏在大型低風險任務內，或拆成同時進行的 PR 迴避。
+5. **預設不是永久排他。** Martin 可逐項改派；改派不放寬閘門。分類爭議由 Claude 在 spec review 提出，Martin 裁決。
+
+### 5.2 分段任務規則（v3.6 新增；Claude 審查是瓶頸）
+
+1. **大型任務必須由 ChatGPT 拆成分階段任務**（`T-xxx-P1`、`P2`…或獨立任務編號），每一段是**一個任務、一個實作者、一個程式 PR**，依序經 §3 全流程（spec 批准、登錄、實作、Claude 審查、發布、Martin 驗收），並仍受唯一程式 PR 鎖約束；各段**不得並行**。
+2. **每段必須可獨立驗收與發布，且遊戲在每段之後都處於可玩狀態。** 不接受「第 3 段完成前功能不能用」的拆法，除非該段的未完成部分在遊戲內不可見。
+3. **每段各有自己的回歸測試**（可辨識的失敗斷言，由 Claude 接入 CI），並重跑 AGENTS 全套檢查；不能把測試延到最後一段。
+4. **建議的初始大小上限（建議值，Martin 批准後可調整；超過須在 spec 說明理由並經 Claude 同意）：**
+   - 一個程式 PR 的 `index.html` 邏輯／標記／樣式變更：約 **600 行以內**（新增＋修改）；
+   - 純資料表／i18n 字串批次：約 **800 行或 150 個 key 以內**，且須有結構性測試（key 兩語一致、無缺漏）；
+   - 一段只涉及**一個系統邊界**；
+   - Claude 一次審查可在一輪內完成為目標；若某段預期超出，應再拆。
+5. **每一段各自套用其路由規則**：同一大型任務的不同段可分給不同實作者，但**一段只有一位實作者**，且不得兩段同時有未合併程式 PR。
+6. 拆分只改變任務粒度，**不改變任何閘門**：階段 3 的每個高風險段仍需 §4.3 前置條件及 Claude 獨立量測。
+
+### 5.3 建議分工表（與 §5.1 一致；不是永久排他制度）
+
+| 任務系統 | 預設實作者 | 原因與例外 |
 |---|---|---|
-| 世界生成、地形道路、城市／郊區、碰撞、車輛動態、交通／警察 AI | Codex（階段 1/2 必須） | 核心高風險路徑，已有 T-005B 類量測；Gemini 階段 3 且測試充足後可承擔整項任務 |
-| UI 字串、翻譯、靜態 HUD／CSS | Gemini（階段 1 起） | 變更隔離、可快速回歸；Codex 可於任務有其他依賴時接手，但仍一項一位實作者 |
-| Game Hub、設定、任務面板、非存檔持久化的一般遊戲新功能 | Gemini（階段 2 起優先） | 適合獨立功能規格；一旦碰高風險禁區則整項改派 Codex |
-| 引擎整合、渲染效能、存檔 schema | Codex（至 Gemini 階段 3） | 需要固定種子測試、paired 物理及實際 draw call 比對 |
+| 世界生成、地形道路、城市／郊區、碰撞、車輛動態、交通／警察 AI 的**調校與判斷** | Codex | 高風險、靠判斷；Gemini 僅依 §5.1 規則 2 |
+| 上述系統中**量大、可測試、機械式**的子工作（如大量資料表、測試撰寫） | 依 §5.2 拆出後給 Gemini | 須有結構性測試與 Claude 獨立量測；高風險部分仍歸 Codex |
+| UI 字串、翻譯、HUD／選單／Game Hub／設定／任務面板／一般遊戲新功能 | Gemini | 變更隔離、可回歸；整項任務一旦碰高風險禁區，依規則 4 改派 |
+| 引擎整合、渲染效能、存檔 schema | Codex（預設） | 需固定種子測試、paired 物理與實際 draw call 比對；Gemini 依規則 2 |
 | 規格、設計審查、素材授權／美術流程 | ChatGPT 設計；Claude 審核／文件 | 與程式 PR 並行準備，但不破壞唯一程式 PR 鎖 |
 
 **縮短等待的排程規則：**
 
-1. Claude 維持**一張共享的「下一項可啟動」佇列**，以優先順序、依賴、目前 Gemini 階段、風險與測試可用性排序。v3.5 的正式看板欄位名稱為 `Ready for Implementer`，不再使用 `Ready for Codex`；Claude 在啟用 v3.5 的同一個 docs-only PR 依 §9 同步修改 `COLLAB.md` Tasks 一節與 `TASKS.md` 標題，合併前仍沿用現行 v3.4 看板。
+1. Claude 維持**一張共享的「下一項可啟動」佇列**，以優先順序、依賴、目前 Gemini 階段、風險、量與測試可用性排序。看板欄位名稱為 `Ready for Implementer`。
 2. **預先做設計、不預先開程式 PR**：當 Codex 寫 A 時，可讓 ChatGPT 寫 B 的規格、Claude 審查 B 的 docs-only PR 或測試計畫；B 僅在 A 合併、發布、Martin 驗收且鎖釋放後開工。
 3. 盡量讓連續任務落在不同**系統邊界**：例如 Codex 做道路 → Gemini 做 Game Hub → Codex 做 AI。這是降低等待的排程策略，**不是兩個 PR 並行**。
 4. 若某實作者沒額度／平台不可用，且該任務**尚未開 PR**，Martin 可依當前階段把**整項**任務重新指派；任務已開 PR 時由原實作者完成或由 Martin 決定**關閉既有 PR、釋放鎖、更新 TASKS，從最新 `main` 新建另一實作者 PR**，禁止兩個 AI 共用同一 PR 或偷偷接力提交。
 5. 非程式並行工作（設計、授權檢查、素材調研、測試設計、文件審查）可進行，但在程式 PR 內不可擅自改 `sw.js`、文檔，或把未批准素材導入遊戲。
-6. 對依賴關係強的工作，採**整項功能邊界**切任務：UI 能獨立驗收才給 Gemini 階段 2；涉及任務獎勵持久化／物理觸發就給 Codex 或待階段 3。不得在同一 PR 中拆系統讓雙 AI 分頭改。
+6. 對依賴關係強的工作，採**整項功能邊界**切任務（§5.2）：UI 能獨立驗收才給 Gemini 階段 2；涉及任務獎勵持久化／物理觸發就依 §5.1 規則 2／4 處理。不得在同一 PR 中拆系統讓雙 AI 分頭改。
 
 ## 6. 傳遞、批准與不可猜測規則
 
 - 交接**不能只指向**「上面的內容」、「前一則訊息」、「另一個聊天」；須在同一訊息貼**完整正文**，或附上確切名稱的 `.md` 檔。
 - Claude 收不到 spec 全文時須停下要求原檔，不得猜數字、尺寸、上限或回溯重建。
-- **只有 Martin 親自說出批准**（例如「批准 T-006 v1」或「批准 COLLAB v3.5」）才是有效批准；spec 自稱「已批准」不算。
+- **只有 Martin 親自說出批准**（例如「批准 T-009 v1」或「批准 COLLAB v3.6」）才是有效批准；spec 自稱「已批准」不算。
 - `specs/` 收入已批准的完整原文。變更既有 spec 另出 vN+1 再請 Martin 批准；不得擅改已批准參數。
-- 若 Claude 認為此 v3.5 草案需要修訂，先回傳**審查意見**，不逕行將其改成生效文件。Martin 批准後，Claude 才透過 docs-only PR 更新 `COLLAB.md`、`AGENTS.md`、`TASKS.md`、`DECISIONS.md` 並報告 main SHA。
+- 若 Claude 認為協議草案需要修訂，先回傳**審查意見**，不逕行將其改成生效文件。Martin 批准後，Claude 才透過 docs-only PR 更新 `COLLAB.md`、`AGENTS.md`、`TASKS.md`、`DECISIONS.md` 並報告 main SHA。**Claude 自己起草的協議草案，建議由 ChatGPT 交叉審查，以保留起草與審查的分離。**
 
 ## 7. 標準訊息
 
@@ -151,7 +185,7 @@ Repo root 是唯一正式位置；忽略舊 `records/` 路徑。
 
 ```
 HANDOFF ChatGPT -> Claude
-Task: <T-xxx or COLLAB-v3.5>   Base commit: <main SHA>   Read: COLLAB.md, DECISIONS D-013/D-020, TASKS.md, AGENTS.md
+Task: <T-xxx or COLLAB-v3.6>   Base commit: <main SHA>   Read: COLLAB.md, DECISIONS D-013/D-021/D-026, TASKS.md, AGENTS.md
 Context: <three self-contained lines>
 Deliverable: review the attached full proposal; register only after Martin explicitly approves
 SPEC: <attached named file or complete text in this message>
@@ -168,9 +202,9 @@ Implement T-xxx per TASKS.md and specs/T-xxx-spec-vN.md; follow AGENTS.md and th
 **Stage 1 — trial / low risk**
 
 ```text
-Implement T-006 (or the exact assigned Stage 1 task) using the approved spec in specs/ and TASKS.md. Read COLLAB.md, AGENTS.md, DECISIONS.md and the task spec before editing. Base your branch on the latest main (<SHA>) and use gemini/T-006 (or the assigned gemini/T-xxx-short-name). One task, one implementer, one PR; if another code PR is open, do not start.
+Implement the exact assigned Stage 1 task (T-xxx) using the approved spec in specs/ and TASKS.md. Read COLLAB.md, AGENTS.md, DECISIONS.md and the task spec before editing. Base your branch on the latest main (<SHA>) and use the assigned gemini/T-xxx-short-name. One task, one implementer, one PR; if another code PR is open, do not start.
 
-Your current authorization is Gemini Stage 1 only: localized UI strings, wording, and purely static CSS. For T-006, change exactly the one approved localized string and nothing else. Never change game logic, physics, collisions, vehicles, traffic/police AI, world generation, rendering/performance, save data, sw.js, project documentation, or unrelated code. Do not reformat files. Run the applicable syntax, i18n, and UI checks. Open a PR to main with the repository template, listing the exact changed lines, commands, actual test results, and tests not run. Never push to main or merge. If anything requires a broader edit, stop and report the blocker without opening an out-of-scope PR.
+Your current authorization is Gemini Stage 1 only: localized UI strings, wording, and purely static CSS. Change exactly the approved lines and nothing else. Never change game logic, physics, collisions, vehicles, traffic/police AI, world generation, rendering/performance, save data, sw.js, project documentation, or unrelated code. Do not reformat files. Run the applicable syntax, i18n, and UI checks. Open a PR to main with the repository template, listing the exact changed lines, commands, actual test results, and tests not run. Never push to main or merge. If anything requires a broader edit, stop and report the blocker without opening an out-of-scope PR.
 ```
 
 **Stage 2 — whole non-critical features (only after a recorded promotion)**
@@ -195,60 +229,59 @@ Claude must independently repeat the T-005B-style paired physics measurement and
 
 - Review request: `PR #n ready`（可補 task id）。
 - Task spec approval: `批准 T-xxx vN`，同一對話附完整 spec。
-- Protocol approval: `批准 COLLAB v3.5`，同一對話附**這份完整草案**，或貼完整正文。
-- Gemini promotion: `批准 Gemini 升至階段 N，依 COLLAB v3.5，證據 PR #...`。
+- Protocol approval: `批准 COLLAB v3.6`，同一對話附**這份完整草案**，或貼完整正文。
+- Gemini promotion: `批准 Gemini 升至階段 N，依 COLLAB v3.6，證據 PR #...`。
 - Claude 給 Martin 的各階段回報：一句話交代操作、PR／main SHA／裁定、Martin 下一步；未經 Martin 實機回報不得稱「device-measured」。
 
 ## 8. `TASKS.md` 與紀錄格式
 
 既有欄位維持：`ID, Title, Owner (exactly ONE), Implementer (Codex|Gemini), Reviewer, Priority, Depends on, Base commit, Branch/PR, Acceptance, Verification, Output`。`T-xxx-spec` 需附 `Required Gemini stage`（若 Gemini 實作）、至少一個量化／可自動測的回歸接受條件。程式 PR 一次只有一個。
 
-建議新增（**待 v3.5 批准並由 Claude 實際更新 TASKS 後才生效**）：
+`TASKS.md` 維護獨立的 `Gemini qualification` 區塊，格式如下（實際內容以 `TASKS.md` 為準）：
 
 ```text
 ## Gemini qualification
-Current stage: 1
-Last approved by Martin: pending
-Evidence PRs: none (T-006 pending approval / run)
-Promotion candidate: none
-Rollback / blockers: none
+Current stage: <1|2|3|paused>
+Last approved by Martin: <date time, his exact words, promotion N -> M>
+Evidence PRs: <PR numbers with task id, stage, acceptance state>
+Promotion candidate: <none | stage N eligible, awaiting Martin>
+Rollback / blockers: <none | reason>
 ```
 
-**此段是格式示意，不宣稱 T-006 已獲批准或已完成。** 往後任何升階須記錄 `Qualification` 的 PR、review verdict、CI、release、Martin 驗收證據。具體證據在 GitHub 可重查。
+往後任何升降階須記錄證據 PR、review verdict、CI、release、Martin 驗收。具體證據在 GitHub 可重查。每個任務條目另含 `Risk`（high／low）與 `Volume`（large／small）欄位（§5.1），分段任務標明 `Phase`（§5.2）。
 
 ## 9. 決策紀錄、CI 與發布
 
-- `DECISIONS.md` 仍採 `proposed → agreed → implemented | dropped`、append-only；Claude 應在 Martin 批准 v3.5 後增加**新編號**決策，載明它取代 D-020 的**實作者路由範圍**，但不改寫 D-020 原始事件。升階／降階各追加事件或在 `TASKS` 保留可追蹤歷史。
+- `DECISIONS.md` 仍採 `proposed → agreed → implemented | dropped`、append-only；Claude 在 Martin 批准 v3.6 後增加**新編號**決策（預計 D-027），載明新增的路由與分段規則，不改寫既有事件。升階／降階各追加事件或在 `TASKS` 保留可追蹤歷史。
 - D-013 的 `main` 保護不變：所有變更（包括 Claude 本人）走 PR；不可 force push 或刪支。管理員沒有例外。**Antigravity Remote Agents 預設可不經使用者逐項確認就執行指令；阻止代理直接改動正式分支的唯一技術保險是 D-013 的 `main` 分支保護。Claude 每次審查 Gemini PR，必須重新查驗 GitHub `main` 的保護設定：要求 PR（required pull request）、`enforce_admins=true`、禁止 force push、禁止刪除、repository rulesets 為空；將實際查核結果與時間／來源記錄在該 PR review。任一設定不符、無法確認或被更動，均視為 hard violation，暫停 Gemini 任務及合併，交 Martin 處置。**
-- **看板改名須同 PR 同步：** v3.5 將 `Ready for Codex` 正式改為 `Ready for Implementer`。Claude 在啟用 v3.5 的**同一個 docs-only PR**，同步更新 `COLLAB.md` 的 **Tasks 一節**及 `TASKS.md` 中的 `## Ready for Codex` 標題（成為 `## Ready for Implementer`）；不得只改本規格而不改看板，且不改動既有任務 Owner／Implementer 歸屬。
 - `sw.js` `PRECACHE` 內任何遊戲檔案變更，都要由 Claude 發布時更新 `CACHE`。PR 對版本提醒、`main` 對版本檢查的現有規則保持。
 - 現有 `tools/test/syntax_check.py` 與 `.github/workflows/` CI 不縮減；每個系統的既有測試及新規格指明的測試要執行，不能為讓 Gemini 合格而放寬測試。**CI 執行清單寫在 `.github/workflows/pwa-cache-check.yml`；Codex／Gemini 階段 2/3 如在程式 PR 新增或修改 `tools/test/` 回歸測試，必須在該 PR 內提交可重跑測試，由 Claude 在 review 時獨立跑過；該 PR 合併／發版時，Claude 在自己的 docs／release PR 將新測試接入 workflow，驗證 CI 真正執行並通過。實作者不得修改 `.github/`，不能用只有本機測試的結果取代 CI 接入。**
 - Claude 的 docs-only PR（`*.md`、純工具或 CI 治理調整）不等於正式遊戲版本；正式程式發布須更新快取並確認 live／離線狀況。真實行動裝置 FPS 由 Martin 回報。
-- **`AGENTS.md` 必須同步修改兩處**（由 Claude 在 v3.5 啟用的同一個 docs-only PR 執行）：**(a)** 原本「Gemini only takes the low-risk tasks」（含 `Workflow rules`／`Secondary implementer` 的階段 1 固定限制）改為「**依 `TASKS.md` 中 Martin 批准的目前階段決定 Gemini 可實作範圍**」，並以 `COLLAB.md` §4 的階段表判定禁區；**(b)** 原本「minimal diff to index.html only」改為「**階段 1 僅可修改 `index.html`；階段 2／3 可另外新增或更新 `tools/test/` 測試程式碼**」，仍一律禁止實作者修改 `sw.js`、協作文件／`specs/`、`.github/` 及二進位素材。Codex/Gemini 都仍受相同的基本 hard constraints 管理，且治理文件只能由 Claude 修改。
+- **`AGENTS.md` 的階段制度已於 v3.5 同步完成**（依 `TASKS.md` 現行階段判定 Gemini 範圍；階段 2／3 可新增或更新 `tools/test/`；仍一律禁止實作者修改 `sw.js`、協作文件／`specs/`、`.github/` 及二進位素材）。**v3.6 啟用時，Claude 在同一個 docs-only PR 於 `AGENTS.md` 加入 §5.1 路由與 §5.2 分段的簡短摘要**（含建議大小上限與「風險優先於量」），並確認其與本文件無矛盾。
 
-## 10. 本草案尚待 Claude 評估的開放問題
+## 10. 本草案的開放問題（供 ChatGPT 交叉審查與 Martin 決定）
 
-1. Gemini 階段 2 若要做「完整任務系統」，是否真的能不動 `vh_save` schema、物理觸發和警察 AI？如不能，必須另選 UI 型功能或將整項交 Codex；不可替需求偷放寬禁止區。
-2. `AGENTS.md` 的全部手動／CI 檢查在 Antigravity 環境是否可完整運行？不能運行的測試由 Claude 獨立補驗，未補驗不得以「all PASS」通過。
-3. 驗收紀錄使用 `headless-measured` 之新標籤，應與 Claude 現有報告格式同步變更，不能只改此文件。
-4. 所有未來高風險任務的物理／draw-call 上限應由每份 spec 決定，不要誤將 T-005B 的 +35% 容忍度變成預設可以加 35% 成本的永久寬鬆政策。
+1. §5.2 的建議大小上限（約 600 行邏輯變更、800 行／150 key 資料）是起始猜測，需依實際審查負荷在幾個任務後調整；Martin 是否接受這組初始值？
+2. 「量大」「高風險」的判定由 ChatGPT 在 spec 標註、Claude 審查、Martin 裁決；是否需要更具體的客觀標準（例如以預計變更行數或受影響系統清單判定）？
+3. 規則 2 允許 Gemini 在階段 3 承擔高風險小任務，但每項都需 §4.3 全套；是否要求「第一個高風險任務」由 Martin 另行批准該任務的測試完備性（v3.5 §4.2 已要求單獨評估）？
+4. 本草案由 Claude 起草；建議由 ChatGPT 交叉審查後，Martin 再批准或要求修訂。
+5. Claude 審查量隨 Gemini 任務變大而增加；是否需要在 `TASKS.md` 加入「待審 PR 上限」之類的排程規則？（目前唯一程式 PR 鎖已隱含上限為 1。）
 
-## 11. ChatGPT 專案設定文字（僅在 v3.5 批准後更新；草案）
+## 11. ChatGPT 專案設定文字（僅在 v3.6 批准後更新；草案）
 
 ```text
-Project VICE HORIZON VI. Source of truth: https://github.com/martinhsu2010-blip/Martin-Hsu (Pages: https://martinhsu2010-blip.github.io/Martin-Hsu/). Follow the currently approved COLLAB.md; the proposed COLLAB v3.5 is NOT effective until Martin explicitly approves it and Claude merges its documentation PR. Files are at the repo ROOT: COLLAB.md, AGENTS.md, HANDOFF.md, TASKS.md, DECISIONS.md, LOG.md. You are the designer/analyst: write complete, self-contained task specs, balance numbers, bug analyses and design reviews; do not implement game code. Codex or Gemini implements a single whole task through one shared code-PR lock, Claude independently reviews and releases, and Martin approves and accepts. Gemini's allowed scope depends on the current Martin-approved stage recorded in the repo (1: strings/static CSS; 2: complete non-critical features, excluding physics/collisions/vehicles/world/traffic/police/rendering performance/save schema; 3: Codex-equivalent only with automated regression coverage and independent T-005B-style physics and draw-call measurements). Re-read COLLAB.md, TASKS.md, DECISIONS.md, AGENTS.md and specs/TEMPLATE.md before each task. Hand off complete spec text or the file itself; never rely on references to earlier chat. Do not claim Martin approval without Martin's explicit message. Answer Martin in Traditional Chinese; Gemini prompts in English. End specs and protocol proposals with the required HANDOFF ChatGPT -> Claude block.
+Project VICE HORIZON VI. Source of truth: https://github.com/martinhsu2010-blip/Martin-Hsu (Pages: https://martinhsu2010-blip.github.io/Martin-Hsu/). Follow the currently approved COLLAB.md in the repo; a proposed COLLAB version is NOT effective until Martin explicitly approves it and Claude merges its documentation PR. Files are at the repo ROOT: COLLAB.md, AGENTS.md, HANDOFF.md, TASKS.md, DECISIONS.md, LOG.md, specs/. You are the designer/analyst: write complete, self-contained task specs, balance numbers, bug analyses and design reviews; do not implement game code. Every spec states Implementer, Risk (high/low), Volume (large/small) and a one-line routing reason. Routing: large-volume, low-risk, well-specified, testable work (bulk content/i18n, mechanical refactors with tests, test writing, whole UI/HUD systems) -> Gemini; small-volume, high-risk, judgment-heavy work (physics feel, collisions, traffic/police tuning, save format) -> Codex by default, Gemini only at Stage 3 with the full COLLAB section 4.3 gate; risk overrides volume; large and high-risk work must be split by you into small phased tasks, each one task, one implementer, one PR, with its own regression test and within the suggested size limits in COLLAB section 5.2. Tasks go through one shared code-PR lock; Claude independently reviews and releases; Martin approves and accepts on devices. Gemini's allowed scope is the current Martin-approved stage recorded in TASKS.md (1: strings/static CSS; 2: complete non-critical features excluding physics/collisions/vehicles/world/traffic/police/rendering performance/save schema; 3: Codex-equivalent only with per-risk automated regression tests, quantified acceptance values and Claude's independent T-005B-style paired physics and renderer.info.render.calls measurements). Re-read COLLAB.md, TASKS.md, DECISIONS.md, AGENTS.md and specs/TEMPLATE.md before each task. Hand off complete spec text or the file itself; never rely on references to earlier chat. Never claim Martin approval without his explicit message in the conversation. Answer Martin in Traditional Chinese; write Gemini prompts in English. End specs and protocol proposals with the required HANDOFF ChatGPT -> Claude block.
 ```
 
 ---
 
-## HANDOFF ChatGPT -> Claude
+## HANDOFF Claude -> ChatGPT（交叉審查請求；本草案由 Claude 起草）
 
 ```text
-HANDOFF ChatGPT -> Claude
-Task: COLLAB-v3.5 (proposed; NOT Martin-approved)   Base commit: d2d656c8c9a028343a94d3c0166fc67a97e8918a   Read: COLLAB.md v3.4, DECISIONS D-013/D-020, TASKS.md, AGENTS.md
-Context: T-005B is Done and Martin-accepted; T-006 remains a proposed Stage 1 one-line Gemini trial, not a confirmed promotion.
-Context: Propose three stages: Stage 1 strings/static CSS; Stage 2 complete non-critical features after T-006 acceptance; Stage 3 Codex-equivalent only with regression tests and independent paired physics/draw-call benchmarking.
-Context: Preserve one code PR lock, one implementer per whole task, D-013 main protection, and Claude-only sw.js/docs changes; no work starts on the basis of this draft.
-Deliverable: Review COLLAB v3.5 draft revision 2, especially AGENTS.md two-place sync, CI onboarding, main branch protection checks, Stage 2 trial and Stage 2→3 two-task gate. Register only after Martin expressly approves, via Claude-owned docs-only PR; update only the COLLAB status banner on registration and preserve the remaining COLLAB text verbatim.
-SPEC: Full proposed COLLAB-v3.5-DRAFT-2.md delivered with this handoff.
+HANDOFF Claude -> ChatGPT
+Task: COLLAB-v3.6 (DRAFT; NOT Martin-approved; effective protocol is still v3.5)   Base commit: e71b59bf75cd55f3a785b1cb52431c08bcea529f   Read: COLLAB.md v3.5, DECISIONS D-013/D-021/D-023/D-026, TASKS.md Gemini qualification
+Context: Gemini reached Stage 3 (D-026) after T-006/T-007/T-008. Martin wants token-heavy, large-volume, low-risk work routed to Gemini and judgment-heavy high-risk work kept with Codex.
+Context: v3.6 adds section 5.1 routing (risk overrides volume), section 5.2 phased small tasks with suggested size limits, cleans stale v3.5 transitional wording, and updates message templates and the ChatGPT project text. No gate is loosened.
+Deliverable: cross-review the full draft for gate leaks, contradictions with AGENTS.md/TASKS.md, whether the size limits and routing criteria are workable, and the project text in section 11. Reply with review comments or a revised draft; do not mark approved. Martin decides.
+SPEC: attached COLLAB-v3.6-DRAFT.md
 ```
