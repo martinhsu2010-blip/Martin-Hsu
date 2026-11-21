@@ -3,8 +3,8 @@
 ## Gemini qualification
 Current stage: 1
 Last approved by Martin: 2026-11-21 (COLLAB v3.5; starting stage)
-Evidence PRs: #53 (T-006, released vh-2026-11-21-02; device acceptance pending)
-Promotion candidate: none
+Evidence PRs: #53 (T-006, released vh-2026-11-21-02; Martin-accepted)
+Promotion candidate: none (Stage 2 only on Martin's separate explicit approval)
 Rollback / blockers: none
 
 ## Ready for ChatGPT
@@ -29,7 +29,7 @@ Why: archives had no license text; needed before any public sharing.
 (none)
 
 ## Done
-### T-006 zh-TW label fix: `shared_space` "Space" -> "空白鍵" (Gemini Stage 1 trial) (Done)
+### T-006 zh-TW label fix: `shared_space` "Space" -> "空白鍵" (Gemini Stage 1 trial) (Done, accepted)
 Owner: Gemini
 Implementer: Gemini (Stage 1 trial; strings only)
 Reviewer: Claude
@@ -39,7 +39,7 @@ Branch/PR: `gemini/T-006` / #53 (merged ffbe3f4, released vh-2026-11-21-02)
 Spec: `specs/T-006-spec-v1.md` (approved by Martin 2026-11-21 15:32; D-022).
 Scope: index.html only, +1/-1: zh-TW `shared_space` value. en table and HTML fallback unchanged.
 Required Gemini stage: 1
-Claude notes: diff exactly index.html +1/-1; Claude re-ran syntax, i18n (py+mjs), hud checks and a headless zh-TW/en probe (label 33 px, row scrollWidth == clientWidth at 390x844 forced-visible and 1280x800, 0 errors); CI green; D-013 protection re-checked 2026-11-21 08:04Z (PR required, enforce_admins true, no force push/deletion, rulesets 0). Awaiting Martin's device acceptance.
+Claude notes: diff exactly index.html +1/-1; Claude re-ran syntax, i18n (py+mjs), hud checks and a headless zh-TW/en probe (label 33 px, row scrollWidth == clientWidth at 390x844 forced-visible and 1280x800, 0 errors); CI green; D-013 protection re-checked 2026-11-21 08:04Z (PR required, enforce_admins true, no force push/deletion, rulesets 0). Martin accepted on his devices 2026-11-21 ("通過").
 
 ### T-005B Suburb frontage + city infill coverage (Done)
 Owner: Codex
