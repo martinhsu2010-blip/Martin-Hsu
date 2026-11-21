@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-21 | — | Martin | — | T-005B accepted on S26 Ultra / Tab S11 (vh-2026-11-21-01); T-005 done; code-PR lock free
 - 2026-11-21 | vh-2026-11-21-01 | Claude (impl. Codex) | commit be87c2f | T-005B: suburb first-row frontage fill and terrain-following lawn verge; city coverage shells (776 phone / 554 desktop incl. 758/538 new) with deterministic height and colour variety (seed 5019, 4 heights x 5 colours per district, windows follow height), pocket parks over all residual empty lots (one shared batch, no bodies), coverage colliders grouped per 120x120 cell, opt-in `?fps=1` readout (average FPS, lowest 1 s FPS in the last minute, preset; auto quality off only while active). Claude headless checks (not device): physics ratio 1.13 phone / 1.06 desktop, draw calls suburb <= +3, city <= +5. Device acceptance pending.
 - 2026-11-21 | — | Martin | — | T-005 spec v2.1 approved (D-019 amended): Part 4 city residual lots → pocket parks, shell height/colour variety, 120-cell collider grouping, `?fps=1` diagnostics; T-005B revision continues in PR #47
 - 2026-11-20 | — | Martin | — | T-005A accepted on S26 Ultra / Tab S11 (vh-2026-11-20-03); T-005B unlocked for Codex
