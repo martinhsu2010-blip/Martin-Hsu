@@ -4,20 +4,21 @@
 (none)
 
 ## Ready for Codex
-### T-005B Suburb frontage + city infill coverage (revision round 2)
-Owner: Codex
+(none)
+
+## In review
+### T-005B Suburb frontage + city infill coverage (released, awaiting Martin's device acceptance)
+Owner: Martin (acceptance)
 Implementer: Codex (world generation, never Gemini)
 Reviewer: Claude
 Priority: P1
-Base commit: `0cc9aff09338ade85fd78826470053d3e5d68208`; revision starts from PR head `c8e395f`
-Branch/PR: `codex/T-005B-coverage` / PR #47 (open, holds the one-code-PR lock; continue in the same PR)
+Base commit: `0cc9aff09338ade85fd78826470053d3e5d68208`
+Branch/PR: `codex/T-005B-coverage` / #47 (merged be87c2f, released vh-2026-11-21-01)
 Depends on: T-005A (Done, Martin-accepted 2026-11-20)
-Spec: Parts 1-3 `specs/T-005-spec-v1.md` (D-019); Part 4 replaced by `specs/T-005-spec-v2.1.md` (approved by Martin 2026-11-21 09:02; D-019).
-Claude notes (review of c8e395f, PR #47 comment 7054236978): all tests and draw budgets pass. To do in this PR: (1) coverage colliders grouped per 120x120 cell (physics budget: paired urban_check median ratio <= 1.35 per preset); (2) suburb verge must not sink into or float above the terrain; (3) v2.1 Part 4: pocket parks over every HARD_EMPTY center (>= 80/100 covered, polygonOffset -2/-4), deterministic heights/colours (seed 5019), windows recomputed from H, `?fps=1` diagnostic readout with auto-quality disabled while active (labels in the bilingual string table). Do not edit sw.js or docs.
-Verification: c8e395f independently reviewed (changes requested); revision pending.
+Spec: Parts 1-3 `specs/T-005-spec-v1.md`; Part 4 `specs/T-005-spec-v2.1.md` (approved by Martin 2026-11-21 09:02; D-019).
+Claude notes: round 1 (c8e395f) changes requested: physics cost of 40-unit collider cells, verge terrain fit, residual city lots; round 2 (e9a2dd4) approved. Do not weaken any hard rule if a later task revisits coverage.
+Verification: code-reviewed + Claude's independent headless checks at e9a2dd4 (not device): all AGENTS checks and route legality pass; `coverage_audit --details` exit 0 (parks cover 17/101/27 phone, 27/101/43 desktop residual centers, 0 untreated); paired Cannon step median ratio 1.13 phone / 1.06 desktop (limit 1.35), city infill bodies +70/+52 (round 1: +333); full-scene draw calls vs base: suburb <= +3, city <= +5 on both profiles; verge clearance exactly +0.04 over the terrain triangles; no console errors. Pending: Martin on S26 Ultra / Tab S11 with `?fps=1`, 60 s per district (CBD, Midtown, Old Town), average >= 30 FPS, shell variety visible, parks visible, no flicker.
 
-## In review
-(none)
 
 ## Doing (Claude)
 (none)
