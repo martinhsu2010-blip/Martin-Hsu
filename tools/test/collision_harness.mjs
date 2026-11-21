@@ -17,6 +17,7 @@ export async function collisionHarness(source = html, preset = 'PHONE_LOW') {
     const h = await trafficHarness(source, preset);
     h.PROFILE = preset.startsWith('DESKTOP') ? 'DESKTOP' : 'MOBILE'; h.DETAIL_LAYER = 1;
     h.mergeGeometries = mergeGeometries;
+    h.FACADE = {chunks: [], far: []};
     const noop = () => {};
     const ctx = new Proxy({}, { get: (obj, key) => obj[key] ?? noop, set: (obj, key, val) => { obj[key] = val; return true; } });
     h.document = { createElement: () => ({ getContext: () => ctx }) };
@@ -47,13 +48,16 @@ export async function collisionHarness(source = html, preset = 'PHONE_LOW') {
     let city = section(source, '            blockX.forEach((bx, ix) => {', '                        const bGroup = new THREE.Group();');
     const bx = source.match(/const blockX = ([^;]+);/)[0], bz = source.match(/const blockZ = ([^;]+);/)[0];
     vm.runInContext('{ const cityParcels = []; ' + bx + bz + city + 'this.city.push({x:px,z:pz,w,d,h,district});\n} }); }); }', h);
+    if (h.plantCityStreetTrees) h.plantCityStreetTrees(new THREE.Object3D());
     const infillTrees = h.TREES.list.slice();
     h.buildTestCityInfill = (...args) => {
         const allTrees = h.TREES.list; h.TREES.list = infillTrees;
         try { return h.buildCityInfill(...args); } finally { h.TREES.list = allTrees; }
     };
-    vm.runInContext('{ const dummy = new THREE.Object3D();' + section(source, '            const palmMatrices = [];', '            const lampMatrices = [];') + '}', h);
-    vm.runInContext(section(source, '            [-240, -120, 0].forEach((ax, ai) => {', '            WORLD.lampPositions ='), h);
+    if (!h.plantCityStreetTrees) {
+        vm.runInContext('{ const dummy = new THREE.Object3D();' + section(source, '            const palmMatrices = [];', '            const lampMatrices = [];') + '}', h);
+        vm.runInContext(section(source, '            [-240, -120, 0].forEach((ax, ai) => {', '            WORLD.lampPositions ='), h);
+    }
     h.buildTrees();
     if (h.initTreeColliders) h.initTreeColliders();
     vm.runInContext(section(source, '        const FAST_TRAVEL =', '        const WMAP =') +
