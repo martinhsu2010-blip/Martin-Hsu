@@ -2228,7 +2228,8 @@
             barrelInstancedMesh: null,
             coneBaseInstancedMesh: null,
             coneBodyInstancedMesh: null,
-            coneStripeInstancedMesh: null
+            coneStripeInstancedMesh: null,
+            midtownCrosswalks: null
         };
 
         function applySkyPreset(index) {
@@ -6813,6 +6814,58 @@
             }
         }
 
+        // T-009: visual-only Midtown zebra crosswalk pilot (one shared InstancedMesh, 0 physics)
+        function buildMidtownCrosswalks() {
+            if (WORLD.midtownCrosswalks) return WORLD.midtownCrosswalks;
+            const intersections = [[-120, -360], [0, -360]];
+            const stripeWidth = 1.6;
+            const stripeLength = 2.8;
+            const stripePitch = 2.6;
+            const stripesPerBand = 8;
+            const bandOffsetsZ = [-14.0, 14.0];
+            const stripeY = 0.085;
+            const valid = [];
+            for (const [ax, cz] of intersections) {
+                if (!ROAD_NET.avenuesX.includes(ax) || !ROAD_NET.crossZ.includes(cz)) continue;
+                if (ROAD_NET.roundabouts.some(rb => Math.hypot(ax - rb.x, cz - rb.z) < 32)) continue;
+                valid.push([ax, cz]);
+            }
+            const total = valid.length * bandOffsetsZ.length * stripesPerBand;
+            if (!total) return null;
+            const geo = new THREE.PlaneGeometry(stripeWidth, stripeLength);
+            const mat = new THREE.MeshStandardMaterial({
+                color: 0xece9df,
+                roughness: 0.9,
+                metalness: 0.0,
+                transparent: false,
+                polygonOffset: true,
+                polygonOffsetFactor: -2,
+                polygonOffsetUnits: -4
+            });
+            const mesh = new THREE.InstancedMesh(geo, mat, total);
+            mesh.castShadow = false;
+            mesh.receiveShadow = true;
+            mesh.frustumCulled = true;
+            const dummy = new THREE.Object3D();
+            dummy.rotation.set(-Math.PI / 2, 0, 0);
+            let idx = 0;
+            for (const [ax, cz] of valid) {
+                for (const dz of bandOffsetsZ) {
+                    for (let i = 0; i < stripesPerBand; i++) {
+                        dummy.position.set(ax + (i - 3.5) * stripePitch, stripeY, cz + dz);
+                        dummy.updateMatrix();
+                        mesh.setMatrixAt(idx++, dummy.matrix);
+                    }
+                }
+            }
+            mesh.instanceMatrix.needsUpdate = true;
+            mesh.computeBoundingBox();
+            mesh.computeBoundingSphere();
+            scene.add(mesh);
+            WORLD.midtownCrosswalks = mesh;
+            return mesh;
+        }
+
         // ==================== 城市細節：紅綠燈、長椅、垃圾桶、路邊停車、屋頂看板、夜間路燈光暈、真實 PBR 貼圖 ====================
         const CITY = { trafficLamps: null, trafficLampCount: 0, lightPhase: -1 };
 
@@ -10717,6 +10770,7 @@
         scene.add(MISSION.marker);
 
         buildRealisticWorld();
+        buildMidtownCrosswalks();
         buildTrees();
         buildDeliveryDepots();
         buildCityDetails();
