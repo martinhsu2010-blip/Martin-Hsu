@@ -7,18 +7,7 @@
 (none)
 
 ## In review
-### T-005B Suburb frontage + city infill coverage (released, awaiting Martin's device acceptance)
-Owner: Martin (acceptance)
-Implementer: Codex (world generation, never Gemini)
-Reviewer: Claude
-Priority: P1
-Base commit: `0cc9aff09338ade85fd78826470053d3e5d68208`
-Branch/PR: `codex/T-005B-coverage` / #47 (merged be87c2f, released vh-2026-11-21-01)
-Depends on: T-005A (Done, Martin-accepted 2026-11-20)
-Spec: Parts 1-3 `specs/T-005-spec-v1.md`; Part 4 `specs/T-005-spec-v2.1.md` (approved by Martin 2026-11-21 09:02; D-019).
-Claude notes: round 1 (c8e395f) changes requested: physics cost of 40-unit collider cells, verge terrain fit, residual city lots; round 2 (e9a2dd4) approved. Do not weaken any hard rule if a later task revisits coverage.
-Verification: code-reviewed + Claude's independent headless checks at e9a2dd4 (not device): all AGENTS checks and route legality pass; `coverage_audit --details` exit 0 (parks cover 17/101/27 phone, 27/101/43 desktop residual centers, 0 untreated); paired Cannon step median ratio 1.13 phone / 1.06 desktop (limit 1.35), city infill bodies +70/+52 (round 1: +333); full-scene draw calls vs base: suburb <= +3, city <= +5 on both profiles; verge clearance exactly +0.04 over the terrain triangles; no console errors. Pending: Martin on S26 Ultra / Tab S11 with `?fps=1`, 60 s per district (CBD, Midtown, Old Town), average >= 30 FPS, shell variety visible, parks visible, no flicker.
-
+(none)
 
 ## Doing (Claude)
 (none)
@@ -33,6 +22,18 @@ Why: archives had no license text; needed before any public sharing.
 (none)
 
 ## Done
+### T-005B Suburb frontage + city infill coverage (Done)
+Owner: Codex
+Implementer: Codex (world generation, never Gemini)
+Reviewer: Claude
+Priority: P1
+Base commit: `0cc9aff09338ade85fd78826470053d3e5d68208`
+Branch/PR: `codex/T-005B-coverage` / #47 (merged be87c2f, released vh-2026-11-21-01)
+Depends on: T-005A (Done, Martin-accepted 2026-11-20)
+Spec: Parts 1-3 `specs/T-005-spec-v1.md`; Part 4 `specs/T-005-spec-v2.1.md` (approved by Martin 2026-11-21 09:02; D-019).
+Claude notes: round 1 (c8e395f) changes requested: physics cost of 40-unit collider cells, verge terrain fit, residual city lots; round 2 (e9a2dd4) approved. Do not weaken any hard rule if a later task revisits coverage.
+Verification: code-reviewed + Claude's independent headless checks at e9a2dd4 (not device): all AGENTS checks and route legality pass; `coverage_audit --details` exit 0 (parks cover 17/101/27 phone, 27/101/43 desktop residual centers, 0 untreated); paired Cannon step median ratio 1.13 phone / 1.06 desktop (limit 1.35), city infill bodies +70/+52 (round 1: +333); full-scene draw calls vs base: suburb <= +3, city <= +5 on both profiles; verge clearance exactly +0.04 over the terrain triangles; no console errors. Martin accepted on S26 Ultra / Tab S11 on 2026-11-21 ("通過"); he did not report the `?fps=1` numbers, so no device FPS figures are recorded.
+
 ### T-005A Spawn cleanup + legal, denser traffic
 Owner: Codex
 Implementer: Codex (traffic/spawn/world, never Gemini)
