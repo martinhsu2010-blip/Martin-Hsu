@@ -11,7 +11,17 @@ Rollback / blockers: none. Stage 2 is provisional until the first Stage 2 trial 
 (none)
 
 ## Ready for Implementer
-(none)
+### T-008 Zone Arrival HUD (Gemini Stage 2 task 2 of 2; general HUD behavior)
+Owner: Gemini
+Implementer: Gemini (Stage 2; passive HUD notice using existing zone logic)
+Reviewer: Claude
+Priority: P2
+Base commit: latest `main` at start (spec baseline `af6209d912a773d930a5520d0823d4ff2dedeee4`)
+Branch/PR: `gemini/T-008` / (none yet)
+Spec: `specs/T-008-spec-v1.md` (approved by Martin 2026-11-21 17:58; D-025).
+Scope: `index.html` + new `tools/test/zone_arrival_check.mjs` only. Claude wires the new test into `.github/workflows/pwa-cache-check.yml` at release (A11).
+Required Gemini stage: 2
+
 
 ## In review
 (none)
