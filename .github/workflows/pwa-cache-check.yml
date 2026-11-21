@@ -42,3 +42,5 @@ jobs:
         run: node tools/test/suburb_check.mjs
       - name: Check urban infill placement, registration and batch budgets
         run: node tools/test/urban_check.mjs
+      - name: Check Game Hub Next Stop card (T-007)
+        run: node tools/test/explore_picks_check.mjs
