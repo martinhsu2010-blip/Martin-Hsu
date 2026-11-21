@@ -286,10 +286,10 @@ for(const preset of ['PHONE_LOW','DESKTOP_HIGH']) {
     for(const speed of [20,60,120]){
         let contacts=0;
         for(const b of citySim.WORLD.cityInfill) for(const heading of [0,Math.PI/2]) {
-            const result=impact(citySim,{body:b.body,groundY:0},speed,heading);
+            const result=impact(citySim,{body:b.body,index:b.shapeIndex??0,groundY:0},speed,heading);
             assert.ok(result.contacts>0&&!result.passed,JSON.stringify({district:b.district,speed,result}));contacts++;
         }
-        report.cityImpacts.push({preset,speed,contacts,buildings:citySim.WORLD.cityInfill.length,tunnels:0});
+        report.cityImpacts.push({preset,speed,contacts,buildings:citySim.WORLD.cityInfill.length,coverageShells:citySim.WORLD.cityInfill.filter(b=>b.coverage).length,tunnels:0});
     }
 }
 console.log('REPORT ' + JSON.stringify(report));

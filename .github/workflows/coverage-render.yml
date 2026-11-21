@@ -1,0 +1,32 @@
+name: Coverage render comparison
+on:
+  pull_request:
+    paths:
+      - 'tools/test/coverage_*.mjs'
+      - 'tools/test/coverage_browser.py'
+      - '.github/workflows/coverage-render.yml'
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [PHONE_LOW, DESKTOP_HIGH]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python3 -m pip install playwright==1.55.0
+      - name: Compare matched cameras and renderer.info.render.calls
+        run: python3 tools/test/coverage_browser.py "$BASE" shots "${{ matrix.preset }}"
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-${{ matrix.preset }}
+          path: shots
+

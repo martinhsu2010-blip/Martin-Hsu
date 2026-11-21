@@ -31,6 +31,8 @@ function observeParcels(s) {
       const observe = reason => { if (setback === 28) return; const map=${slot};
       const key=zone+'/'+i+'/'+side; if(!map.has(key))map.set(key,new Set()); map.get(key).add(reason); };`);
     part=part.replace('candidates[ti].push(', "observe('eligible'); candidates[ti].push(");
+    if(part.includes('const candidate ='))part=part.replace('candidates[ti].push(candidate);',
+        "if(candidate.row===1)(WORLD.auditFrontCandidates ??= []).push(candidate); candidates[ti].push(candidate);");
     return s.slice(0,a)+part+s.slice(b);
 }
 function frontage(h,zone,side) {
@@ -64,6 +66,7 @@ function frontage(h,zone,side) {
             }
         }
     }
+    if(h.WORLD.auditFrontCandidates)assert.ok(maxLegal<=45,names[zone]+' frontage');
     const counts=runs.map(r=>r.to-r.from);
     if(details) for(const r of runs)console.log('RUN',names[zone],side,round(r.from),round(r.to),[...r.reasons].join('/'));
     console.log('FRONT',names[zone],side,'runs',runs.length,'total',round(counts.reduce((a,b)=>a+b,0)),'max',round(Math.max(0,...counts)),'eligibleTotal',round(limit),'eligibleMax',round(maxLegal));
@@ -76,6 +79,8 @@ function city(h) {
     const cells=[120,240].map(s=>new Set(old.map(b=>keys(b,s))));
     const offsets=new Set([-36,-32,-30,-24,-18,-12,-6,0,6,12,18,24,30,32,36]);
     const counts={CBD:{},MID:{},OLD:{}};
+    const exactRoad=h.cityRoadEnvelope?.();
+    const remaining={CBD:0,MID:0,OLD:0}, buildable={CBD:0,MID:0,OLD:0};
     for(let ix=0;ix<5;ix++)for(let bz=-660;bz<=660;bz+=120){
         const left=n.avenuesX[ix],right=n.avenuesX[ix+1],bx=(left+right)/2, district=h.cityDistrict(bx,bz);
         if((bx===-60&&Math.abs(bz)===60)||(bx<=-180&&bz>=300)||(bx===-510&&bz>-300))continue;
@@ -88,9 +93,24 @@ function city(h) {
                 if(guard<3||reserved.some(b=>hits(x,z,5,b,3))||trunks.some(b=>hits(x,z,5,b,3)))continue;
                 if(original.some(b=>hits(x,z,5,b))||fill.some(b=>hits(x,z,5,b)))continue;
                 if(h.rectHitsElevated(x,z,10,10,3)||h.rectHitsCurvedRoad(x,z,10,10,3.5))continue;
-                const reason=[...original,...fill].some(b=>hits(x,z,5,b,4))?'facade gap':guard<10?'street strip':
+                let reason=[...original,...fill].some(b=>hits(x,z,5,b,4))?'facade gap':guard<10?'street strip':
                     cells.some((set,i)=>!set.has(keys({x,z},[120,240][i])))?'facade cell':
                     !offsets.has(x-bx)||!offsets.has(z-bz)?'unsampled grid':'placement target';
+                if(exactRoad){
+                    if(exactRoad(x,z,5))reason='continuous road clearance';
+                    else {
+                        remaining[district]++;
+                        const hasSpace=(px,pz,size)=>Math.min(roadGap(px,n.avenuesX,n.avenueHalf),roadGap(pz,n.crossZ,n.crossHalf))+5>=size/2+3 &&
+                            !reserved.some(b=>hits(px,pz,size/2,b,3)) && !trunks.some(b=>hits(px,pz,size/2,b,3)) &&
+                            !original.some(b=>hits(px,pz,size/2,b,3)) && !fill.some(b=>hits(px,pz,size/2,b,3)) &&
+                            !exactRoad(px,pz,size/2);
+                        let fit=false;
+                        for(const size of [10,8])for(let dx=1-size/2-5;dx<size/2+5&&!fit;dx++)
+                            for(let dz=1-size/2-5;dz<size/2+5&&!fit;dz++)fit=hasSpace(x+dx,z+dz,size);
+                        if(fit)buildable[district]++;
+                        reason=fit?'buildable':'clearance prevents another shell';
+                    }
+                }
                 counts[district][reason]=(counts[district][reason]||0)+1;
                 if(details){
                     if(row&&row.end===x-2&&row.reason===reason)row.end=x;
@@ -100,12 +120,36 @@ function city(h) {
             if(row)console.log('LOT',district,bx,bz,z,row.start,row.end,row.reason);
         }
     }
+    if(exactRoad){
+        console.log('HARD_EMPTY',JSON.stringify(remaining),'CAN_ADD',JSON.stringify(buildable));
+        assert.ok(Object.values(buildable).every(n=>n===0),'legal shell fits a remaining hard-clear rectangle');
+    }
     console.log('CITY',JSON.stringify(counts),'placed',JSON.stringify(Object.fromEntries(Object.keys(counts).map(d=>[d,h.city.filter(b=>b.district===d).length+added.filter(b=>b.district===d).length]))));
 }
 for(const preset of ['PHONE_LOW','DESKTOP_HIGH']){
     console.log('PRESET',preset);
     const h=await collisionHarness(observeParcels(source),preset);
     for(let zone=0;zone<4;zone++)for(const side of [-1,1])frontage(h,zone,side);
+    if (h.WORLD.auditFrontCandidates) {
+        const houses=h.WORLD.suburbHouses, prior=[];
+        for(const b of houses){
+            const road=h.ROAD_NET.suburbRoads[b.zone], p=road.pts[b.k-b.zone*7];
+            const distance=Math.hypot(b.x-p.x,b.z-p.z)-road.half;
+            if(b.row===1)assert.ok(Math.abs(distance-(b.hz-.5)-7)<1e-6);
+            else {
+                assert.ok(Math.abs(distance-28)<1e-6);
+                const front=h.WORLD.auditFrontCandidates.filter(f=>f.zone===b.zone && f.side===b.side && f.k===b.k);
+                assert.ok(front.every(f=>prior.some(o=>!h.suburbSeparated(f,o))),'open first row before a rear parcel');
+            }
+            prior.push(b);
+        }
+        assert.equal(houses.length,preset==='PHONE_LOW'?210:390);
+        const verge=h.WORLD.suburbVerge, normals=verge.geometry.attributes.normal;
+        assert.ok(verge.isMesh&&!Array.isArray(verge.material)&&!verge.castShadow);
+        for(let i=0;i<normals.count;i++)assert.ok(normals.getY(i)>0,'lawn triangle faces down');
+        console.log('HOUSES',houses.length,'front',houses.filter(b=>b.row===1).length,'rear',houses.filter(b=>b.row===2).length);
+    }
+    if(process.argv.includes('--front'))continue;
     h.WORLD.roofs=[];h.WORLD.buildings=[];h.WORLD.cameraBlockers=[];
     h.buildTestCityInfill(h.city,[new THREE.MeshStandardMaterial(),new THREE.MeshStandardMaterial()],[],[]);
     city(h);
