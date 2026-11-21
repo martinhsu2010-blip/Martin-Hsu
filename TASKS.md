@@ -1,11 +1,11 @@
 # Task board (rules: COLLAB.md v3.4). One Owner per task. One active code PR at a time, shared by Codex and Antigravity; each code task carries `Implementer: Codex|Gemini`.
 
 ## Gemini qualification
-Current stage: 1
-Last approved by Martin: 2026-11-21 (COLLAB v3.5; starting stage)
+Current stage: 2
+Last approved by Martin: 2026-11-21 16:09 ("升2", promotion 1 -> 2, evidence PR #53)
 Evidence PRs: #53 (T-006, released vh-2026-11-21-02; Martin-accepted)
-Promotion candidate: none (Stage 2 only on Martin's separate explicit approval)
-Rollback / blockers: none
+Promotion candidate: none (Stage 3 only on Martin's separate explicit approval + COLLAB v3.5 §4.3 test gate)
+Rollback / blockers: none. Stage 2 is provisional until the first Stage 2 trial (not yet specified) is reviewed and accepted.
 
 ## Ready for ChatGPT
 (none)
