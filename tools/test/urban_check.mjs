@@ -43,16 +43,25 @@ for(const preset of ['PHONE_LOW','DESKTOP_HIGH']){
  // Matched headless workloads: same stationary cars, baseline city boxes and pooled trunks.
  h.selectObserver(-60,-180);h.freeze();
  for(const car of h.WORLD.vehicles){car.chassisBody.velocity.setZero();car.chassisBody.angularVelocity.setZero();for(let w=0;w<4;w++){car.vehicle.applyEngineForce(0,w);car.vehicle.setBrake(35,w);}}
+ const pairs=[];
+ for(let run=0;run<5;run++){
  const timing={};
- for(const version of ['before','after']){
-  if(version==='before')for(const b of bodies)h.physicsWorld.removeBody(b);else for(const b of bodies)h.physicsWorld.addBody(b);
+ for(const version of run%2?['after','before']:['before','after']){
+  for(const b of bodies){
+   if(version==='before' && b.world)h.physicsWorld.removeBody(b);
+   if(version==='after' && !b.world)h.physicsWorld.addBody(b);
+  }
   h.physicsWorld.broadphase.dirty=true;for(let i=0;i<600;i++)h.physicsWorld.step(1/60);
   const times=[];for(let i=0;i<1800;i++){const t=performance.now();h.physicsWorld.step(1/60);times.push(performance.now()-t);}times.sort((a,b)=>a-b);timing[version]={medianMs:times[900],p95Ms:times[1710]};
  }
+ timing.ratio=timing.after.medianMs/timing.before.medianMs; pairs.push(timing);
+ }
+ const medianRatio=pairs.map(p=>p.ratio).sort((a,b)=>a-b)[2];
+ console.log('PAIRED',preset,JSON.stringify({pairs,medianRatio}));
  const facadeDraws=h.WORLD.cityCoverageFacades.length;
  assert.ok(h.WORLD.cityCoverageFacades.every(mesh=>mesh.isInstancedMesh&&!mesh.castShadow&&h.FACADE.chunks.some(c=>c.mesh===mesh)));
  const shellDelta=h.WORLD.cityInfillMeshes.length-old.WORLD.cityInfillMeshes.length;
  assert.ok(facadeDraws+2*shellDelta<=(preset==='PHONE_LOW'?8:16));
- report.push({preset,oldCounts,coverageOpaqueDrawDelta:facadeDraws+shellDelta,coverageDrawDeltaWithShadows:facadeDraws+2*shellDelta,counts:h.WORLD.cityInfillStats,minBuilding,minRoad,minPoint,minTree,maxAlignment,addedBodies:bodies.length,baselineBodies:original.length,addedOpaqueDraws:h.WORLD.cityInfillMeshes.length,addedWithOneShadowPass:2*h.WORLD.cityInfillMeshes.length,extraFacadeCells:0,windowInstances:windows.length,headlessStep:timing});
+ report.push({preset,oldCounts,coverageOpaqueDrawDelta:facadeDraws+shellDelta,coverageDrawDeltaWithShadows:facadeDraws+2*shellDelta,counts:h.WORLD.cityInfillStats,minBuilding,minRoad,minPoint,minTree,maxAlignment,addedBodies:bodies.length,baselineBodies:original.length,addedOpaqueDraws:h.WORLD.cityInfillMeshes.length,addedWithOneShadowPass:2*h.WORLD.cityInfillMeshes.length,extraFacadeCells:0,windowInstances:windows.length,headlessStep:pairs,medianRatio});
 }
-console.log('REPORT '+JSON.stringify(report));console.log('RESULT: PASS (headless components; structural draw count; no device FPS claim)');
+console.log('REPORT '+JSON.stringify(report));assert.ok(report.every(r=>r.medianRatio<=1.35),'physics ratio exceeds 1.35');console.log('RESULT: PASS (headless components; structural draw count; no device FPS claim)');

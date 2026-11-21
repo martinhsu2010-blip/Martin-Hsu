@@ -1,5 +1,6 @@
 // Run against a commit or the worktree. --details prints every interval and every
 // 10x10 center (consecutive x positions on one z row are compressed, step = 2).
+import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { collisionHarness, html, root, THREE } from './collision_harness.mjs';
@@ -71,7 +72,104 @@ function frontage(h,zone,side) {
     if(details) for(const r of runs)console.log('RUN',names[zone],side,round(r.from),round(r.to),[...r.reasons].join('/'));
     console.log('FRONT',names[zone],side,'runs',runs.length,'total',round(counts.reduce((a,b)=>a+b,0)),'max',round(Math.max(0,...counts)),'eligibleTotal',round(limit),'eligibleMax',round(maxLegal));
 }
-function city(h) {
+function checkShells(h,windows,preset) {
+    const spec={
+        CBD:[[12,16,20,24],[0xcbd3d6,0xaabbc3,0xbbc1ca,0xd4cbc0,0xbac7bd]],
+        MID:[[12,17,22,27],[0xd8c5aa,0xbfada1,0xb5bea9,0xb0c0c5,0xd5b6a4]],
+        OLD:[[9,12,15,18],[0xc58d79,0xd4b691,0xbdab91,0xacb59c,0xc1a19a]]
+    };
+    const buildings=h.WORLD.cityInfill.filter(b=>b.coverage);
+    assert.equal(buildings.length,preset==='PHONE_LOW'?758:538);
+    const reversed=Array.from(buildings,b=>({...b,h:0,tint:0})).reverse();
+    h.styleCoverage(reversed);
+    const matrix=new THREE.Matrix4(), color=new THREE.Color();
+    for(const [district,[hs,cs]] of Object.entries(spec)){
+        const hash=b=>Buffer.from([5019,district,b.x,b.z,b.w,b.d].join('|')).reduce((v,c)=>Math.imul(v^c,16777619)>>>0,2166136261);
+        const list=buildings.filter(b=>b.district===district).sort((a,b)=>hash(a)-hash(b)||a.x-b.x||a.z-b.z||a.w-b.w||a.d-b.d);
+        const histogram=Array(20).fill(0), heightCounts={},colorCounts={};
+        for(const [i,b] of list.entries()){
+            const ci=(Math.floor(i/4)+i%4)%5, H=hs[i%4];
+            b.mesh.getMatrixAt(b.instance,matrix); b.mesh.getColorAt(b.instance,color);
+            assert.equal(matrix.elements[5],H); assert.equal(matrix.elements[13],H/2);
+            assert.equal(color.getHex(),cs[ci]);
+            const replay=reversed.find(o=>o.x===b.x&&o.z===b.z);
+            assert.equal(replay.h,H); assert.equal(replay.tint,cs[ci]);
+            assert.ok(h.WORLD.roofs.some(r=>r.x===b.x&&r.z===b.z&&r.h===H));
+            const j=b.shapeIndex,he=b.body.shapes[j].halfExtents,p=b.body.pointToWorldFrame(b.body.shapeOffsets[j]);
+            assert.deepEqual([p.x,p.y,p.z,he.x,he.y,he.z],[b.x,H/2,b.z,b.w/2,H/2,b.d/2]);
+            const actual=windows.filter(w=>{
+                const e=w.matrix.elements;
+                return Math.abs(e[12]-b.x)<=b.w/2+.07 && Math.abs(e[14]-b.z)<=b.d/2+.07;
+            }).map(w=>w.matrix.elements[13]).sort((a,b)=>a-b);
+            const floors=Math.floor((H-6)/4.6);
+            assert.equal(actual.length,4*floors);
+            actual.forEach((y,k)=>assert.ok(Math.abs(y-(6.2+Math.floor(k/4)*4.6))<=.01));
+            histogram[i%4*5+ci]++;
+            heightCounts[H]=(heightCounts[H]||0)+1;
+            const hex=color.getHexString();
+            colorCounts[hex]=(colorCounts[hex]||0)+1;
+        }
+        assert.ok(Math.min(...histogram)>0 && Math.max(...histogram)-Math.min(...histogram)<=1);
+        console.log('STYLES',district,JSON.stringify({heightCounts,colorCounts,histogram}));
+    }
+}
+
+function parkAudit(h,centers,counts,preset) {
+    // Frozen coordinate hashes from the complete c8e395f audit, in block/grid traversal order.
+    const hashes={'PHONE_LOW': 'addf1d4e4bd8315c46de87443e2f01e0c095dd3baeb8330f9474bdbe0b148ef1', 'DESKTOP_HIGH': '8e1fad2eafaff97995fff4942a1d4e18df6a19ca3fc6b111c9f98fa218de3f85'};
+    assert.equal(createHash('sha256').update(centers.map(p=>p.d+':'+p.x+','+p.z).join('|')).digest('hex'),hashes[preset]);
+    const mesh=h.WORLD.coveragePark;
+    assert.ok(mesh?.visible && mesh.parent===h.scene && mesh.layers.test(h.camera.layers));
+    assert.deepEqual([mesh.material.visible,mesh.material.polygonOffset,mesh.material.polygonOffsetFactor,mesh.material.polygonOffsetUnits],[true,true,-2,-4]);
+    const pos=mesh.geometry.attributes.position, color=mesh.geometry.attributes.color;
+    const rects=[];
+    for(let k=0;k<pos.count;k+=6){
+        const x=pos.getX(k),z=pos.getZ(k),X=pos.getX(k+2),Z=pos.getZ(k+2);
+        const corners=[[x,z],[x,Z],[X,Z],[x,z],[X,Z],[X,z]];
+        corners.forEach(([u,v],i)=>{
+            assert.deepEqual([pos.getX(k+i),pos.getZ(k+i)],[u,v]);
+            assert.ok(Math.abs(pos.getY(k+i)-.03)<1e-6);
+        });
+        assert.ok(X>x && Z>z);
+        const tint=new THREE.Color().fromBufferAttribute(color,k).getHex();
+        assert.ok([0x71865b,0xb9ae94].includes(tint));
+        assert.ok(!rects.some(b=>Math.min(X,b.X)>Math.max(x,b.x) && Math.min(Z,b.Z)>Math.max(z,b.z)),'overlapping park triangles');
+        rects.push({x,z,X,Z});
+    }
+    function coverage(x,z,faces){
+        let area=0,inside=false;
+        for(const b of faces){
+            area+=Math.max(0,Math.min(x+5,b.X)-Math.max(x-5,b.x))*Math.max(0,Math.min(z+5,b.Z)-Math.max(z-5,b.z));
+            inside ||= x>=b.x && x<=b.X && z>=b.z && z<=b.Z;
+        }
+        return {area,inside};
+    }
+    const expected=preset==='PHONE_LOW'?[17,101,27]:[27,101,43];
+    let failed=0;
+    for(const [i,d] of ['CBD','MID','OLD'].entries()){
+        const points=centers.filter(c=>c.d===d);
+        assert.equal(points.length,expected[i]);
+        const boxes=points.map(p=>coverage(p.x,p.z,rects));
+        const treated=boxes.filter(b=>b.inside && b.area>=80-1e-5).length;
+        console.log('PARK',d,'PARK_COVERED',treated,'UNTREATED',points.length-treated,'ROAD_EXCLUDED',counts[d]['continuous road clearance']||0);
+        boxes.forEach((b,j)=>{if(details||!b.inside||b.area<80)console.log('CENTER',points[j],b);});
+        failed+=points.length-treated;
+    }
+    // Every square unit of submitted geometry must be inside the union of hard-clear source rectangles.
+    for(const r of rects){
+        for(let x=r.x;x<r.X;x=Math.min(Math.floor(x)+1,r.X))
+            for(let z=r.z;z<r.Z;z=Math.min(Math.floor(z)+1,r.Z))
+                assert.ok(centers.some(p=>p.x-5<=x && p.x+5>=Math.min(Math.floor(x)+1,r.X) &&
+                    p.z-5<=z && p.z+5>=Math.min(Math.floor(z)+1,r.Z)),'HARD_OVERLAP');
+    }
+    console.log('HARD_OVERLAP',0);
+    const first=centers[0], removed=rects.filter(r=>r.X<=first.x-5||r.x>=first.x+5||r.Z<=first.z-5||r.z>=first.z+5);
+    assert.equal(coverage(first.x,first.z,removed).inside,false);
+    assert.equal(failed,0);
+}
+
+function city(h,preset) {
+    const centers=[];
     const n=h.ROAD_NET, old=h.city.map(b=>({...b,w:b.w+4,d:b.d+4})), added=h.WORLD.cityInfill;
     const roadGap=(p,axis,half)=>Math.min(...axis.map(v=>Math.abs(p-v)))-half-5;
     const trees=h.TREES.list.map(t=>({x:t.x,z:t.z,w:4*t.scale,d:4*t.scale}));
@@ -99,7 +197,7 @@ function city(h) {
                 if(exactRoad){
                     if(exactRoad(x,z,5))reason='continuous road clearance';
                     else {
-                        remaining[district]++;
+                        remaining[district]++; centers.push({d:district,x,z});
                         const hasSpace=(px,pz,size)=>Math.min(roadGap(px,n.avenuesX,n.avenueHalf),roadGap(pz,n.crossZ,n.crossHalf))+5>=size/2+3 &&
                             !reserved.some(b=>hits(px,pz,size/2,b,3)) && !trunks.some(b=>hits(px,pz,size/2,b,3)) &&
                             !original.some(b=>hits(px,pz,size/2,b,3)) && !fill.some(b=>hits(px,pz,size/2,b,3)) &&
@@ -124,6 +222,7 @@ function city(h) {
         console.log('HARD_EMPTY',JSON.stringify(remaining),'CAN_ADD',JSON.stringify(buildable));
         assert.ok(Object.values(buildable).every(n=>n===0),'legal shell fits a remaining hard-clear rectangle');
     }
+    if(ref<0)parkAudit(h,centers,counts,preset);
     console.log('CITY',JSON.stringify(counts),'placed',JSON.stringify(Object.fromEntries(Object.keys(counts).map(d=>[d,h.city.filter(b=>b.district===d).length+added.filter(b=>b.district===d).length]))));
 }
 // Sample inside every lawn triangle against makeTerrain's indexed ground faces.
@@ -179,7 +278,9 @@ for(const preset of ['PHONE_LOW','DESKTOP_HIGH']){
     }
     if(process.argv.includes('--front'))continue;
     h.WORLD.roofs=[];h.WORLD.buildings=[];h.WORLD.cameraBlockers=[];
-    h.buildTestCityInfill(h.city,[new THREE.MeshStandardMaterial(),new THREE.MeshStandardMaterial()],[],[]);
-    city(h);
+    const windows=[];
+    h.buildTestCityInfill(h.city,[new THREE.MeshStandardMaterial(),new THREE.MeshStandardMaterial()],windows,[]);
+    if(ref<0)checkShells(h,windows,preset);
+    city(h,preset);
 }
 
