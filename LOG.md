@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-21 | vh-2026-11-21-03 | Claude (impl. Gemini) | commit 670acbc | T-007: WORLD "Next Stop" card (PR #59); explore_picks_check wired into CI; awaiting Martin's device acceptance
 - 2026-11-21 | — | Claude | — | Fix: `specs/T-007-spec-v1.md` was omitted from #57 (untracked); added verbatim in this PR; T-007 registration is complete only from this commit
 - 2026-11-21 | — | Martin | — | T-007 spec v1 approved (D-024): Gemini's first Stage 2 trial (WORLD "Next Stop" card); spec registered, task in Ready for Implementer
 - 2026-11-21 | — | Martin | — | Gemini promoted to Stage 2 (D-023, "升2"); first Stage 2 trial spec pending from ChatGPT

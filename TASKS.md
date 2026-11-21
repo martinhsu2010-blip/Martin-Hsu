@@ -3,7 +3,7 @@
 ## Gemini qualification
 Current stage: 2
 Last approved by Martin: 2026-11-21 16:09 ("升2", promotion 1 -> 2, evidence PR #53)
-Evidence PRs: #53 (T-006, released vh-2026-11-21-02; Martin-accepted)
+Evidence PRs: #53 (T-006, Stage 1, Martin-accepted); #59 (T-007, Stage 2 trial #1, released vh-2026-11-21-03; device acceptance pending)
 Promotion candidate: none (Stage 3 only on Martin's separate explicit approval + COLLAB v3.5 §4.3 test gate)
 Rollback / blockers: none. Stage 2 is provisional until the first Stage 2 trial (not yet specified) is reviewed and accepted.
 
@@ -11,17 +11,7 @@ Rollback / blockers: none. Stage 2 is provisional until the first Stage 2 trial 
 (none)
 
 ## Ready for Implementer
-### T-007 Game Hub WORLD "Next Stop" card (Gemini Stage 2 first trial)
-Owner: Gemini
-Implementer: Gemini (Stage 2 trial; single small non-persistent UI feature)
-Reviewer: Claude
-Priority: P2
-Base commit: latest `main` at start (spec baseline `20a793a5c37cf85d161532e1b683911c7ae4f5d6`)
-Branch/PR: `gemini/T-007` / (none yet)
-Spec: `specs/T-007-spec-v1.md` (approved by Martin 2026-11-21 16:36; D-024).
-Scope: `index.html` + new `tools/test/explore_picks_check.mjs` only. Claude wires the new test into `.github/workflows/pwa-cache-check.yml` at release (A11).
-Required Gemini stage: 2 (Stage 2 trial)
-
+(none)
 
 ## In review
 (none)
@@ -39,6 +29,18 @@ Why: archives had no license text; needed before any public sharing.
 (none)
 
 ## Done
+### T-007 Game Hub WORLD "Next Stop" card (Gemini Stage 2 first trial) (Done, awaiting device acceptance)
+Owner: Gemini
+Implementer: Gemini (Stage 2 trial; single small non-persistent UI feature)
+Reviewer: Claude
+Priority: P2
+Base commit: latest `main` at start (spec baseline `20a793a5c37cf85d161532e1b683911c7ae4f5d6`)
+Branch/PR: `gemini/T-007` / #59 (merged 670acbc, released vh-2026-11-21-03)
+Spec: `specs/T-007-spec-v1.md` (approved by Martin 2026-11-21 16:36; D-024).
+Scope: `index.html` + new `tools/test/explore_picks_check.mjs` only. Claude wires the new test into `.github/workflows/pwa-cache-check.yml` at release (A11).
+Required Gemini stage: 2 (Stage 2 trial)
+Claude notes: Stage 2 trial verdict 通過 (PR comment). Claude re-ran all AGENTS checks + new test; 5 independent mutations fail the test; headless 390/360/844x390/1280; CI step wired and passed; D-013 re-checked 2026-11-21 09:43Z. Not device-measured. Martin device acceptance pending (A13).
+
 ### T-006 zh-TW label fix: `shared_space` "Space" -> "空白鍵" (Gemini Stage 1 trial) (Done, accepted)
 Owner: Gemini
 Implementer: Gemini (Stage 1 trial; strings only)
