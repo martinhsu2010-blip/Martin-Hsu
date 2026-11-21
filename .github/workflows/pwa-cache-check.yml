@@ -44,3 +44,5 @@ jobs:
         run: node tools/test/urban_check.mjs
       - name: Check Game Hub Next Stop card (T-007)
         run: node tools/test/explore_picks_check.mjs
+      - name: Check Zone Arrival HUD notice (T-008)
+        run: node tools/test/zone_arrival_check.mjs
