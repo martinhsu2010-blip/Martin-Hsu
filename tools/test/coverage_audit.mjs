@@ -133,6 +133,14 @@ function parkAudit(h,centers,counts,preset) {
     const mesh=h.WORLD.coveragePark;
     assert.ok(mesh?.visible && mesh.parent===h.scene && mesh.layers.test(h.camera.layers));
     assert.deepEqual([mesh.material.visible,mesh.material.polygonOffset,mesh.material.polygonOffsetFactor,mesh.material.polygonOffsetUnits],[true,true,-2,-4]);
+    assert.equal(mesh.count,1);
+    for(const [height,expected] of [[-5,0],[.031,1],[55,1]]){
+        const view=new THREE.PerspectiveCamera();
+        view.position.y=height; view.updateMatrixWorld();
+        mesh.onBeforeRender(null,h.scene,view);
+        assert.equal(mesh.count,expected);
+        mesh.onAfterRender();
+    }
     const pos=mesh.geometry.attributes.position, color=mesh.geometry.attributes.color;
     const walks=[];
     for(const x of h.ROAD_NET.avenuesX) h.visitAvenueSidewalks(x,(sx,z0,z1)=>walks.push({sx,z0,z1}));

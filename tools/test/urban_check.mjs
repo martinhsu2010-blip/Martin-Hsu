@@ -70,10 +70,10 @@ for(const preset of ['PHONE_LOW','DESKTOP_HIGH']){
  }
  const medianRatio=pairs.map(p=>p.ratio).sort((a,b)=>a-b)[2];
  console.log('PAIRED',preset,JSON.stringify({pairs,medianRatio}));
- const facadeDraws=h.WORLD.cityCoverageFacades.length;
+ const facadeDraws=h.WORLD.cityCoverageFacades.length, parkDraws=Number(!!h.WORLD.coveragePark);
  assert.ok(h.WORLD.cityCoverageFacades.every(mesh=>mesh.isInstancedMesh&&!mesh.castShadow&&h.FACADE.chunks.some(c=>c.mesh===mesh)));
  const shellDelta=h.WORLD.cityInfillMeshes.length-old.WORLD.cityInfillMeshes.length;
- assert.ok(facadeDraws+2*shellDelta<=(preset==='PHONE_LOW'?8:16));
- report.push({preset,oldCounts,coverageOpaqueDrawDelta:facadeDraws+shellDelta,coverageDrawDeltaWithShadows:facadeDraws+2*shellDelta,counts:h.WORLD.cityInfillStats,minBuilding,minRoad,minPoint,minTree,maxAlignment,addedBodies:bodies.length,baselineBodies:original.length,addedOpaqueDraws:h.WORLD.cityInfillMeshes.length,addedWithOneShadowPass:2*h.WORLD.cityInfillMeshes.length,extraFacadeCells:0,windowInstances:windows.length,headlessStep:pairs,medianRatio});
+ assert.ok(parkDraws+facadeDraws+2*shellDelta<=(preset==='PHONE_LOW'?8:16));
+ report.push({preset,oldCounts,coverageOpaqueDrawDelta:parkDraws+facadeDraws+shellDelta,coverageDrawDeltaWithShadows:parkDraws+facadeDraws+2*shellDelta,counts:h.WORLD.cityInfillStats,minBuilding,minRoad,minPoint,minTree,maxAlignment,addedBodies:bodies.length,baselineBodies:original.length,addedOpaqueDraws:h.WORLD.cityInfillMeshes.length,addedWithOneShadowPass:2*h.WORLD.cityInfillMeshes.length,extraFacadeCells:0,windowInstances:windows.length,headlessStep:pairs,medianRatio});
 }
 console.log('REPORT '+JSON.stringify(report));assert.ok(report.every(r=>r.medianRatio<=1.35),'physics ratio exceeds 1.35');console.log('RESULT: PASS (headless components; structural draw count; no device FPS claim)');

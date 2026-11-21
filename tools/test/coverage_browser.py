@@ -34,7 +34,12 @@ RENDER = """([label,x,z,tx,tz]) => {
             o===w.coveragePark?'park':o===w.suburbVerge?'verge':o===w.winInstanced?'windows':
             o.isInstancedMesh?'other instances':o.geometry.type;
         hooks.push([o,fn]);
-        o.onBeforeRender=function(...args){draws[kind]=(draws[kind]||0)+1;return fn.apply(this,args)};
+        o.onBeforeRender=function(...args){
+            const value=fn.apply(this,args);
+            const label=kind==='park'?kind+'@'+args[2].matrixWorld.elements[13].toFixed(1):kind;
+            draws[label]=(draws[label]||0)+(o.isInstancedMesh && !o.count?0:1);
+            return value;
+        };
     });
     r.render(scene,c);
     for(const [o,fn] of hooks)o.onBeforeRender=fn;

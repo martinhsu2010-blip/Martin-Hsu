@@ -4709,8 +4709,19 @@
             const geo=new THREE.BufferGeometry();
             geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
             geo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
-            const mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({vertexColors:true,polygonOffset:true,
-                polygonOffsetFactor:-2,polygonOffsetUnits:-4}));
+            const material=new THREE.MeshBasicMaterial({vertexColors:true,polygonOffset:true,
+                polygonOffsetFactor:-2,polygonOffsetUnits:-4});
+            const mesh=new THREE.InstancedMesh(geo,material,1);
+            mesh.setMatrixAt(0,new THREE.Matrix4());
+            // Every triangle is horizontal and front-facing from above. A camera below the
+            // lowest face (e.g. the ocean mirror) sees only backfaces. Reject that empty
+            // submission before the GPU; keep the same geometry for every visible view.
+            geo.computeBoundingBox();
+            const lowestFace=geo.boundingBox.min.y;
+            mesh.onBeforeRender=(_renderer,_scene,view)=>{
+                mesh.count=view.matrixWorld.elements[13]<lowestFace ? 0 : 1;
+            };
+            mesh.onAfterRender=()=>{mesh.count=1;};
             scene.add(mesh); WORLD.coveragePark=mesh;
         }
 
