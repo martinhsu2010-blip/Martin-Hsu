@@ -4,17 +4,17 @@
 (none)
 
 ## Ready for Codex
-### T-005B Suburb frontage + city infill coverage
+### T-005B Suburb frontage + city infill coverage (revision round 2)
 Owner: Codex
 Implementer: Codex (world generation, never Gemini)
 Reviewer: Claude
 Priority: P1
-Base commit: `12d25ab28d0b7c5e35bd50291e4009c4f1089a38` (+ later docs-only commits)
-Branch/PR: `codex/T-005B-coverage` / (not opened)
+Base commit: `0cc9aff09338ade85fd78826470053d3e5d68208`; revision starts from PR head `c8e395f`
+Branch/PR: `codex/T-005B-coverage` / PR #47 (open, holds the one-code-PR lock; continue in the same PR)
 Depends on: T-005A (Done, Martin-accepted 2026-11-20)
-Spec: `specs/T-005-spec-v1.md` Parts 3-4 (approved by Martin 2026-11-20 14:06; D-019).
-Claude notes: audits first (suburb bare-frontage runs, legal empty city lots); relax only the soft rules in the order given; no silent cap increase (caps stay 210 phone / 390 desktop unless Martin approves a new one); collider, facade offset and draw-call rules as T-004D/E, budgets counted from the current build.
-Verification: pending.
+Spec: Parts 1-3 `specs/T-005-spec-v1.md` (D-019); Part 4 replaced by `specs/T-005-spec-v2.1.md` (approved by Martin 2026-11-21 09:02; D-019).
+Claude notes (review of c8e395f, PR #47 comment 7054236978): all tests and draw budgets pass. To do in this PR: (1) coverage colliders grouped per 120x120 cell (physics budget: paired urban_check median ratio <= 1.35 per preset); (2) suburb verge must not sink into or float above the terrain; (3) v2.1 Part 4: pocket parks over every HARD_EMPTY center (>= 80/100 covered, polygonOffset -2/-4), deterministic heights/colours (seed 5019), windows recomputed from H, `?fps=1` diagnostic readout with auto-quality disabled while active (labels in the bilingual string table). Do not edit sw.js or docs.
+Verification: c8e395f independently reviewed (changes requested); revision pending.
 
 ## In review
 (none)
