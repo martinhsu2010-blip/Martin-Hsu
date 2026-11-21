@@ -1,6 +1,6 @@
 # CLAUDE.md — working notes for Claude (reviewer / integrator / releaser)
 
-Roles and pipeline are in `COLLAB.md` (v3.3); this file only covers how Claude works efficiently. It never changes a role, a test requirement or an approved spec.
+Roles and pipeline are in `COLLAB.md` (v3.5); this file only covers how Claude works efficiently. It never changes a role, a test requirement or an approved spec.
 
 ## Token efficiency (never at the cost of review quality)
 1. **Review the diff, not the file.** Fetch the PR diff (`gh api repos/.../pulls/N/files`) and read changed hunks with their surroundings; locate anything else with `grep -n` and read small ranges of `index.html`. Use `HANDOFF.md` as the code map.
@@ -17,3 +17,4 @@ Roles and pipeline are in `COLLAB.md` (v3.3); this file only covers how Claude w
 - `PHONE_LOW` skips `loadPolyHavenModels()` (no facade kit, `__phDone` never fires): use TABLET/MED or spoofed DESKTOP/HIGH to judge facades.
 - Claude in Chrome is not reachable from the phone app: give Martin manual steps instead.
 - Release = bump `CACHE` in `sw.js` (Claude only); Codex never edits it or the docs.
+- Every Gemini PR review: also re-check `main` protection with `gh api repos/martinhsu2010-blip/Martin-Hsu/branches/main/protection` (required PR, `enforce_admins=true`, no force push/deletion) and `.../rulesets` (empty), and record the result in the review (COLLAB v3.5 §9).

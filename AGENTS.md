@@ -11,16 +11,18 @@ Implement ONE approved task at a time exactly as specified in `TASKS.md` / the l
 ## Workflow rules
 - Work on a branch named `codex/T-<id>-<short-name>` (Codex) or `gemini/T-<id>-<short-name>` (Gemini; if the tool picks its own name, say which in the PR) from the latest `main`. Never push to `main`. Never merge your own PR. Open a PR using the template and keep it small.
 - One active code PR at a time. If another PR is open, wait. One task = one session = one PR; never start a second task in the same PR.
-- Gemini (Antigravity) only takes the low-risk tasks in "Secondary implementer" below. If your task turns out to touch physics, traffic, collisions, world generation, save format, camera or more than one or two systems, **stop and say so in the PR description**; do not push through.
+- What Gemini (Antigravity) may implement depends on the stage Martin has approved in `TASKS.md` (`Gemini qualification`, COLLAB v3.5 §4; D-021); use the stage table to decide the forbidden areas. If your task turns out to touch physics, traffic, collisions, world generation, save format, camera or more than one or two systems **outside your current stage**, **stop and say so in the PR description**; do not push through.
 - Do NOT edit `sw.js` `CACHE` or the docs (`TASKS.md`, `DECISIONS.md`, `LOG.md`, `HANDOFF.md`, `COLLAB.md`, `specs/`); the maintainer (Claude) does that when integrating.
 - Do not add or change binary assets (models, textures, fonts, libs). List what you would need in the PR instead.
 - Do not reformat or reorder unrelated code; the file is large and diffs must stay reviewable.
 
-## Secondary implementer (Antigravity / Gemini) — D-020
-Applies only when `TASKS.md` says `Implementer: Gemini`; everything else in this file applies to you too.
-- **Allowed (whole task only):** zh/en UI strings and translations (`STRINGS`/`tr()`); wording polish of missions/UI text; purely static HUD/menu CSS tweaks; documentation or copy fixes with no logic change.
-- **Forbidden, stop and report instead of opening a PR:** `cannon-es` physics, collisions, vehicle handling, traffic/police AI, world generation, draw calls/rendering performance, save format. If the spec touches any of these, say so and do nothing else.
-- **Branch and diff:** branch `gemini/<task-id>` from the latest `main`; minimal diff to `index.html` only; no reformatting, reordering or "cleanup" of unrelated code; PR to `main` with the template; never merge, never push to `main`.
+## Secondary implementer (Antigravity / Gemini) — D-020, replaced in scope by D-021 (COLLAB v3.5 §4)
+Applies only when `TASKS.md` says `Implementer: Gemini`; everything else in this file applies to you too. Your stage is the `Current stage` in the `Gemini qualification` block of `TASKS.md`; if it is missing or unclear, you are in Stage 1.
+- **Stage 1 (allowed, whole task only):** zh/en UI strings and translations (`STRINGS`/`tr()`); wording polish of missions/UI text; purely static HUD/menu CSS tweaks. No JavaScript logic, events, DOM behaviour, storage, new files or assets.
+- **Stage 2 (only after Martin's recorded promotion):** whole non-critical features (menus, settings that do not change the save schema, mission/interaction systems, general HUD behaviour). The first Stage 2 task is a trial (single, small, no persistence).
+- **Stage 3 (only after Martin's recorded promotion and the test gate in COLLAB v3.5 §4.3):** Codex-equivalent scope.
+- **Always forbidden at Stages 1-2, stop and report instead of opening a PR:** `cannon-es` physics, collisions, vehicle handling, traffic/police AI, world/terrain/road generation, draw calls/rendering performance, `vh_save` schema changes (even adding defaulted fields). If the spec touches any of these, say so and do nothing else.
+- **Branch and diff:** branch `gemini/<task-id>` from the latest `main`. Stage 1: minimal diff to `index.html` only. Stages 2-3: `index.html` plus new or updated test code in `tools/test/` where the spec requires it. Never edit `sw.js`, the docs, `specs/`, `.github/` or binary assets. No reformatting, reordering or "cleanup" of unrelated code; PR to `main` with the template; never merge, never push to `main`.
 - The one-active-code-PR lock is shared with Codex: if any code PR is open, wait.
 
 ## Hard constraints (the reviewer checks these)
