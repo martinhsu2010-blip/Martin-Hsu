@@ -3,25 +3,15 @@
 ## Gemini qualification
 Current stage: 2
 Last approved by Martin: 2026-11-21 16:09 ("升2", promotion 1 -> 2, evidence PR #53)
-Evidence PRs: #53 (T-006, Stage 1, Martin-accepted); #59 (T-007, Stage 2 trial #1, released vh-2026-11-21-03; Martin-accepted)
-Promotion candidate: none; needs one more distinct-category Stage 2 task (T-008 spec pending) (Stage 3 only on Martin's separate explicit approval + COLLAB v3.5 §4.3 test gate)
+Evidence PRs: #53 (T-006, Stage 1, Martin-accepted); #59 (T-007, Stage 2 #1, Martin-accepted); #63 (T-008, Stage 2 #2, released vh-2026-11-21-04; device acceptance pending)
+Promotion candidate: none; needs one more distinct-category Stage 2 task (T-008 released, device acceptance pending) (Stage 3 only on Martin's separate explicit approval + COLLAB v3.5 §4.3 test gate)
 Rollback / blockers: none. Stage 2 is provisional until the first Stage 2 trial (not yet specified) is reviewed and accepted.
 
 ## Ready for ChatGPT
 (none)
 
 ## Ready for Implementer
-### T-008 Zone Arrival HUD (Gemini Stage 2 task 2 of 2; general HUD behavior)
-Owner: Gemini
-Implementer: Gemini (Stage 2; passive HUD notice using existing zone logic)
-Reviewer: Claude
-Priority: P2
-Base commit: latest `main` at start (spec baseline `af6209d912a773d930a5520d0823d4ff2dedeee4`)
-Branch/PR: `gemini/T-008` / (none yet)
-Spec: `specs/T-008-spec-v1.md` (approved by Martin 2026-11-21 17:58; D-025).
-Scope: `index.html` + new `tools/test/zone_arrival_check.mjs` only. Claude wires the new test into `.github/workflows/pwa-cache-check.yml` at release (A11).
-Required Gemini stage: 2
-
+(none)
 
 ## In review
 (none)
@@ -39,6 +29,18 @@ Why: archives had no license text; needed before any public sharing.
 (none)
 
 ## Done
+### T-008 Zone Arrival HUD (Gemini Stage 2 task 2 of 2; general HUD behavior) (Done, awaiting device acceptance)
+Owner: Gemini
+Implementer: Gemini (Stage 2; passive HUD notice using existing zone logic)
+Reviewer: Claude
+Priority: P2
+Base commit: latest `main` at start (spec baseline `af6209d912a773d930a5520d0823d4ff2dedeee4`)
+Branch/PR: `gemini/T-008` / #63 (merged 0803a21, released vh-2026-11-21-04)
+Spec: `specs/T-008-spec-v1.md` (approved by Martin 2026-11-21 17:58; D-025).
+Scope: `index.html` + new `tools/test/zone_arrival_check.mjs` only. Claude wires the new test into `.github/workflows/pwa-cache-check.yml` at release (A11).
+Required Gemini stage: 2
+Claude notes: Stage 2 task 2 verdict 通過 (PR comment). Claude re-ran all AGENTS checks + route_legality + both new tests; 6 independent mutations fail the test; headless real-teleport checks at 390x844, 844x390, 1280x800; no spawn popup; CI step wired and passed; D-013 re-checked 2026-11-21 10:49Z. Not device-measured. Martin device acceptance pending (A12).
+
 ### T-007 Game Hub WORLD "Next Stop" card (Gemini Stage 2 first trial) (Done, accepted)
 Owner: Gemini
 Implementer: Gemini (Stage 2 trial; single small non-persistent UI feature)
