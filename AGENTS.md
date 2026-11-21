@@ -1,6 +1,6 @@
 # AGENTS.md — rules for Codex and Antigravity/Gemini (and any coding agent) working on VICE HORIZON VI
 
-Read `COLLAB.md` (v3.4) first; this file is the short version for the coding agent. Your spec is the file named in your task message under `specs/` plus the task entry in `TASKS.md`; if either is missing or contradicts the other, stop and say so in the PR description.
+Read `COLLAB.md` (v3.6) first; this file is the short version for the coding agent. Your spec is the file named in your task message under `specs/` plus the task entry in `TASKS.md`; if either is missing or contradicts the other, stop and say so in the PR description.
 
 ## Project
 Open-world driving browser game: Three.js r160 + cannon-es 0.20, one file `index.html` (~9,900 lines, search for `// ====` banners; function/section map in `HANDOFF.md`), PWA served by GitHub Pages from `main`. Architecture and current systems: `HANDOFF.md`. Task you are working on: `TASKS.md`. Decisions you must respect: `DECISIONS.md`.
@@ -11,7 +11,7 @@ Implement ONE approved task at a time exactly as specified in `TASKS.md` / the l
 ## Workflow rules
 - Work on a branch named `codex/T-<id>-<short-name>` (Codex) or `gemini/T-<id>-<short-name>` (Gemini; if the tool picks its own name, say which in the PR) from the latest `main`. Never push to `main`. Never merge your own PR. Open a PR using the template and keep it small.
 - One active code PR at a time. If another PR is open, wait. One task = one session = one PR; never start a second task in the same PR.
-- What Gemini (Antigravity) may implement depends on the stage Martin has approved in `TASKS.md` (`Gemini qualification`, COLLAB v3.5 §4; D-021); use the stage table to decide the forbidden areas. If your task turns out to touch physics, traffic, collisions, world generation, save format, camera or more than one or two systems **outside your current stage**, **stop and say so in the PR description**; do not push through.
+- What Gemini (Antigravity) may implement depends on the stage Martin has approved in `TASKS.md` (`Gemini qualification`, COLLAB v3.6 §4; D-021); use the stage table to decide the forbidden areas. If your task turns out to touch physics, traffic, collisions, world generation, save format, camera or more than one or two systems **outside your current stage**, **stop and say so in the PR description**; do not push through.
 - Do NOT edit `sw.js` `CACHE` or the docs (`TASKS.md`, `DECISIONS.md`, `LOG.md`, `HANDOFF.md`, `COLLAB.md`, `specs/`); the maintainer (Claude) does that when integrating.
 - Do not add or change binary assets (models, textures, fonts, libs). List what you would need in the PR instead.
 - Do not reformat or reorder unrelated code; the file is large and diffs must stay reviewable.
@@ -20,10 +20,11 @@ Implement ONE approved task at a time exactly as specified in `TASKS.md` / the l
 Applies only when `TASKS.md` says `Implementer: Gemini`; everything else in this file applies to you too. Your stage is the `Current stage` in the `Gemini qualification` block of `TASKS.md`; if it is missing or unclear, you are in Stage 1.
 - **Stage 1 (allowed, whole task only):** zh/en UI strings and translations (`STRINGS`/`tr()`); wording polish of missions/UI text; purely static HUD/menu CSS tweaks. No JavaScript logic, events, DOM behaviour, storage, new files or assets.
 - **Stage 2 (only after Martin's recorded promotion):** whole non-critical features (menus, settings that do not change the save schema, mission/interaction systems, general HUD behaviour). The first Stage 2 task is a trial (single, small, no persistence).
-- **Stage 3 (only after Martin's recorded promotion and the test gate in COLLAB v3.5 §4.3):** Codex-equivalent scope.
+- **Stage 3 (only after Martin's recorded promotion and the test gate in COLLAB v3.6 §4.3):** Codex-equivalent scope. Each Stage 3 task needs its own approved spec, per-risk regression tests, quantified acceptance values, and Claude's independent paired measurements.
 - **Always forbidden at Stages 1-2, stop and report instead of opening a PR:** `cannon-es` physics, collisions, vehicle handling, traffic/police AI, world/terrain/road generation, draw calls/rendering performance, `vh_save` schema changes (even adding defaulted fields). If the spec touches any of these, say so and do nothing else.
 - **Branch and diff:** branch `gemini/<task-id>` from the latest `main`. Stage 1: minimal diff to `index.html` only. Stages 2-3: `index.html` plus new or updated test code in `tools/test/` where the spec requires it. Never edit `sw.js`, the docs, `specs/`, `.github/` or binary assets. No reformatting, reordering or "cleanup" of unrelated code; PR to `main` with the template; never merge, never push to `main`.
 - The one-active-code-PR lock is shared with Codex: if any code PR is open, wait.
+- **Routing and sizing (COLLAB v3.6 §5.1-5.2):** large-volume, low-risk, testable work goes to Gemini; small high-risk judgment work goes to Codex by default (Gemini only at Stage 3 with the full §4.3 gate). Risk overrides volume: if a task touches any high-risk system it is high-risk, whatever its size. Large tasks are split into phased small tasks, one task / one implementer / one PR each, each with its own regression test. Suggested starting limits per PR: about 600 lines of `index.html` logic/markup/style change, or about 800 data lines / 150 i18n keys; one system boundary per phase. If your task exceeds that, stop and report so it can be split.
 
 ## Hard constraints (the reviewer checks these)
 - Mobile performance first: no per-frame allocations in hot loops, keep draw calls low (use InstancedMesh / merged static meshes), keep physics cost low (cannon-es `step` is the main cost). Say how your change affects phones.

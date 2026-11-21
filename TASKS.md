@@ -1,4 +1,4 @@
-# Task board (rules: COLLAB.md v3.4). One Owner per task. One active code PR at a time, shared by Codex and Antigravity; each code task carries `Implementer: Codex|Gemini`.
+# Task board (rules: COLLAB.md v3.6). One Owner per task. One active code PR at a time, shared by Codex and Antigravity; each code task carries `Implementer: Codex|Gemini`.
 
 ## Gemini qualification
 Current stage: 3

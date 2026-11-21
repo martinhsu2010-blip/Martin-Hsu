@@ -66,7 +66,7 @@ Debug handle: `window.__VH` exposes internals (SAVE, STUNT, DELIVERY, CAR_MODELS
 - Mobile performance matters most; check any added feature on the PHONE_* presets.
 
 ## Working agreement
-See `COLLAB.md` (v3.4) and `AGENTS.md`. Code changes arrive as Pull Requests from Codex (or Gemini via Antigravity Remote Agents for low-risk tasks) and are reviewed/integrated/released by Claude.
+See `COLLAB.md` (v3.6) and `AGENTS.md`. Code changes arrive as Pull Requests from Codex (or Gemini via Antigravity Remote Agents for low-risk tasks) and are reviewed/integrated/released by Claude.
 
 T-006 (zh-TW `shared_space` label) is the first Gemini Stage 1 trial; see `TASKS.md` and `specs/T-006-spec-v1.md`.
 

@@ -1,6 +1,6 @@
 # CLAUDE.md — working notes for Claude (reviewer / integrator / releaser)
 
-Roles and pipeline are in `COLLAB.md` (v3.5); this file only covers how Claude works efficiently. It never changes a role, a test requirement or an approved spec.
+Roles and pipeline are in `COLLAB.md` (v3.6); this file only covers how Claude works efficiently. It never changes a role, a test requirement or an approved spec.
 
 ## Token efficiency (never at the cost of review quality)
 1. **Review the diff, not the file.** Fetch the PR diff (`gh api repos/.../pulls/N/files`) and read changed hunks with their surroundings; locate anything else with `grep -n` and read small ranges of `index.html`. Use `HANDOFF.md` as the code map.
