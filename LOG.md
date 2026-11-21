@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-21 | — | Martin | — | T-008 accepted on devices (vh-2026-11-21-04); Gemini Stage 2 evidence 2 of 2 complete; code-PR lock free
 - 2026-11-21 | vh-2026-11-21-04 | Claude (impl. Gemini) | commit 0803a21 | T-008: Zone Arrival HUD (PR #63); zone_arrival_check wired into CI; awaiting Martin's device acceptance
 - 2026-11-21 | — | Martin | — | T-008 spec v1 approved (D-025): Gemini Stage 2 task 2 (Zone Arrival HUD); spec registered, task in Ready for Implementer
 - 2026-11-21 | — | Martin | — | T-007 accepted on devices (vh-2026-11-21-03); Stage 2 evidence 1 of 2; code-PR lock free
