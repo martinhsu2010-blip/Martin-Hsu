@@ -11,7 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-012 Midtown streetscape quality pilot (C+; world/render; HIGH risk, SMALL volume) (Released vh-2026-11-22-08; awaiting Martin device acceptance)
+### T-012 Midtown streetscape quality pilot (C+; world/render; HIGH risk, SMALL volume) (Done; accepted by Martin 2026-11-22 13:24, FPS unmeasured)
 Owner: Codex
 Implementer: Codex
 Reviewer: Claude
