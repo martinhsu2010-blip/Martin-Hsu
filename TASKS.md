@@ -11,7 +11,16 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-(none)
+### T-010 Midtown coverage facade pilot (C+; world/render; HIGH risk, SMALL volume) (Ready; new-scene calibration runs while Codex implements)
+Owner: Codex
+Implementer: Codex
+Reviewer: Claude
+Priority: P1
+Base commit: latest main at start (spec checked against `f57d890d090ec43196daf962c5f63e4ec5e9faa3`; code identical to b729942)
+Branch/PR: `codex/T-010-midtown-facade-pilot`
+Spec: `specs/T-010-spec-v1.1.md` (approved by Martin 2026-11-22 08:57; D-031)
+Scope: `index.html` + new `tools/test/midtown_facade_pilot_check.mjs` only (about 200 / 250 lines). 6 coverage buildings in the MID block (-420<x<-240, -360<z<-240), east-facing window frames, sills and roofline trim; 2 InstancedMesh registered in `FACADE.chunks`; 0 physics, 0 save fields. Claude wires the test into CI at release.
+Claude notes: G0 done (16+ coverage buildings in the block on each profile; east faces visible from the avenue). Claude runs all section 6 measurements (physics cap 1.25, near draw calls +2/+3/+4, control +0); R5 browser check is Claude-run. Device acceptance incl. `?fps=1` by Martin.
 
 ## In review
 (none)
