@@ -4897,6 +4897,84 @@
             addBatch(masonry, 0xb5aa96);
         }
 
+        function buildMidtownStreetscape(unit, windowData) {
+            const selected = WORLD.midtownFacadePilot.selected.slice(0,2);
+            const trim = [], glazing = [], paving = [], meshes = [];
+            const part = new THREE.Object3D();
+            function box(batch, x0,x1, y0,y1, z0,z1, color) {
+                part.position.set((x0+x1)/2,(y0+y1)/2,(z0+z1)/2);
+                part.scale.set(x1-x0,y1-y0,z1-z0);
+                part.updateMatrix();
+                batch.push({matrix:part.matrix.clone(),color});
+            }
+            const sidewalks = [];
+            visitAvenueSidewalks(-240,(sx,z0,z1) => {
+                if (sx < -240) sidewalks.push({sx,z0,z1});
+            });
+            for (const b of selected) {
+                const east = b.x+b.w/2, left = b.z-b.d/2, right = b.z+b.d/2;
+                const jamb = .20, doorHalf = .8, reveal = .42;
+                const warmStone = 0xa39988, darkBase = 0x605a51;
+                const doorLeft = b.z-doorHalf, doorRight = b.z+doorHalf;
+                // Recessed door, two display windows on low plinths, common header.
+                box(glazing,east+.06,east+.09,.18,2.72,doorLeft,doorRight,0x3e3732);
+                for (const [lo,hi] of [[left+reveal,doorLeft-jamb],[doorRight+jamb,right-reveal]]) {
+                    box(glazing,east+.11,east+.155,.54,2.72,lo,hi,0x435759);
+                    box(trim,east+.06,east+.19,.18,.54,lo,hi,darkBase);
+                }
+                for (const [lo,hi] of [[doorLeft-jamb,doorLeft],[doorRight,doorRight+jamb]]) {
+                    box(trim,east+.06,east+.23,.18,2.72,lo,hi,warmStone);
+                }
+                box(trim,east+.06,east+.23,2.72,2.91,left+reveal,right-reveal,warmStone);
+                box(trim,east+.06,east+.20,0,.18,doorLeft,doorRight,darkBase);
+
+                const postInset = .28, postWidth = .22;
+                for (const lo of [left+postInset,right-postInset-postWidth]) {
+                    box(trim,east,east+.18,3.26,b.h-.42,lo,lo+postWidth,warmStone);
+                }
+                // Use the actual east pane heights, reserving the sill below the glazing.
+                const panes = [];
+                for (const i of WORLD.coverageWindows) {
+                    const e = windowData[i].matrix.elements;
+                    if (Math.abs(e[12]-east-.06)<.001 && Math.abs(e[14]-b.z)<.001 && e[8]>.99)
+                        panes.push([e[13]-1.2-.24,e[13]+1.2+.12]);
+                }
+                for (const y of [4.4,9.0,13.6]) {
+                    if (y >= b.h-.5 || panes.some(([lo,hi]) => y+.07>=lo && y-.07<=hi)) continue;
+                    box(trim,east,east+.12,y-.07,y+.07,left+postInset+postWidth,right-postInset-postWidth,0x928a7e);
+                }
+
+                for (const {sx,z0,z1} of sidewalks) {
+                    const lo = Math.max(left,z0), hi = Math.min(right,z1);
+                    if (hi <= lo) continue;
+                    const inner = sx-2.5, outer = sx+2.5;
+                    box(paving,east+.20,inner,0,.18,lo,hi,0x85847e);
+                    box(paving,outer-.16,outer-.03,.18,.202,lo,hi,0x858d91);
+                    for (let z=lo+1.25; z+.023<hi; z+=2.5) {
+                        box(paving,inner+.04,outer-.19,.18,.20,z-.023,z+.023,0x778084);
+                    }
+                }
+            }
+            for (const batch of [trim,glazing,paving]) {
+                if (!batch.length) continue;
+                const material = new THREE.MeshStandardMaterial({roughness:.86,metalness:0});
+                const mesh = new THREE.InstancedMesh(unit,material,batch.length);
+                const color = new THREE.Color();
+                batch.forEach((p,i) => {
+                    mesh.setMatrixAt(i,p.matrix);
+                    mesh.setColorAt(i,color.setHex(p.color));
+                });
+                mesh.castShadow = false;
+                mesh.receiveShadow = true;
+                mesh.computeBoundingSphere();
+                scene.add(mesh);
+                const {center,radius} = mesh.boundingSphere;
+                FACADE.chunks.push({mesh,x:center.x,z:center.z,r:radius});
+                meshes.push(mesh);
+            }
+            WORLD.midtownStreetscapePilot = {selected,meshes};
+        }
+
         function buildCityInfill(original, wallMaterials, windowData, nightWindowData) {
             const parcels=cityInfillParcels(original), unit=new THREE.BoxGeometry(1,1,1), dm=new THREE.Object3D();
             WORLD.cityInfill=parcels; WORLD.cityInfillMeshes=[]; WORLD.cityCoverageFacades=[];
@@ -4933,6 +5011,7 @@
             }
             buildCoverageFacades(parcels.filter(b=>b.coverage),unit,trim);
             buildMidtownFacadePilot(unit);
+            buildMidtownStreetscape(unit,windowData);
         }
         // 玻璃帷幕牆貼圖：深色反光玻璃 + 鋁框直條 + 樓層橫帶；夜晚自發光貼圖隨機點亮辦公室
         function createCurtainWallTextures(tint) {
