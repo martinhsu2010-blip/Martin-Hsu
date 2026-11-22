@@ -4975,6 +4975,106 @@
             WORLD.midtownStreetscapePilot = {selected,meshes};
         }
 
+        function buildMidtownArtPilot(windowData) {
+            const selected = WORLD.midtownStreetscapePilot.selected;
+            const walls = [], relief = [], meshes = [];
+            const palettes = [
+                {upper:0xa99b83, base:0x5e564d, trim:0x827665},
+                {upper:0x818775, base:0x4d584d, trim:0x626a5c}
+            ];
+            selected.forEach((b, index) => {
+                const east = b.x+b.w/2, left = b.z-b.d/2, right = b.z+b.d/2;
+                const palette = palettes[index], cap = b.h-.56;
+                function panel(batch, back, front, low, high, start, end, color) {
+                    if (high <= low || end <= start) return;
+                    const matrix = new THREE.Matrix4().makeScale(front-back, high-low, end-start);
+                    matrix.setPosition(east+(back+front)/2, (low+high)/2, (start+end)/2);
+                    batch.push({matrix,color});
+                }
+                // Deep stone returns flank the existing glazed entrance. Leave its header,
+                // threshold, plinth and glass visible. The two returns meet the sidewalk.
+                for (const [lo,hi] of [[left+.04,left+.40],[right-.40,right-.04]]) {
+                    panel(relief,.014,.20,.18,2.94,lo,hi,palette.base);
+                }
+                // Recessed base course below the original window plinths.
+                for (const [lo,hi] of [[left+.40,b.z-1.02],[b.z+1.02,right-.40]]) {
+                    panel(relief,.014,.17,.025,.17,lo,hi,palette.base);
+                }
+
+                const panes = [];
+                for (const i of WORLD.coverageWindows) {
+                    const e = windowData[i].matrix.elements;
+                    if (Math.abs(e[12]-east-.06)>.001 || Math.abs(e[14]-b.z)>.001 || e[8]<.99) continue;
+                    const half = 1.1*Math.hypot(e[0],e[1],e[2])+.26;
+                    panes.push({lo:e[13]-1.46, hi:e[13]+1.34, half});
+                }
+                // Slice at actual sill/head elevations and at the existing floor bands.
+                // Cladding stops at the inner edge of the original corner posts.
+                const bands = [4.4,9,13.6].filter(y=>y<cap);
+                const cuts = [3.26,cap,...panes.flatMap(p=>[p.lo,p.hi]),
+                    ...bands.flatMap(y=>[y-.09,y+.09])].filter(y=>y>=3.26 && y<=cap).sort((a,c)=>a-c);
+                for (let k=1;k<cuts.length;k++) {
+                    const lo=cuts[k-1], hi=cuts[k], mid=(lo+hi)/2;
+                    if (bands.some(y=>Math.abs(mid-y)<.09)) continue;
+                    const pane=panes.find(p=>mid>p.lo && mid<p.hi);
+                    const spans=pane ? [[left+.52,b.z-pane.half],[b.z+pane.half,right-.52]] :
+                        [[left+.52,right-.52]];
+                    for (const [start,end] of spans)
+                        panel(walls,.012,.035,lo,hi,start,end,palette.upper);
+                    // Paired pilasters bound a recessed central bay. Shallow spandrels
+                    // span the bay between the window heads and the next floor's sill.
+                    for (const sign of [-1,1]) {
+                        const z=b.z+sign*(b.d/2-1.55);
+                        panel(relief,.036,.218,lo,hi,z-.27,z+.27,palette.trim);
+                    }
+                    if (!pane && hi-lo>.34) {
+                        const depth=Math.min(.80,(hi-lo)*.65);
+                        panel(relief,.036,.12,mid-depth/2,mid+depth/2,
+                            left+1.84,right-1.84,palette.trim);
+                    }
+                }
+            });
+            const canvas=document.createElement('canvas');
+            canvas.width=canvas.height=128;
+            const ctx=canvas.getContext('2d');
+            let seed=13;
+            for (let y=0;y<128;y++) for (let x=0;x<128;x++) {
+                seed=(Math.imul(seed,1664525)+1013904223)>>>0;
+                const mineral=Math.sin(2*Math.PI*(2*x+y)/128)+Math.cos(2*Math.PI*(x-3*y)/128);
+                const value=249+Math.round(mineral+(seed/4294967296-.5)*4);
+                ctx.fillStyle='rgb('+value+','+value+','+value+')';
+                ctx.fillRect(x,y,1,1);
+            }
+            const grain=new THREE.CanvasTexture(canvas);
+            grain.wrapS=grain.wrapT=THREE.RepeatWrapping;
+            grain.colorSpace=THREE.SRGBColorSpace;
+            const stone=new THREE.MeshStandardMaterial({map:grain,roughness:.93,metalness:0});
+            // Static metric UVs: adjoining boxes sample the same grain at their common
+            // edge, even when one instance is a narrow jamb and another is a wide panel.
+            stone.onBeforeCompile = shader => {
+                shader.vertexShader=shader.vertexShader.replace('#include <uv_vertex>',
+                    '#include <uv_vertex>\nvec3 stonePos=(instanceMatrix*vec4(position,1.0)).xyz;\n'+
+                    'vMapUv=vec2(abs(normal.x)>0.5 ? stonePos.z : stonePos.x,'+
+                    'abs(normal.y)>0.5 ? stonePos.z : stonePos.y)*0.5;');
+            };
+            const unit=new THREE.BoxGeometry(1,1,1), tint=new THREE.Color();
+            for (const [parts,mat] of [[walls,stone],[relief,new THREE.MeshStandardMaterial({roughness:.88,metalness:0})]]) {
+                const mesh=new THREE.InstancedMesh(unit,mat,parts.length);
+                parts.forEach(({matrix,color},i)=>{
+                    mesh.setMatrixAt(i,matrix);
+                    mesh.setColorAt(i,tint.setHex(color));
+                });
+                mesh.castShadow=false;
+                mesh.receiveShadow=true;
+                mesh.computeBoundingSphere();
+                scene.add(mesh);
+                const {center,radius}=mesh.boundingSphere;
+                FACADE.chunks.push({mesh,x:center.x,z:center.z,r:radius});
+                meshes.push(mesh);
+            }
+            WORLD.midtownArtPilot={selected,meshes};
+        }
+
         function buildCityInfill(original, wallMaterials, windowData, nightWindowData) {
             const parcels=cityInfillParcels(original), unit=new THREE.BoxGeometry(1,1,1), dm=new THREE.Object3D();
             WORLD.cityInfill=parcels; WORLD.cityInfillMeshes=[]; WORLD.cityCoverageFacades=[];
@@ -6342,6 +6442,7 @@
 
             plantCityStreetTrees(dummy);
             buildCityInfill(cityParcels, wallMaterials, windowData, nightWindowData);
+            buildMidtownArtPilot(windowData);
 
             // 四面反光玻璃窗戶 InstancedMesh (含隨機每扇窗明暗色調)
             const winGeo = new THREE.PlaneGeometry(2.2, 2.4);
