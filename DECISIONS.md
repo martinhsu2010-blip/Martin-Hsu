@@ -130,3 +130,6 @@ D-032 | 2026-11-22 | implemented | PR #75 squash-merged as ae3951a, CACHE vh-202
 
 ## D-033 T-011 spec v1 approved (Midtown West fast-travel QA entry, Codex)
 D-033 | 2026-11-22 | agreed | Martin ("批准", 2026-11-22 10:35, after Claude's G0 review) approved `specs/T-011-spec-v1.md` (ChatGPT; stored verbatim) together with Claude's reading of its dependency line: it means the shared code-PR lock only (0 open PRs now), not Martin's T-010 device acceptance, since the new entry is what makes that acceptance practical. Implementer Codex (LOW risk, SMALL volume). Claude G0 verified: base main 965c90e, avenuesX includes -240 (half 12), heading -PI/2 = west, Missions modal buttons are static.
+
+## D-034 T-011 released (Midtown West fast travel, Codex)
+D-034 | 2026-11-22 | implemented | PR #78 squash-merged as 42293df, CACHE vh-2026-11-22-07, midtown_west_travel_check wired into CI. Claude review PASS: 10/10 mutations caught, headless browser check of Missions button, language switch and delivery block. No physics/render change, so no benchmark. D-013 checked 2026-11-22T02:58Z. Martin uses the new entry for T-010 device acceptance.

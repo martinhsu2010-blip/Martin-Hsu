@@ -11,7 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-011 Midtown West fast-travel QA entry (C; UI data; LOW risk, SMALL volume) (Ready)
+### T-011 Midtown West fast-travel QA entry (C; UI data; LOW risk, SMALL volume) (Released vh-2026-11-22-07; awaiting Martin device check)
 Owner: Codex
 Implementer: Codex
 Reviewer: Claude
@@ -20,7 +20,7 @@ Base commit: latest main at start (spec checked against `965c90e98e5e34d06345d1e
 Branch/PR: `codex/T-011-midtown-west-travel`
 Spec: `specs/T-011-spec-v1.md` (approved by Martin 2026-11-22 10:35; D-033)
 Scope: `index.html` + new `tools/test/midtown_west_travel_check.mjs` only. One FAST_TRAVEL entry `MIDTOWN_W`, two i18n strings, one Missions-modal button. Codex reports verified final (x,z,h).
-Claude notes: Spec section 8 dependency is read as the shared PR lock only (D-033), because this entry is needed for T-010 device acceptance.
+Status: PR #78 merged 42293df; Claude review PASS (10/10 mutations caught, browser check done). Claude notes: Spec section 8 dependency is read as the shared PR lock only (D-033), because this entry is needed for T-010 device acceptance.
 
 ### T-010 Midtown coverage facade pilot (C+; world/render; HIGH risk, SMALL volume) (Released vh-2026-11-22-06; awaiting Martin device acceptance)
 Owner: Codex

@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-22 | vh-2026-11-22-07 | Claude (impl. Codex) | commit 42293df | T-011: Midtown West fast-travel entry (PR #78); midtown_west_travel_check wired into CI
 - 2026-11-22 | (docs only, no game release) | Claude | commit 965c90e | T-011 spec v1 approved and registered (D-033); Codex prompt issued
 - 2026-11-22 | vh-2026-11-22-06 | Claude (impl. Codex) | commit ae3951a | T-010: Midtown coverage facade pilot (PR #75); midtown_facade_pilot_check wired into CI; awaiting Martin's device acceptance
 - 2026-11-22 | — | Martin | — | T-010 spec v1.1 approved (D-031): Midtown coverage facade pilot (Codex); spec registered
