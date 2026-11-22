@@ -133,3 +133,6 @@ D-033 | 2026-11-22 | agreed | Martin ("批准", 2026-11-22 10:35, after Claude's
 
 ## D-034 T-011 released (Midtown West fast travel, Codex)
 D-034 | 2026-11-22 | implemented | PR #78 squash-merged as 42293df, CACHE vh-2026-11-22-07, midtown_west_travel_check wired into CI. Claude review PASS: 10/10 mutations caught, headless browser check of Missions button, language switch and delivery block. No physics/render change, so no benchmark. D-013 checked 2026-11-22T02:58Z. Martin uses the new entry for T-010 device acceptance.
+
+## D-035 T-010 accepted on device
+D-035 | 2026-11-22 | accepted | Martin accepted T-010 on his device ("通過", 2026-11-22 11:15) using the T-011 Midtown West fast-travel entry (screenshot at arrival, Downtown CBD label because x=-235 is inside the CBD bound). He did not report `?fps=1` averages, so the >=30 FPS part is recorded as unmeasured, not passed. No rollback.
