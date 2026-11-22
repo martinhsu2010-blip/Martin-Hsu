@@ -142,3 +142,6 @@ D-036 | 2026-11-22 | agreed | Martin ("批准", 2026-11-22 11:46, after Claude's
 
 ## D-037 T-012 released (Midtown streetscape quality pilot, Codex)
 D-037 | 2026-11-22 | implemented | PR #82 squash-merged as f31230b, CACHE vh-2026-11-22-08, midtown_streetscape_quality_check wired into CI. Claude review PASS: 17/18 mutations caught (the remaining one is equivalent); bodies/shapes delta 0; draw calls near +3 on PHONE (5 pairs), TABLET (3), DESKTOP (1), control +0 (postFX excluded, LOD forced); PHONE physics paired median 1.228 against same-environment baseline calibration 1.195 (noise), TABLET/DESKTOP physics not paired. Day/night screenshots clean. D-013 checked 2026-11-22T04:38Z. Pending Martin's device acceptance incl. the apron-sinking trade-off (D-036) and `?fps=1` >=30 (unreported = unmeasured).
+
+## D-038 T-012 accepted on device
+D-038 | 2026-11-22 | accepted | Martin accepted T-012 on his device ("通過", 2026-11-22 13:24). He did not report `?fps=1` averages, so the >=30 FPS part is recorded as unmeasured, not passed; he reported no problem with the apron sinking trade-off. No rollback.

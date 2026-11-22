@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-22 | vh-2026-11-22-08 | Martin | commit f31230b | T-012 accepted on device; FPS not reported (unmeasured)
 - 2026-11-22 | vh-2026-11-22-08 | Claude (impl. Codex) | commit f31230b | T-012: Midtown storefronts, forecourt apron and sidewalk detail (PR #82); midtown_streetscape_quality_check wired into CI; awaiting Martin's device acceptance
 - 2026-11-22 | (docs only, no game release) | Claude | commit cabec9a | T-012 spec v1.1 approved and registered (D-036); Codex prompt issued
 - 2026-11-22 | vh-2026-11-22-07 | Martin | commit 42293df | T-010 accepted on device; FPS not reported (unmeasured); T-011 in use
