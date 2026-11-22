@@ -136,3 +136,6 @@ D-034 | 2026-11-22 | implemented | PR #78 squash-merged as 42293df, CACHE vh-202
 
 ## D-035 T-010 accepted on device
 D-035 | 2026-11-22 | accepted | Martin accepted T-010 on his device ("通過", 2026-11-22 11:15) using the T-011 Midtown West fast-travel entry (screenshot at arrival, Downtown CBD label because x=-235 is inside the CBD bound). He did not report `?fps=1` averages, so the >=30 FPS part is recorded as unmeasured, not passed. No rollback.
+
+## D-036 T-012 spec v1.1 approved (Midtown streetscape quality pilot, Codex)
+D-036 | 2026-11-22 | agreed | Martin ("批准", 2026-11-22 11:46, after Claude's G0 browser review on PHONE_LOW/TABLET_MED/DESKTOP_HIGH and v1 -> v1.1 revision) approved `specs/T-012-spec-v1.1.md` (ChatGPT; stored verbatim). Implementer Codex (HIGH risk, SMALL volume). v1.1 added the forecourt apron (bare ground x -263..-257), storefront top <=2.95 to clear the existing cornice (y 2.99-3.21), protrusion measured from x=-263, sidewalk segment from production visitAvenueSidewalks, per-building floor-band limits. Known trade-off recorded: apron has no collider (physics delta must stay 0), so feet/wheels may sink visually; judged in Claude's R6 screenshots.
