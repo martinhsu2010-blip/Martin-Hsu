@@ -52,3 +52,5 @@ jobs:
         run: node tools/test/midtown_facade_pilot_check.mjs
       - name: Check Midtown West fast travel (T-011)
         run: node tools/test/midtown_west_travel_check.mjs
+      - name: Check Midtown streetscape quality (T-012)
+        run: node tools/test/midtown_streetscape_quality_check.mjs
