@@ -11,6 +11,17 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
+### T-012 Midtown streetscape quality pilot (C+; world/render; HIGH risk, SMALL volume) (Ready)
+Owner: Codex
+Implementer: Codex
+Reviewer: Claude
+Priority: P1
+Base commit: latest main at start (spec checked against `cabec9a9b7587745c41457be039b995f2fbdcc49`)
+Branch/PR: `codex/T-012-midtown-streetscape-quality`
+Spec: `specs/T-012-spec-v1.1.md` (approved by Martin 2026-11-22 11:46; D-036)
+Scope: `index.html` + new `tools/test/midtown_streetscape_quality_check.mjs` only. First two T-010 selected buildings, east storefront (top <=2.95), posts from >=3.25, floor bands, forecourt apron x -262.8..-257.0 at y=0.18, sidewalk seams; max 3 InstancedMesh / 3 materials.
+Claude notes: G0 done on three presets (v1 review). Known trade-off: apron has no collider, so on-foot or car wheels sink up to 0.18 m visually; Claude checks in R6 screenshots, fix would be a one-number v1.2. Claude runs all section 6 measurements (physics 1.25; near draw calls +3/+4/+5, control +0).
+
 ### T-011 Midtown West fast-travel QA entry (C; UI data; LOW risk, SMALL volume) (Done; used by Martin for T-010 acceptance)
 Owner: Codex
 Implementer: Codex
