@@ -48,3 +48,5 @@ jobs:
         run: node tools/test/zone_arrival_check.mjs
       - name: Check Midtown crosswalk pilot (T-009)
         run: node tools/test/midtown_crosswalk_check.mjs
+      - name: Check Midtown facade pilot (T-010)
+        run: node tools/test/midtown_facade_pilot_check.mjs
