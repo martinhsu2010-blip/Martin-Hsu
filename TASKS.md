@@ -11,7 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-013 Midtown architectural art-quality recovery pilot (C+; world/render; HIGH risk, SMALL volume) (Released vh-2026-11-22-09; ART verdict pending/not PASS; device FPS measured)
+### T-013 Midtown architectural art-quality recovery pilot (C+; world/render; HIGH risk, SMALL volume) (Closed 2026-11-22 as a technical pilot; released vh-2026-11-22-09; NO ART PASS; device FPS measured)
 Owner: Codex
 Implementer: Codex
 Reviewer: Claude
@@ -21,7 +21,7 @@ Branch/PR: `codex/T-013-midtown-art-quality`
 Spec: `specs/T-013-spec-v1.md` (approved by Martin 2026-11-22 13:47 with Claude's G0 clarifications; D-039)
 Scope: `index.html` + new `tools/test/midtown_art_quality_check.mjs` only. Same two T-012 buildings, east facade wall treatment, pilasters/spandrels, two palettes; max 2 new InstancedMesh / 2 materials / 1 CanvasTexture <=256px. Needs Martin ART PASS separately from tests.
 Status: PR #86 merged 2f0bf2d; Claude technical review PASS (14/15 mutations caught, 1 equivalent; near +2, control +0; PHONE physics median 1.171). Claude notes: Near draw-call cap +2 on all presets, control +0. Oblique camera poses: south (-236,5.5,-262)->(-263,7,-305); north (-236,5.5,-348)->(-263,7,-305).
-Martin's ART verdict on T-013: neither pass nor reject ("還行，但跟我預想的差有點多"); wants more architectural detail and realism. Not ART PASS; no rollout.
+Martin's ART verdict on T-013: neither pass nor reject ("還行，但跟我預想的差有點多"); wants more architectural detail and realism. Closed by Martin as a technical test (D-042): not ART PASS, not a rollout base.
 Device FPS (`?fps=1`, Martin, 2026-11-22 ~16:25-16:31, Midtown West, 60 s window, single run, no pre-T-010 baseline): Tab S11 TABLET_MED 46.0 day / 49.6 night (lowest 1 s 32); S26 Ultra PHONE_MED 74.4 day / 70.6 night (lowest 1 s 1, same value in every shot: read as load/teleport hitch, not confirmed). An earlier phone pair (28.6/28.9) was taken with an FPS limiter on and is discarded.
 
 ### T-012 Midtown streetscape quality pilot (C+; world/render; HIGH risk, SMALL volume) (Done; accepted by Martin 2026-11-22 13:24; FPS measured on the T-013 build, see T-013)
