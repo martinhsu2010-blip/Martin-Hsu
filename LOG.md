@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-22 | vh-2026-11-22-09 | Claude (impl. Codex) | commit 2f0bf2d | T-013: Midtown art-quality pilot (PR #86); midtown_art_quality_check wired into CI; awaiting Martin ART PASS and device FPS
 - 2026-11-22 | (docs only, no game release) | Claude | commit ed95ead | T-013 spec v1 approved and registered (D-039); Codex prompt issued
 - 2026-11-22 | vh-2026-11-22-08 | Martin | commit f31230b | T-012 accepted on device; FPS not reported (unmeasured)
 - 2026-11-22 | vh-2026-11-22-08 | Claude (impl. Codex) | commit f31230b | T-012: Midtown storefronts, forecourt apron and sidewalk detail (PR #82); midtown_streetscape_quality_check wired into CI; awaiting Martin's device acceptance
