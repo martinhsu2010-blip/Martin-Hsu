@@ -29,7 +29,7 @@ Why: archives had no license text; needed before any public sharing.
 (none)
 
 ## Done
-### T-009 Midtown crosswalk pilot (Gemini Stage 3 first task; world/render) (Released, awaiting Martin's device acceptance)
+### T-009 Midtown crosswalk pilot (Gemini Stage 3 first task; world/render) (Done; Martin accepted 2026-11-22; FPS not reported)
 Owner: Gemini
 Implementer: Gemini (Stage 3)
 Reviewer: Claude
@@ -39,7 +39,7 @@ Branch/PR: `gemini/T-009-crosswalks` / #71 (merged b729942, released vh-2026-11-
 Spec: `specs/T-009-spec-v1.3.md` (v1.3 replaces the second intersection (-240,-360) with (-120,-360); approved by Martin 2026-11-21 23:26; D-030). Earlier: v1.2 (§6.2 physics gate, D-029) and v1.1 (D-028) stay in force otherwise.
 Scope: `index.html` + new `tools/test/midtown_crosswalk_check.mjs` only (optional bench file only if Claude pre-approves). Claude wires the new test into CI at release.
 Required Gemini stage: 3
-Claude notes: Stage 3 trial verdict PASS (PR comment). 13 AGENTS checks re-run; 11 mutations red; physics medians (cap 1.25) PHONE_LOW 1.186/1.051, TABLET_MED 1.023/1.045, DESKTOP_HIGH 0.966/1.047, bodies/shapes +0; draw calls near +1 on all presets (limits +2/+4/+6), control +0. Device acceptance (A12: day/night drive-through at both intersections, `?fps=1` >= 30 on S26 Ultra and Tab S11) pending Martin.
+Claude notes: Stage 3 trial verdict PASS (PR comment). 13 AGENTS checks re-run; 11 mutations red; physics medians (cap 1.25) PHONE_LOW 1.186/1.051, TABLET_MED 1.023/1.045, DESKTOP_HIGH 0.966/1.047, bodies/shapes +0; draw calls near +1 on all presets (limits +2/+4/+6), control +0. Martin accepted on devices 2026-11-22 08:36 ("通過"). `?fps=1` numbers for S26 Ultra / Tab S11 were NOT reported: FPS is recorded as unmeasured (spec §6.4), not as passed.
 
 ### T-008 Zone Arrival HUD (Gemini Stage 2 task 2 of 2; general HUD behavior) (Done, accepted)
 Owner: Gemini
