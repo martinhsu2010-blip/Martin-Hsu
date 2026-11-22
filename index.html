@@ -4846,6 +4846,54 @@
             WORLD.cityCoverageFacades.push(mesh);
         }
 
+        function buildMidtownFacadePilot(unit) {
+            const selected = WORLD.cityInfill.filter(b => b.coverage === true && b.district === 'MID' &&
+                b.x > -420 && b.x < -240 && b.z > -360 && b.z < -240)
+                .sort((a,b) => Math.abs(a.x+240)-Math.abs(b.x+240) || Math.abs(a.z+300)-Math.abs(b.z+300) ||
+                    a.x-b.x || a.z-b.z || a.w-b.w || a.d-b.d).slice(0,6);
+            const meshes = [];
+            WORLD.midtownFacadePilot = {selected, meshes};
+            if (!selected.length) return;
+
+            const frames = [], masonry = [], part = new THREE.Object3D();
+            function box(batch, x, y, z, depth, height, width) {
+                part.position.set(x, y, z);
+                part.scale.set(depth, height, width);
+                part.updateMatrix();
+                batch.push(part.matrix.clone());
+            }
+            for (const b of selected) {
+                const east = b.x+b.w/2, glassWidth = 2.2*b.w/5, rail = .12;
+                const rows = Math.min(2, Math.floor((b.h-6)/4.6));
+                for (let floor=0; floor<rows; floor++) {
+                    const y = 6.2+floor*4.6, x = east+.155;
+                    // Back of frame at wall +0.135; the glass plane is at +0.06.
+                    for (const sign of [-1,1]) {
+                        box(frames, x, y, b.z+sign*(glassWidth+rail)/2, .04, 2.4, rail);
+                        box(frames, x, y+sign*(2.4+rail)/2, b.z, .04, rail, glassWidth+2*rail);
+                    }
+                    // Directly below the lower rail with a projecting lip.
+                    box(masonry, east+.18, y-1.2-rail-.06, b.z, .09, .12, glassWidth+4*rail);
+                }
+                box(masonry, east+.09, b.h-.22, b.z, .18, .22, b.d);
+            }
+            function addBatch(matrices, color) {
+                if (!matrices.length) return;
+                const material = new THREE.MeshStandardMaterial({color, roughness:.9, metalness:0});
+                const mesh = new THREE.InstancedMesh(unit, material, matrices.length);
+                matrices.forEach((matrix,i) => mesh.setMatrixAt(i,matrix));
+                mesh.castShadow = false;
+                mesh.receiveShadow = true;
+                mesh.computeBoundingSphere();
+                scene.add(mesh);
+                const {center,radius} = mesh.boundingSphere;
+                FACADE.chunks.push({mesh,x:center.x,z:center.z,r:radius});
+                meshes.push(mesh);
+            }
+            addBatch(frames, 0x534e48);
+            addBatch(masonry, 0xb5aa96);
+        }
+
         function buildCityInfill(original, wallMaterials, windowData, nightWindowData) {
             const parcels=cityInfillParcels(original), unit=new THREE.BoxGeometry(1,1,1), dm=new THREE.Object3D();
             WORLD.cityInfill=parcels; WORLD.cityInfillMeshes=[]; WORLD.cityCoverageFacades=[];
@@ -4881,6 +4929,7 @@
                 mesh.castShadow=true;mesh.receiveShadow=true;scene.add(mesh);WORLD.cameraBlockers.push(mesh);WORLD.cityInfillMeshes.push(mesh);
             }
             buildCoverageFacades(parcels.filter(b=>b.coverage),unit,trim);
+            buildMidtownFacadePilot(unit);
         }
         // 玻璃帷幕牆貼圖：深色反光玻璃 + 鋁框直條 + 樓層橫帶；夜晚自發光貼圖隨機點亮辦公室
         function createCurtainWallTextures(tint) {
