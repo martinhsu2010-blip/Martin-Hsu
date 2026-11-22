@@ -35,7 +35,8 @@ function expectedSelection(infill) {
 function verifyGeometry(h, glass, selected, meshes, additions) {
     assert.ok(meshes.length > 0 && meshes.length <= 2);
     assert.equal(new Set(meshes.map(m => m.material)).size <= 2,true);
-    assert.deepEqual(new Set(additions),new Set(meshes),'all and only pilot meshes attached');
+    assert.ok(additions.length === meshes.length && additions.every(m => meshes.includes(m)),
+        'all and only pilot meshes attached');
     const boxes = [];
     h.scene.updateMatrixWorld(true);
     for (const m of meshes) {
