@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-22 | vh-2026-11-22-05 | Martin | commit b729942 | T-009 accepted on devices; FPS not reported (unmeasured)
 - 2026-11-22 | vh-2026-11-22-05 | Claude (impl. Gemini) | commit b729942 | T-009: Midtown crosswalk pilot (PR #71, Stage 3); midtown_crosswalk_check wired into CI; awaiting Martin's device acceptance
 - 2026-11-21 | — | Martin | — | T-009 spec v1.3 approved (D-030): second intersection moved to (-120,-360); pre-start calibration complete; spec registered
 - 2026-11-21 | — | Martin | — | T-009 spec v1.2 approved (D-029): physics gate revised to fixed 1.25 + validity-only calibration; spec registered; pre-start audit still pending
