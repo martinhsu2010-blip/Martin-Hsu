@@ -145,3 +145,6 @@ D-037 | 2026-11-22 | implemented | PR #82 squash-merged as f31230b, CACHE vh-202
 
 ## D-038 T-012 accepted on device
 D-038 | 2026-11-22 | accepted | Martin accepted T-012 on his device ("通過", 2026-11-22 13:24). He did not report `?fps=1` averages, so the >=30 FPS part is recorded as unmeasured, not passed; he reported no problem with the apron sinking trade-off. No rollback.
+
+## D-039 T-013 spec v1 approved (Midtown art-quality pilot, Codex)
+D-039 | 2026-11-22 | agreed | Martin ("批准", 2026-11-22 13:47, after Claude's G0 browser review) approved `specs/T-013-spec-v1.md` (ChatGPT; stored verbatim) together with Claude's G0 clarifications: (1) the two shells already carry a texture map and per-building colour (not flat), so overlays must avoid muddy stacking; (2) overlay changes only the east face, so the corner colour seam is judged in Martin's ART review; (3) the shared unit box stretches UVs, so the textured batch needs its own UV-correct geometry; (4) overlay depth sits between wall x=-263 and glass plane +0.06 (thickness <=0.04). G0 confirmed: main ed95ead, same two buildings on all presets, fixed oblique cameras recorded in TASKS. Exposure/overexposure stays out of scope (candidate T-014).
