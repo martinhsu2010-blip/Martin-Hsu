@@ -11,7 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-013 Midtown architectural art-quality recovery pilot (C+; world/render; HIGH risk, SMALL volume) (Ready)
+### T-013 Midtown architectural art-quality recovery pilot (C+; world/render; HIGH risk, SMALL volume) (Released vh-2026-11-22-09; awaiting Martin ART PASS and device FPS)
 Owner: Codex
 Implementer: Codex
 Reviewer: Claude
@@ -20,7 +20,7 @@ Base commit: latest main at start (spec checked against `ed95ead47e8e488d3f1b4fe
 Branch/PR: `codex/T-013-midtown-art-quality`
 Spec: `specs/T-013-spec-v1.md` (approved by Martin 2026-11-22 13:47 with Claude's G0 clarifications; D-039)
 Scope: `index.html` + new `tools/test/midtown_art_quality_check.mjs` only. Same two T-012 buildings, east facade wall treatment, pilasters/spandrels, two palettes; max 2 new InstancedMesh / 2 materials / 1 CanvasTexture <=256px. Needs Martin ART PASS separately from tests.
-Claude notes: Near draw-call cap +2 on all presets, control +0. Oblique camera poses: south (-236,5.5,-262)->(-263,7,-305); north (-236,5.5,-348)->(-263,7,-305).
+Status: PR #86 merged 2f0bf2d; Claude technical review PASS (14/15 mutations caught, 1 equivalent; near +2, control +0; PHONE physics median 1.171). Claude notes: Near draw-call cap +2 on all presets, control +0. Oblique camera poses: south (-236,5.5,-262)->(-263,7,-305); north (-236,5.5,-348)->(-263,7,-305).
 
 ### T-012 Midtown streetscape quality pilot (C+; world/render; HIGH risk, SMALL volume) (Done; accepted by Martin 2026-11-22 13:24, FPS unmeasured)
 Owner: Codex
