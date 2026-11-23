@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-23 | (docs only, no game release) | Claude | base ff0ced1 | T-014B1 spec v1.2 approved and registered (D-043); Gemini Stage 3 pre-start gates pending
 - 2026-11-22 | vh-2026-11-22-09 | Martin | commit 2f0bf2d | T-013 closed as a technical test; no ART PASS (D-042)
 - 2026-11-22 | vh-2026-11-22-09 | Martin | commit 2f0bf2d | Device FPS measured (Tab S11 46-50, S26 Ultra 71-74); T-013 ART verdict not PASS (D-041)
 - 2026-11-22 | vh-2026-11-22-09 | Claude (impl. Codex) | commit 2f0bf2d | T-013: Midtown art-quality pilot (PR #86); midtown_art_quality_check wired into CI; awaiting Martin ART PASS and device FPS
