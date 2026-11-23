@@ -11,7 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-014B1 Site A procedural massing + street pilot (world/render/travel; HIGH risk, SMALL volume) (Ready; §5A pre-start gates PASS 2026-11-23 on main 8c58095; Gemini may start)
+### T-014B1 Site A procedural massing + street pilot (world/render/travel; HIGH risk, SMALL volume) (Released 2026-11-23 as vh-2026-11-23-01, PR #93, commit 2e801b1; awaiting Martin device FPS + massing review; NO ART PASS)
 Owner: Gemini
 Implementer: Gemini (Stage 3; exception to default Codex routing, requested by Martin because Codex usage is nearly exhausted; D-043)
 Reviewer: Claude
