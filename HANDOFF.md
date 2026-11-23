@@ -117,4 +117,4 @@ Routes live in `ROAD_NET.routes` (R0-R4 city/coast loops, R5/R6 the two elevated
 Released vh-2026-11-22-09. Device FPS (`?fps=1`, single run, Midtown West): Tab S11 TABLET_MED 46-50, S26 Ultra PHONE_MED 71-74; lowest-1s values (32 / 1) look like load hitches. T-013 is closed as a technical test with no ART PASS (D-042); do not roll out beyond the two pilot buildings.
 
 ## T-014B1 status
-Spec `specs/T-014B1-spec-v1.2.md` registered (D-043), Implementer Gemini (Stage 3 exception). Not started: Claude must first record the spec §5A pre-start gates (baseline/lock, reproducible physics + real draw-call measurement, tests) as PASS. Site A (-501,-790) verified empty, terrain flat y=0.
+Spec `specs/T-014B1-spec-v1.2.md` registered (D-043), Implementer Gemini (Stage 3 exception). §5A pre-start gates PASS (D-043a); Gemini may start from latest main. Draw-call baselines at Site A (OFF): PHONE_LOW 158/frame, TABLET_MED ~14.5, DESKTOP_HIGH ~51-53 (read with info.autoReset=false). Site A (-501,-790) verified empty, terrain flat y=0.
