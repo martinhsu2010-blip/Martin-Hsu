@@ -11,6 +11,18 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
+### T-014B1 Site A procedural massing + street pilot (world/render/travel; HIGH risk, SMALL volume) (Ready; BLOCKED until Claude records Gemini Stage 3 pre-start gates §5A as PASS)
+Owner: Gemini
+Implementer: Gemini (Stage 3; exception to default Codex routing, requested by Martin because Codex usage is nearly exhausted; D-043)
+Reviewer: Claude
+Priority: P1
+Base commit: latest main at start (spec checked against `ff0ced15ec85f80905b4ef5c0b696afbf0f93194`)
+Branch/PR: `gemini/T-014B1-site-a-showcase`
+Spec: `specs/T-014B1-spec-v1.2.md` (approved by Martin 2026-11-23 09:09; D-043)
+Scope: `index.html` + new `tools/test/t014b1_site_a_check.mjs` only. Two procedural buildings (A L-plan, B curved corner) + 100 m visual street at Site A (-501,-790), one `SHOWCASE_SITE_A` FAST_TRAVEL entry (only entry bypassing the DELIVERY.job guard; job preserved). No collision, no textures, castShadow=false. Caps: A<=400, B<=900, street<=120 tris, +6 main-pass calls, <=5 materials. Physics bodies/shapes delta 0.
+Gates: spec §5A (Claude reproduces physics + real draw-call measurements first), §6 mutation tests, §7 device FPS (thresholds pending Martin calibration). CI wiring + CACHE bump = Claude release commit on the same branch.
+Acceptance: Claude review + CI, then Martin device FPS and massing review. No ART PASS implied.
+
 ### T-013 Midtown architectural art-quality recovery pilot (C+; world/render; HIGH risk, SMALL volume) (Closed 2026-11-22 as a technical pilot; released vh-2026-11-22-09; NO ART PASS; device FPS measured)
 Owner: Codex
 Implementer: Codex
