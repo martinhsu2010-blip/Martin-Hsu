@@ -56,3 +56,5 @@ jobs:
         run: node tools/test/midtown_streetscape_quality_check.mjs
       - name: Check Midtown art quality (T-013)
         run: node tools/test/midtown_art_quality_check.mjs
+      - name: Check Site A showcase (T-014B1)
+        run: node tools/test/t014b1_site_a_check.mjs
