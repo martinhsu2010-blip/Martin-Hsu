@@ -11,6 +11,17 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
+### T-014B2 Site A commercial + office facades / R8 night windows (world/render/shader; HIGH risk, SMALL volume) (Ready; BLOCKED until Claude records §5 pre-start gates as PASS)
+Owner: Gemini
+Implementer: Gemini (Stage 3; exception to default Codex routing because Codex usage is nearly exhausted; D-045)
+Reviewer: Claude
+Priority: P1
+Base commit: latest main at start (B1 released as vh-2026-11-23-01, commit 2e801b1)
+Branch/PR: `gemini/T-014B2-site-a-facades`
+Spec: `specs/T-014B2-spec-v1.2.md` (approved by Martin 2026-11-23 19:55; D-045)
+Scope: `index.html` + new `tools/test/t014b2_site_a_facade_check.py` (Python Playwright) only. 1024² RGBA8 Canvas atlas + 512² true R8 night-window mask on the existing 6 Site A meshes; A = Commercial, B = Office; UV attributes only inside the B1 builder, texture/material patch in a separate function outside the T-014B1 markers; B1 test unchanged and must pass; required `?showcase=0`. Budgets: <=2 new textures (<=5,947,392 bytes), +0 meshes/materials/calls, init <=12 ms headless, physics delta 0.
+Gates: spec §5 (Claude reproduces Playwright/GPU R8 test, pass-separated draw calls, paired physics), Claude release commit adds CACHE bump + browser CI job. ART limitation (~16-19 px/m, soft close-up on phones) disclosed; Martin judges ART. No ART PASS implied.
+
 ### T-014B1 Site A procedural massing + street pilot (world/render/travel; HIGH risk, SMALL volume) (Released 2026-11-23 as vh-2026-11-23-01, PR #93, commit 2e801b1; awaiting Martin device FPS + massing review; NO ART PASS)
 Owner: Gemini
 Implementer: Gemini (Stage 3; exception to default Codex routing, requested by Martin because Codex usage is nearly exhausted; D-043)
