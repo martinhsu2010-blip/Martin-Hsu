@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-23 | (docs only, no game release) | Claude | base 178fc7d | T-014B2 §5 pre-start gates PASS (D-045a); Gemini prompt issued
 - 2026-11-23 | (docs only, no game release) | Claude | base 943ff86 | T-014B2 spec v1.2 approved and registered (D-045); Gemini pre-start gates pending
 - 2026-11-23 | vh-2026-11-23-01 | Claude (impl. Gemini) | commit 2e801b1 | T-014B1: Site A procedural massing + 100 m visual street, SHOWCASE_SITE_A fast-travel entry (PR #93); t014b1_site_a_check wired into CI; awaiting Martin device FPS and massing review
 - 2026-11-23 | (docs only, no game release) | Claude | base 8c58095 | T-014B1 §5A pre-start gates PASS (lock free; baseline-vs-baseline physics control medians PHONE_LOW 1.03/0.96, TABLET_MED 0.95/0.98, DESKTOP_HIGH 1.02/1.04, all <=1.10; real renderer calls measurable); Gemini prompt issued
