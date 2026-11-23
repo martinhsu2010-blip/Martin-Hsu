@@ -118,3 +118,6 @@ Released vh-2026-11-22-09. Device FPS (`?fps=1`, single run, Midtown West): Tab 
 
 ## T-014B1 status
 Released vh-2026-11-23-01 (PR #93, D-044). Site A showcase: two procedural buildings + 100 m visual street, no collision, fast-travel chip `Showcase Site A (No Collision)` / `展示區 A（無碰撞）`; test-only toggle `__VH.setShowcaseSiteAVisible`. Awaiting Martin device FPS and massing review; no ART PASS. Next phases T-014B2/B3 not approved; T-015 lighting still a separate draft. Measurement lesson: read draw calls with `renderer.info.autoReset=false`; mirror pass can re-draw showcase meshes.
+
+## T-014B2 status
+Spec `specs/T-014B2-spec-v1.2.md` registered (D-045), Implementer Gemini. Not started: Claude must first record the spec §5 pre-start gates as PASS (Playwright GPU R8 test feasible, pass-separated draw-call and paired-physics harness, browser CI job).
