@@ -30,8 +30,8 @@ for (const preset of ['PHONE_LOW','DESKTOP_HIGH']) {
     h.buildTestCityInfill(h.city,[new THREE.MeshStandardMaterial(),new THREE.MeshStandardMaterial()],[],[]);
     const entries = h.arrivals, target = entries.find(t=>t.id===id);
     assert.equal(entries.filter(t=>t.id===id).length,1);
-    assert.equal(entries.at(-1),target);
-    assert.deepEqual(Array.from(entries.slice(0,-1),signature),Array.from(old,signature),'original destinations');
+    assert.equal(entries[old.length],target,'MIDTOWN_W stays directly after the original destinations');
+    assert.deepEqual(Array.from(entries.slice(0,old.length),signature),Array.from(old,signature),'original destinations');
     assert.equal(target.icon,icon);
     assert.ok(!('y' in target));
     const {x,z,h:heading} = target;
