@@ -11,7 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-014B2 Site A commercial + office facades / R8 night windows (world/render/shader; HIGH risk, SMALL volume) (Ready; BLOCKED until Claude records §5 pre-start gates as PASS)
+### T-014B2 Site A commercial + office facades / R8 night windows (world/render/shader; HIGH risk, SMALL volume) (Ready; §5 pre-start gates PASS 2026-11-23 on main 178fc7d; Gemini may start)
 Owner: Gemini
 Implementer: Gemini (Stage 3; exception to default Codex routing because Codex usage is nearly exhausted; D-045)
 Reviewer: Claude
