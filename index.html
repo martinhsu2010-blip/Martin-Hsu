@@ -135,6 +135,8 @@
         "boardwalk": "Boardwalk",
         "midtown": "Midtown",
         "midtown_west": "Midtown West",
+        "showcase_site_a": "Showcase Site A (No Collision)",
+        "showcase_site_a_warn": "Showcase street (no collision, pass-through walls)",
         "vice_suburbs": "VICE SUBURBS",
         "old_town_2": "OLD TOWN",
         "midtown_2": "MIDTOWN",
@@ -467,6 +469,8 @@
         "boardwalk": "海濱樂園",
         "midtown": "中城",
         "midtown_west": "中城西側",
+        "showcase_site_a": "展示區 A（無碰撞）",
+        "showcase_site_a_warn": "展示街（未設碰撞，可能穿牆）",
         "vice_suburbs": "VICE SUBURBS 郊區",
         "old_town_2": "OLD TOWN 老城區",
         "midtown_2": "MIDTOWN 中城",
@@ -2232,7 +2236,8 @@
             coneBaseInstancedMesh: null,
             coneBodyInstancedMesh: null,
             coneStripeInstancedMesh: null,
-            midtownCrosswalks: null
+            midtownCrosswalks: null,
+            showcaseSiteA: null
         };
 
         function applySkyPreset(index) {
@@ -10196,7 +10201,8 @@
             { id: 'MARINA', get name() { return tr('starlight_marina'); }, icon: '🛥️', x: 220, z: 340, h: 0 },
             { id: 'AIRPORT', get name() { return tr('stunt_airport'); }, icon: '✈️', x: -420, z: -200, h: 0 },
             { id: 'CIRCLE', get name() { return tr('vice_circle'); }, icon: '⭕', x: -240, z: -60, h: Math.PI },
-            { id: 'MIDTOWN_W', get name() { return tr('midtown_west'); }, icon: '🏢', x: -235, z: -300, h: -Math.PI / 2 }
+            { id: 'MIDTOWN_W', get name() { return tr('midtown_west'); }, icon: '🏢', x: -235, z: -300, h: -Math.PI / 2 },
+            { id: 'SHOWCASE_SITE_A', get name() { return tr('showcase_site_a'); }, icon: '🏗️', x: -501, z: -790, h: 0 }
         ];
         const WMAP = { open: false, cx: -300, cz: -100, scale: 0.35, sel: null, pointers: new Map(), dragged: false, pinch: 0, last: null };
         STATE.waypoint = null;
@@ -10350,7 +10356,8 @@
             const dist = Math.hypot(sel.x - pos.x, sel.z - pos.z);
             document.getElementById('wm-sel-icon').textContent = sel.icon || '📍';
             document.getElementById('wm-sel-name').textContent = sel.name;
-            document.getElementById('wm-sel-sub').textContent = districtName(sel.x, sel.z) + tr('distance_2') + (dist >= 1000 ? (dist / 1000).toFixed(1) + ' km' : Math.round(dist) + ' m');
+            const subBase = districtName(sel.x, sel.z) + tr('distance_2') + (dist >= 1000 ? (dist / 1000).toFixed(1) + ' km' : Math.round(dist) + ' m');
+            document.getElementById('wm-sel-sub').textContent = sel.id === 'SHOWCASE_SITE_A' ? subBase + ' · ' + tr('showcase_site_a_warn') : subBase;
             panel.classList.remove('hidden');
             drawWorldMap();
         }
@@ -10360,12 +10367,13 @@
 
         // 快速穿梭：黑幕淡出 → 傳送 → 淡入
         function fastTravelTo(t) {
-            if (DELIVERY.job) { showBanner(() => (tr('fast_travel_unavailable_during_delivery')), () => (tr('complete_your_delivery_first'))); return; }
+            const bypassDelivery = !!(t && t.id === 'SHOWCASE_SITE_A');
+            if (DELIVERY.job && !bypassDelivery) { showBanner(() => (tr('fast_travel_unavailable_during_delivery')), () => (tr('complete_your_delivery_first'))); return; }
             const fade = document.getElementById('travel-fade');
             closeWorldMap();
             fade.style.opacity = '1';
             setTimeout(() => {
-                if (DELIVERY.job) { fade.style.opacity = '0'; return; }
+                if (DELIVERY.job && !bypassDelivery) { fade.style.opacity = '0'; return; }
                 const y = typeof t.y === 'function' ? t.y() : t.y;
                 teleportTo(t.x, t.z, t.h || 0, y);
                 if (STATE.waypoint && Math.hypot(STATE.waypoint.x - t.x, STATE.waypoint.z - t.z) < 40) clearWaypoint();
@@ -10465,7 +10473,7 @@
             document.getElementById('wm-close').addEventListener('click', closeWorldMap);
             document.getElementById('wm-travel').addEventListener('click', () => {
                 if (WMAP.sel) fastTravelTo(WMAP.sel);
-                if (DELIVERY.job) { WMAP.travelBlocked = true; document.getElementById('wm-sel-sub').textContent = tr('fast_travel_blocked_complete_your_delivery_first'); }
+                if (DELIVERY.job && (!WMAP.sel || WMAP.sel.id !== 'SHOWCASE_SITE_A')) { WMAP.travelBlocked = true; document.getElementById('wm-sel-sub').textContent = tr('fast_travel_blocked_complete_your_delivery_first'); }
             });
             document.getElementById('wm-waypoint').addEventListener('click', () => { if (WMAP.sel) { setWaypoint(WMAP.sel.x, WMAP.sel.z, WMAP.sel.name); drawWorldMap(); } });
             window.addEventListener('resize', () => { if (WMAP.open) drawWorldMap(); });
@@ -10930,6 +10938,219 @@
             console.log('[VH] 靜態合併：' + removed + ' 個網格 → ' + merged + ' 個');
         }
 
+        // T-014B1: visual-only Site A procedural massing + street pilot (0 physics, <=6 calls, <=5 untextured materials)
+        function buildShowcaseSiteA() {
+            if (WORLD.showcaseSiteA) return WORLD.showcaseSiteA;
+            const ASPHALT_Y_OFFSET = 0.05;
+            const SIDEWALK_TOP_OFFSET = 0.20;
+            const makeBuf = () => ({ pos: [], norm: [] });
+            const pushTri = (buf, a, b, c, nA, nB = nA, nC = nA) => {
+                const ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2];
+                const vx = c[0] - a[0], vy = c[1] - a[1], vz = c[2] - a[2];
+                const cx = uy * vz - uz * vy, cy = uz * vx - ux * vz, cz = ux * vy - uy * vx;
+                const nx = nA[0] + nB[0] + nC[0], ny = nA[1] + nB[1] + nC[1], nz = nA[2] + nB[2] + nC[2];
+                const flip = (cx * nx + cy * ny + cz * nz) < 0;
+                const p2 = flip ? c : b, p3 = flip ? b : c;
+                const q2 = flip ? nC : nB, q3 = flip ? nB : nC;
+                buf.pos.push(a[0], a[1], a[2], p2[0], p2[1], p2[2], p3[0], p3[1], p3[2]);
+                buf.norm.push(nA[0], nA[1], nA[2], q2[0], q2[1], q2[2], q3[0], q3[1], q3[2]);
+            };
+            const pushQuad = (buf, a, b, c, d, nA, nB = nA, nC = nA, nD = nA) => {
+                pushTri(buf, a, b, c, nA, nB, nC);
+                pushTri(buf, a, c, d, nA, nC, nD);
+            };
+            const toGeometry = (buf) => {
+                const geo = new THREE.BufferGeometry();
+                geo.setAttribute('position', new THREE.Float32BufferAttribute(buf.pos, 3));
+                geo.setAttribute('normal', new THREE.Float32BufferAttribute(buf.norm, 3));
+                geo.computeBoundingBox();
+                geo.computeBoundingSphere();
+                return geo;
+            };
+            const addPolygonPrism = (buf, pts, y0, y1, smoothEdges = null) => {
+                const n = pts.length;
+                for (let i = 0; i < n; i++) {
+                    const p0 = pts[i], p1 = pts[(i + 1) % n];
+                    const dx = p1[0] - p0[0], dz = p1[1] - p0[1];
+                    const len = Math.hypot(dx, dz) || 1;
+                    const flat = [dz / len, 0, -dx / len];
+                    const sn = smoothEdges && smoothEdges.get(i);
+                    const n0 = sn ? sn[0] : flat, n1 = sn ? sn[1] : flat;
+                    pushQuad(buf, [p0[0], y0, p0[1]], [p0[0], y1, p0[1]], [p1[0], y1, p1[1]], [p1[0], y0, p1[1]], n0, n0, n1, n1);
+                }
+                const faces = THREE.ShapeUtils.triangulateShape(pts.map(([x, z]) => new THREE.Vector2(x, z)), []);
+                for (const [ia, ib, ic] of faces) {
+                    const pa = pts[ia], pb = pts[ib], pc = pts[ic];
+                    pushTri(buf, [pa[0], y1, pa[1]], [pc[0], y1, pc[1]], [pb[0], y1, pb[1]], [0, 1, 0]);
+                    pushTri(buf, [pa[0], y0, pa[1]], [pb[0], y0, pb[1]], [pc[0], y0, pc[1]], [0, -1, 0]);
+                }
+            };
+            const addBox = (buf, x0, x1, y0, y1, z0, z1) => {
+                addPolygonPrism(buf, [[x0, z0], [x1, z0], [x1, z1], [x0, z1]], y0, y1);
+            };
+            const addParapetRing = (buf, outerPts, innerPts, y0, y1, smoothEdges = null) => {
+                const n = outerPts.length;
+                for (let i = 0; i < n; i++) {
+                    const o0 = outerPts[i], o1 = outerPts[(i + 1) % n];
+                    const i0 = innerPts[i], i1 = innerPts[(i + 1) % n];
+                    const dx = o1[0] - o0[0], dz = o1[1] - o0[1];
+                    const len = Math.hypot(dx, dz) || 1;
+                    const outFlat = [dz / len, 0, -dx / len];
+                    const sn = smoothEdges && smoothEdges.get(i);
+                    const oN0 = sn ? sn[0] : outFlat, oN1 = sn ? sn[1] : outFlat;
+                    const inN0 = [-oN0[0], 0, -oN0[2]], inN1 = [-oN1[0], 0, -oN1[2]];
+                    pushQuad(buf, [o0[0], y0, o0[1]], [o0[0], y1, o0[1]], [o1[0], y1, o1[1]], [o1[0], y0, o1[1]], oN0, oN0, oN1, oN1);
+                    pushQuad(buf, [i0[0], y0, i0[1]], [i1[0], y0, i1[1]], [i1[0], y1, i1[1]], [i0[0], y1, i0[1]], inN0, inN1, inN1, inN0);
+                    pushQuad(buf, [o0[0], y1, o0[1]], [i0[0], y1, i0[1]], [i1[0], y1, i1[1]], [o1[0], y1, o1[1]], [0, 1, 0]);
+                }
+            };
+            const addCylinder = (buf, cx, cz, radius, y0, y1, segs = 10) => {
+                const pts = [], smooth = new Map();
+                for (let i = 0; i < segs; i++) {
+                    const a0 = (i / segs) * Math.PI * 2, a1 = ((i + 1) / segs) * Math.PI * 2;
+                    pts.push([cx + Math.cos(a0) * radius, cz + Math.sin(a0) * radius]);
+                    smooth.set(i, [[Math.cos(a0), 0, Math.sin(a0)], [Math.cos(a1), 0, Math.sin(a1)]]);
+                }
+                addPolygonPrism(buf, pts, y0, y1, smooth);
+            };
+            const makeCurvedRect = (minX, maxX, minZ, maxZ, arcR, segs = 10) => {
+                const cx = minX + arcR, cz = maxZ - arcR;
+                const pts = [[minX, minZ], [maxX, minZ], [maxX, maxZ]];
+                const smooth = new Map();
+                const arcStartIdx = pts.length;
+                for (let i = 0; i <= segs; i++) {
+                    const t = Math.PI / 2 + (i / segs) * (Math.PI / 2);
+                    pts.push([cx + arcR * Math.cos(t), cz + arcR * Math.sin(t)]);
+                    if (i < segs) {
+                        const tNext = Math.PI / 2 + ((i + 1) / segs) * (Math.PI / 2);
+                        smooth.set(arcStartIdx + i, [[Math.cos(t), 0, Math.sin(t)], [Math.cos(tNext), 0, Math.sin(tNext)]]);
+                    }
+                }
+                return { pts, smooth, cx, cz, arcR, segs };
+            };
+
+            // 1) Street asphalt (100m x 10m, x in [-551,-451], z in [-795,-785])
+            const xs = [-551, -526, -501, -476, -451];
+            const asphaltBuf = makeBuf();
+            for (let i = 0; i < xs.length - 1; i++) {
+                const x0 = xs[i], x1 = xs[i + 1], z0 = -795, z1 = -785;
+                pushQuad(
+                    asphaltBuf,
+                    [x0, terrainHeight(x0, z0) + ASPHALT_Y_OFFSET, z0],
+                    [x0, terrainHeight(x0, z1) + ASPHALT_Y_OFFSET, z1],
+                    [x1, terrainHeight(x1, z1) + ASPHALT_Y_OFFSET, z1],
+                    [x1, terrainHeight(x1, z0) + ASPHALT_Y_OFFSET, z0],
+                    [0, 1, 0]
+                );
+            }
+
+            // 2) Merged South [-799,-795] + North [-785,-781] sidewalks & curbs (1 draw batch)
+            const sidewalkBuf = makeBuf();
+            for (const [z0, z1] of [[-799, -795], [-785, -781]]) {
+                for (let i = 0; i < xs.length - 1; i++) {
+                    const x0 = xs[i], x1 = xs[i + 1];
+                    const b00 = terrainHeight(x0, z0), b10 = terrainHeight(x1, z0);
+                    const b01 = terrainHeight(x0, z1), b11 = terrainHeight(x1, z1);
+                    const t00 = b00 + SIDEWALK_TOP_OFFSET, t10 = b10 + SIDEWALK_TOP_OFFSET;
+                    const t01 = b01 + SIDEWALK_TOP_OFFSET, t11 = b11 + SIDEWALK_TOP_OFFSET;
+                    pushQuad(sidewalkBuf, [x0, t00, z0], [x0, t01, z1], [x1, t11, z1], [x1, t10, z0], [0, 1, 0]);
+                    pushQuad(sidewalkBuf, [x0, b00, z0], [x0, t00, z0], [x1, t10, z0], [x1, b10, z0], [0, 0, -1]);
+                    pushQuad(sidewalkBuf, [x1, b11, z1], [x1, t11, z1], [x0, t01, z1], [x0, b01, z1], [0, 0, 1]);
+                }
+                const xW = xs[0], xE = xs[xs.length - 1];
+                pushQuad(sidewalkBuf, [xW, terrainHeight(xW, z1), z1], [xW, terrainHeight(xW, z1) + SIDEWALK_TOP_OFFSET, z1],
+                    [xW, terrainHeight(xW, z0) + SIDEWALK_TOP_OFFSET, z0], [xW, terrainHeight(xW, z0), z0], [-1, 0, 0]);
+                pushQuad(sidewalkBuf, [xE, terrainHeight(xE, z0), z0], [xE, terrainHeight(xE, z0) + SIDEWALK_TOP_OFFSET, z0],
+                    [xE, terrainHeight(xE, z1) + SIDEWALK_TOP_OFFSET, z1], [xE, terrainHeight(xE, z1), z1], [1, 0, 0]);
+            }
+
+            // 3) Building A: exact 6-point L polygon + >=1.2m street setback + parapet + roof equipment
+            const aBasePts = [[-539, -777], [-517, -777], [-517, -763], [-526, -763], [-526, -770], [-539, -770]];
+            const aUpperPts = [[-538.4, -775.2], [-517.6, -775.2], [-517.6, -763.6], [-526.0, -763.6], [-526.0, -770.0], [-538.4, -770.0]];
+            const aUpperInner = [[-537.95, -774.75], [-518.05, -774.75], [-518.05, -764.05], [-525.55, -764.05], [-525.55, -770.45], [-537.95, -770.45]];
+            const yA = Math.min(...aBasePts.map(([x, z]) => terrainHeight(x, z)));
+            const aShellBuf = makeBuf();
+            addPolygonPrism(aShellBuf, aBasePts, yA, yA + 9.6);
+            addPolygonPrism(aShellBuf, aUpperPts, yA + 9.6, yA + 14.2);
+            addBox(aShellBuf, -525.2, -518.4, yA + 14.2, yA + 16.4, -773.8, -764.4);
+            const aRoofBuf = makeBuf();
+            addBox(aRoofBuf, -539.0, -517.0, yA + 9.6, yA + 10.35, -777.0, -776.55);
+            addParapetRing(aRoofBuf, aUpperPts, aUpperInner, yA + 14.2, yA + 14.95);
+            addBox(aRoofBuf, -525.35, -518.25, yA + 16.4, yA + 16.7, -773.95, -764.25);
+            addBox(aRoofBuf, -535.5, -531.0, yA + 14.2, yA + 15.5, -773.8, -771.4);
+            addBox(aRoofBuf, -523.8, -520.2, yA + 16.7, yA + 17.35, -771.2, -768.2);
+
+            // 4) Building B: non-L curved NW corner (10-seg arc, r=4 at (-480,-807)) + 2-level roof + <=2 equipment primitives
+            const bBase = makeCurvedRect(-484, -461, -821, -803, 4.0, 10);
+            const bBaseInner = makeCurvedRect(-483.5, -461.5, -820.5, -803.5, 3.5, 10);
+            const bUpper = makeCurvedRect(-479.5, -462.5, -819.5, -804.8, 3.0, 10);
+            const bUpperInner = makeCurvedRect(-479.05, -462.95, -819.05, -805.25, 2.55, 10);
+            const yB = Math.min(...bBase.pts.map(([x, z]) => terrainHeight(x, z)));
+            const bShellBuf = makeBuf();
+            addPolygonPrism(bShellBuf, bBase.pts, yB, yB + 20.8, bBase.smooth);
+            addPolygonPrism(bShellBuf, bUpper.pts, yB + 20.8, yB + 23.8, bUpper.smooth);
+            const bRoofBuf = makeBuf();
+            addParapetRing(bRoofBuf, bBase.pts, bBaseInner.pts, yB + 20.8, yB + 21.55, bBase.smooth);
+            addParapetRing(bRoofBuf, bUpper.pts, bUpperInner.pts, yB + 23.8, yB + 24.35, bUpper.smooth);
+            addBox(bRoofBuf, -474.0, -468.0, yB + 23.8, yB + 25.0, -815.5, -810.5);
+            addCylinder(bRoofBuf, -465.5, -814.5, 1.4, yB + 23.8, yB + 24.9, 10);
+
+            // 5 untextured MeshStandardMaterial instances (<=5 budget, 0 textures)
+            const matShellA = new THREE.MeshStandardMaterial({ color: 0xc9b9a6, roughness: 0.82, metalness: 0.06 });
+            const matShellB = new THREE.MeshStandardMaterial({ color: 0x8e9eb0, roughness: 0.72, metalness: 0.14 });
+            const matRoofTrim = new THREE.MeshStandardMaterial({ color: 0x4b5563, roughness: 0.80, metalness: 0.15 });
+            const matAsphalt = new THREE.MeshStandardMaterial({
+                color: 0x363b42, roughness: 0.94, metalness: 0.02,
+                polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -2
+            });
+            const matSidewalk = new THREE.MeshStandardMaterial({ color: 0xb2b6bc, roughness: 0.88, metalness: 0.02 });
+
+            const makeMesh = (name, buf, mat) => {
+                const mesh = new THREE.Mesh(toGeometry(buf), mat);
+                mesh.name = name;
+                mesh.castShadow = false;
+                mesh.receiveShadow = true;
+                mesh.frustumCulled = true;
+                mesh.userData.noBatch = true;
+                mesh.userData.showcaseSiteA = true;
+                return mesh;
+            };
+            const meshes = {
+                buildingAShell: makeMesh('siteA_buildingA_shell', aShellBuf, matShellA),
+                buildingARoof: makeMesh('siteA_buildingA_roof', aRoofBuf, matRoofTrim),
+                buildingBShell: makeMesh('siteA_buildingB_shell', bShellBuf, matShellB),
+                buildingBRoof: makeMesh('siteA_buildingB_roof', bRoofBuf, matRoofTrim),
+                streetAsphalt: makeMesh('siteA_street_asphalt', asphaltBuf, matAsphalt),
+                streetSidewalks: makeMesh('siteA_street_sidewalks', sidewalkBuf, matSidewalk)
+            };
+            const group = new THREE.Group();
+            group.name = 'showcase_site_a';
+            group.userData.noBatch = true;
+            Object.values(meshes).forEach(m => group.add(m));
+            scene.add(group);
+            WORLD.showcaseSiteA = {
+                group,
+                meshes,
+                materials: [matShellA, matShellB, matRoofTrim, matAsphalt, matSidewalk],
+                footprints: {
+                    center: { x: -501, z: -790 },
+                    asphalt: { minX: -551, maxX: -451, minZ: -795, maxZ: -785, yOffset: ASPHALT_Y_OFFSET },
+                    southSidewalk: { minX: -551, maxX: -451, minZ: -799, maxZ: -795, topOffset: SIDEWALK_TOP_OFFSET },
+                    northSidewalk: { minX: -551, maxX: -451, minZ: -785, maxZ: -781, topOffset: SIDEWALK_TOP_OFFSET },
+                    buildingA: { minX: -539, maxX: -517, minZ: -777, maxZ: -763, baseY: yA, setbackMin: 1.8, polygon: aBasePts.map(p => p.slice()) },
+                    buildingB: { minX: -484, maxX: -461, minZ: -821, maxZ: -803, baseY: yB, arcCenter: { x: -480, z: -807 }, arcRadius: 4, arcSegments: 10, polygon: bBase.pts.map(p => p.slice()) }
+                },
+                setVisible(on) { group.visible = Boolean(on); return group.visible; },
+                isVisible() { return group.visible; }
+            };
+            return WORLD.showcaseSiteA;
+        }
+        function setShowcaseSiteAVisible(on) {
+            if (!WORLD.showcaseSiteA) return false;
+            return WORLD.showcaseSiteA.setVisible(on);
+        }
+        // T-014B1_END
+
         // ---------- 物理碰撞體線框除錯 (按 K 或在設定中開啟) ----------
         const PHYS_DEBUG = { on: false, group: new THREE.Group(), items: [] };
         scene.add(PHYS_DEBUG.group);
@@ -11008,6 +11229,7 @@
         buildDeliveryDepots();
         buildCityDetails();
         batchStaticMeshes();
+        buildShowcaseSiteA();
         // 所有 InstancedMesh (窗戶、棕櫚樹、道具、紅綠燈…) 都不進海面倒影
         scene.traverse(o => { if (o.isInstancedMesh) o.layers.set(DETAIL_LAYER); });
         loadPolyHavenModels();
@@ -11157,7 +11379,7 @@
         requestAnimationFrame(animate);
 
         // 除錯用：在瀏覽器主控台輸入 __VH 可查看遊戲狀態
-        window.__VH = { TREE_COLLIDERS, refreshTreeColliders, treeColliderDiagnostics, PHYS_DEBUG, setPhysicsDebug, updatePhysicsDebug, TRAFFIC, updateTrafficPhysics, trafficDiagnostics, changeLanguage, refreshMissionLabels, renderDrivingHUD, showBanner, VH_I18N, WMAP, openGameHub, closeModals, __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights };
+        window.__VH = { TREE_COLLIDERS, refreshTreeColliders, treeColliderDiagnostics, PHYS_DEBUG, setPhysicsDebug, updatePhysicsDebug, TRAFFIC, updateTrafficPhysics, trafficDiagnostics, changeLanguage, refreshMissionLabels, renderDrivingHUD, showBanner, VH_I18N, WMAP, openGameHub, closeModals, __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights, buildShowcaseSiteA, setShowcaseSiteAVisible };
     </script>
 </body>
 </html>
