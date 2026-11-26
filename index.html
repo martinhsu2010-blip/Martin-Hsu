@@ -2284,6 +2284,9 @@
                 WORLD.windowShaderMat.uniforms.uNight.value = p.nightWindows;
                 WORLD.windowShaderMat.uniforms.uSky.value.setHex(p.hemiSky).multiplyScalar(p.exposure);
             }
+            if (WORLD.showcaseSiteA && WORLD.showcaseSiteA.atlas) {
+                WORLD.showcaseSiteA.atlas.uniforms.uFacadeNight.value = p.nightWindows;
+            }
             if (WORLD.lightPoolMat) {
                 WORLD.lightPoolMat.opacity = Math.max(0, (p.nightWindows - 0.2) * 1.1);
                 WORLD.lightPoolMat.visible = p.nightWindows > 0.25;
@@ -10943,8 +10946,10 @@
             if (WORLD.showcaseSiteA) return WORLD.showcaseSiteA;
             const ASPHALT_Y_OFFSET = 0.05;
             const SIDEWALK_TOP_OFFSET = 0.20;
-            const makeBuf = () => ({ pos: [], norm: [] });
-            const pushTri = (buf, a, b, c, nA, nB = nA, nC = nA) => {
+            const INV_A = 1 / 1024;
+            const UV_CAP = { u0: 32 * INV_A, u1: 240 * INV_A, v0: 968 * INV_A, v1: 1000 * INV_A };
+            const makeBuf = () => ({ pos: [], norm: [], uv: [] });
+            const pushTri = (buf, a, b, c, nA, nB = nA, nC = nA, uvA = [UV_CAP.u0, UV_CAP.v0], uvB = uvA, uvC = uvA) => {
                 const ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2];
                 const vx = c[0] - a[0], vy = c[1] - a[1], vz = c[2] - a[2];
                 const cx = uy * vz - uz * vy, cy = uz * vx - ux * vz, cz = ux * vy - uy * vx;
@@ -10952,23 +10957,50 @@
                 const flip = (cx * nx + cy * ny + cz * nz) < 0;
                 const p2 = flip ? c : b, p3 = flip ? b : c;
                 const q2 = flip ? nC : nB, q3 = flip ? nB : nC;
+                const t2 = flip ? uvC : uvB, t3 = flip ? uvB : uvC;
                 buf.pos.push(a[0], a[1], a[2], p2[0], p2[1], p2[2], p3[0], p3[1], p3[2]);
                 buf.norm.push(nA[0], nA[1], nA[2], q2[0], q2[1], q2[2], q3[0], q3[1], q3[2]);
+                buf.uv.push(uvA[0], uvA[1], t2[0], t2[1], t3[0], t3[1]);
             };
-            const pushQuad = (buf, a, b, c, d, nA, nB = nA, nC = nA, nD = nA) => {
-                pushTri(buf, a, b, c, nA, nB, nC);
-                pushTri(buf, a, c, d, nA, nC, nD);
+            const pushQuad = (buf, a, b, c, d, nA, nB = nA, nC = nA, nD = nA, uvA = [UV_CAP.u0, UV_CAP.v1], uvB = [UV_CAP.u0, UV_CAP.v0], uvC = [UV_CAP.u1, UV_CAP.v0], uvD = [UV_CAP.u1, UV_CAP.v1]) => {
+                pushTri(buf, a, b, c, nA, nB, nC, uvA, uvB, uvC);
+                pushTri(buf, a, c, d, nA, nC, nD, uvA, uvC, uvD);
             };
             const toGeometry = (buf) => {
                 const geo = new THREE.BufferGeometry();
                 geo.setAttribute('position', new THREE.Float32BufferAttribute(buf.pos, 3));
                 geo.setAttribute('normal', new THREE.Float32BufferAttribute(buf.norm, 3));
+                geo.setAttribute('uv', new THREE.Float32BufferAttribute(buf.uv, 2));
                 geo.computeBoundingBox();
                 geo.computeBoundingSphere();
                 return geo;
             };
-            const addPolygonPrism = (buf, pts, y0, y1, smoothEdges = null) => {
+            const polyPerim = (pts) => {
+                const segs = [];
+                let total = 0;
+                for (let i = 0; i < pts.length; i++) {
+                    const p0 = pts[i], p1 = pts[(i + 1) % pts.length];
+                    const len = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]);
+                    segs.push([total, total + len, len]);
+                    total += len;
+                }
+                return { segs, total: total || 1 };
+            };
+            const addPolygonPrism = (buf, pts, y0, y1, smoothEdges = null, uvSpec = null) => {
                 const n = pts.length;
+                const pm = polyPerim(pts);
+                let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
+                for (let i = 0; i < n; i++) {
+                    if (pts[i][0] < minX) minX = pts[i][0];
+                    if (pts[i][0] > maxX) maxX = pts[i][0];
+                    if (pts[i][1] < minZ) minZ = pts[i][1];
+                    if (pts[i][1] > maxZ) maxZ = pts[i][1];
+                }
+                const spanX = (maxX - minX) || 1, spanZ = (maxZ - minZ) || 1;
+                const capUV = (px, pz) => [
+                    UV_CAP.u0 + ((px - minX) / spanX) * (UV_CAP.u1 - UV_CAP.u0),
+                    UV_CAP.v0 + ((pz - minZ) / spanZ) * (UV_CAP.v1 - UV_CAP.v0)
+                ];
                 for (let i = 0; i < n; i++) {
                     const p0 = pts[i], p1 = pts[(i + 1) % n];
                     const dx = p1[0] - p0[0], dz = p1[1] - p0[1];
@@ -10976,17 +11008,34 @@
                     const flat = [dz / len, 0, -dx / len];
                     const sn = smoothEdges && smoothEdges.get(i);
                     const n0 = sn ? sn[0] : flat, n1 = sn ? sn[1] : flat;
-                    pushQuad(buf, [p0[0], y0, p0[1]], [p0[0], y1, p0[1]], [p1[0], y1, p1[1]], [p1[0], y0, p1[1]], n0, n0, n1, n1);
+                    let uA = UV_CAP.u0, uB = UV_CAP.u1, vTop = UV_CAP.v0, vBot = UV_CAP.v1;
+                    if (uvSpec) {
+                        const al = uvSpec.segAlign && uvSpec.segAlign[i];
+                        const pRef = uvSpec.totalPerim || pm.total;
+                        const s0 = al ? 0.5 * (al[0] + al[1]) - 0.5 * len : pm.segs[i][0];
+                        const s1 = al ? 0.5 * (al[0] + al[1]) + 0.5 * len : pm.segs[i][1];
+                        const uSpan = uvSpec.u1 - uvSpec.u0;
+                        uA = uvSpec.u1 - (s0 / pRef) * uSpan;
+                        uB = uvSpec.u1 - (s1 / pRef) * uSpan;
+                        vTop = uvSpec.v0;
+                        vBot = uvSpec.v1;
+                    }
+                    pushQuad(
+                        buf, [p0[0], y0, p0[1]], [p0[0], y1, p0[1]], [p1[0], y1, p1[1]], [p1[0], y0, p1[1]],
+                        n0, n0, n1, n1,
+                        [uA, vBot], [uA, vTop], [uB, vTop], [uB, vBot]
+                    );
                 }
                 const faces = THREE.ShapeUtils.triangulateShape(pts.map(([x, z]) => new THREE.Vector2(x, z)), []);
                 for (const [ia, ib, ic] of faces) {
                     const pa = pts[ia], pb = pts[ib], pc = pts[ic];
-                    pushTri(buf, [pa[0], y1, pa[1]], [pc[0], y1, pc[1]], [pb[0], y1, pb[1]], [0, 1, 0]);
-                    pushTri(buf, [pa[0], y0, pa[1]], [pb[0], y0, pb[1]], [pc[0], y0, pc[1]], [0, -1, 0]);
+                    const uva = capUV(pa[0], pa[1]), uvb = capUV(pb[0], pb[1]), uvc = capUV(pc[0], pc[1]);
+                    pushTri(buf, [pa[0], y1, pa[1]], [pc[0], y1, pc[1]], [pb[0], y1, pb[1]], [0, 1, 0], [0, 1, 0], [0, 1, 0], uva, uvc, uvb);
+                    pushTri(buf, [pa[0], y0, pa[1]], [pb[0], y0, pb[1]], [pc[0], y0, pc[1]], [0, -1, 0], [0, -1, 0], [0, -1, 0], uva, uvb, uvc);
                 }
             };
-            const addBox = (buf, x0, x1, y0, y1, z0, z1) => {
-                addPolygonPrism(buf, [[x0, z0], [x1, z0], [x1, z1], [x0, z1]], y0, y1);
+            const addBox = (buf, x0, x1, y0, y1, z0, z1, uvSpec = null) => {
+                addPolygonPrism(buf, [[x0, z0], [x1, z0], [x1, z1], [x0, z1]], y0, y1, null, uvSpec);
             };
             const addParapetRing = (buf, outerPts, innerPts, y0, y1, smoothEdges = null) => {
                 const n = outerPts.length;
@@ -11034,13 +11083,15 @@
             const asphaltBuf = makeBuf();
             for (let i = 0; i < xs.length - 1; i++) {
                 const x0 = xs[i], x1 = xs[i + 1], z0 = -795, z1 = -785;
+                const u0 = (x0 + 551) / 100, u1 = (x1 + 551) / 100;
                 pushQuad(
                     asphaltBuf,
                     [x0, terrainHeight(x0, z0) + ASPHALT_Y_OFFSET, z0],
                     [x0, terrainHeight(x0, z1) + ASPHALT_Y_OFFSET, z1],
                     [x1, terrainHeight(x1, z1) + ASPHALT_Y_OFFSET, z1],
                     [x1, terrainHeight(x1, z0) + ASPHALT_Y_OFFSET, z0],
-                    [0, 1, 0]
+                    [0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0],
+                    [u0, 0], [u0, 1], [u1, 1], [u1, 0]
                 );
             }
 
@@ -11053,9 +11104,10 @@
                     const b01 = terrainHeight(x0, z1), b11 = terrainHeight(x1, z1);
                     const t00 = b00 + SIDEWALK_TOP_OFFSET, t10 = b10 + SIDEWALK_TOP_OFFSET;
                     const t01 = b01 + SIDEWALK_TOP_OFFSET, t11 = b11 + SIDEWALK_TOP_OFFSET;
-                    pushQuad(sidewalkBuf, [x0, t00, z0], [x0, t01, z1], [x1, t11, z1], [x1, t10, z0], [0, 1, 0]);
-                    pushQuad(sidewalkBuf, [x0, b00, z0], [x0, t00, z0], [x1, t10, z0], [x1, b10, z0], [0, 0, -1]);
-                    pushQuad(sidewalkBuf, [x1, b11, z1], [x1, t11, z1], [x0, t01, z1], [x0, b01, z1], [0, 0, 1]);
+                    const u0 = (x0 + 551) / 100, u1 = (x1 + 551) / 100;
+                    pushQuad(sidewalkBuf, [x0, t00, z0], [x0, t01, z1], [x1, t11, z1], [x1, t10, z0], [0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0], [u0, 0], [u0, 1], [u1, 1], [u1, 0]);
+                    pushQuad(sidewalkBuf, [x0, b00, z0], [x0, t00, z0], [x1, t10, z0], [x1, b10, z0], [0, 0, -1], [0, 0, -1], [0, 0, -1], [0, 0, -1], [u0, 0], [u0, 1], [u1, 1], [u1, 0]);
+                    pushQuad(sidewalkBuf, [x1, b11, z1], [x1, t11, z1], [x0, t01, z1], [x0, b01, z1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [u1, 0], [u1, 1], [u0, 1], [u0, 0]);
                 }
                 const xW = xs[0], xE = xs[xs.length - 1];
                 pushQuad(sidewalkBuf, [xW, terrainHeight(xW, z1), z1], [xW, terrainHeight(xW, z1) + SIDEWALK_TOP_OFFSET, z1],
@@ -11069,10 +11121,11 @@
             const aUpperPts = [[-538.4, -775.2], [-517.6, -775.2], [-517.6, -763.6], [-526.0, -763.6], [-526.0, -770.0], [-538.4, -770.0]];
             const aUpperInner = [[-537.95, -774.75], [-518.05, -774.75], [-518.05, -764.05], [-525.55, -764.05], [-525.55, -770.45], [-537.95, -770.45]];
             const yA = Math.min(...aBasePts.map(([x, z]) => terrainHeight(x, z)));
+            const aBasePM = polyPerim(aBasePts);
             const aShellBuf = makeBuf();
-            addPolygonPrism(aShellBuf, aBasePts, yA, yA + 9.6);
-            addPolygonPrism(aShellBuf, aUpperPts, yA + 9.6, yA + 14.2);
-            addBox(aShellBuf, -525.2, -518.4, yA + 14.2, yA + 16.4, -773.8, -764.4);
+            addPolygonPrism(aShellBuf, aBasePts, yA, yA + 9.6, null, { u0: 16 * INV_A, u1: 1008 * INV_A, v0: 232 * INV_A, v1: 448 * INV_A });
+            addPolygonPrism(aShellBuf, aUpperPts, yA + 9.6, yA + 14.2, null, { u0: 16 * INV_A, u1: 1008 * INV_A, v0: 96 * INV_A, v1: 216 * INV_A, totalPerim: aBasePM.total, segAlign: aBasePM.segs });
+            addBox(aShellBuf, -525.2, -518.4, yA + 14.2, yA + 16.4, -773.8, -764.4, { u0: 16 * INV_A, u1: 464 * INV_A, v0: 16 * INV_A, v1: 80 * INV_A });
             const aRoofBuf = makeBuf();
             addBox(aRoofBuf, -539.0, -517.0, yA + 9.6, yA + 10.35, -777.0, -776.55);
             addParapetRing(aRoofBuf, aUpperPts, aUpperInner, yA + 14.2, yA + 14.95);
@@ -11087,8 +11140,8 @@
             const bUpperInner = makeCurvedRect(-479.05, -462.95, -819.05, -805.25, 2.55, 10);
             const yB = Math.min(...bBase.pts.map(([x, z]) => terrainHeight(x, z)));
             const bShellBuf = makeBuf();
-            addPolygonPrism(bShellBuf, bBase.pts, yB, yB + 20.8, bBase.smooth);
-            addPolygonPrism(bShellBuf, bUpper.pts, yB + 20.8, yB + 23.8, bUpper.smooth);
+            addPolygonPrism(bShellBuf, bBase.pts, yB, yB + 20.8, bBase.smooth, { u0: 16 * INV_A, u1: 996 * INV_A, v0: 544 * INV_A, v1: 944 * INV_A });
+            addPolygonPrism(bShellBuf, bUpper.pts, yB + 20.8, yB + 23.8, bUpper.smooth, { u0: 16 * INV_A, u1: 776 * INV_A, v0: 464 * INV_A, v1: 528 * INV_A });
             const bRoofBuf = makeBuf();
             addParapetRing(bRoofBuf, bBase.pts, bBaseInner.pts, yB + 20.8, yB + 21.55, bBase.smooth);
             addParapetRing(bRoofBuf, bUpper.pts, bUpperInner.pts, yB + 23.8, yB + 24.35, bUpper.smooth);
@@ -11150,6 +11203,346 @@
             return WORLD.showcaseSiteA.setVisible(on);
         }
         // T-014B1_END
+
+        // T-014B2: Site A shared 1024^2 RGBA8 Canvas atlas + 512^2 true R8 night mask (outside B1 markers)
+        const SHOWCASE_FACADE_SEED = 20261123;
+        function buildShowcaseFacadeMaps(seed = SHOWCASE_FACADE_SEED, fp = null) {
+            const t0 = performance.now();
+            const ATLAS = 1024, MASK = 512, INV = 1 / ATLAS, LEVELS = [0, 85, 170, 255];
+            const canvas = document.createElement('canvas');
+            canvas.width = ATLAS; canvas.height = ATLAS;
+            const ctx = canvas.getContext('2d');
+            const r = (c, x, y, w, h) => { ctx.fillStyle = c; ctx.fillRect(x, y, w, h); };
+            const maskData = new Uint8Array(MASK * MASK);
+            let rngState = (seed >>> 0) || 1;
+            const rand = () => {
+                rngState = (rngState + 0x6D2B79F5) | 0;
+                let t = Math.imul(rngState ^ (rngState >>> 15), 1 | rngState);
+                t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+                return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+            };
+            const fillMask = (mx0, my0, mx1, my1, val) => {
+                const x0 = Math.max(0, Math.min(MASK, mx0 | 0)), x1 = Math.max(0, Math.min(MASK, mx1 | 0));
+                const y0 = Math.max(0, Math.min(MASK, my0 | 0)), y1 = Math.max(0, Math.min(MASK, my1 | 0));
+                if (x1 <= x0 || y1 <= y0 || !val) return;
+                for (let y = y0; y < y1; y++) maskData.fill(val, y * MASK + x0, y * MASK + x1);
+            };
+            const perimInfo = (pts) => {
+                const segs = []; let total = 0;
+                for (let i = 0; i < pts.length; i++) {
+                    const p0 = pts[i], p1 = pts[(i + 1) % pts.length];
+                    const dx = p1[0] - p0[0], dz = p1[1] - p0[1], len = Math.hypot(dx, dz) || 1;
+                    segs.push({ index: i, s0: total, s1: total + len, length: len, p0, p1, normal: [dz / len, 0, -dx / len] });
+                    total += len;
+                }
+                return { segs, total };
+            };
+            const sampleWallWorld = (pm, u, u0, u1, v, v0, v1, yBase, ySpan) => {
+                const s = Math.max(0, Math.min(pm.total, ((u1 - u) / (u1 - u0)) * pm.total));
+                let seg = pm.segs[pm.segs.length - 1];
+                for (let i = 0; i < pm.segs.length; i++) { if (s <= pm.segs[i].s1 + 1e-6) { seg = pm.segs[i]; break; } }
+                const f = Math.max(0, Math.min(1, (s - seg.s0) / seg.length));
+                return {
+                    world: [seg.p0[0] + (seg.p1[0] - seg.p0[0]) * f, yBase + ((v1 - v) / (v1 - v0)) * ySpan, seg.p0[1] + (seg.p1[1] - seg.p0[1]) * f],
+                    normal: seg.normal.slice(), segIndex: seg.index
+                };
+            };
+
+            const aBasePts = (fp && fp.buildingA && fp.buildingA.polygon) || [[-539, -777], [-517, -777], [-517, -763], [-526, -763], [-526, -770], [-539, -770]];
+            const aUpperPts = [[-538.4, -775.2], [-517.6, -775.2], [-517.6, -763.6], [-526.0, -763.6], [-526.0, -770.0], [-538.4, -770.0]];
+            const bBasePts = (fp && fp.buildingB && fp.buildingB.polygon) || (() => {
+                const pts = [[-484, -821], [-461, -821], [-461, -803]];
+                for (let i = 0; i <= 10; i++) { const t = Math.PI / 2 + (i / 10) * (Math.PI / 2); pts.push([-480 + 4 * Math.cos(t), -807 + 4 * Math.sin(t)]); }
+                return pts;
+            })();
+            const yA = (fp && fp.buildingA) ? fp.buildingA.baseY : 0, yB = (fp && fp.buildingB) ? fp.buildingB.baseY : 0;
+            const aBasePM = perimInfo(aBasePts), aUpperPM = perimInfo(aUpperPts), bBasePM = perimInfo(bBasePts);
+
+            // Background gutter fill & dedicated non-window roof/terrace cap patch (x: 16..256, y: 960..1008; mask strictly 0)
+            r('#2d323a', 0, 0, ATLAS, ATLAS);
+            r('#5d636c', 16, 960, 240, 48);
+            for (let gx = 24; gx < 252; gx += 24) r('#535962', gx, 962, 2, 44);
+            r('#686f78', 18, 982, 236, 2);
+
+            // --- BUILDING A: Commercial (L-plan, warm sandstone masonry + dark bronze storefront + recessed entrances) ---
+            const panesA = [];
+            r('#d6c6af', 16, 16, 992, 432);
+            for (let sy = 20; sy < 448; sy += 12) r('#ccbba2', 16, sy, 992, 1);
+            for (let sx = 16; sx < 1008; sx += 32) r('#dfd1bc', sx, 16, 1, 432);
+            const aShopGrad = ctx.createLinearGradient(0, 376, 0, 434);
+            aShopGrad.addColorStop(0, '#1a2d3a'); aShopGrad.addColorStop(0.45, '#2b4759'); aShopGrad.addColorStop(1, '#1d3240');
+            const aWinGrad = ctx.createLinearGradient(0, 0, 0, 36);
+            aWinGrad.addColorStop(0, '#223848'); aWinGrad.addColorStop(0.5, '#38576d'); aWinGrad.addColorStop(1, '#263d4d');
+            const recordPaneA = (band, floor, segIndex, mx0, my0, mx1, my1, byteVal, wi) => {
+                fillMask(mx0, my0, mx1, my1, byteVal);
+                panesA.push({
+                    band, floor, segIndex, maskRect: [mx0, my0, mx1, my1], atlasRect: [mx0 * 2, my0 * 2, mx1 * 2, my1 * 2],
+                    u: (mx0 + mx1) / (2 * MASK), v: (my0 + my1) / (2 * MASK), maskByte: byteVal, level: LEVELS.indexOf(byteVal),
+                    world: wi.world, normal: wi.normal
+                });
+            };
+            const aBaseU0 = 16 * INV, aBaseU1 = 1008 * INV, aBaseV0 = 232 * INV, aBaseV1 = 448 * INV, aUpV0 = 96 * INV, aUpV1 = 216 * INV;
+            const aSegMeta = aBasePM.segs.map((seg) => ({
+                index: seg.index, length: seg.length, s0: seg.s0, s1: seg.s1,
+                u0: aBaseU1 - (seg.s1 / aBasePM.total) * (aBaseU1 - aBaseU0),
+                u1: aBaseU1 - (seg.s0 / aBasePM.total) * (aBaseU1 - aBaseU0),
+                worldStart: seg.p0.slice(), worldEnd: seg.p1.slice(), normal: seg.normal.slice()
+            }));
+
+            // Ground-floor commercial entablature, accent fascia, overhang shadow & granite plinth (y: 358..448)
+            r('#333a44', 16, 358, 992, 16); r('#626c7a', 16, 358, 992, 2); r('#b49878', 16, 364, 992, 4);
+            r('#1b2026', 16, 374, 992, 4); r('#4c525c', 16, 436, 992, 12); r('#686f7a', 16, 436, 992, 2);
+
+            const aStorefrontSeg0Levels = [255, 170, 0, 255, 85, 170];
+            for (const seg of aSegMeta) {
+                const segMx0 = Math.ceil(seg.u0 * MASK) + 3, segMx1 = Math.floor(seg.u1 * MASK) - 3, usable = segMx1 - segMx0;
+                const sx0 = Math.round(seg.u0 * ATLAS), sx1 = Math.round(seg.u1 * ATLAS);
+                // Solid stone corner pilasters framing each L-segment (prevents corner window bleed)
+                r('#c4b197', sx0, 232, 6, 216); r('#c4b197', sx1 - 6, 232, 6, 216);
+                r('#9f8c73', sx0 + 5, 232, 1, 216); r('#9f8c73', sx1 - 6, 232, 1, 216);
+
+                // Ground-floor retail storefront bays + recessed double-door entrances
+                const bayCount = Math.max(2, Math.round(seg.length / 3.5)), bayPitch = Math.floor(usable / bayCount);
+                for (let b = 0; b < bayCount; b++) {
+                    const bx0 = segMx0 + b * bayPitch, bx1 = bx0 + bayPitch - 4;
+                    if (bx1 - bx0 < 10) continue;
+                    const isEnt = (seg.index === 0 && (b === 1 || b === 4)) || (seg.index === 1 && b === 1);
+                    const ax = bx0 * 2, aw = (bx1 - bx0) * 2;
+                    r('#2d333c', ax - 2, 376, aw + 4, 60);
+                    if (isEnt) {
+                        const halfW = Math.floor((aw - 6) / 2);
+                        r('#1b232b', ax, 378, aw, 58); r('#48525e', ax, 378, aw, 4); r('#2e4c60', ax + 2, 384, aw - 4, 10);
+                        r('#203646', ax + 2, 396, halfW, 38); r('#203646', ax + aw - 2 - halfW, 396, halfW, 38);
+                        r('#c8d1dc', ax + 4, 414, halfW - 4, 2); r('#c8d1dc', ax + aw - halfW, 414, halfW - 4, 2);
+                        r('#6f7884', ax + 2, 428, halfW, 6); r('#6f7884', ax + aw - 2 - halfW, 428, halfW, 6);
+                        r('#9aa0a8', ax - 2, 434, aw + 4, 4);
+                    } else {
+                        r(aShopGrad, ax, 378, aw, 56);
+                        r('rgba(130, 175, 200, 0.22)', ax + 2, 380, Math.max(4, Math.floor(aw * 0.35)), 50);
+                        r('rgba(220, 205, 180, 0.16)', ax + 3, 414, aw - 6, 4);
+                        r('rgba(220, 205, 180, 0.16)', ax + 3, 424, aw - 6, 3);
+                        r('#313842', ax, 392, aw, 3); r('#313842', ax + Math.floor(aw / 2) - 1, 378, 2, 56);
+                        r('#8b7b66', ax - 2, 433, aw + 4, 3);
+                    }
+                    const byteVal = (seg.index === 0 && b < aStorefrontSeg0Levels.length) ? aStorefrontSeg0Levels[b] : (rand() < 0.68 ? LEVELS[1 + Math.floor(rand() * 3)] : 0);
+                    const my0 = isEnt ? 198 : 190, my1 = 216, mxA = bx0 + 1, mxB = bx1 - 1;
+                    recordPaneA('ground', 0, seg.index, mxA, my0, mxB, my1, byteVal,
+                        sampleWallWorld(aBasePM, (mxA + mxB) / (2 * MASK), aBaseU0, aBaseU1, (my0 + my1) / (2 * MASK), aBaseV0, aBaseV1, yA, 9.6));
+                }
+
+                // Upper commercial floors on base tier (Floors 2 & 3: tighter punched-window rhythm)
+                const upCount = Math.max(2, Math.round(seg.length / 1.95)), upPitch = Math.floor(usable / upCount);
+                for (const fl of [{ floor: 1, y0: 296, my0: 155, my1: 172 }, { floor: 2, y0: 232, my0: 123, my1: 140 }]) {
+                    r('#b9a286', sx0 + 6, fl.y0, sx1 - sx0 - 12, 8);
+                    r('#3a424d', sx0 + 6, fl.y0 + 8, sx1 - sx0 - 12, 4);
+                    for (let w = 0; w < upCount; w++) {
+                        const wx0 = segMx0 + w * upPitch + 1, wx1 = Math.min(segMx1 - 1, wx0 + Math.max(5, Math.min(8, upPitch - 4)));
+                        if (wx1 - wx0 < 5) continue;
+                        const ax = wx0 * 2, aw = (wx1 - wx0) * 2, ay = fl.my0 * 2, ah = (fl.my1 - fl.my0) * 2;
+                        r('#2d343e', ax - 2, ay - 2, aw + 4, ah + 4);
+                        ctx.save(); ctx.translate(ax, ay); r(aWinGrad, 0, 0, aw, ah); ctx.restore();
+                        r('rgba(155, 195, 220, 0.25)', ax + 1, ay + 1, aw - 2, 5);
+                        r('#2a313a', ax + Math.floor(aw / 2) - 1, ay, 2, ah); r('#2a313a', ax, ay + Math.floor(ah * 0.42), aw, 2);
+                        r('#e5dac7', ax - 3, ay + ah + 2, aw + 6, 3); r('#8b7b67', ax - 2, ay + ah + 5, aw + 4, 2);
+                        const byteVal = (seg.index === 0 && fl.floor === 1 && w < 4) ? LEVELS[w] : (rand() < 0.44 ? LEVELS[1 + Math.floor(rand() * 3)] : 0);
+                        recordPaneA('upperBase', fl.floor, seg.index, wx0, fl.my0, wx1, fl.my1, byteVal,
+                            sampleWallWorld(aBasePM, (wx0 + wx1) / (2 * MASK), aBaseU0, aBaseU1, (fl.my0 + fl.my1) / (2 * MASK), aBaseV0, aBaseV1, yA, 9.6));
+                    }
+                }
+            }
+
+            // Building A Upper Setback Tier (Floors 4 & 5, y: 96..216) + Penthouse (y: 16..80)
+            for (let i = 0; i < aUpperPM.segs.length; i++) {
+                const uSeg = aUpperPM.segs[i], bSeg = aBasePM.segs[i], sMid = 0.5 * (bSeg.s0 + bSeg.s1);
+                const uHi = aBaseU1 - ((sMid - 0.5 * uSeg.length) / aBasePM.total) * (aBaseU1 - aBaseU0);
+                const uLo = aBaseU1 - ((sMid + 0.5 * uSeg.length) / aBasePM.total) * (aBaseU1 - aBaseU0);
+                const segMx0 = Math.ceil(uLo * MASK) + 2, segMx1 = Math.floor(uHi * MASK) - 2;
+                const upCount = Math.max(2, Math.round(uSeg.length / 2.0)), upPitch = Math.floor((segMx1 - segMx0) / upCount);
+                for (const fl of [{ floor: 3, y0: 156, my0: 85, my1: 101 }, { floor: 4, y0: 96, my0: 55, my1: 71 }]) {
+                    r('#3d4551', Math.round(uLo * ATLAS), fl.y0, Math.round((uHi - uLo) * ATLAS), 10);
+                    r('#c5b094', Math.round(uLo * ATLAS), fl.y0 + 10, Math.round((uHi - uLo) * ATLAS), 4);
+                    for (let w = 0; w < upCount; w++) {
+                        const wx0 = segMx0 + w * upPitch + 1, wx1 = Math.min(segMx1 - 1, wx0 + Math.max(5, Math.min(7, upPitch - 4)));
+                        if (wx1 - wx0 < 5) continue;
+                        const ax = wx0 * 2, aw = (wx1 - wx0) * 2, ay = fl.my0 * 2, ah = (fl.my1 - fl.my0) * 2;
+                        r('#2d343e', ax - 2, ay - 2, aw + 4, ah + 4); r('#2c465a', ax, ay, aw, ah);
+                        r('#486c85', ax + 1, ay + 1, aw - 2, 6); r('#e2d7c5', ax - 2, ay + ah + 2, aw + 4, 2);
+                        const f = Math.max(0, Math.min(1, (uHi - (wx0 + wx1) / (2 * MASK)) / (uHi - uLo)));
+                        const wy = yA + 9.6 + ((aUpV1 - (fl.my0 + fl.my1) / (2 * MASK)) / (aUpV1 - aUpV0)) * 4.6;
+                        recordPaneA('setback', fl.floor, i, wx0, fl.my0, wx1, fl.my1, rand() < 0.38 ? LEVELS[1 + Math.floor(rand() * 3)] : 0, {
+                            world: [uSeg.p0[0] + (uSeg.p1[0] - uSeg.p0[0]) * f, wy, uSeg.p0[1] + (uSeg.p1[1] - uSeg.p0[1]) * f], normal: uSeg.normal.slice()
+                        });
+                    }
+                }
+            }
+            r('#bfb09a', 16, 16, 448, 64); r('#3b424d', 16, 16, 448, 12);
+            for (let lx = 26; lx < 450; lx += 16) {
+                r('#464e5a', lx, 36, 10, 32);
+                for (let ly = 40; ly < 66; ly += 6) r('#2a3038', lx + 1, ly, 8, 2);
+            }
+
+            // --- BUILDING B: Office (curtain wall, fine aluminum mullions, 2 glass reflection tones, continuous 10-seg arc) ---
+            const panesB = [], bBaseU0 = 16 * INV, bBaseU1 = 996 * INV, bBaseV0 = 544 * INV, bBaseV1 = 944 * INV;
+            const bSegMeta = bBasePM.segs.map((seg) => ({
+                index: seg.index, isArc: seg.index >= 3 && seg.index <= 12, length: seg.length, s0: seg.s0, s1: seg.s1,
+                u0: bBaseU1 - (seg.s1 / bBasePM.total) * (bBaseU1 - bBaseU0),
+                u1: bBaseU1 - (seg.s0 / bBasePM.total) * (bBaseU1 - bBaseU0),
+                worldStart: seg.p0.slice(), worldEnd: seg.p1.slice(), normal: seg.normal.slice()
+            }));
+            const arcSegs = bSegMeta.filter(s => s.isArc);
+            const arcUvSpan = { u0: Math.min(...arcSegs.map(s => s.u0)), u1: Math.max(...arcSegs.map(s => s.u1)), s0: arcSegs[0].s0, s1: arcSegs[arcSegs.length - 1].s1, segStart: 3, segEnd: 12 };
+            r('#273241', 16, 464, 980, 480);
+            const bGlassA = ctx.createLinearGradient(0, 0, 0, 42);
+            bGlassA.addColorStop(0, '#365874'); bGlassA.addColorStop(0.38, '#5a84a4'); bGlassA.addColorStop(0.72, '#3c607c'); bGlassA.addColorStop(1, '#22384c');
+            const bGlassB = ctx.createLinearGradient(0, 0, 0, 42);
+            bGlassB.addColorStop(0, '#466c8a'); bGlassB.addColorStop(0.42, '#729bb8'); bGlassB.addColorStop(0.75, '#476b87'); bGlassB.addColorStop(1, '#2c465c');
+            const recordPaneB = (band, floor, modIdx, mx0, my0, mx1, my1, byteVal, wi) => {
+                fillMask(mx0, my0, mx1, my1, byteVal);
+                panesB.push({
+                    band, floor, module: modIdx, segIndex: wi.segIndex, maskRect: [mx0, my0, mx1, my1], atlasRect: [mx0 * 2, my0 * 2, mx1 * 2, my1 * 2],
+                    u: (mx0 + mx1) / (2 * MASK), v: (my0 + my1) / (2 * MASK), maskByte: byteVal, level: LEVELS.indexOf(byteVal),
+                    world: wi.world, normal: wi.normal
+                });
+            };
+
+            // 5 continuous office curtain-wall floors (y: 552..852, 49 modules x 20px = 980px; 2 mask texels dark mullion gutter)
+            r('#364457', 16, 544, 980, 8); r('#6c8098', 16, 544, 980, 2);
+            const B_MODS = 49;
+            for (let fl = 0; fl < 5; fl++) {
+                const fy = 552 + fl * 60, myBase = 276 + fl * 30;
+                r('#253040', 16, fy, 980, 16); r('#6b7e96', 16, fy, 980, 2);
+                r('#334357', 16, fy + 4, 980, 8); r('#18202b', 16, fy + 14, 980, 2);
+                const floorLevels = new Array(B_MODS).fill(0);
+                for (let m = 0; m < B_MODS; ) {
+                    const suiteLen = 2 + Math.floor(rand() * 3), lvl = rand() < 0.54 ? LEVELS[1 + Math.floor(rand() * 3)] : 0;
+                    for (let k = 0; k < suiteLen && m + k < B_MODS; k++) floorLevels[m + k] = (k === suiteLen - 1 && rand() < 0.25) ? 0 : lvl;
+                    m += suiteLen;
+                }
+                const sb = 12 + fl * 2;
+                floorLevels[sb % B_MODS] = 0; floorLevels[(sb + 1) % B_MODS] = LEVELS[1 + (fl % 3)];
+                floorLevels[(sb + 2) % B_MODS] = LEVELS[1 + ((fl + 1) % 3)]; floorLevels[(sb + 3) % B_MODS] = 0;
+                floorLevels[(sb + 4) % B_MODS] = LEVELS[1 + ((fl + 2) % 3)];
+                for (let mod = 0; mod < B_MODS; mod++) {
+                    const mx0 = 8 + mod * 10, ax = mx0 * 2;
+                    r('#1d2530', ax, fy + 16, 2, 44); r('#8b9db2', ax + 1, fy + 16, 1, 44);
+                    r('#8b9db2', ax + 18, fy + 16, 1, 44); r('#1d2530', ax + 19, fy + 16, 1, 44);
+                    ctx.save(); ctx.translate(ax + 2, fy + 16);
+                    r(((mod + fl) % 3 === 0) ? bGlassB : bGlassA, 0, 0, 16, 42);
+                    r('rgba(195, 224, 245, 0.18)', 2, 2, 6, 16);
+                    r('rgba(20, 32, 46, 0.22)', 0, 11, 16, 1); r('rgba(20, 32, 46, 0.22)', 0, 26, 16, 1);
+                    ctx.restore();
+                    r('#24303e', ax + 2, fy + 58, 16, 2);
+                    const pMx0 = mx0 + 1, pMx1 = mx0 + 9, pMy0 = myBase + 8, pMy1 = myBase + 29;
+                    recordPaneB('office', fl + 1, mod, pMx0, pMy0, pMx1, pMy1, floorLevels[mod],
+                        sampleWallWorld(bBasePM, (pMx0 + pMx1) / (2 * MASK), bBaseU0, bBaseU1, (pMy0 + pMy1) / (2 * MASK), bBaseV0, bBaseV1, yB, 20.8));
+                }
+            }
+
+            // Building B Corporate Lobby Ground Floor (y: 852..944) + Upper Executive Crown (y: 464..528)
+            r('#253040', 16, 852, 980, 14); r('#8fa3ba', 16, 852, 980, 3); r('#151b24', 16, 866, 980, 4); r('#2c333d', 16, 936, 980, 8);
+            const bLobbyGrad = ctx.createLinearGradient(0, 870, 0, 936);
+            bLobbyGrad.addColorStop(0, '#1f3344'); bLobbyGrad.addColorStop(0.55, '#35546c'); bLobbyGrad.addColorStop(1, '#1d2f3f');
+            for (let lb = 0; lb < 24; lb++) {
+                const bx0 = 8 + lb * 20, ax = bx0 * 2, isPortal = (lb >= 8 && lb <= 10);
+                r('#6f8298', ax, 866, 4, 70); r('#1b232e', ax + 4, 866, 2, 70);
+                r(isPortal ? '#2a465c' : bLobbyGrad, ax + 6, 870, 32, 66);
+                if (isPortal) {
+                    r('#9db1c7', ax + 4, 866, 36, 5); r('#182430', ax + 6, 892, 32, 3);
+                    r('#7e93aa', ax + 21, 895, 2, 41); r('#c8d6e5', ax + 15, 914, 4, 2); r('#c8d6e5', ax + 25, 914, 4, 2);
+                } else {
+                    r('rgba(180, 215, 240, 0.20)', ax + 8, 872, 10, 60); r('#253140', ax + 6, 898, 32, 2);
+                }
+                const byteVal = isPortal ? (lb === 9 ? 255 : 170) : (lb % 4 === 0 ? 0 : (rand() < 0.62 ? LEVELS[1 + Math.floor(rand() * 3)] : 0));
+                const pMx0 = bx0 + 4, pMx1 = bx0 + 18, pMy0 = 436, pMy1 = 466;
+                recordPaneB('lobby', 0, lb, pMx0, pMy0, pMx1, pMy1, byteVal,
+                    sampleWallWorld(bBasePM, (pMx0 + pMx1) / (2 * MASK), bBaseU0, bBaseU1, (pMy0 + pMy1) / (2 * MASK), bBaseV0, bBaseV1, yB, 20.8));
+            }
+            r('#263140', 16, 464, 760, 14); r('#768aa2', 16, 464, 760, 2);
+            for (let cm = 0; cm < 38; cm++) {
+                const mx0 = 8 + cm * 10, ax = mx0 * 2;
+                r('#8b9db2', ax, 478, 2, 50); r((cm % 2 === 0) ? '#3a5d79' : '#4a708c', ax + 2, 478, 16, 44); r('#24303e', ax + 2, 522, 16, 6);
+                fillMask(mx0 + 1, 240, mx0 + 9, 260, rand() < 0.36 ? LEVELS[1 + Math.floor(rand() * 3)] : 0);
+            }
+
+            const pickSamples = (panes, preferFn) => {
+                const out = { dark: [], level1: [], level2: [], level3: [] }, keys = ['dark', 'level1', 'level2', 'level3'];
+                for (let lvl = 0; lvl < 4; lvl++) {
+                    out[keys[lvl]] = panes.filter(p => p.level === lvl && preferFn(p)).concat(panes.filter(p => p.level === lvl && !preferFn(p))).slice(0, 6);
+                }
+                return out;
+            };
+            const atlasTexture = new THREE.CanvasTexture(canvas);
+            atlasTexture.colorSpace = THREE.SRGBColorSpace; atlasTexture.flipY = false; atlasTexture.generateMipmaps = true;
+            atlasTexture.minFilter = THREE.LinearMipmapLinearFilter; atlasTexture.magFilter = THREE.LinearFilter;
+            atlasTexture.wrapS = THREE.ClampToEdgeWrapping; atlasTexture.wrapT = THREE.ClampToEdgeWrapping; atlasTexture.needsUpdate = true;
+
+            const maskTexture = new THREE.DataTexture(maskData, MASK, MASK, THREE.RedFormat, THREE.UnsignedByteType);
+            maskTexture.colorSpace = THREE.NoColorSpace; maskTexture.flipY = false; maskTexture.unpackAlignment = 1; maskTexture.generateMipmaps = true;
+            maskTexture.minFilter = THREE.LinearMipmapLinearFilter; maskTexture.magFilter = THREE.LinearFilter;
+            maskTexture.wrapS = THREE.ClampToEdgeWrapping; maskTexture.wrapT = THREE.ClampToEdgeWrapping; maskTexture.needsUpdate = true;
+
+            return {
+                seed, atlasSize: ATLAS, maskSize: MASK, initMs: performance.now() - t0,
+                canvas, maskData, atlasTexture, maskTexture,
+                islands: {
+                    A: {
+                        role: 'commercial', uvBounds: { u0: 16 * INV, u1: 1008 * INV, v0: 16 * INV, v1: 448 * INV },
+                        bands: {
+                            ground: { yMin: 0, yMax: 4.0, v0: 358 * INV, v1: 448 * INV },
+                            upperBase: { yMin: 4.0, yMax: 9.6, v0: 232 * INV, v1: 358 * INV },
+                            setback: { yMin: 9.6, yMax: 14.2, v0: 96 * INV, v1: 216 * INV },
+                            penthouse: { yMin: 14.2, yMax: 16.4, u0: 16 * INV, u1: 464 * INV, v0: 16 * INV, v1: 80 * INV }
+                        },
+                        segments: aSegMeta, samples: pickSamples(panesA, p => p.segIndex === 0), panes: panesA
+                    },
+                    B: {
+                        role: 'office', uvBounds: { u0: 16 * INV, u1: 996 * INV, v0: 464 * INV, v1: 944 * INV },
+                        bands: {
+                            lobby: { yMin: 0, yMax: 4.8, v0: 852 * INV, v1: 944 * INV },
+                            office: { yMin: 4.8, yMax: 20.8, v0: 544 * INV, v1: 852 * INV },
+                            crown: { yMin: 20.8, yMax: 23.8, u0: 16 * INV, u1: 776 * INV, v0: 464 * INV, v1: 528 * INV }
+                        },
+                        segments: bSegMeta, arcUvSpan, samples: pickSamples(panesB, p => p.segIndex === 2 || (p.segIndex >= 3 && p.segIndex <= 12)), panes: panesB
+                    },
+                    roofCap: { uvBounds: { u0: 16 * INV, u1: 256 * INV, v0: 960 * INV, v1: 1008 * INV } }
+                }
+            };
+        }
+
+        function applyShowcaseFacades() {
+            const sc = WORLD.showcaseSiteA;
+            if (!sc) return null;
+            if (sc.atlas) return sc.atlas;
+            const built = buildShowcaseFacadeMaps(SHOWCASE_FACADE_SEED, sc.footprints);
+            const nightUniform = { value: STATE.night || 0 };
+            const maskUniform = { value: built.maskTexture };
+            const patchFacadeMat = (mat, rough, metal, colLow, colHigh) => {
+                mat.color.setHex(0xffffff); mat.emissive.setHex(0x000000);
+                mat.map = built.atlasTexture; mat.roughness = rough; mat.metalness = metal;
+                mat.customProgramCacheKey = () => 'vh-showcase-facade-v1';
+                mat.onBeforeCompile = (shader) => {
+                    shader.uniforms.uFacadeMask = maskUniform;
+                    shader.uniforms.uFacadeNight = nightUniform;
+                    shader.uniforms.uWinColorLow = { value: colLow };
+                    shader.uniforms.uWinColorHigh = { value: colHigh };
+                    shader.fragmentShader = shader.fragmentShader
+                        .replace('#include <emissivemap_pars_fragment>',
+                            `#include <emissivemap_pars_fragment>\nuniform sampler2D uFacadeMask;\nuniform float uFacadeNight;\nuniform vec3 uWinColorLow;\nuniform vec3 uWinColorHigh;`)
+                        .replace('#include <emissivemap_fragment>',
+                            `#include <emissivemap_fragment>\n#ifdef USE_MAP\nfloat vhWinMask = texture2D( uFacadeMask, vMapUv ).r;\nfloat vhNightAmt = clamp( uFacadeNight, 0.0, 1.0 );\nfloat vhLit = step( 0.08, vhWinMask ) * vhWinMask;\nfloat vhGain = vhLit * ( 0.42 + 1.23 * vhLit );\nvec3 vhWinTint = mix( uWinColorLow, uWinColorHigh, clamp( ( vhWinMask - 0.33 ) * 1.5, 0.0, 1.0 ) );\ntotalEmissiveRadiance += vhWinTint * vhGain * vhNightAmt;\n#endif`);
+                };
+                mat.needsUpdate = true;
+            };
+            patchFacadeMat(sc.materials[0], 0.72, 0.08, new THREE.Color(0.96, 0.72, 0.40), new THREE.Color(1.00, 0.91, 0.68));
+            patchFacadeMat(sc.materials[1], 0.42, 0.28, new THREE.Color(0.72, 0.85, 0.98), new THREE.Color(0.98, 0.96, 0.88));
+            sc.atlas = {
+                seed: built.seed, atlasSize: built.atlasSize, maskSize: built.maskSize, initMs: built.initMs,
+                atlasTexture: built.atlasTexture, maskTexture: built.maskTexture,
+                uniforms: { uFacadeNight: nightUniform, uFacadeMask: maskUniform },
+                islands: built.islands
+            };
+            return sc.atlas;
+        }
 
         // ---------- 物理碰撞體線框除錯 (按 K 或在設定中開啟) ----------
         const PHYS_DEBUG = { on: false, group: new THREE.Group(), items: [] };
@@ -11230,6 +11623,8 @@
         buildCityDetails();
         batchStaticMeshes();
         buildShowcaseSiteA();
+        applyShowcaseFacades();
+        if (new URLSearchParams(location.search).get('showcase') === '0') setShowcaseSiteAVisible(false);
         // 所有 InstancedMesh (窗戶、棕櫚樹、道具、紅綠燈…) 都不進海面倒影
         scene.traverse(o => { if (o.isInstancedMesh) o.layers.set(DETAIL_LAYER); });
         loadPolyHavenModels();
@@ -11379,7 +11774,7 @@
         requestAnimationFrame(animate);
 
         // 除錯用：在瀏覽器主控台輸入 __VH 可查看遊戲狀態
-        window.__VH = { TREE_COLLIDERS, refreshTreeColliders, treeColliderDiagnostics, PHYS_DEBUG, setPhysicsDebug, updatePhysicsDebug, TRAFFIC, updateTrafficPhysics, trafficDiagnostics, changeLanguage, refreshMissionLabels, renderDrivingHUD, showBanner, VH_I18N, WMAP, openGameHub, closeModals, __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights, buildShowcaseSiteA, setShowcaseSiteAVisible };
+        window.__VH = { TREE_COLLIDERS, refreshTreeColliders, treeColliderDiagnostics, PHYS_DEBUG, setPhysicsDebug, updatePhysicsDebug, TRAFFIC, updateTrafficPhysics, trafficDiagnostics, changeLanguage, refreshMissionLabels, renderDrivingHUD, showBanner, VH_I18N, WMAP, openGameHub, closeModals, __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights, buildShowcaseSiteA, setShowcaseSiteAVisible, applyShowcaseFacades, buildShowcaseFacadeMaps };
     </script>
 </body>
 </html>
