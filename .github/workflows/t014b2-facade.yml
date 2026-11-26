@@ -1,0 +1,18 @@
+name: Site A facades (T-014B2)
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'tools/test/t014b2_site_a_facade_check.py'
+      - '.github/workflows/t014b2-facade.yml'
+permissions:
+  contents: read
+jobs:
+  facade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install playwright==1.55.0
+      - name: Site A facade atlas, R8 night mask, budgets and mutations (PHONE_LOW)
+        run: python3 tools/test/t014b2_site_a_facade_check.py --preset PHONE_LOW --frames 12
