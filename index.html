@@ -2507,7 +2507,21 @@
                 sunLight.shadow.map.dispose();
                 sunLight.shadow.map = null;
             }
+            if (WORLD.showcaseSiteA && WORLD.showcaseSiteA.atlas && WORLD.showcaseSiteA.atlas.atlasTexture) {
+                const aniso = showcaseFacadeAnisotropy();
+                if (WORLD.showcaseSiteA.atlas.atlasTexture.anisotropy !== aniso) {
+                    WORLD.showcaseSiteA.atlas.atlasTexture.anisotropy = aniso;
+                    WORLD.showcaseSiteA.atlas.atlasTexture.needsUpdate = true;
+                }
+            }
             applyResolution();
+        }
+
+        function showcaseFacadeAnisotropy() {
+            const maxAniso = (renderer && renderer.capabilities && typeof renderer.capabilities.getMaxAnisotropy === 'function')
+                ? renderer.capabilities.getMaxAnisotropy() : 1;
+            const target = STATE.quality === 'LOW' ? 2 : 4;
+            return Math.min(target, maxAniso);
         }
 
         function stepQualityDown() {
@@ -11514,6 +11528,8 @@
             if (!sc) return null;
             if (sc.atlas) return sc.atlas;
             const built = buildShowcaseFacadeMaps(SHOWCASE_FACADE_SEED, sc.footprints);
+            built.atlasTexture.anisotropy = showcaseFacadeAnisotropy();
+            built.atlasTexture.needsUpdate = true;
             const nightUniform = { value: STATE.night || 0 };
             const maskUniform = { value: built.maskTexture };
             const patchFacadeMat = (mat, rough, metal, colLow, colHigh) => {
