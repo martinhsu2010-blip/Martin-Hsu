@@ -19,7 +19,7 @@ Priority: P1
 Base commit: main e9ee12e (re-confirm at start)
 Branch/PR: `gemini/T-016B-we01b-capacity-analyzer`
 Spec: `specs/T-016B-spec-v1.4.md` (entry point, Claude conditions win) + `specs/WE-01-spec-v1.2.md`, `specs/WE-01-v1.3-amendment.md`, `specs/WE-01-v1.4-amendment.md`, `specs/WE-01-v1.4-errata-T016B.md`; REVISED-v2 polygons (`polygon_revision = 2`) frozen in D-052
-Scope: new `tools/test/we01b_capacity_analyzer.py` + `tools/test/we01b_capacity_analyzer_check.py` only (Python stdlib; line ceiling raised to 1,600 combined by Martin, D-052a; progress reports at about 1,300 lines and before finishing). Reads Claude-supplied dumps (PHONE_LOW + DESKTOP_HIGH) and the read-only fixtures in `tools/fixtures/we01/`. Two-layer design: `geom_valid` (no road access) and `evaluate_access` (replaceable corridors). `C_conditional` = `PENDING_T016D`. No game, CACHE, CI or docs change by Gemini; Claude wires the check into CI after acceptance.
+Scope: new `tools/test/we01b_capacity_analyzer.py` + `tools/test/we01b_capacity_analyzer_check.py` only (Python stdlib; line ceiling 1,900 combined (analyzer <= 1,300, check <= 600), raised by Martin, D-052a/D-052b; report before finishing). Reads Claude-supplied dumps (PHONE_LOW + DESKTOP_HIGH) and the read-only fixtures in `tools/fixtures/we01/`. Two-layer design: `geom_valid` (no road access) and `evaluate_access` (replaceable corridors). `C_conditional` = `PENDING_T016D`. No game, CACHE, CI or docs change by Gemini; Claude wires the check into CI after acceptance.
 Gates (v1.2): B1, B2, B3, B6, B7, B9, B12 (B4 -> T-016C; B5, B10, B11 and final B8 -> T-016D). A passing T-016B is not a feasibility result.
 Status: registered; implementation prompt given to Martin for Gemini.
 
