@@ -9396,6 +9396,7 @@
             }
             refreshTreeColliders(0, true);
             camera.position.set(x, groundY + 7, z - 12);
+            if (WORLD.showcaseSiteA && typeof WORLD.showcaseSiteA.resetLOD === 'function') WORLD.showcaseSiteA.resetLOD();
         }
 
         function getActivePosition() {
@@ -11218,28 +11219,33 @@
         }
         // T-014B1_END
 
-        // T-014B2: Site A shared 1024^2 RGBA8 Canvas atlas + 512^2 true R8 night mask (outside B1 markers)
+        // T-014B2/B3: Site A shared facade layout, 1024^2 RGBA8 Canvas atlas + 512^2 R8 night mask, Near geometry & layer-31 LOD (outside B1 markers)
         const SHOWCASE_FACADE_SEED = 20261123;
-        function buildShowcaseFacadeMaps(seed = SHOWCASE_FACADE_SEED, fp = null) {
-            const t0 = performance.now();
+        const SHOWCASE_LOD_ACTIVE_LAYER = 0;
+        const SHOWCASE_LOD_INACTIVE_LAYER = 31;
+        const SHOWCASE_LOD_NEAR_DIST = 35;
+        const SHOWCASE_LOD_FAR_DIST = 50;
+        const SHOWCASE_GEOM = {
+            recessA: 0.20,
+            recessAStore: 0.22,
+            recessB: 0.20,
+            recessBLobby: 0.22,
+            recessBCrown: 0.18,
+            frameProjA: 0.10,
+            frameProjBSpandrel: 0.09,
+            frameProjBMullion: 0.11,
+            frameProjBLobby: 0.10,
+            frameProjBCrown: 0.10
+        };
+
+        function buildShowcaseFacadeLayout(seed = SHOWCASE_FACADE_SEED, fp = null) {
             const ATLAS = 1024, MASK = 512, INV = 1 / ATLAS, LEVELS = [0, 85, 170, 255];
-            const canvas = document.createElement('canvas');
-            canvas.width = ATLAS; canvas.height = ATLAS;
-            const ctx = canvas.getContext('2d');
-            const r = (c, x, y, w, h) => { ctx.fillStyle = c; ctx.fillRect(x, y, w, h); };
-            const maskData = new Uint8Array(MASK * MASK);
             let rngState = (seed >>> 0) || 1;
             const rand = () => {
                 rngState = (rngState + 0x6D2B79F5) | 0;
                 let t = Math.imul(rngState ^ (rngState >>> 15), 1 | rngState);
                 t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
                 return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-            };
-            const fillMask = (mx0, my0, mx1, my1, val) => {
-                const x0 = Math.max(0, Math.min(MASK, mx0 | 0)), x1 = Math.max(0, Math.min(MASK, mx1 | 0));
-                const y0 = Math.max(0, Math.min(MASK, my0 | 0)), y1 = Math.max(0, Math.min(MASK, my1 | 0));
-                if (x1 <= x0 || y1 <= y0 || !val) return;
-                for (let y = y0; y < y1; y++) maskData.fill(val, y * MASK + x0, y * MASK + x1);
             };
             const perimInfo = (pts) => {
                 const segs = []; let total = 0;
@@ -11264,13 +11270,280 @@
 
             const aBasePts = (fp && fp.buildingA && fp.buildingA.polygon) || [[-539, -777], [-517, -777], [-517, -763], [-526, -763], [-526, -770], [-539, -770]];
             const aUpperPts = [[-538.4, -775.2], [-517.6, -775.2], [-517.6, -763.6], [-526.0, -763.6], [-526.0, -770.0], [-538.4, -770.0]];
+            const aUpperInner = [[-537.95, -774.75], [-518.05, -774.75], [-518.05, -764.05], [-525.55, -764.05], [-525.55, -770.45], [-537.95, -770.45]];
             const bBasePts = (fp && fp.buildingB && fp.buildingB.polygon) || (() => {
                 const pts = [[-484, -821], [-461, -821], [-461, -803]];
                 for (let i = 0; i <= 10; i++) { const t = Math.PI / 2 + (i / 10) * (Math.PI / 2); pts.push([-480 + 4 * Math.cos(t), -807 + 4 * Math.sin(t)]); }
                 return pts;
             })();
+            const bUpperPts = (() => {
+                const pts = [[-479.5, -819.5], [-462.5, -819.5], [-462.5, -804.8]];
+                for (let i = 0; i <= 10; i++) { const t = Math.PI / 2 + (i / 10) * (Math.PI / 2); pts.push([-476.5 + 3 * Math.cos(t), -807.8 + 3 * Math.sin(t)]); }
+                return pts;
+            })();
             const yA = (fp && fp.buildingA) ? fp.buildingA.baseY : 0, yB = (fp && fp.buildingB) ? fp.buildingB.baseY : 0;
-            const aBasePM = perimInfo(aBasePts), aUpperPM = perimInfo(aUpperPts), bBasePM = perimInfo(bBasePts);
+            const aBasePM = perimInfo(aBasePts), aUpperPM = perimInfo(aUpperPts), bBasePM = perimInfo(bBasePts), bUpperPM = perimInfo(bUpperPts);
+
+            // --- Building A shared layout ---
+            const aBaseU0 = 16 * INV, aBaseU1 = 1008 * INV, aBaseV0 = 232 * INV, aBaseV1 = 448 * INV, aUpV0 = 96 * INV, aUpV1 = 216 * INV;
+            const aSegMeta = aBasePM.segs.map((seg) => {
+                const u0 = aBaseU1 - (seg.s1 / aBasePM.total) * (aBaseU1 - aBaseU0);
+                const u1 = aBaseU1 - (seg.s0 / aBasePM.total) * (aBaseU1 - aBaseU0);
+                return {
+                    index: seg.index, length: seg.length, s0: seg.s0, s1: seg.s1, u0, u1,
+                    sx0: Math.round(u0 * ATLAS), sx1: Math.round(u1 * ATLAS),
+                    segMx0: Math.ceil(u0 * MASK) + 3, segMx1: Math.floor(u1 * MASK) - 3,
+                    worldStart: seg.p0.slice(), worldEnd: seg.p1.slice(), normal: seg.normal.slice()
+                };
+            });
+            const aStorefrontSeg0Levels = [255, 170, 0, 255, 85, 170];
+            const aOpenings = [];
+            let aOpenIdx = 0;
+            for (const seg of aSegMeta) {
+                const usable = seg.segMx1 - seg.segMx0;
+                const bayCount = Math.max(2, Math.round(seg.length / 3.5)), bayPitch = Math.floor(usable / bayCount);
+                for (let b = 0; b < bayCount; b++) {
+                    const bx0 = seg.segMx0 + b * bayPitch, bx1 = bx0 + bayPitch - 4;
+                    if (bx1 - bx0 < 10) continue;
+                    const isEnt = (seg.index === 0 && (b === 1 || b === 4)) || (seg.index === 1 && b === 1);
+                    const ax = bx0 * 2, aw = (bx1 - bx0) * 2;
+                    const byteVal = (seg.index === 0 && b < aStorefrontSeg0Levels.length) ? aStorefrontSeg0Levels[b] : (rand() < 0.68 ? LEVELS[1 + Math.floor(rand() * 3)] : 0);
+                    const my0 = isEnt ? 198 : 190, my1 = 216, mxA = bx0 + 1, mxB = bx1 - 1;
+                    const gy0 = 378, gy1 = isEnt ? 436 : 434;
+                    const uvRect = { u0: ax * INV, u1: (ax + aw) * INV, v0: gy0 * INV, v1: gy1 * INV };
+                    const s0Local = ((aBaseU1 - uvRect.u1) / (aBaseU1 - aBaseU0)) * aBasePM.total - seg.s0;
+                    const s1Local = ((aBaseU1 - uvRect.u0) / (aBaseU1 - aBaseU0)) * aBasePM.total - seg.s0;
+                    const y0 = yA + ((aBaseV1 - uvRect.v1) / (aBaseV1 - aBaseV0)) * 9.6;
+                    const y1 = yA + ((aBaseV1 - uvRect.v0) / (aBaseV1 - aBaseV0)) * 9.6;
+                    const wi = sampleWallWorld(aBasePM, (mxA + mxB) / (2 * MASK), aBaseU0, aBaseU1, (my0 + my1) / (2 * MASK), aBaseV0, aBaseV1, yA, 9.6);
+                    aOpenings.push({
+                        id: 'A_g_' + (aOpenIdx++), building: 'A', band: 'ground', floor: 0, segIndex: seg.index, bayIndex: b, isEnt,
+                        bx0, bx1, ax, aw, ay: gy0, ah: gy1 - gy0,
+                        glassAtlasRect: [ax, gy0, ax + aw, gy1], maskRect: [mxA, my0, mxB, my1], atlasRect: [mxA * 2, my0 * 2, mxB * 2, my1 * 2],
+                        uvRect, s0: s0Local, s1: s1Local, y0, y1,
+                        recess: SHOWCASE_GEOM.recessAStore, frameProj: SHOWCASE_GEOM.frameProjA,
+                        u: (mxA + mxB) / (2 * MASK), v: (my0 + my1) / (2 * MASK), maskByte: byteVal, level: LEVELS.indexOf(byteVal),
+                        world: wi.world, normal: wi.normal
+                    });
+                }
+                const upCount = Math.max(2, Math.round(seg.length / 1.95)), upPitch = Math.floor(usable / upCount);
+                for (const fl of [{ floor: 1, y0: 296, my0: 155, my1: 172 }, { floor: 2, y0: 232, my0: 123, my1: 140 }]) {
+                    for (let w = 0; w < upCount; w++) {
+                        const wx0 = seg.segMx0 + w * upPitch + 1, wx1 = Math.min(seg.segMx1 - 1, wx0 + Math.max(5, Math.min(8, upPitch - 4)));
+                        if (wx1 - wx0 < 5) continue;
+                        const ax = wx0 * 2, aw = (wx1 - wx0) * 2, ay = fl.my0 * 2, ah = (fl.my1 - fl.my0) * 2;
+                        const byteVal = (seg.index === 0 && fl.floor === 1 && w < 4) ? LEVELS[w] : (rand() < 0.44 ? LEVELS[1 + Math.floor(rand() * 3)] : 0);
+                        const uvRect = { u0: ax * INV, u1: (ax + aw) * INV, v0: ay * INV, v1: (ay + ah) * INV };
+                        const s0Local = ((aBaseU1 - uvRect.u1) / (aBaseU1 - aBaseU0)) * aBasePM.total - seg.s0;
+                        const s1Local = ((aBaseU1 - uvRect.u0) / (aBaseU1 - aBaseU0)) * aBasePM.total - seg.s0;
+                        const y0 = yA + ((aBaseV1 - uvRect.v1) / (aBaseV1 - aBaseV0)) * 9.6;
+                        const y1 = yA + ((aBaseV1 - uvRect.v0) / (aBaseV1 - aBaseV0)) * 9.6;
+                        const wi = sampleWallWorld(aBasePM, (wx0 + wx1) / (2 * MASK), aBaseU0, aBaseU1, (fl.my0 + fl.my1) / (2 * MASK), aBaseV0, aBaseV1, yA, 9.6);
+                        aOpenings.push({
+                            id: 'A_u_' + (aOpenIdx++), building: 'A', band: 'upperBase', floor: fl.floor, segIndex: seg.index, bayIndex: w, isEnt: false,
+                            wx0, wx1, ax, aw, ay, ah, flY0: fl.y0,
+                            glassAtlasRect: [ax, ay, ax + aw, ay + ah], maskRect: [wx0, fl.my0, wx1, fl.my1], atlasRect: [ax, ay, ax + aw, ay + ah],
+                            uvRect, s0: s0Local, s1: s1Local, y0, y1,
+                            recess: SHOWCASE_GEOM.recessA, frameProj: SHOWCASE_GEOM.frameProjA,
+                            u: (wx0 + wx1) / (2 * MASK), v: (fl.my0 + fl.my1) / (2 * MASK), maskByte: byteVal, level: LEVELS.indexOf(byteVal),
+                            world: wi.world, normal: wi.normal
+                        });
+                    }
+                }
+            }
+            const aUpperSegMeta = [];
+            for (let i = 0; i < aUpperPM.segs.length; i++) {
+                const uSeg = aUpperPM.segs[i], bSeg = aBasePM.segs[i], sMid = 0.5 * (bSeg.s0 + bSeg.s1);
+                const uHi = aBaseU1 - ((sMid - 0.5 * uSeg.length) / aBasePM.total) * (aBaseU1 - aBaseU0);
+                const uLo = aBaseU1 - ((sMid + 0.5 * uSeg.length) / aBasePM.total) * (aBaseU1 - aBaseU0);
+                const segMx0 = Math.ceil(uLo * MASK) + 2, segMx1 = Math.floor(uHi * MASK) - 2;
+                aUpperSegMeta.push({ index: i, length: uSeg.length, s0: uSeg.s0, s1: uSeg.s1, u0: uLo, u1: uHi, segMx0, segMx1, worldStart: uSeg.p0.slice(), worldEnd: uSeg.p1.slice(), normal: uSeg.normal.slice() });
+                const upCount = Math.max(2, Math.round(uSeg.length / 2.0)), upPitch = Math.floor((segMx1 - segMx0) / upCount);
+                for (const fl of [{ floor: 3, y0: 156, my0: 85, my1: 101 }, { floor: 4, y0: 96, my0: 55, my1: 71 }]) {
+                    for (let w = 0; w < upCount; w++) {
+                        const wx0 = segMx0 + w * upPitch + 1, wx1 = Math.min(segMx1 - 1, wx0 + Math.max(5, Math.min(7, upPitch - 4)));
+                        if (wx1 - wx0 < 5) continue;
+                        const ax = wx0 * 2, aw = (wx1 - wx0) * 2, ay = fl.my0 * 2, ah = (fl.my1 - fl.my0) * 2;
+                        const byteVal = rand() < 0.38 ? LEVELS[1 + Math.floor(rand() * 3)] : 0;
+                        const uvRect = { u0: ax * INV, u1: (ax + aw) * INV, v0: ay * INV, v1: (ay + ah) * INV };
+                        const s0Local = ((uHi - uvRect.u1) / (uHi - uLo)) * uSeg.length;
+                        const s1Local = ((uHi - uvRect.u0) / (uHi - uLo)) * uSeg.length;
+                        const y0 = yA + 9.6 + ((aUpV1 - uvRect.v1) / (aUpV1 - aUpV0)) * 4.6;
+                        const y1 = yA + 9.6 + ((aUpV1 - uvRect.v0) / (aUpV1 - aUpV0)) * 4.6;
+                        const f = Math.max(0, Math.min(1, (uHi - (wx0 + wx1) / (2 * MASK)) / (uHi - uLo)));
+                        const wy = yA + 9.6 + ((aUpV1 - (fl.my0 + fl.my1) / (2 * MASK)) / (aUpV1 - aUpV0)) * 4.6;
+                        aOpenings.push({
+                            id: 'A_s_' + (aOpenIdx++), building: 'A', band: 'setback', floor: fl.floor, segIndex: i, bayIndex: w, isEnt: false,
+                            wx0, wx1, ax, aw, ay, ah, flY0: fl.y0,
+                            glassAtlasRect: [ax, ay, ax + aw, ay + ah], maskRect: [wx0, fl.my0, wx1, fl.my1], atlasRect: [ax, ay, ax + aw, ay + ah],
+                            uvRect, s0: s0Local, s1: s1Local, y0, y1,
+                            recess: SHOWCASE_GEOM.recessA, frameProj: SHOWCASE_GEOM.frameProjA,
+                            u: (wx0 + wx1) / (2 * MASK), v: (fl.my0 + fl.my1) / (2 * MASK), maskByte: byteVal, level: LEVELS.indexOf(byteVal),
+                            world: [uSeg.p0[0] + (uSeg.p1[0] - uSeg.p0[0]) * f, wy, uSeg.p0[1] + (uSeg.p1[1] - uSeg.p0[1]) * f], normal: uSeg.normal.slice()
+                        });
+                    }
+                }
+            }
+
+            // --- Building B shared layout ---
+            const bBaseU0 = 16 * INV, bBaseU1 = 996 * INV, bBaseV0 = 544 * INV, bBaseV1 = 944 * INV;
+            const bCrownU0 = 16 * INV, bCrownU1 = 776 * INV, bCrownV0 = 464 * INV, bCrownV1 = 528 * INV;
+            const bSegMeta = bBasePM.segs.map((seg) => ({
+                index: seg.index, isArc: seg.index >= 3 && seg.index <= 12, length: seg.length, s0: seg.s0, s1: seg.s1,
+                u0: bBaseU1 - (seg.s1 / bBasePM.total) * (bBaseU1 - bBaseU0),
+                u1: bBaseU1 - (seg.s0 / bBasePM.total) * (bBaseU1 - bBaseU0),
+                worldStart: seg.p0.slice(), worldEnd: seg.p1.slice(), normal: seg.normal.slice()
+            }));
+            const arcSegs = bSegMeta.filter(s => s.isArc);
+            const arcUvSpan = { u0: Math.min(...arcSegs.map(s => s.u0)), u1: Math.max(...arcSegs.map(s => s.u1)), s0: arcSegs[0].s0, s1: arcSegs[arcSegs.length - 1].s1, segStart: 3, segEnd: 12 };
+            const bOpenings = [];
+            const bCrownOpenings = [];
+            const B_MODS = 49;
+            for (let fl = 0; fl < 5; fl++) {
+                const fy = 552 + fl * 60, myBase = 276 + fl * 30;
+                const floorLevels = new Array(B_MODS).fill(0);
+                for (let m = 0; m < B_MODS; ) {
+                    const suiteLen = 2 + Math.floor(rand() * 3), lvl = rand() < 0.54 ? LEVELS[1 + Math.floor(rand() * 3)] : 0;
+                    for (let k = 0; k < suiteLen && m + k < B_MODS; k++) floorLevels[m + k] = (k === suiteLen - 1 && rand() < 0.25) ? 0 : lvl;
+                    m += suiteLen;
+                }
+                const sb = 12 + fl * 2;
+                floorLevels[sb % B_MODS] = 0; floorLevels[(sb + 1) % B_MODS] = LEVELS[1 + (fl % 3)];
+                floorLevels[(sb + 2) % B_MODS] = LEVELS[1 + ((fl + 1) % 3)]; floorLevels[(sb + 3) % B_MODS] = 0;
+                floorLevels[(sb + 4) % B_MODS] = LEVELS[1 + ((fl + 2) % 3)];
+                for (let mod = 0; mod < B_MODS; mod++) {
+                    const mx0 = 8 + mod * 10, ax = mx0 * 2;
+                    const pMx0 = mx0 + 1, pMx1 = mx0 + 9, pMy0 = myBase + 8, pMy1 = myBase + 29;
+                    const uvRect = { u0: (ax + 2) * INV, u1: (ax + 18) * INV, v0: (fy + 16) * INV, v1: (fy + 58) * INV };
+                    const s0 = ((bBaseU1 - uvRect.u1) / (bBaseU1 - bBaseU0)) * bBasePM.total;
+                    const s1 = ((bBaseU1 - uvRect.u0) / (bBaseU1 - bBaseU0)) * bBasePM.total;
+                    const y0 = yB + ((bBaseV1 - uvRect.v1) / (bBaseV1 - bBaseV0)) * 20.8;
+                    const y1 = yB + ((bBaseV1 - uvRect.v0) / (bBaseV1 - bBaseV0)) * 20.8;
+                    const wi = sampleWallWorld(bBasePM, (pMx0 + pMx1) / (2 * MASK), bBaseU0, bBaseU1, (pMy0 + pMy1) / (2 * MASK), bBaseV0, bBaseV1, yB, 20.8);
+                    bOpenings.push({
+                        id: 'B_o_' + (fl + 1) + '_' + mod, building: 'B', band: 'office', floor: fl + 1, flIdx: fl, module: mod, segIndex: wi.segIndex,
+                        mx0, ax, fy, glassAtlasRect: [ax + 2, fy + 16, ax + 18, fy + 58],
+                        maskRect: [pMx0, pMy0, pMx1, pMy1], atlasRect: [pMx0 * 2, pMy0 * 2, pMx1 * 2, pMy1 * 2],
+                        uvRect, s0, s1, y0, y1,
+                        recess: SHOWCASE_GEOM.recessB, frameProj: SHOWCASE_GEOM.frameProjBMullion,
+                        u: (pMx0 + pMx1) / (2 * MASK), v: (pMy0 + pMy1) / (2 * MASK), maskByte: floorLevels[mod], level: LEVELS.indexOf(floorLevels[mod]),
+                        world: wi.world, normal: wi.normal
+                    });
+                }
+            }
+            for (let lb = 0; lb < 24; lb++) {
+                const bx0 = 8 + lb * 20, ax = bx0 * 2, isPortal = (lb >= 8 && lb <= 10);
+                const byteVal = isPortal ? (lb === 9 ? 255 : 170) : (lb % 4 === 0 ? 0 : (rand() < 0.62 ? LEVELS[1 + Math.floor(rand() * 3)] : 0));
+                const pMx0 = bx0 + 4, pMx1 = bx0 + 18, pMy0 = 436, pMy1 = 466;
+                const uvRect = { u0: (ax + 6) * INV, u1: (ax + 38) * INV, v0: 870 * INV, v1: 936 * INV };
+                const s0 = ((bBaseU1 - uvRect.u1) / (bBaseU1 - bBaseU0)) * bBasePM.total;
+                const s1 = ((bBaseU1 - uvRect.u0) / (bBaseU1 - bBaseU0)) * bBasePM.total;
+                const y0 = yB + ((bBaseV1 - uvRect.v1) / (bBaseV1 - bBaseV0)) * 20.8;
+                const y1 = yB + ((bBaseV1 - uvRect.v0) / (bBaseV1 - bBaseV0)) * 20.8;
+                const wi = sampleWallWorld(bBasePM, (pMx0 + pMx1) / (2 * MASK), bBaseU0, bBaseU1, (pMy0 + pMy1) / (2 * MASK), bBaseV0, bBaseV1, yB, 20.8);
+                bOpenings.push({
+                    id: 'B_l_' + lb, building: 'B', band: 'lobby', floor: 0, module: lb, isPortal, segIndex: wi.segIndex,
+                    bx0, ax, glassAtlasRect: [ax + 6, 870, ax + 38, 936],
+                    maskRect: [pMx0, pMy0, pMx1, pMy1], atlasRect: [pMx0 * 2, pMy0 * 2, pMx1 * 2, pMy1 * 2],
+                    uvRect, s0, s1, y0, y1,
+                    recess: SHOWCASE_GEOM.recessBLobby, frameProj: SHOWCASE_GEOM.frameProjBLobby,
+                    u: (pMx0 + pMx1) / (2 * MASK), v: (pMy0 + pMy1) / (2 * MASK), maskByte: byteVal, level: LEVELS.indexOf(byteVal),
+                    world: wi.world, normal: wi.normal
+                });
+            }
+            for (let cm = 0; cm < 38; cm++) {
+                const mx0 = 8 + cm * 10, ax = mx0 * 2;
+                const byteVal = rand() < 0.36 ? LEVELS[1 + Math.floor(rand() * 3)] : 0;
+                const uvRect = { u0: (ax + 2) * INV, u1: (ax + 18) * INV, v0: 478 * INV, v1: 522 * INV };
+                const s0 = ((bCrownU1 - uvRect.u1) / (bCrownU1 - bCrownU0)) * bUpperPM.total;
+                const s1 = ((bCrownU1 - uvRect.u0) / (bCrownU1 - bCrownU0)) * bUpperPM.total;
+                const y0 = yB + 20.8 + ((bCrownV1 - uvRect.v1) / (bCrownV1 - bCrownV0)) * 3.0;
+                const y1 = yB + 20.8 + ((bCrownV1 - uvRect.v0) / (bCrownV1 - bCrownV0)) * 3.0;
+                const wi = sampleWallWorld(bUpperPM, (mx0 + 5) / MASK, bCrownU0, bCrownU1, 250 / MASK, bCrownV0, bCrownV1, yB + 20.8, 3.0);
+                bCrownOpenings.push({
+                    id: 'B_c_' + cm, building: 'B', band: 'crown', floor: 6, module: cm, segIndex: wi.segIndex,
+                    mx0, ax, glassAtlasRect: [ax + 2, 478, ax + 18, 522],
+                    maskRect: [mx0 + 1, 240, mx0 + 9, 260], atlasRect: [(mx0 + 1) * 2, 480, (mx0 + 9) * 2, 520],
+                    uvRect, s0, s1, y0, y1,
+                    recess: SHOWCASE_GEOM.recessBCrown, frameProj: SHOWCASE_GEOM.frameProjBCrown,
+                    u: (mx0 + 5) / MASK, v: 250 / MASK, maskByte: byteVal, level: LEVELS.indexOf(byteVal),
+                    world: wi.world, normal: wi.normal
+                });
+            }
+
+            return {
+                seed, atlasSize: ATLAS, maskSize: MASK, levels: LEVELS, geom: SHOWCASE_GEOM,
+                roofCap: {
+                    atlasRect: [16, 960, 256, 1008],
+                    uvCap: { u0: 32 * INV, u1: 240 * INV, v0: 968 * INV, v1: 1000 * INV },
+                    uvBounds: { u0: 16 * INV, u1: 256 * INV, v0: 960 * INV, v1: 1008 * INV }
+                },
+                A: {
+                    role: 'commercial', baseY: yA,
+                    basePts: aBasePts.map(p => p.slice()), upperPts: aUpperPts.map(p => p.slice()), upperInner: aUpperInner.map(p => p.slice()),
+                    basePM: aBasePM, upperPM: aUpperPM,
+                    segments: aSegMeta, upperSegments: aUpperSegMeta,
+                    openings: aOpenings,
+                    uvSpec: {
+                        base: { u0: aBaseU0, u1: aBaseU1, v0: aBaseV0, v1: aBaseV1, y0: yA, y1: yA + 9.6 },
+                        upper: { u0: aBaseU0, u1: aBaseU1, v0: aUpV0, v1: aUpV1, y0: yA + 9.6, y1: yA + 14.2 },
+                        penthouse: { u0: 16 * INV, u1: 464 * INV, v0: 16 * INV, v1: 80 * INV, y0: yA + 14.2, y1: yA + 16.4 }
+                    },
+                    bands: {
+                        ground: { yMin: 0, yMax: 4.0, v0: 358 * INV, v1: 448 * INV },
+                        upperBase: { yMin: 4.0, yMax: 9.6, v0: 232 * INV, v1: 358 * INV },
+                        setback: { yMin: 9.6, yMax: 14.2, v0: 96 * INV, v1: 216 * INV },
+                        penthouse: { yMin: 14.2, yMax: 16.4, u0: 16 * INV, u1: 464 * INV, v0: 16 * INV, v1: 80 * INV }
+                    },
+                    safeMaskZeroUV: {
+                        bronze: { u0: 32 * INV, u1: 200 * INV, v0: 360 * INV, v1: 364 * INV },
+                        darkReveal: { u0: 32 * INV, u1: 200 * INV, v0: 374 * INV, v1: 376 * INV },
+                        stone: { u0: 32 * INV, u1: 200 * INV, v0: 288 * INV, v1: 294 * INV },
+                        plinth: { u0: 32 * INV, u1: 200 * INV, v0: 440 * INV, v1: 446 * INV }
+                    }
+                },
+                B: {
+                    role: 'office', baseY: yB,
+                    baseRect: { minX: -484, maxX: -461, minZ: -821, maxZ: -803, arcR: 4.0, segs: 10 },
+                    upperRect: { minX: -479.5, maxX: -462.5, minZ: -819.5, maxZ: -804.8, arcR: 3.0, segs: 10 },
+                    basePts: bBasePts.map(p => p.slice()), upperPts: bUpperPts.map(p => p.slice()),
+                    basePM: bBasePM, upperPM: bUpperPM,
+                    segments: bSegMeta, arcUvSpan,
+                    openings: bOpenings, crownOpenings: bCrownOpenings,
+                    uvSpec: {
+                        base: { u0: bBaseU0, u1: bBaseU1, v0: bBaseV0, v1: bBaseV1, y0: yB, y1: yB + 20.8 },
+                        crown: { u0: bCrownU0, u1: bCrownU1, v0: bCrownV0, v1: bCrownV1, y0: yB + 20.8, y1: yB + 23.8 }
+                    },
+                    bands: {
+                        lobby: { yMin: 0, yMax: 4.8, v0: 852 * INV, v1: 944 * INV },
+                        office: { yMin: 4.8, yMax: 20.8, v0: 544 * INV, v1: 852 * INV },
+                        crown: { yMin: 20.8, yMax: 23.8, u0: 16 * INV, u1: 776 * INV, v0: 464 * INV, v1: 528 * INV }
+                    },
+                    safeMaskZeroUV: {
+                        spandrel: { u0: 32 * INV, u1: 200 * INV, v0: 556 * INV, v1: 562 * INV },
+                        mullion: { u0: 32 * INV, u1: 200 * INV, v0: 856 * INV, v1: 862 * INV },
+                        darkReveal: { u0: 32 * INV, u1: 200 * INV, v0: 866 * INV, v1: 868 * INV },
+                        crownTrim: { u0: 32 * INV, u1: 200 * INV, v0: 468 * INV, v1: 474 * INV }
+                    }
+                }
+            };
+        }
+
+        function buildShowcaseFacadeMaps(seed = SHOWCASE_FACADE_SEED, fp = null, sharedLayout = null) {
+            const t0 = performance.now();
+            const layout = sharedLayout || buildShowcaseFacadeLayout(seed, fp);
+            const ATLAS = layout.atlasSize, MASK = layout.maskSize, INV = 1 / ATLAS;
+            const canvas = document.createElement('canvas');
+            canvas.width = ATLAS; canvas.height = ATLAS;
+            const ctx = canvas.getContext('2d');
+            const r = (c, x, y, w, h) => { ctx.fillStyle = c; ctx.fillRect(x, y, w, h); };
+            const maskData = new Uint8Array(MASK * MASK);
+            const fillMask = (mx0, my0, mx1, my1, val) => {
+                const x0 = Math.max(0, Math.min(MASK, mx0 | 0)), x1 = Math.max(0, Math.min(MASK, mx1 | 0));
+                const y0 = Math.max(0, Math.min(MASK, my0 | 0)), y1 = Math.max(0, Math.min(MASK, my1 | 0));
+                if (x1 <= x0 || y1 <= y0 || !val) return;
+                for (let y = y0; y < y1; y++) maskData.fill(val, y * MASK + x0, y * MASK + x1);
+            };
 
             // Background gutter fill & dedicated non-window roof/terrace cap patch (x: 16..256, y: 960..1008; mask strictly 0)
             r('#2d323a', 0, 0, ATLAS, ATLAS);
@@ -11278,7 +11551,7 @@
             for (let gx = 24; gx < 252; gx += 24) r('#535962', gx, 962, 2, 44);
             r('#686f78', 18, 982, 236, 2);
 
-            // --- BUILDING A: Commercial (L-plan, warm sandstone masonry + dark bronze storefront + recessed entrances) ---
+            // --- BUILDING A: Commercial (painted strictly from shared layout) ---
             const panesA = [];
             r('#d6c6af', 16, 16, 992, 432);
             for (let sy = 20; sy < 448; sy += 12) r('#ccbba2', 16, sy, 992, 1);
@@ -11287,41 +11560,25 @@
             aShopGrad.addColorStop(0, '#1a2d3a'); aShopGrad.addColorStop(0.45, '#2b4759'); aShopGrad.addColorStop(1, '#1d3240');
             const aWinGrad = ctx.createLinearGradient(0, 0, 0, 36);
             aWinGrad.addColorStop(0, '#223848'); aWinGrad.addColorStop(0.5, '#38576d'); aWinGrad.addColorStop(1, '#263d4d');
-            const recordPaneA = (band, floor, segIndex, mx0, my0, mx1, my1, byteVal, wi) => {
-                fillMask(mx0, my0, mx1, my1, byteVal);
+            const recordPaneA = (op) => {
+                fillMask(op.maskRect[0], op.maskRect[1], op.maskRect[2], op.maskRect[3], op.maskByte);
                 panesA.push({
-                    band, floor, segIndex, maskRect: [mx0, my0, mx1, my1], atlasRect: [mx0 * 2, my0 * 2, mx1 * 2, my1 * 2],
-                    u: (mx0 + mx1) / (2 * MASK), v: (my0 + my1) / (2 * MASK), maskByte: byteVal, level: LEVELS.indexOf(byteVal),
-                    world: wi.world, normal: wi.normal
+                    band: op.band, floor: op.floor, segIndex: op.segIndex,
+                    maskRect: op.maskRect.slice(), atlasRect: op.atlasRect.slice(),
+                    u: op.u, v: op.v, maskByte: op.maskByte, level: op.level,
+                    world: op.world.slice(), normal: op.normal.slice()
                 });
             };
-            const aBaseU0 = 16 * INV, aBaseU1 = 1008 * INV, aBaseV0 = 232 * INV, aBaseV1 = 448 * INV, aUpV0 = 96 * INV, aUpV1 = 216 * INV;
-            const aSegMeta = aBasePM.segs.map((seg) => ({
-                index: seg.index, length: seg.length, s0: seg.s0, s1: seg.s1,
-                u0: aBaseU1 - (seg.s1 / aBasePM.total) * (aBaseU1 - aBaseU0),
-                u1: aBaseU1 - (seg.s0 / aBasePM.total) * (aBaseU1 - aBaseU0),
-                worldStart: seg.p0.slice(), worldEnd: seg.p1.slice(), normal: seg.normal.slice()
-            }));
 
-            // Ground-floor commercial entablature, accent fascia, overhang shadow & granite plinth (y: 358..448)
             r('#333a44', 16, 358, 992, 16); r('#626c7a', 16, 358, 992, 2); r('#b49878', 16, 364, 992, 4);
             r('#1b2026', 16, 374, 992, 4); r('#4c525c', 16, 436, 992, 12); r('#686f7a', 16, 436, 992, 2);
 
-            const aStorefrontSeg0Levels = [255, 170, 0, 255, 85, 170];
-            for (const seg of aSegMeta) {
-                const segMx0 = Math.ceil(seg.u0 * MASK) + 3, segMx1 = Math.floor(seg.u1 * MASK) - 3, usable = segMx1 - segMx0;
-                const sx0 = Math.round(seg.u0 * ATLAS), sx1 = Math.round(seg.u1 * ATLAS);
-                // Solid stone corner pilasters framing each L-segment (prevents corner window bleed)
-                r('#c4b197', sx0, 232, 6, 216); r('#c4b197', sx1 - 6, 232, 6, 216);
-                r('#9f8c73', sx0 + 5, 232, 1, 216); r('#9f8c73', sx1 - 6, 232, 1, 216);
-
-                // Ground-floor retail storefront bays + recessed double-door entrances
-                const bayCount = Math.max(2, Math.round(seg.length / 3.5)), bayPitch = Math.floor(usable / bayCount);
-                for (let b = 0; b < bayCount; b++) {
-                    const bx0 = segMx0 + b * bayPitch, bx1 = bx0 + bayPitch - 4;
-                    if (bx1 - bx0 < 10) continue;
-                    const isEnt = (seg.index === 0 && (b === 1 || b === 4)) || (seg.index === 1 && b === 1);
-                    const ax = bx0 * 2, aw = (bx1 - bx0) * 2;
+            for (const seg of layout.A.segments) {
+                r('#c4b197', seg.sx0, 232, 6, 216); r('#c4b197', seg.sx1 - 6, 232, 6, 216);
+                r('#9f8c73', seg.sx0 + 5, 232, 1, 216); r('#9f8c73', seg.sx1 - 6, 232, 1, 216);
+                for (const op of layout.A.openings) {
+                    if (op.band !== 'ground' || op.segIndex !== seg.index) continue;
+                    const { ax, aw, isEnt } = op;
                     r('#2d333c', ax - 2, 376, aw + 4, 60);
                     if (isEnt) {
                         const halfW = Math.floor((aw - 6) / 2);
@@ -11338,54 +11595,33 @@
                         r('#313842', ax, 392, aw, 3); r('#313842', ax + Math.floor(aw / 2) - 1, 378, 2, 56);
                         r('#8b7b66', ax - 2, 433, aw + 4, 3);
                     }
-                    const byteVal = (seg.index === 0 && b < aStorefrontSeg0Levels.length) ? aStorefrontSeg0Levels[b] : (rand() < 0.68 ? LEVELS[1 + Math.floor(rand() * 3)] : 0);
-                    const my0 = isEnt ? 198 : 190, my1 = 216, mxA = bx0 + 1, mxB = bx1 - 1;
-                    recordPaneA('ground', 0, seg.index, mxA, my0, mxB, my1, byteVal,
-                        sampleWallWorld(aBasePM, (mxA + mxB) / (2 * MASK), aBaseU0, aBaseU1, (my0 + my1) / (2 * MASK), aBaseV0, aBaseV1, yA, 9.6));
+                    recordPaneA(op);
                 }
-
-                // Upper commercial floors on base tier (Floors 2 & 3: tighter punched-window rhythm)
-                const upCount = Math.max(2, Math.round(seg.length / 1.95)), upPitch = Math.floor(usable / upCount);
-                for (const fl of [{ floor: 1, y0: 296, my0: 155, my1: 172 }, { floor: 2, y0: 232, my0: 123, my1: 140 }]) {
-                    r('#b9a286', sx0 + 6, fl.y0, sx1 - sx0 - 12, 8);
-                    r('#3a424d', sx0 + 6, fl.y0 + 8, sx1 - sx0 - 12, 4);
-                    for (let w = 0; w < upCount; w++) {
-                        const wx0 = segMx0 + w * upPitch + 1, wx1 = Math.min(segMx1 - 1, wx0 + Math.max(5, Math.min(8, upPitch - 4)));
-                        if (wx1 - wx0 < 5) continue;
-                        const ax = wx0 * 2, aw = (wx1 - wx0) * 2, ay = fl.my0 * 2, ah = (fl.my1 - fl.my0) * 2;
+                for (const fl of [{ floor: 1, y0: 296 }, { floor: 2, y0: 232 }]) {
+                    r('#b9a286', seg.sx0 + 6, fl.y0, seg.sx1 - seg.sx0 - 12, 8);
+                    r('#3a424d', seg.sx0 + 6, fl.y0 + 8, seg.sx1 - seg.sx0 - 12, 4);
+                    for (const op of layout.A.openings) {
+                        if (op.band !== 'upperBase' || op.segIndex !== seg.index || op.floor !== fl.floor) continue;
+                        const { ax, aw, ay, ah } = op;
                         r('#2d343e', ax - 2, ay - 2, aw + 4, ah + 4);
                         ctx.save(); ctx.translate(ax, ay); r(aWinGrad, 0, 0, aw, ah); ctx.restore();
                         r('rgba(155, 195, 220, 0.25)', ax + 1, ay + 1, aw - 2, 5);
                         r('#2a313a', ax + Math.floor(aw / 2) - 1, ay, 2, ah); r('#2a313a', ax, ay + Math.floor(ah * 0.42), aw, 2);
                         r('#e5dac7', ax - 3, ay + ah + 2, aw + 6, 3); r('#8b7b67', ax - 2, ay + ah + 5, aw + 4, 2);
-                        const byteVal = (seg.index === 0 && fl.floor === 1 && w < 4) ? LEVELS[w] : (rand() < 0.44 ? LEVELS[1 + Math.floor(rand() * 3)] : 0);
-                        recordPaneA('upperBase', fl.floor, seg.index, wx0, fl.my0, wx1, fl.my1, byteVal,
-                            sampleWallWorld(aBasePM, (wx0 + wx1) / (2 * MASK), aBaseU0, aBaseU1, (fl.my0 + fl.my1) / (2 * MASK), aBaseV0, aBaseV1, yA, 9.6));
+                        recordPaneA(op);
                     }
                 }
             }
-
-            // Building A Upper Setback Tier (Floors 4 & 5, y: 96..216) + Penthouse (y: 16..80)
-            for (let i = 0; i < aUpperPM.segs.length; i++) {
-                const uSeg = aUpperPM.segs[i], bSeg = aBasePM.segs[i], sMid = 0.5 * (bSeg.s0 + bSeg.s1);
-                const uHi = aBaseU1 - ((sMid - 0.5 * uSeg.length) / aBasePM.total) * (aBaseU1 - aBaseU0);
-                const uLo = aBaseU1 - ((sMid + 0.5 * uSeg.length) / aBasePM.total) * (aBaseU1 - aBaseU0);
-                const segMx0 = Math.ceil(uLo * MASK) + 2, segMx1 = Math.floor(uHi * MASK) - 2;
-                const upCount = Math.max(2, Math.round(uSeg.length / 2.0)), upPitch = Math.floor((segMx1 - segMx0) / upCount);
-                for (const fl of [{ floor: 3, y0: 156, my0: 85, my1: 101 }, { floor: 4, y0: 96, my0: 55, my1: 71 }]) {
-                    r('#3d4551', Math.round(uLo * ATLAS), fl.y0, Math.round((uHi - uLo) * ATLAS), 10);
-                    r('#c5b094', Math.round(uLo * ATLAS), fl.y0 + 10, Math.round((uHi - uLo) * ATLAS), 4);
-                    for (let w = 0; w < upCount; w++) {
-                        const wx0 = segMx0 + w * upPitch + 1, wx1 = Math.min(segMx1 - 1, wx0 + Math.max(5, Math.min(7, upPitch - 4)));
-                        if (wx1 - wx0 < 5) continue;
-                        const ax = wx0 * 2, aw = (wx1 - wx0) * 2, ay = fl.my0 * 2, ah = (fl.my1 - fl.my0) * 2;
+            for (const uSeg of layout.A.upperSegments) {
+                for (const fl of [{ floor: 3, y0: 156 }, { floor: 4, y0: 96 }]) {
+                    r('#3d4551', Math.round(uSeg.u0 * ATLAS), fl.y0, Math.round((uSeg.u1 - uSeg.u0) * ATLAS), 10);
+                    r('#c5b094', Math.round(uSeg.u0 * ATLAS), fl.y0 + 10, Math.round((uSeg.u1 - uSeg.u0) * ATLAS), 4);
+                    for (const op of layout.A.openings) {
+                        if (op.band !== 'setback' || op.segIndex !== uSeg.index || op.floor !== fl.floor) continue;
+                        const { ax, aw, ay, ah } = op;
                         r('#2d343e', ax - 2, ay - 2, aw + 4, ah + 4); r('#2c465a', ax, ay, aw, ah);
                         r('#486c85', ax + 1, ay + 1, aw - 2, 6); r('#e2d7c5', ax - 2, ay + ah + 2, aw + 4, 2);
-                        const f = Math.max(0, Math.min(1, (uHi - (wx0 + wx1) / (2 * MASK)) / (uHi - uLo)));
-                        const wy = yA + 9.6 + ((aUpV1 - (fl.my0 + fl.my1) / (2 * MASK)) / (aUpV1 - aUpV0)) * 4.6;
-                        recordPaneA('setback', fl.floor, i, wx0, fl.my0, wx1, fl.my1, rand() < 0.38 ? LEVELS[1 + Math.floor(rand() * 3)] : 0, {
-                            world: [uSeg.p0[0] + (uSeg.p1[0] - uSeg.p0[0]) * f, wy, uSeg.p0[1] + (uSeg.p1[1] - uSeg.p0[1]) * f], normal: uSeg.normal.slice()
-                        });
+                        recordPaneA(op);
                     }
                 }
             }
@@ -11395,49 +11631,31 @@
                 for (let ly = 40; ly < 66; ly += 6) r('#2a3038', lx + 1, ly, 8, 2);
             }
 
-            // --- BUILDING B: Office (curtain wall, fine aluminum mullions, 2 glass reflection tones, continuous 10-seg arc) ---
-            const panesB = [], bBaseU0 = 16 * INV, bBaseU1 = 996 * INV, bBaseV0 = 544 * INV, bBaseV1 = 944 * INV;
-            const bSegMeta = bBasePM.segs.map((seg) => ({
-                index: seg.index, isArc: seg.index >= 3 && seg.index <= 12, length: seg.length, s0: seg.s0, s1: seg.s1,
-                u0: bBaseU1 - (seg.s1 / bBasePM.total) * (bBaseU1 - bBaseU0),
-                u1: bBaseU1 - (seg.s0 / bBasePM.total) * (bBaseU1 - bBaseU0),
-                worldStart: seg.p0.slice(), worldEnd: seg.p1.slice(), normal: seg.normal.slice()
-            }));
-            const arcSegs = bSegMeta.filter(s => s.isArc);
-            const arcUvSpan = { u0: Math.min(...arcSegs.map(s => s.u0)), u1: Math.max(...arcSegs.map(s => s.u1)), s0: arcSegs[0].s0, s1: arcSegs[arcSegs.length - 1].s1, segStart: 3, segEnd: 12 };
+            // --- BUILDING B: Office (painted strictly from shared layout) ---
+            const panesB = [];
             r('#273241', 16, 464, 980, 480);
             const bGlassA = ctx.createLinearGradient(0, 0, 0, 42);
             bGlassA.addColorStop(0, '#365874'); bGlassA.addColorStop(0.38, '#5a84a4'); bGlassA.addColorStop(0.72, '#3c607c'); bGlassA.addColorStop(1, '#22384c');
             const bGlassB = ctx.createLinearGradient(0, 0, 0, 42);
             bGlassB.addColorStop(0, '#466c8a'); bGlassB.addColorStop(0.42, '#729bb8'); bGlassB.addColorStop(0.75, '#476b87'); bGlassB.addColorStop(1, '#2c465c');
-            const recordPaneB = (band, floor, modIdx, mx0, my0, mx1, my1, byteVal, wi) => {
-                fillMask(mx0, my0, mx1, my1, byteVal);
+            const recordPaneB = (op) => {
+                fillMask(op.maskRect[0], op.maskRect[1], op.maskRect[2], op.maskRect[3], op.maskByte);
                 panesB.push({
-                    band, floor, module: modIdx, segIndex: wi.segIndex, maskRect: [mx0, my0, mx1, my1], atlasRect: [mx0 * 2, my0 * 2, mx1 * 2, my1 * 2],
-                    u: (mx0 + mx1) / (2 * MASK), v: (my0 + my1) / (2 * MASK), maskByte: byteVal, level: LEVELS.indexOf(byteVal),
-                    world: wi.world, normal: wi.normal
+                    band: op.band, floor: op.floor, module: op.module, segIndex: op.segIndex,
+                    maskRect: op.maskRect.slice(), atlasRect: op.atlasRect.slice(),
+                    u: op.u, v: op.v, maskByte: op.maskByte, level: op.level,
+                    world: op.world.slice(), normal: op.normal.slice()
                 });
             };
 
-            // 5 continuous office curtain-wall floors (y: 552..852, 49 modules x 20px = 980px; 2 mask texels dark mullion gutter)
             r('#364457', 16, 544, 980, 8); r('#6c8098', 16, 544, 980, 2);
-            const B_MODS = 49;
             for (let fl = 0; fl < 5; fl++) {
-                const fy = 552 + fl * 60, myBase = 276 + fl * 30;
+                const fy = 552 + fl * 60;
                 r('#253040', 16, fy, 980, 16); r('#6b7e96', 16, fy, 980, 2);
                 r('#334357', 16, fy + 4, 980, 8); r('#18202b', 16, fy + 14, 980, 2);
-                const floorLevels = new Array(B_MODS).fill(0);
-                for (let m = 0; m < B_MODS; ) {
-                    const suiteLen = 2 + Math.floor(rand() * 3), lvl = rand() < 0.54 ? LEVELS[1 + Math.floor(rand() * 3)] : 0;
-                    for (let k = 0; k < suiteLen && m + k < B_MODS; k++) floorLevels[m + k] = (k === suiteLen - 1 && rand() < 0.25) ? 0 : lvl;
-                    m += suiteLen;
-                }
-                const sb = 12 + fl * 2;
-                floorLevels[sb % B_MODS] = 0; floorLevels[(sb + 1) % B_MODS] = LEVELS[1 + (fl % 3)];
-                floorLevels[(sb + 2) % B_MODS] = LEVELS[1 + ((fl + 1) % 3)]; floorLevels[(sb + 3) % B_MODS] = 0;
-                floorLevels[(sb + 4) % B_MODS] = LEVELS[1 + ((fl + 2) % 3)];
-                for (let mod = 0; mod < B_MODS; mod++) {
-                    const mx0 = 8 + mod * 10, ax = mx0 * 2;
+                for (const op of layout.B.openings) {
+                    if (op.band !== 'office' || op.flIdx !== fl) continue;
+                    const { ax, module: mod } = op;
                     r('#1d2530', ax, fy + 16, 2, 44); r('#8b9db2', ax + 1, fy + 16, 1, 44);
                     r('#8b9db2', ax + 18, fy + 16, 1, 44); r('#1d2530', ax + 19, fy + 16, 1, 44);
                     ctx.save(); ctx.translate(ax + 2, fy + 16);
@@ -11446,18 +11664,16 @@
                     r('rgba(20, 32, 46, 0.22)', 0, 11, 16, 1); r('rgba(20, 32, 46, 0.22)', 0, 26, 16, 1);
                     ctx.restore();
                     r('#24303e', ax + 2, fy + 58, 16, 2);
-                    const pMx0 = mx0 + 1, pMx1 = mx0 + 9, pMy0 = myBase + 8, pMy1 = myBase + 29;
-                    recordPaneB('office', fl + 1, mod, pMx0, pMy0, pMx1, pMy1, floorLevels[mod],
-                        sampleWallWorld(bBasePM, (pMx0 + pMx1) / (2 * MASK), bBaseU0, bBaseU1, (pMy0 + pMy1) / (2 * MASK), bBaseV0, bBaseV1, yB, 20.8));
+                    recordPaneB(op);
                 }
             }
 
-            // Building B Corporate Lobby Ground Floor (y: 852..944) + Upper Executive Crown (y: 464..528)
             r('#253040', 16, 852, 980, 14); r('#8fa3ba', 16, 852, 980, 3); r('#151b24', 16, 866, 980, 4); r('#2c333d', 16, 936, 980, 8);
             const bLobbyGrad = ctx.createLinearGradient(0, 870, 0, 936);
             bLobbyGrad.addColorStop(0, '#1f3344'); bLobbyGrad.addColorStop(0.55, '#35546c'); bLobbyGrad.addColorStop(1, '#1d2f3f');
-            for (let lb = 0; lb < 24; lb++) {
-                const bx0 = 8 + lb * 20, ax = bx0 * 2, isPortal = (lb >= 8 && lb <= 10);
+            for (const op of layout.B.openings) {
+                if (op.band !== 'lobby') continue;
+                const { ax, isPortal } = op;
                 r('#6f8298', ax, 866, 4, 70); r('#1b232e', ax + 4, 866, 2, 70);
                 r(isPortal ? '#2a465c' : bLobbyGrad, ax + 6, 870, 32, 66);
                 if (isPortal) {
@@ -11466,16 +11682,13 @@
                 } else {
                     r('rgba(180, 215, 240, 0.20)', ax + 8, 872, 10, 60); r('#253140', ax + 6, 898, 32, 2);
                 }
-                const byteVal = isPortal ? (lb === 9 ? 255 : 170) : (lb % 4 === 0 ? 0 : (rand() < 0.62 ? LEVELS[1 + Math.floor(rand() * 3)] : 0));
-                const pMx0 = bx0 + 4, pMx1 = bx0 + 18, pMy0 = 436, pMy1 = 466;
-                recordPaneB('lobby', 0, lb, pMx0, pMy0, pMx1, pMy1, byteVal,
-                    sampleWallWorld(bBasePM, (pMx0 + pMx1) / (2 * MASK), bBaseU0, bBaseU1, (pMy0 + pMy1) / (2 * MASK), bBaseV0, bBaseV1, yB, 20.8));
+                recordPaneB(op);
             }
             r('#263140', 16, 464, 760, 14); r('#768aa2', 16, 464, 760, 2);
-            for (let cm = 0; cm < 38; cm++) {
-                const mx0 = 8 + cm * 10, ax = mx0 * 2;
+            for (const op of layout.B.crownOpenings) {
+                const { ax, module: cm } = op;
                 r('#8b9db2', ax, 478, 2, 50); r((cm % 2 === 0) ? '#3a5d79' : '#4a708c', ax + 2, 478, 16, 44); r('#24303e', ax + 2, 522, 16, 6);
-                fillMask(mx0 + 1, 240, mx0 + 9, 260, rand() < 0.36 ? LEVELS[1 + Math.floor(rand() * 3)] : 0);
+                fillMask(op.maskRect[0], op.maskRect[1], op.maskRect[2], op.maskRect[3], op.maskByte);
             }
 
             const pickSamples = (panes, preferFn) => {
@@ -11497,36 +11710,586 @@
 
             return {
                 seed, atlasSize: ATLAS, maskSize: MASK, initMs: performance.now() - t0,
-                canvas, maskData, atlasTexture, maskTexture,
+                canvas, maskData, atlasTexture, maskTexture, layout,
                 islands: {
                     A: {
                         role: 'commercial', uvBounds: { u0: 16 * INV, u1: 1008 * INV, v0: 16 * INV, v1: 448 * INV },
-                        bands: {
-                            ground: { yMin: 0, yMax: 4.0, v0: 358 * INV, v1: 448 * INV },
-                            upperBase: { yMin: 4.0, yMax: 9.6, v0: 232 * INV, v1: 358 * INV },
-                            setback: { yMin: 9.6, yMax: 14.2, v0: 96 * INV, v1: 216 * INV },
-                            penthouse: { yMin: 14.2, yMax: 16.4, u0: 16 * INV, u1: 464 * INV, v0: 16 * INV, v1: 80 * INV }
-                        },
-                        segments: aSegMeta, samples: pickSamples(panesA, p => p.segIndex === 0), panes: panesA
+                        bands: layout.A.bands,
+                        segments: layout.A.segments, samples: pickSamples(panesA, p => p.segIndex === 0), panes: panesA
                     },
                     B: {
                         role: 'office', uvBounds: { u0: 16 * INV, u1: 996 * INV, v0: 464 * INV, v1: 944 * INV },
-                        bands: {
-                            lobby: { yMin: 0, yMax: 4.8, v0: 852 * INV, v1: 944 * INV },
-                            office: { yMin: 4.8, yMax: 20.8, v0: 544 * INV, v1: 852 * INV },
-                            crown: { yMin: 20.8, yMax: 23.8, u0: 16 * INV, u1: 776 * INV, v0: 464 * INV, v1: 528 * INV }
-                        },
-                        segments: bSegMeta, arcUvSpan, samples: pickSamples(panesB, p => p.segIndex === 2 || (p.segIndex >= 3 && p.segIndex <= 12)), panes: panesB
+                        bands: layout.B.bands,
+                        segments: layout.B.segments, arcUvSpan: layout.B.arcUvSpan, samples: pickSamples(panesB, p => p.segIndex === 2 || (p.segIndex >= 3 && p.segIndex <= 12)), panes: panesB
                     },
-                    roofCap: { uvBounds: { u0: 16 * INV, u1: 256 * INV, v0: 960 * INV, v1: 1008 * INV } }
+                    roofCap: { uvBounds: layout.roofCap.uvBounds }
                 }
             };
+        }
+
+        function buildShowcaseSiteANear(sc = WORLD.showcaseSiteA, sharedLayout = null) {
+            if (!sc) return null;
+            if (sc.near) return sc.near;
+            const t0 = performance.now();
+            const layout = sharedLayout || (sc.atlas && sc.atlas.layout) || buildShowcaseFacadeLayout(SHOWCASE_FACADE_SEED, sc.footprints);
+            const UV_CAP = layout.roofCap.uvCap;
+            const makeBuf = () => ({ pos: [], norm: [], uv: [] });
+            const pushTri = (buf, a, b, c, nA, nB = nA, nC = nA, uvA = [UV_CAP.u0, UV_CAP.v0], uvB = uvA, uvC = uvA) => {
+                const ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2];
+                const vx = c[0] - a[0], vy = c[1] - a[1], vz = c[2] - a[2];
+                const cx = uy * vz - uz * vy, cy = uz * vx - ux * vz, cz = ux * vy - uy * vx;
+                const nx = nA[0] + nB[0] + nC[0], ny = nA[1] + nB[1] + nC[1], nz = nA[2] + nB[2] + nC[2];
+                const flip = (cx * nx + cy * ny + cz * nz) < 0;
+                const p2 = flip ? c : b, p3 = flip ? b : c;
+                const q2 = flip ? nC : nB, q3 = flip ? nB : nC;
+                const t2 = flip ? uvC : uvB, t3 = flip ? uvB : uvC;
+                buf.pos.push(a[0], a[1], a[2], p2[0], p2[1], p2[2], p3[0], p3[1], p3[2]);
+                buf.norm.push(nA[0], nA[1], nA[2], q2[0], q2[1], q2[2], q3[0], q3[1], q3[2]);
+                buf.uv.push(uvA[0], uvA[1], t2[0], t2[1], t3[0], t3[1]);
+            };
+            const pushQuad = (buf, a, b, c, d, nA, nB = nA, nC = nA, nD = nA, uvA = [UV_CAP.u0, UV_CAP.v1], uvB = [UV_CAP.u0, UV_CAP.v0], uvC = [UV_CAP.u1, UV_CAP.v0], uvD = [UV_CAP.u1, UV_CAP.v1]) => {
+                pushTri(buf, a, b, c, nA, nB, nC, uvA, uvB, uvC);
+                pushTri(buf, a, c, d, nA, nC, nD, uvA, uvC, uvD);
+            };
+            const pushUVRectQuad = (buf, a, b, c, d, nA, nB, nC, nD, uvBox) => {
+                pushQuad(buf, a, b, c, d, nA, nB, nC, nD, [uvBox.u0, uvBox.v1], [uvBox.u0, uvBox.v0], [uvBox.u1, uvBox.v0], [uvBox.u1, uvBox.v1]);
+            };
+            const toGeometry = (buf) => {
+                const geo = new THREE.BufferGeometry();
+                geo.setAttribute('position', new THREE.Float32BufferAttribute(buf.pos, 3));
+                geo.setAttribute('normal', new THREE.Float32BufferAttribute(buf.norm, 3));
+                geo.setAttribute('uv', new THREE.Float32BufferAttribute(buf.uv, 2));
+                geo.computeBoundingBox();
+                geo.computeBoundingSphere();
+                return geo;
+            };
+            const addPolygonCaps = (buf, pts, y0, y1) => {
+                let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
+                for (let i = 0; i < pts.length; i++) {
+                    if (pts[i][0] < minX) minX = pts[i][0];
+                    if (pts[i][0] > maxX) maxX = pts[i][0];
+                    if (pts[i][1] < minZ) minZ = pts[i][1];
+                    if (pts[i][1] > maxZ) maxZ = pts[i][1];
+                }
+                const spanX = (maxX - minX) || 1, spanZ = (maxZ - minZ) || 1;
+                const capUV = (px, pz) => [
+                    UV_CAP.u0 + ((px - minX) / spanX) * (UV_CAP.u1 - UV_CAP.u0),
+                    UV_CAP.v0 + ((pz - minZ) / spanZ) * (UV_CAP.v1 - UV_CAP.v0)
+                ];
+                const faces = THREE.ShapeUtils.triangulateShape(pts.map(([x, z]) => new THREE.Vector2(x, z)), []);
+                for (const [ia, ib, ic] of faces) {
+                    const pa = pts[ia], pb = pts[ib], pc = pts[ic];
+                    const uva = capUV(pa[0], pa[1]), uvb = capUV(pb[0], pb[1]), uvc = capUV(pc[0], pc[1]);
+                    pushTri(buf, [pa[0], y1, pa[1]], [pc[0], y1, pc[1]], [pb[0], y1, pb[1]], [0, 1, 0], [0, 1, 0], [0, 1, 0], uva, uvc, uvb);
+                    pushTri(buf, [pa[0], y0, pa[1]], [pb[0], y0, pb[1]], [pc[0], y0, pc[1]], [0, -1, 0], [0, -1, 0], [0, -1, 0], uva, uvb, uvc);
+                }
+            };
+            const addSimplePrism = (buf, pts, y0, y1, smoothEdges = null, uvSpec = null) => {
+                const n = pts.length;
+                let total = 0;
+                const segs = [];
+                for (let i = 0; i < n; i++) {
+                    const p0 = pts[i], p1 = pts[(i + 1) % n];
+                    const len = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]) || 1;
+                    segs.push([total, total + len]);
+                    total += len;
+                }
+                for (let i = 0; i < n; i++) {
+                    const p0 = pts[i], p1 = pts[(i + 1) % n];
+                    const dx = p1[0] - p0[0], dz = p1[1] - p0[1], len = Math.hypot(dx, dz) || 1;
+                    const flat = [dz / len, 0, -dx / len];
+                    const sn = smoothEdges && smoothEdges.get(i);
+                    const n0 = sn ? sn[0] : flat, n1 = sn ? sn[1] : flat;
+                    let uA = UV_CAP.u0, uB = UV_CAP.u1, vTop = UV_CAP.v0, vBot = UV_CAP.v1;
+                    if (uvSpec) {
+                        const uSpan = uvSpec.u1 - uvSpec.u0;
+                        uA = uvSpec.u1 - (segs[i][0] / total) * uSpan;
+                        uB = uvSpec.u1 - (segs[i][1] / total) * uSpan;
+                        vTop = uvSpec.v0; vBot = uvSpec.v1;
+                    }
+                    pushQuad(buf, [p0[0], y0, p0[1]], [p0[0], y1, p0[1]], [p1[0], y1, p1[1]], [p1[0], y0, p1[1]], n0, n0, n1, n1, [uA, vBot], [uA, vTop], [uB, vTop], [uB, vBot]);
+                }
+                addPolygonCaps(buf, pts, y0, y1);
+            };
+            const addBox = (buf, x0, x1, y0, y1, z0, z1, uvSpec = null) => {
+                addSimplePrism(buf, [[x0, z0], [x1, z0], [x1, z1], [x0, z1]], y0, y1, null, uvSpec);
+            };
+            const addParapetRing = (buf, outerPts, innerPts, y0, y1, smoothEdges = null) => {
+                const n = outerPts.length;
+                for (let i = 0; i < n; i++) {
+                    const o0 = outerPts[i], o1 = outerPts[(i + 1) % n];
+                    const i0 = innerPts[i], i1 = innerPts[(i + 1) % n];
+                    const dx = o1[0] - o0[0], dz = o1[1] - o0[1], len = Math.hypot(dx, dz) || 1;
+                    const outFlat = [dz / len, 0, -dx / len];
+                    const sn = smoothEdges && smoothEdges.get(i);
+                    const oN0 = sn ? sn[0] : outFlat, oN1 = sn ? sn[1] : outFlat;
+                    const inN0 = [-oN0[0], 0, -oN0[2]], inN1 = [-oN1[0], 0, -oN1[2]];
+                    pushQuad(buf, [o0[0], y0, o0[1]], [o0[0], y1, o0[1]], [o1[0], y1, o1[1]], [o1[0], y0, o1[1]], oN0, oN0, oN1, oN1);
+                    pushQuad(buf, [i0[0], y0, i0[1]], [i1[0], y0, i1[1]], [i1[0], y1, i1[1]], [i0[0], y1, i0[1]], inN0, inN1, inN1, inN0);
+                    pushQuad(buf, [o0[0], y1, o0[1]], [i0[0], y1, i0[1]], [i1[0], y1, i1[1]], [o1[0], y1, o1[1]], [0, 1, 0]);
+                }
+            };
+            const addCylinder = (buf, cx, cz, radius, y0, y1, segs = 12) => {
+                const pts = [], smooth = new Map();
+                for (let i = 0; i < segs; i++) {
+                    const a0 = (i / segs) * Math.PI * 2, a1 = ((i + 1) / segs) * Math.PI * 2;
+                    pts.push([cx + Math.cos(a0) * radius, cz + Math.sin(a0) * radius]);
+                    smooth.set(i, [[Math.cos(a0), 0, Math.sin(a0)], [Math.cos(a1), 0, Math.sin(a1)]]);
+                }
+                addSimplePrism(buf, pts, y0, y1, smooth);
+            };
+            const makeCurvedRect = (minX, maxX, minZ, maxZ, arcR, segs = 10) => {
+                const cx = minX + arcR, cz = maxZ - arcR;
+                const pts = [[minX, minZ], [maxX, minZ], [maxX, maxZ]];
+                const smooth = new Map();
+                const arcStartIdx = pts.length;
+                for (let i = 0; i <= segs; i++) {
+                    const t = Math.PI / 2 + (i / segs) * (Math.PI / 2);
+                    pts.push([cx + arcR * Math.cos(t), cz + arcR * Math.sin(t)]);
+                    if (i < segs) {
+                        const tNext = Math.PI / 2 + ((i + 1) / segs) * (Math.PI / 2);
+                        smooth.set(arcStartIdx + i, [[Math.cos(t), 0, Math.sin(t)], [Math.cos(tNext), 0, Math.sin(tNext)]]);
+                    }
+                }
+                return { pts, smooth };
+            };
+            const offsetOrthoPoly = (pts, off) => {
+                const n = pts.length, normals = [];
+                for (let i = 0; i < n; i++) {
+                    const p0 = pts[i], p1 = pts[(i + 1) % n];
+                    const dx = p1[0] - p0[0], dz = p1[1] - p0[1], len = Math.hypot(dx, dz) || 1;
+                    normals.push([dz / len, -dx / len]);
+                }
+                return pts.map((p, i) => {
+                    const nPrev = normals[(i + n - 1) % n], nNext = normals[i];
+                    return [p[0] + (nPrev[0] + nNext[0]) * off, p[1] + (nPrev[1] + nNext[1]) * off];
+                });
+            };
+            const addProjectingBand = (buf, innerPts, outerPts, y0, y1, uvBox, smoothEdges = null) => {
+                const n = outerPts.length;
+                for (let i = 0; i < n; i++) {
+                    const o0 = outerPts[i], o1 = outerPts[(i + 1) % n];
+                    const i0 = innerPts[i], i1 = innerPts[(i + 1) % n];
+                    const dx = o1[0] - o0[0], dz = o1[1] - o0[1], len = Math.hypot(dx, dz) || 1;
+                    const outFlat = [dz / len, 0, -dx / len];
+                    const sn = smoothEdges && smoothEdges.get(i);
+                    const n0 = sn ? sn[0] : outFlat, n1 = sn ? sn[1] : outFlat;
+                    pushUVRectQuad(buf, [o0[0], y0, o0[1]], [o0[0], y1, o0[1]], [o1[0], y1, o1[1]], [o1[0], y0, o1[1]], n0, n0, n1, n1, uvBox);
+                    pushUVRectQuad(buf, [o0[0], y1, o0[1]], [i0[0], y1, i0[1]], [i1[0], y1, i1[1]], [o1[0], y1, o1[1]], [0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0], uvBox);
+                    pushUVRectQuad(buf, [i0[0], y0, i0[1]], [o0[0], y0, o0[1]], [o1[0], y0, o1[1]], [i1[0], y0, i1[1]], [0, -1, 0], [0, -1, 0], [0, -1, 0], [0, -1, 0], uvBox);
+                }
+            };
+
+            const windowQuads = [];
+
+            // ==================== BUILDING A NEAR (Commercial L-plan: perforated walls + recessed glazing + projecting frames) ====================
+            const aNearShellBuf = makeBuf();
+            const aSafe = layout.A.safeMaskZeroUV;
+            const yA = layout.A.baseY;
+            const buildAPunchedTier = (segs, tierY0, tierY1, openings, uvSpec) => {
+                const ySpan = tierY1 - tierY0;
+                for (const seg of segs) {
+                    const p0 = seg.worldStart, p1 = seg.worldEnd;
+                    const tx = (p1[0] - p0[0]) / seg.length, tz = (p1[1] - p0[1]) / seg.length;
+                    const nx = seg.normal[0], nz = seg.normal[2];
+                    const wallN = [nx, 0, nz], tanPos = [tx, 0, tz], tanNeg = [-tx, 0, -tz];
+                    const pt = (s, y, off) => [p0[0] + tx * s + nx * off, y, p0[1] + tz * s + nz * off];
+                    const wallU = (s) => seg.u1 - (s / seg.length) * (seg.u1 - seg.u0);
+                    const wallV = (y) => uvSpec.v1 - ((y - tierY0) / ySpan) * (uvSpec.v1 - uvSpec.v0);
+                    const emitWallRect = (sA, sB, yA0, yA1) => {
+                        if (sB - sA < 1e-4 || yA1 - yA0 < 1e-4) return;
+                        const uA = wallU(sA), uB = wallU(sB), vB = wallV(yA0), vT = wallV(yA1);
+                        pushQuad(aNearShellBuf, pt(sA, yA0, 0), pt(sA, yA1, 0), pt(sB, yA1, 0), pt(sB, yA0, 0),
+                            wallN, wallN, wallN, wallN, [uA, vB], [uA, vT], [uB, vT], [uB, vB]);
+                    };
+
+                    const segOps = openings.filter(o => o.segIndex === seg.index);
+                    const floorMap = new Map();
+                    for (const op of segOps) {
+                        if (!floorMap.has(op.floor)) floorMap.set(op.floor, []);
+                        floorMap.get(op.floor).push(op);
+                    }
+                    const rows = [...floorMap.values()].map(list => {
+                        list.sort((a, b) => a.s0 - b.s0);
+                        let minY = Infinity, maxY = -Infinity;
+                        for (const op of list) {
+                            const fwB = op.band === 'ground' ? 0.05 : 0.09;
+                            const fwT = 0.08;
+                            minY = Math.min(minY, Math.max(tierY0 + 0.02, op.y0 - fwB));
+                            maxY = Math.max(maxY, Math.min(tierY1 - 0.02, op.y1 + fwT));
+                        }
+                        return { ops: list, yBot: minY, yTop: maxY };
+                    }).sort((a, b) => a.yBot - b.yBot);
+
+                    let yCursor = tierY0;
+                    for (const row of rows) {
+                        const rBot = Math.max(yCursor, row.yBot), rTop = Math.min(tierY1, row.yTop);
+                        emitWallRect(0, seg.length, yCursor, rBot);
+                        let sCursor = 0;
+                        for (let i = 0; i < row.ops.length; i++) {
+                            const op = row.ops[i];
+                            const gapL = i === 0 ? op.s0 : 0.5 * (op.s0 - row.ops[i - 1].s1);
+                            const gapR = i === row.ops.length - 1 ? (seg.length - op.s1) : 0.5 * (row.ops[i + 1].s0 - op.s1);
+                            const fwL = Math.min(0.08, Math.max(0.02, gapL - 0.01));
+                            const fwR = Math.min(0.08, Math.max(0.02, gapR - 0.01));
+                            const fwB = op.band === 'ground' ? 0.05 : 0.09;
+                            const fwT = 0.08;
+                            const fS0 = Math.max(sCursor, op.s0 - fwL), fS1 = Math.min(seg.length, op.s1 + fwR);
+                            const fY0 = Math.max(rBot, op.y0 - fwB), fY1 = Math.min(rTop, op.y1 + fwT);
+                            const rec = -op.recess, proj = op.frameProj;
+                            const uvFrame = aSafe.bronze;
+                            const uvSill = op.band === 'ground' ? aSafe.bronze : aSafe.stone;
+                            const uvRev = aSafe.darkReveal;
+
+                            // Pier to left of frame + wall slivers below/above frame inside row
+                            emitWallRect(sCursor, fS0, rBot, rTop);
+                            emitWallRect(fS0, fS1, rBot, fY0);
+                            emitWallRect(fS0, fS1, fY1, rTop);
+
+                            // 1) Recessed glazing quad with exact layout uvRect
+                            const triStart = aNearShellBuf.pos.length / 9;
+                            pushQuad(aNearShellBuf,
+                                pt(op.s0, op.y0, rec), pt(op.s0, op.y1, rec), pt(op.s1, op.y1, rec), pt(op.s1, op.y0, rec),
+                                wallN, wallN, wallN, wallN,
+                                [op.uvRect.u1, op.uvRect.v1], [op.uvRect.u1, op.uvRect.v0], [op.uvRect.u0, op.uvRect.v0], [op.uvRect.u0, op.uvRect.v1]);
+                            windowQuads.push({ id: op.id, building: 'A', band: op.band, triStart, triCount: 2 });
+
+                            // 2) Continuous inner reveals from +frameProj straight back to -recess
+                            pushUVRectQuad(aNearShellBuf, pt(op.s0, op.y0, rec), pt(op.s0, op.y1, rec), pt(op.s0, op.y1, proj), pt(op.s0, op.y0, proj), tanPos, tanPos, tanPos, tanPos, uvRev);
+                            pushUVRectQuad(aNearShellBuf, pt(op.s1, op.y0, proj), pt(op.s1, op.y1, proj), pt(op.s1, op.y1, rec), pt(op.s1, op.y0, rec), tanNeg, tanNeg, tanNeg, tanNeg, uvRev);
+                            pushUVRectQuad(aNearShellBuf, pt(op.s0, op.y1, proj), pt(op.s0, op.y1, rec), pt(op.s1, op.y1, rec), pt(op.s1, op.y1, proj), [0, -1, 0], [0, -1, 0], [0, -1, 0], [0, -1, 0], uvRev);
+                            pushUVRectQuad(aNearShellBuf, pt(op.s0, op.y0, rec), pt(op.s0, op.y0, proj), pt(op.s1, op.y0, proj), pt(op.s1, op.y0, rec), [0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0], uvSill);
+
+                            // 3) 4 projecting frame front bars at +frameProj (no coplanar backface)
+                            pushUVRectQuad(aNearShellBuf, pt(fS0, op.y1, proj), pt(fS0, fY1, proj), pt(fS1, fY1, proj), pt(fS1, op.y1, proj), wallN, wallN, wallN, wallN, uvFrame);
+                            pushUVRectQuad(aNearShellBuf, pt(fS0, fY0, proj), pt(fS0, op.y0, proj), pt(fS1, op.y0, proj), pt(fS1, fY0, proj), wallN, wallN, wallN, wallN, uvSill);
+                            pushUVRectQuad(aNearShellBuf, pt(fS0, op.y0, proj), pt(fS0, op.y1, proj), pt(op.s0, op.y1, proj), pt(op.s0, op.y0, proj), wallN, wallN, wallN, wallN, uvFrame);
+                            pushUVRectQuad(aNearShellBuf, pt(op.s1, op.y0, proj), pt(op.s1, op.y1, proj), pt(fS1, op.y1, proj), pt(fS1, op.y0, proj), wallN, wallN, wallN, wallN, uvFrame);
+
+                            // 4) 4 outer frame side returns from 0 to +frameProj
+                            pushUVRectQuad(aNearShellBuf, pt(fS0, fY1, proj), pt(fS0, fY1, 0), pt(fS1, fY1, 0), pt(fS1, fY1, proj), [0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0], uvFrame);
+                            pushUVRectQuad(aNearShellBuf, pt(fS0, fY0, 0), pt(fS0, fY0, proj), pt(fS1, fY0, proj), pt(fS1, fY0, 0), [0, -1, 0], [0, -1, 0], [0, -1, 0], [0, -1, 0], uvSill);
+                            pushUVRectQuad(aNearShellBuf, pt(fS0, fY0, 0), pt(fS0, fY1, 0), pt(fS0, fY1, proj), pt(fS0, fY0, proj), tanNeg, tanNeg, tanNeg, tanNeg, uvFrame);
+                            pushUVRectQuad(aNearShellBuf, pt(fS1, fY0, proj), pt(fS1, fY1, proj), pt(fS1, fY1, 0), pt(fS1, fY0, 0), tanPos, tanPos, tanPos, tanPos, uvFrame);
+
+                            sCursor = fS1;
+                        }
+                        emitWallRect(sCursor, seg.length, rBot, rTop);
+                        yCursor = rTop;
+                    }
+                    emitWallRect(0, seg.length, yCursor, tierY1);
+                }
+            };
+
+            buildAPunchedTier(layout.A.segments, yA, yA + 9.6, layout.A.openings.filter(o => o.band === 'ground' || o.band === 'upperBase'), layout.A.uvSpec.base);
+            addPolygonCaps(aNearShellBuf, layout.A.basePts, yA, yA + 9.6);
+            buildAPunchedTier(layout.A.upperSegments, yA + 9.6, yA + 14.2, layout.A.openings.filter(o => o.band === 'setback'), layout.A.uvSpec.upper);
+            addPolygonCaps(aNearShellBuf, layout.A.upperPts, yA + 9.6, yA + 14.2);
+            // Projecting commercial entablature cornice & setback belt course (in [0.08, 0.12] m, strictly inside solid spandrels)
+            addProjectingBand(aNearShellBuf, layout.A.basePts, offsetOrthoPoly(layout.A.basePts, 0.11), yA + 3.68, yA + 4.02, aSafe.bronze);
+            addProjectingBand(aNearShellBuf, layout.A.basePts, offsetOrthoPoly(layout.A.basePts, 0.10), yA + 9.38, yA + 9.60, aSafe.stone);
+            // Penthouse box + subtle top coping band
+            addBox(aNearShellBuf, -525.2, -518.4, yA + 14.2, yA + 16.4, -773.8, -764.4, layout.A.uvSpec.penthouse);
+
+            // Building A Near Roof (reuses matRoofTrim)
+            const aNearRoofBuf = makeBuf();
+            addBox(aNearRoofBuf, -539.0, -517.0, yA + 9.6, yA + 10.35, -777.0, -776.55);
+            addBox(aNearRoofBuf, -539.08, -516.92, yA + 10.35, yA + 10.46, -777.08, -776.47);
+            addParapetRing(aNearRoofBuf, layout.A.upperPts, layout.A.upperInner, yA + 14.2, yA + 14.95);
+            addParapetRing(aNearRoofBuf, offsetOrthoPoly(layout.A.upperPts, 0.08), offsetOrthoPoly(layout.A.upperInner, -0.04), yA + 14.95, yA + 15.08);
+            addBox(aNearRoofBuf, -525.35, -518.25, yA + 16.4, yA + 16.7, -773.95, -764.25);
+            addBox(aNearRoofBuf, -535.5, -531.0, yA + 14.2, yA + 15.5, -773.8, -771.4);
+            addBox(aNearRoofBuf, -523.8, -520.2, yA + 16.7, yA + 17.35, -771.2, -768.2);
+
+            // ==================== BUILDING B NEAR (Office curtain wall: recessed glazing + projecting spandrels & vertical mullions on smooth 10-seg arc) ====================
+            const bNearShellBuf = makeBuf();
+            const bSafe = layout.B.safeMaskZeroUV;
+            const yB = layout.B.baseY;
+            const evalPolyAtS = (poly, pm, s) => {
+                const scClamped = Math.max(0, Math.min(pm.total, s));
+                let segIdx = pm.segs.length - 1;
+                for (let i = 0; i < pm.segs.length; i++) {
+                    if (scClamped <= pm.segs[i].s1 + 1e-6) { segIdx = i; break; }
+                }
+                const seg = pm.segs[segIdx];
+                const f = Math.max(0, Math.min(1, (scClamped - seg.s0) / seg.length));
+                const n = poly.pts.length;
+                const p0 = poly.pts[segIdx], p1 = poly.pts[(segIdx + 1) % n];
+                const x = p0[0] + (p1[0] - p0[0]) * f, z = p0[1] + (p1[1] - p0[1]) * f;
+                const sn = poly.smooth && poly.smooth.get(segIdx);
+                let nx = seg.normal[0], nz = seg.normal[2];
+                if (sn) {
+                    const ix = sn[0][0] + (sn[1][0] - sn[0][0]) * f, iz = sn[0][2] + (sn[1][2] - sn[0][2]) * f;
+                    const l = Math.hypot(ix, iz) || 1;
+                    nx = ix / l; nz = iz / l;
+                }
+                const dx = p1[0] - p0[0], dz = p1[1] - p0[1], dl = Math.hypot(dx, dz) || 1;
+                return { x, z, n: [nx, 0, nz], t: [dx / dl, 0, dz / dl], segIdx };
+            };
+            const emitPerimeterStrip = (buf, poly, pm, sA, sB, y0, y1, uvFn) => {
+                let emitted = 0;
+                for (let i = 0; i < pm.segs.length; i++) {
+                    const seg = pm.segs[i];
+                    if (seg.s1 <= sA + 1e-6 || seg.s0 >= sB - 1e-6) continue;
+                    const sa = Math.max(sA, seg.s0), sb = Math.min(sB, seg.s1);
+                    if (sb - sa < 1e-5) continue;
+                    const fa = (sa - seg.s0) / seg.length, fb = (sb - seg.s0) / seg.length;
+                    const n = poly.pts.length, p0 = poly.pts[i], p1 = poly.pts[(i + 1) % n];
+                    const ax = p0[0] + (p1[0] - p0[0]) * fa, az = p0[1] + (p1[1] - p0[1]) * fa;
+                    const bx = p0[0] + (p1[0] - p0[0]) * fb, bz = p0[1] + (p1[1] - p0[1]) * fb;
+                    const sn = poly.smooth && poly.smooth.get(i);
+                    let nA = seg.normal, nB = seg.normal;
+                    if (sn) {
+                        const axN = sn[0][0] + (sn[1][0] - sn[0][0]) * fa, azN = sn[0][2] + (sn[1][2] - sn[0][2]) * fa, la = Math.hypot(axN, azN) || 1;
+                        const bxN = sn[0][0] + (sn[1][0] - sn[0][0]) * fb, bzN = sn[0][2] + (sn[1][2] - sn[0][2]) * fb, lb = Math.hypot(bxN, bzN) || 1;
+                        nA = [axN / la, 0, azN / la]; nB = [bxN / lb, 0, bzN / lb];
+                    }
+                    const [uA, vB] = uvFn(sa, y0), [uA2, vT] = uvFn(sa, y1), [uB, vT2] = uvFn(sb, y1), [uB2, vB2] = uvFn(sb, y0);
+                    pushQuad(buf, [ax, y0, az], [ax, y1, az], [bx, y1, bz], [bx, y0, bz], nA, nA, nB, nB, [uA, vB], [uA2, vT], [uB, vT2], [uB2, vB2]);
+                    emitted += 2;
+                }
+                return emitted;
+            };
+            const emitPerimeterRing = (buf, polyA, polyB, y, ny, uvBox) => {
+                const n = polyA.pts.length, norm = [0, ny, 0];
+                for (let i = 0; i < n; i++) {
+                    const a0 = polyA.pts[i], a1 = polyA.pts[(i + 1) % n];
+                    const b0 = polyB.pts[i], b1 = polyB.pts[(i + 1) % n];
+                    pushUVRectQuad(buf, [a0[0], y, a0[1]], [b0[0], y, b0[1]], [b1[0], y, b1[1]], [a1[0], y, a1[1]], norm, norm, norm, norm, uvBox);
+                }
+            };
+            const emitSpandrelBand = (buf, polyFront, polyTopBack, polyBotBack, pm, y0, y1, uvSpec, tierY0, tierY1, uvTrim, uvRev) => {
+                const ySpan = tierY1 - tierY0;
+                const uSpan = uvSpec.u1 - uvSpec.u0, vSpan = uvSpec.v1 - uvSpec.v0;
+                emitPerimeterStrip(buf, polyFront, pm, 0, pm.total, y0, y1, (s, y) => [
+                    uvSpec.u1 - (s / pm.total) * uSpan,
+                    uvSpec.v1 - ((y - tierY0) / ySpan) * vSpan
+                ]);
+                emitPerimeterRing(buf, polyTopBack, polyFront, y1, 1, uvTrim);
+                emitPerimeterRing(buf, polyFront, polyBotBack, y0, -1, uvRev);
+            };
+            const emitCurtainRow = (buf, polyGlass, polyMullion, polyBotSpandrel, polyTopSpandrel, emitBotCap, emitTopCap, pm, y0, y1, rowOps, uvSpec, tierY0, tierY1, uvMul, uvRev) => {
+                const sorted = rowOps.slice().sort((a, b) => a.s0 - b.s0);
+                const uSpan = uvSpec.u1 - uvSpec.u0, vSpan = uvSpec.v1 - uvSpec.v0, ySpan = tierY1 - tierY0;
+                const emitMullion = (s0, s1) => {
+                    if (s1 - s0 < 1e-4) return;
+                    emitPerimeterStrip(buf, polyMullion, pm, s0, s1, y0, y1, (s, y) => [
+                        uvMul.u0 + ((s - s0) / Math.max(1e-4, s1 - s0)) * (uvMul.u1 - uvMul.u0),
+                        uvMul.v1 - ((y - y0) / Math.max(1e-4, y1 - y0)) * (uvMul.v1 - uvMul.v0)
+                    ]);
+                    const gL = evalPolyAtS(polyGlass, pm, s0), mL = evalPolyAtS(polyMullion, pm, s0);
+                    const gR = evalPolyAtS(polyGlass, pm, s1), mR = evalPolyAtS(polyMullion, pm, s1);
+                    const nL = [-mL.t[0], 0, -mL.t[2]], nR = [mR.t[0], 0, mR.t[2]];
+                    pushUVRectQuad(buf, [gL.x, y0, gL.z], [gL.x, y1, gL.z], [mL.x, y1, mL.z], [mL.x, y0, mL.z], nL, nL, nL, nL, uvRev);
+                    pushUVRectQuad(buf, [mR.x, y0, mR.z], [mR.x, y1, mR.z], [gR.x, y1, gR.z], [gR.x, y0, gR.z], nR, nR, nR, nR, uvRev);
+                    if (emitTopCap) {
+                        const spL = evalPolyAtS(polyTopSpandrel, pm, s0), spR = evalPolyAtS(polyTopSpandrel, pm, s1);
+                        pushUVRectQuad(buf, [spL.x, y1, spL.z], [mL.x, y1, mL.z], [mR.x, y1, mR.z], [spR.x, y1, spR.z], [0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0], uvMul);
+                    }
+                    if (emitBotCap) {
+                        const spL = evalPolyAtS(polyBotSpandrel, pm, s0), spR = evalPolyAtS(polyBotSpandrel, pm, s1);
+                        pushUVRectQuad(buf, [mL.x, y0, mL.z], [spL.x, y0, spL.z], [spR.x, y0, spR.z], [mR.x, y0, mR.z], [0, -1, 0], [0, -1, 0], [0, -1, 0], [0, -1, 0], uvRev);
+                    }
+                };
+                let sCursor = 0;
+                for (const op of sorted) {
+                    emitMullion(sCursor, op.s0);
+                    const triStart = buf.pos.length / 9;
+                    const triCount = emitPerimeterStrip(buf, polyGlass, pm, op.s0, op.s1, op.y0, op.y1, (s, y) => [
+                        uvSpec.u1 - (s / pm.total) * uSpan,
+                        uvSpec.v1 - ((y - tierY0) / ySpan) * vSpan
+                    ]);
+                    windowQuads.push({ id: op.id, building: 'B', band: op.band, triStart, triCount });
+                    sCursor = op.s1;
+                }
+                emitMullion(sCursor, pm.total);
+            };
+
+            const br = layout.B.baseRect, ur = layout.B.upperRect;
+            const makeBPoly = (rect, off) => makeCurvedRect(rect.minX - off, rect.maxX + off, rect.minZ - off, rect.maxZ + off, rect.arcR + off, rect.segs);
+            const bPolyZero = makeBPoly(br, 0);
+            const bPolyOfficeGlass = makeBPoly(br, -SHOWCASE_GEOM.recessB);
+            const bPolyLobbyGlass = makeBPoly(br, -SHOWCASE_GEOM.recessBLobby);
+            const bPolySpandrel = makeBPoly(br, SHOWCASE_GEOM.frameProjBSpandrel);
+            const bPolyMullion = makeBPoly(br, SHOWCASE_GEOM.frameProjBMullion);
+            const bPolyLobbyCol = makeBPoly(br, SHOWCASE_GEOM.frameProjBLobby);
+            const bPolyPlinth = makeBPoly(br, 0.08);
+            const bPolyCanopy = makeBPoly(br, 0.11);
+            const bUvBase = layout.B.uvSpec.base;
+            const yFromAyB = (ay) => yB + ((944 - ay) / 400) * 20.8;
+
+            // Base plinth + Lobby glass/columns + Lobby canopy
+            emitSpandrelBand(bNearShellBuf, bPolyPlinth, bPolyLobbyGlass, bPolyZero, layout.B.basePM, yFromAyB(944), yFromAyB(936), bUvBase, yB, yB + 20.8, bSafe.spandrel, bSafe.darkReveal);
+            emitCurtainRow(bNearShellBuf, bPolyLobbyGlass, bPolyLobbyCol, bPolyPlinth, bPolyCanopy, true, false, layout.B.basePM, yFromAyB(936), yFromAyB(870),
+                layout.B.openings.filter(o => o.band === 'lobby'), bUvBase, yB, yB + 20.8, bSafe.mullion, bSafe.darkReveal);
+            emitSpandrelBand(bNearShellBuf, bPolyCanopy, bPolyOfficeGlass, bPolyLobbyGlass, layout.B.basePM, yFromAyB(870), yFromAyB(850), bUvBase, yB, yB + 20.8, bSafe.mullion, bSafe.darkReveal);
+
+            // 5 Office curtain-wall floors (bottom-up fl = 4..0) + horizontal projecting spandrels
+            for (let fl = 4; fl >= 0; fl--) {
+                const fy = 552 + fl * 60;
+                const yGlassBot = yFromAyB(fy + 58), yGlassTop = yFromAyB(fy + 16);
+                emitCurtainRow(bNearShellBuf, bPolyOfficeGlass, bPolyMullion, fl === 4 ? bPolyCanopy : bPolySpandrel, bPolySpandrel, fl !== 4, true, layout.B.basePM, yGlassBot, yGlassTop,
+                    layout.B.openings.filter(o => o.band === 'office' && o.flIdx === fl), bUvBase, yB, yB + 20.8, bSafe.mullion, bSafe.darkReveal);
+                const spTopAy = (fl === 0) ? 544 : (fy - 2);
+                const topBack = (fl === 0) ? bPolyZero : bPolyOfficeGlass;
+                emitSpandrelBand(bNearShellBuf, bPolySpandrel, topBack, bPolyOfficeGlass, layout.B.basePM, yGlassTop, yFromAyB(spTopAy), bUvBase, yB, yB + 20.8, bSafe.spandrel, bSafe.darkReveal);
+            }
+            addPolygonCaps(bNearShellBuf, bPolyZero.pts, yB, yB + 20.8);
+
+            // Upper Executive Crown (yB + 20.8 .. yB + 23.8)
+            const bUpZero = makeBPoly(ur, 0);
+            const bUpGlass = makeBPoly(ur, -SHOWCASE_GEOM.recessBCrown);
+            const bUpSpandrel = makeBPoly(ur, 0.09);
+            const bUpMullion = makeBPoly(ur, SHOWCASE_GEOM.frameProjBCrown);
+            const bUvCrown = layout.B.uvSpec.crown;
+            const yFromAyBC = (ay) => yB + 20.8 + ((528 - ay) / 64) * 3.0;
+            emitSpandrelBand(bNearShellBuf, bUpSpandrel, bUpGlass, bUpZero, layout.B.upperPM, yFromAyBC(528), yFromAyBC(522), bUvCrown, yB + 20.8, yB + 23.8, bSafe.crownTrim, bSafe.darkReveal);
+            emitCurtainRow(bNearShellBuf, bUpGlass, bUpMullion, bUpSpandrel, bUpSpandrel, true, true, layout.B.upperPM, yFromAyBC(522), yFromAyBC(478),
+                layout.B.crownOpenings, bUvCrown, yB + 20.8, yB + 23.8, bSafe.mullion, bSafe.darkReveal);
+            emitSpandrelBand(bNearShellBuf, bUpSpandrel, bUpZero, bUpGlass, layout.B.upperPM, yFromAyBC(478), yFromAyBC(464), bUvCrown, yB + 20.8, yB + 23.8, bSafe.crownTrim, bSafe.darkReveal);
+            addPolygonCaps(bNearShellBuf, bUpZero.pts, yB + 20.8, yB + 23.8);
+
+            // Building B Near Roof (reuses matRoofTrim)
+            const bNearRoofBuf = makeBuf();
+            const bBaseInner = makeCurvedRect(-483.5, -461.5, -820.5, -803.5, 3.5, 10);
+            const bUpperInner = makeCurvedRect(-479.05, -462.95, -819.05, -805.25, 2.55, 10);
+            addParapetRing(bNearRoofBuf, bPolyZero.pts, bBaseInner.pts, yB + 20.8, yB + 21.55, bPolyZero.smooth);
+            addParapetRing(bNearRoofBuf, makeBPoly(br, 0.08).pts, makeCurvedRect(-483.42, -461.58, -820.42, -803.58, 3.42, 10).pts, yB + 21.55, yB + 21.68, bPolyZero.smooth);
+            addParapetRing(bNearRoofBuf, bUpZero.pts, bUpperInner.pts, yB + 23.8, yB + 24.35, bUpZero.smooth);
+            addParapetRing(bNearRoofBuf, makeBPoly(ur, 0.08).pts, makeCurvedRect(-478.97, -463.03, -818.97, -805.33, 2.47, 10).pts, yB + 24.35, yB + 24.47, bUpZero.smooth);
+            addBox(bNearRoofBuf, -474.0, -468.0, yB + 23.8, yB + 25.0, -815.5, -810.5);
+            addCylinder(bNearRoofBuf, -465.5, -814.5, 1.4, yB + 23.8, yB + 24.9, 12);
+
+            const makeNearMesh = (name, buf, mat) => {
+                const geo = toGeometry(buf);
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.name = name;
+                mesh.castShadow = false;
+                mesh.receiveShadow = true;
+                mesh.frustumCulled = true;
+                mesh.visible = true;
+                mesh.layers.set(SHOWCASE_LOD_INACTIVE_LAYER);
+                mesh.userData.noBatch = true;
+                mesh.userData.showcaseSiteA = true;
+                mesh.userData.showcaseSiteALod = 'near';
+                return mesh;
+            };
+            const nearMeshes = {
+                buildingAShell: makeNearMesh('siteA_buildingA_near_shell', aNearShellBuf, sc.materials[0]),
+                buildingARoof: makeNearMesh('siteA_buildingA_near_roof', aNearRoofBuf, sc.materials[2]),
+                buildingBShell: makeNearMesh('siteA_buildingB_near_shell', bNearShellBuf, sc.materials[1]),
+                buildingBRoof: makeNearMesh('siteA_buildingB_near_roof', bNearRoofBuf, sc.materials[2])
+            };
+            const nearGroup = new THREE.Group();
+            nearGroup.name = 'showcase_site_a_near';
+            nearGroup.userData.noBatch = true;
+            nearGroup.userData.showcaseSiteA = true;
+            nearGroup.visible = sc.group.visible;
+            Object.values(nearMeshes).forEach(m => nearGroup.add(m));
+            scene.add(nearGroup);
+
+            const triOf = (m) => m.geometry.attributes.position.count / 3;
+            const bytesOf = (m) => {
+                const a = m.geometry.attributes;
+                return (a.position ? a.position.array.byteLength : 0) + (a.normal ? a.normal.array.byteLength : 0) + (a.uv ? a.uv.array.byteLength : 0);
+            };
+            const trisAShell = triOf(nearMeshes.buildingAShell), trisARoof = triOf(nearMeshes.buildingARoof);
+            const trisBShell = triOf(nearMeshes.buildingBShell), trisBRoof = triOf(nearMeshes.buildingBRoof);
+            const bufferBytes = Object.values(nearMeshes).reduce((s, m) => s + bytesOf(m), 0);
+
+            sc.near = {
+                group: nearGroup,
+                meshes: nearMeshes,
+                windowQuads,
+                stats: {
+                    trisAShell, trisARoof, trisA: trisAShell + trisARoof,
+                    trisBShell, trisBRoof, trisB: trisBShell + trisBRoof,
+                    totalTris: trisAShell + trisARoof + trisBShell + trisBRoof,
+                    bufferBytes, initMs: performance.now() - t0
+                }
+            };
+            sc.lod = {
+                A: 'far', B: 'far',
+                nearDist: SHOWCASE_LOD_NEAR_DIST, farDist: SHOWCASE_LOD_FAR_DIST,
+                activeLayer: SHOWCASE_LOD_ACTIVE_LAYER, inactiveLayer: SHOWCASE_LOD_INACTIVE_LAYER,
+                pendingReset: true, updates: 0, skippedWhileHidden: 0,
+                lastDistA: Infinity, lastDistB: Infinity
+            };
+
+            const baseSetVisible = sc.setVisible;
+            sc.setVisible = (on) => {
+                const vis = baseSetVisible(on);
+                nearGroup.visible = vis;
+                if (vis) {
+                    sc.lod.pendingReset = true;
+                    updateShowcaseSiteALOD(true);
+                }
+                return vis;
+            };
+            sc.isVisible = () => sc.group.visible && nearGroup.visible;
+            sc.resetLOD = () => {
+                sc.lod.pendingReset = true;
+                if (sc.isVisible()) {
+                    updateShowcaseSiteALOD(true);
+                    sc.lod.pendingReset = true;
+                }
+            };
+            sc.updateLOD = (forceReset = false) => updateShowcaseSiteALOD(forceReset);
+            updateShowcaseSiteALOD(true);
+            return sc.near;
+        }
+
+        function updateShowcaseSiteALOD(forceReset = false) {
+            const sc = WORLD.showcaseSiteA;
+            if (!sc || !sc.near || !sc.lod) return null;
+            if (!sc.isVisible()) {
+                sc.lod.skippedWhileHidden++;
+                return sc.lod;
+            }
+            const lod = sc.lod;
+            const doReset = Boolean(forceReset || lod.pendingReset);
+            lod.pendingReset = false;
+            const cx = camera.position.x, cz = camera.position.z;
+            const fpA = sc.footprints.buildingA, fpB = sc.footprints.buildingB;
+            const dxA = cx < fpA.minX ? (fpA.minX - cx) : (cx > fpA.maxX ? (cx - fpA.maxX) : 0);
+            const dzA = cz < fpA.minZ ? (fpA.minZ - cz) : (cz > fpA.maxZ ? (cz - fpA.maxZ) : 0);
+            const dA = Math.hypot(dxA, dzA);
+            const dxB = cx < fpB.minX ? (fpB.minX - cx) : (cx > fpB.maxX ? (cx - fpB.maxX) : 0);
+            const dzB = cz < fpB.minZ ? (fpB.minZ - cz) : (cz > fpB.maxZ ? (cz - fpB.maxZ) : 0);
+            const dB = Math.hypot(dxB, dzB);
+            lod.lastDistA = dA;
+            lod.lastDistB = dB;
+            const nextA = doReset ? (dA <= SHOWCASE_LOD_NEAR_DIST ? 'near' : 'far')
+                : (dA <= SHOWCASE_LOD_NEAR_DIST ? 'near' : (dA >= SHOWCASE_LOD_FAR_DIST ? 'far' : lod.A));
+            const nextB = doReset ? (dB <= SHOWCASE_LOD_NEAR_DIST ? 'near' : 'far')
+                : (dB <= SHOWCASE_LOD_NEAR_DIST ? 'near' : (dB >= SHOWCASE_LOD_FAR_DIST ? 'far' : lod.B));
+            const applyBuildingLayers = (farShell, farRoof, nearShell, nearRoof, isNear) => {
+                const farLayer = isNear ? SHOWCASE_LOD_INACTIVE_LAYER : SHOWCASE_LOD_ACTIVE_LAYER;
+                const nearLayer = isNear ? SHOWCASE_LOD_ACTIVE_LAYER : SHOWCASE_LOD_INACTIVE_LAYER;
+                farShell.layers.set(farLayer);
+                farRoof.layers.set(farLayer);
+                nearShell.layers.set(nearLayer);
+                nearRoof.layers.set(nearLayer);
+            };
+            if (doReset || nextA !== lod.A) {
+                lod.A = nextA;
+                applyBuildingLayers(sc.meshes.buildingAShell, sc.meshes.buildingARoof, sc.near.meshes.buildingAShell, sc.near.meshes.buildingARoof, nextA === 'near');
+            }
+            if (doReset || nextB !== lod.B) {
+                lod.B = nextB;
+                applyBuildingLayers(sc.meshes.buildingBShell, sc.meshes.buildingBRoof, sc.near.meshes.buildingBShell, sc.near.meshes.buildingBRoof, nextB === 'near');
+            }
+            lod.updates++;
+            return lod;
         }
 
         function applyShowcaseFacades() {
             const sc = WORLD.showcaseSiteA;
             if (!sc) return null;
-            if (sc.atlas) return sc.atlas;
+            if (sc.atlas) {
+                if (!sc.near) buildShowcaseSiteANear(sc, sc.atlas.layout);
+                return sc.atlas;
+            }
             const built = buildShowcaseFacadeMaps(SHOWCASE_FACADE_SEED, sc.footprints);
             built.atlasTexture.anisotropy = showcaseFacadeAnisotropy();
             built.atlasTexture.needsUpdate = true;
@@ -11555,8 +12318,9 @@
                 seed: built.seed, atlasSize: built.atlasSize, maskSize: built.maskSize, initMs: built.initMs,
                 atlasTexture: built.atlasTexture, maskTexture: built.maskTexture,
                 uniforms: { uFacadeNight: nightUniform, uFacadeMask: maskUniform },
-                islands: built.islands
+                islands: built.islands, layout: built.layout
             };
+            buildShowcaseSiteANear(sc, built.layout);
             return sc.atlas;
         }
 
@@ -11770,6 +12534,7 @@
             updateVehicleFX(dt);
             updateCityDetails(dt);
             updateFacadeLOD(false);
+            updateShowcaseSiteALOD(false);
             updateWaypoint();
             updateDelivery(dt);
             updateStuntJumps(dt);
@@ -11790,7 +12555,7 @@
         requestAnimationFrame(animate);
 
         // 除錯用：在瀏覽器主控台輸入 __VH 可查看遊戲狀態
-        window.__VH = { TREE_COLLIDERS, refreshTreeColliders, treeColliderDiagnostics, PHYS_DEBUG, setPhysicsDebug, updatePhysicsDebug, TRAFFIC, updateTrafficPhysics, trafficDiagnostics, changeLanguage, refreshMissionLabels, renderDrivingHUD, showBanner, VH_I18N, WMAP, openGameHub, closeModals, __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights, buildShowcaseSiteA, setShowcaseSiteAVisible, applyShowcaseFacades, buildShowcaseFacadeMaps };
+        window.__VH = { TREE_COLLIDERS, refreshTreeColliders, treeColliderDiagnostics, PHYS_DEBUG, setPhysicsDebug, updatePhysicsDebug, TRAFFIC, updateTrafficPhysics, trafficDiagnostics, changeLanguage, refreshMissionLabels, renderDrivingHUD, showBanner, VH_I18N, WMAP, openGameHub, closeModals, __stunt: (dt) => updateStuntJumps(dt), __recycle: (dt) => recycleTraffic(dt), SAVE, STUNT, DELIVERY, CAR_MODELS, loadCarModel, startDeliveryJob, nearestDepot, getActivePosition, TREES, DAY, skyAtHour, applySkyParams, updateDayCycle, __th: terrainHeight, RealisticRaycastVehicle, updateFacadeLOD, applyQualitySetting, applySkyPreset, ROAD_NET, MISSION, startMission, THREE, CANNON, STATE, INPUT, WORLD, CAM, PLAYER, physicsWorld, camera, scene, renderer, toggleEnterExitCar, teleportTo, updateCameraAndLights, buildShowcaseSiteA, setShowcaseSiteAVisible, applyShowcaseFacades, buildShowcaseFacadeMaps, buildShowcaseFacadeLayout, buildShowcaseSiteANear, updateShowcaseSiteALOD };
     </script>
 </body>
 </html>

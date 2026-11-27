@@ -11,7 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-014B3 Site A facade geometry: recessed glazing, projecting frames, Near/Far LOD (world/render; HIGH risk, SMALL volume) (Approved v1.2 D-048; ready for Gemini)
+### T-014B3 Site A facade geometry: recessed glazing, projecting frames, Near/Far LOD (world/render; HIGH risk, SMALL volume) (Released vh-2026-11-27-02, PR #102, D-049; awaiting Martin device FPS >=30 day/night and ART judgement; NO ART PASS)
 Owner: Gemini
 Implementer: Gemini (Stage 3; exception to default Codex routing because Codex usage is low; D-048)
 Reviewer: Claude
