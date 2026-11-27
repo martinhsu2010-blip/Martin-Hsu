@@ -25,7 +25,7 @@ Precedence on conflict: this file > errata > v1.4 > v1.3 > v1.2. Explicit supers
 - Implementer: Gemini (Stage 3, per-task exception continues, D-052). Reviewer: Claude. Risk LOW, volume SMALL.
 - Branch `gemini/T-016B-we01b-capacity-analyzer`, base = latest `main` at start (Claude gives the SHA in the prompt).
 - Only two new files: `tools/test/we01b_capacity_analyzer.py` and `tools/test/we01b_capacity_analyzer_check.py`. Python standard library only. No change to any existing file (WE-01A files, fixtures, production, `sw.js`, CI, docs, specs).
-- Lines (both files combined): target 900, hard ceiling 1,050; lines above 900 only for tests. Progress reports at about half progress and before finishing (errata E3.3). Over 1,050 -> stop and return to Claude. No compression, weakened assertions or deleted tests to fit.
+- Lines (both files combined): **revised by Martin 2026-11-27 (D-052a): hard ceiling 1,600** (was 1,050); progress report at about 1,300 lines and before finishing; over 1,600 -> stop and return to Claude. No compression of code, no weakened or deleted tests to fit. (Original: target 900, ceiling 1,050.) Progress reports at about half progress and before finishing (errata E3.3). 
 - Allowed imports from `we01a_land_analyzer`: `validate_dump`, `compute_static_fingerprint`, `poly_bounds`, `poly_area`, `is_axis_rect`, `clip_poly_to_rect`, `fp_intersects_cell`, `sample_height`, `slope_class_from_pct`. Nothing else (no underscore functions).
 - The check script may additionally import (read-only) `make_dump`, `_rect`, `_fp`, `_write_dump`, `_expect_fail` from `we01a_land_analyzer_check` (it has a `__main__` guard). It must not change that file.
 - Never commit dumps, generated outputs, `__pycache__`, browser caches. Run with `python3 -B`.
