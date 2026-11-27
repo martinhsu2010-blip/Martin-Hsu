@@ -26,7 +26,7 @@ Spec: `specs/WE-01-spec-v1.2.md` (§5 schema, conditions C1-C6). These notes des
 | `WORLD.suburbHouses` | BUILDING | EXACT_OUTLINE | oriented rectangle (visual wall box); physics boxes are 0.3 m larger per side |
 | `TREE_COLLIDERS` | TREE | CONSERVATIVE_AABB | trunk collider box (all trees, not only the active pool) |
 | `PHYSICS_STATIC` | COLLIDER | EXACT_OUTLINE for boxes/convex, CONSERVATIVE_AABB for cylinders/spheres/trimesh | physicsWorld bodies with mass 0, per shape; duplicates of infill/tree bodies and the ground box removed; `visual=false`, `physical=true` |
-| `SCENE_BOX3` | OTHER | CONSERVATIVE_AABB | visible meshes and instances up to 40 m wide; **inflates** obstacles (tree crowns, facade windows, lamps); `visual=true`, `physical=false` |
+| `SCENE_BOX3` | BUILDING (with `parent_id`) or OTHER | CONSERVATIVE_AABB | visible meshes and instances up to 40 m wide; **inflates** obstacles (tree crowns, lamps). A box whose centre lies within 2 m of a building footprint is a facade part: category `BUILDING`, `parent_id` = that building; all others are `OTHER`. `visual=true`, `physical=false` |
 | `ROAD_NET.*` | ROAD | EXACT_OUTLINE per segment quad (roundabout: AABB) | carriageway only: avenues (half 12), cross streets (half 11), ribbons, hillRoad, terrainRoads, suburbRoads, ring, spurs |
 | `ROAD_NET.avenueSidewalks` / `crossSidewalks` | SIDEWALK | CONSERVATIVE_AABB | 6 m strips outside the carriageway; other roads have no sidewalk footprint |
 | `SITE_A_PROTECTION` | SITE_A | EXACT_OUTLINE | `protected=true`, X[-561,-441] Z[-831,-753]; equals the runtime Site A bounding box +10 m (`RUNTIME_VERIFIED`) |
@@ -42,3 +42,6 @@ Only objects intersecting a survey rectangle or a corridor rectangle (+10 m) are
 
 ## Fingerprint contract (C3), summary
 Input view = physical_ground bounds/top_y, terrain_regions, water/beach polygons, regions, height_grids, footprints (without `source_ref`/`verification`), roads (without `source_ref`/`verification`), `metadata.source_counts`, `completeness`. All metric numbers -> integer mm with `floor(x*1000+0.5)`; `nx`, `nz`, counts stay; lists with `id` sorted by id; canonical JSON `sort_keys=True, separators=(",", ":")`; SHA-256 hex of the UTF-8 bytes. `fingerprint_reference.py` is the exact definition; a change in any included value must change the fingerprint (test A17), a change in `generated_at`, `issues`, `source_ref` or `seed` must not.
+
+## Revision
+2026-11-27 (D-051b): extractor `we01-extract-1` now tags facade scene boxes as BUILDING with `parent_id`; before this the land analysis showed almost no L2 land because facade boxes were OTHER (-> L5). Sample fingerprints changed to `3503a715...` (PHONE_LOW) and `06f4e416...` (DESKTOP_HIGH).
