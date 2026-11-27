@@ -291,6 +291,53 @@ def test_mutations_ma01_to_ma09(td: Path):
     _expect_fail("M-A09: accept wrong height length", lambda: _expect_fail("must_reject_bad_len", lambda: W.validate_dump(bad_len, {"allow_bad_height_len": True})))
 
 
+def test_round1_edge_oracles(td: Path):
+    # 1 & 2. Hand-written slope threshold table (S0..S4) + S4 (>30%) must map to L5 (never L1)
+    for pct, exp_s in ((0.0, "S0"), (5.0, "S0"), (5.01, "S1"), (10.0, "S1"), (10.01, "S2"), (20.0, "S2"), (20.01, "S3"), (30.0, "S3"), (30.01, "S4")):
+        assert W.slope_class_from_pct(pct) == exp_s, f"Slope boundary {pct}%: got {W.slope_class_from_pct(pct)} != {exp_s}"
+    ramp_cases = (
+        ("SL05", 5.0, "S0", "L0"), ("SL055", 5.5, "S1", "L1"),
+        ("SL10", 10.0, "S1", "L1"), ("SL105", 10.5, "S2", "L1"),
+        ("SL20", 20.0, "S2", "L1"), ("SL205", 20.5, "S3", "L1"),
+        ("SL299", 29.9, "S3", "L1"), ("SL305", 30.5, "S4", "L5"),
+    )
+    for rid, pct, exp_s, exp_l in ramp_cases:
+        reg = [{"id": rid, "name": rid, "initial_polygon": _rect(0, 0, 5, 5), "survey_polygon": _rect(0, 0, 5, 5), "buffer_m": 0, "source_ref": "syn"}]
+        p = _write_dump(td, f"{rid}.json", make_dump(regions=reg, height_fn=lambda x, z, k=pct / 100.0: round(x * k, 3)))
+        r0 = W.analyze_dumps([p])["inventory"]["regions"][0]
+        exp_sc = {s: (25.0 if s == exp_s else 0.0) for s in W.SLOPE_CLASSES}
+        exp_lc = {c: (25.0 if c == exp_l else 0.0) for c in W.CLASSES}
+        assert r0["slope_class_areas_m2"] == exp_sc, f"Ramp {pct}% slope mismatch: {r0['slope_class_areas_m2']} != {exp_sc}"
+        assert r0["common_initial_class_areas_m2"] == exp_lc, f"Ramp {pct}% land mismatch: {r0['common_initial_class_areas_m2']} != {exp_lc}"
+
+    # 3. Footprint with verification="UNKNOWN" must classify its cells as LX (never L0/L2/L5)
+    reg_u = [{"id": "ZUV", "name": "UnkVer", "initial_polygon": _rect(0, 0, 15, 5), "survey_polygon": _rect(0, 0, 15, 5), "buffer_m": 0, "source_ref": "syn"}]
+    fps_u = [_fp("UB", "BUILDING", [1, 1, 4, 4], ver="UNKNOWN"), _fp("UO", "OTHER", [6, 1, 9, 4], ver="UNKNOWN")]
+    pu = _write_dump(td, "r1_unk_fp.json", make_dump(regions=reg_u, footprints=fps_u))
+    cu = W.analyze_dumps([pu])["inventory"]["regions"][0]["common_initial_class_areas_m2"]
+    assert cu == {"L0": 25.0, "L1": 0.0, "L2": 0.0, "L3": 0.0, "L4": 0.0, "L5": 0.0, "LX": 50.0}, f"UNKNOWN footprint mismatch: {cu}"
+
+    # 4. Zero-area vertical-plane AABB: blocks cell strictly inside, does NOT block when on cell boundary
+    reg_v = [{"id": "ZVP", "name": "VertPlane", "initial_polygon": _rect(0, 0, 20, 5), "survey_polygon": _rect(0, 0, 20, 5), "buffer_m": 0, "source_ref": "syn"}]
+    fps_v = [
+        _fp("VX_IN", "OTHER", [2.5, 1.0, 2.5, 4.0], sg="SCENE_BOX3", gt="AABB", prec="CONSERVATIVE_AABB"),
+        _fp("VZ_IN", "OTHER", [6.0, 2.5, 9.0, 2.5], sg="SCENE_BOX3", gt="AABB", prec="CONSERVATIVE_AABB"),
+        _fp("VX_EDGE", "OTHER", [15.0, 0.0, 15.0, 5.0], sg="SCENE_BOX3", gt="AABB", prec="CONSERVATIVE_AABB"),
+        _fp("VZ_EDGE", "OTHER", [10.0, 0.0, 15.0, 0.0], sg="SCENE_BOX3", gt="AABB", prec="CONSERVATIVE_AABB"),
+    ]
+    pv = _write_dump(td, "r1_vplane.json", make_dump(regions=reg_v, footprints=fps_v))
+    cv = W.analyze_dumps([pv])["inventory"]["regions"][0]["common_initial_class_areas_m2"]
+    assert cv == {"L0": 50.0, "L1": 0.0, "L2": 0.0, "L3": 0.0, "L4": 0.0, "L5": 50.0, "LX": 0.0}, f"Vertical plane AABB mismatch: {cv}"
+
+    # 5. Area conservation tolerance <= 1.0 m2 and rejection when class-area error exceeds 1.0 m2
+    assert 0.0 < W.CONSERVATION_TOL_M2 <= 1.0, f"CONSERVATION_TOL_M2 too loose: {W.CONSERVATION_TOL_M2}"
+    # 5m x 0.3m strip = 1.5 m2; double-counting 2 overlapping classes gives error = 1.5 m2 > 1.0 m2 -> must raise ValidationError
+    reg_c = [{"id": "ZCT", "name": "ConsTol", "initial_polygon": _rect(0, 0, 5, 0.3), "survey_polygon": _rect(0, 0, 5, 0.3), "buffer_m": 0, "source_ref": "syn"}]
+    pc = _write_dump(td, "r1_cons.json", make_dump(regions=reg_c, water=[_rect(0, 0, 5, 1)], beach=[_rect(0, 0, 5, 1)]))
+    assert W.analyze_dumps([pc])["inventory"]["regions"][0]["common_conservation_error_m2"]["initial"] <= 1.0
+    _expect_fail("conservation error 1.5m2 > 1.0m2 must reject", lambda: W.analyze_dumps([pc], opts={"double_count_overlaps": True}))
+
+
 def test_real_sample_dumps(td: Path):
     od = td / "real_samples"
     assert W.main(["--dump", str(SAMPLE_LO), "--dump", str(SAMPLE_HI), "--out", str(od)]) == 0
@@ -316,9 +363,10 @@ def main() -> int:
         _assert_a12_preset_diff(td); print("PASS [A12] two-preset obstacle union / L0 intersection")
         _assert_a13_height_provenance(); print("PASS [A13] height provenance (direct vs interpolated)")
         test_a03_a15_a16_a17_a18(td); print("PASS [A03/A15/A16/A17/A18] determinism, SVG, precision, C3 fingerprint, flat physical ground")
+        test_round1_edge_oracles(td); print("PASS [R1-EDGE] slope thresholds S0-S4, S4->L5, UNKNOWN fp->LX, vertical-plane AABB, conservation tol<=1m2")
         test_mutations_ma01_to_ma09(td); print("PASS [M-A01..M-A09] all 9 mutations turned RED")
         test_real_sample_dumps(td); print("PASS [REAL-SAMPLES] sample_phone_low + sample_desktop_high end-to-end")
-    print(f"RESULT: PASS (WE-01A A01, A03-A13, A15-A18 + M-A01..M-A09 RED + real samples in {time.monotonic() - t0:.2f}s)")
+    print(f"RESULT: PASS (WE-01A A01, A03-A13, A15-A18 + R1 edge oracles + M-A01..M-A09 RED + real samples in {time.monotonic() - t0:.2f}s)")
     return 0
 
 
