@@ -11,7 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-014B2 Site A commercial + office facades / R8 night windows (world/render/shader; HIGH risk, SMALL volume) (Released vh-2026-11-26-01, PR #97, commit a0da29d; awaiting Martin device FPS and ART judgement)
+### T-014B2 Site A commercial + office facades / R8 night windows (world/render/shader; HIGH risk, SMALL volume) (Released vh-2026-11-26-01, PR #97, commit a0da29d; Martin reported no device performance impact 2026-11-27 (subjective); follow-up T-014B2.1 anisotropy released vh-2026-11-27-01, PR #99, D-047; ART PASS not granted)
 Owner: Gemini
 Implementer: Gemini (Stage 3; exception to default Codex routing because Codex usage is nearly exhausted; D-045)
 Reviewer: Claude

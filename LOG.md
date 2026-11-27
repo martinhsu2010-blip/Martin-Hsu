@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-27 | vh-2026-11-27-01 | Claude (impl. Gemini) | PR #99 ea098f9 + CACHE bump | T-014B2.1: anisotropic filtering (2 LOW / 4 otherwise) on the Site A facade atlas only; awaiting Martin tablet check of oblique wall sharpness
 - 2026-11-26 | vh-2026-11-26-01 | Claude (impl. Gemini) | commit a0da29d | T-014B2: Site A commercial + office facades, 1024 atlas + R8 night mask, ?showcase=0 (PR #97); t014b2-facade.yml browser CI job added; awaiting Martin device FPS and ART judgement
 - 2026-11-23 | (docs only, no game release) | Claude | base 178fc7d | T-014B2 §5 pre-start gates PASS (D-045a); Gemini prompt issued
 - 2026-11-23 | (docs only, no game release) | Claude | base 943ff86 | T-014B2 spec v1.2 approved and registered (D-045); Gemini pre-start gates pending
