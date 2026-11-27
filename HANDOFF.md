@@ -119,6 +119,9 @@ Released vh-2026-11-22-09. Device FPS (`?fps=1`, single run, Midtown West): Tab 
 ## T-014B1 status
 Released vh-2026-11-23-01 (PR #93, D-044). Site A showcase: two procedural buildings + 100 m visual street, no collision, fast-travel chip `Showcase Site A (No Collision)` / `展示區 A（無碰撞）`; test-only toggle `__VH.setShowcaseSiteAVisible`. Awaiting Martin device FPS and massing review; no ART PASS. Next phases T-014B2/B3 not approved; T-015 lighting still a separate draft. Measurement lesson: read draw calls with `renderer.info.autoReset=false`; mirror pass can re-draw showcase meshes.
 
+## T-014B3 status
+Registered 2026-11-27 (D-048, spec `specs/T-014B3-spec-v1.2.md`, pre-start gates D-048a PASS). Gemini to implement on branch `gemini/T-014B3-facade-geometry` (index.html + new tests only). Claude verifies independently (renderer.info main/mirror, golden hashes, luminance 0.90-1.05, physics pairs) and owns CACHE/CI. Residential not approved.
+
 ## T-014B2 status
 Update 2026-11-27: Martin tested B2 on device (ON/OFF) and felt no performance impact (subjective, no FPS number). T-014B2.1 (PR #99, D-047, vh-2026-11-27-01) adds anisotropic filtering to the facade atlas only; awaiting Martin's oblique-wall sharpness check on Tab S11. B3 geometry proposal (ChatGPT) reviewed for feasibility only, not registered/approved.
 
