@@ -79,13 +79,16 @@ def test_r01_to_r04_geometry_and_fillets(td: Path) -> None:
     assert C.CANDIDATE_ROADS["H01"]["min_radius_m"] == 18.0 and C.CANDIDATE_ROADS["H01"]["max_grade_pct"] == 9.0
     assert C.CANDIDATE_ROADS["U01"]["is_existing_reuse"] is True
 
-    # Mutant 1: C01 carriageway width changed back to 14 m
+    # Mutant 1: C01 carriageway width changed back to 14 m (no analyzer hook: pass mutated road_spec directly)
     fps, segs = _ave0_base()
     cg = [_cor_grid("COR_C01_1M", 180, 860, 280, 1240)]
     p_c01 = _syn_pair(td, "r02", cg, fps, segs=segs, pg_bounds=[-300, -300, 400, 1400])
     d_c01 = C.load_dumps(p_c01)
-    assert C.evaluate_road(c01, d_c01, B.build_road_graph(d_c01["PHONE_LOW"]))["carriageway_width_m"] == 17.0
-    _expect_fail("M:c01_width_14", lambda: _check(C.evaluate_road(c01, d_c01, B.build_road_graph(d_c01["PHONE_LOW"]), opts={"c01_width_14": True})["carriageway_width_m"] == 17.0))
+    g_c01 = B.build_road_graph(d_c01["PHONE_LOW"])
+    r_c01 = C.evaluate_road(c01, d_c01, g_c01)
+    assert r_c01["carriageway_width_m"] == 17.0 and r_c01["corridor_half_width_m"] == 12.5
+    c01_14 = dict(c01, carriageway_width_m=14.0, corridor_half_width_m=11.0)
+    _expect_fail("M:c01_width_14", lambda: _check(C.evaluate_road(c01_14, d_c01, g_c01)["carriageway_width_m"] == 17.0))
 
     # R03 + R04: fillets, collinear (C02 -> no arc), tangent > L/2 fails (never shrink R), spacing <= 3 m
     cl_c02 = C.build_centerline(C.CANDIDATE_ROADS["C02"])
@@ -332,10 +335,13 @@ def test_real_samples_and_mutants(td: Path) -> None:
     g_r = B.build_road_graph(dumps_r["PHONE_LOW"])
     _expect_fail("M:drop_ave110_link", lambda: _check(any(l["reason"] == "AVE110_EXTENSION_REQUIRED" for l in C.evaluate_road(C.CANDIDATE_ROADS["C02"], dumps_r, g_r, opts={"drop_ave110_link": True})["optional_extension_links"])))
     _expect_fail("M:count_u01_as_new", lambda: _check(C.evaluate_road(C.CANDIDATE_ROADS["U01"], dumps_r, g_r, opts={"count_u01_as_new": True})["new_length_m"] == 0.0))
-    # H01 failing must not fail B2 (mutant 17)
+    # H01 failing must not fail B2 (no analyzer hook: verify generic verdict rules on road_results)
     rr_for_b2 = {k: C.evaluate_road(C.CANDIDATE_ROADS[k], dumps_r, g_r) for k in ("H01", "H02")}
     C.build_candidate_graph(rr_for_b2, g_r)
-    _expect_fail("M:h01_fails_b2", lambda: _check(C.evaluate_region_access(rr_for_b2, g_r, dumps_r, opts={"h01_fails_b2": True})["REVISED"]["B2"]["verdict"] == "CONDITIONAL"))
+    assert C.evaluate_region_access(rr_for_b2, g_r, dumps_r)["REVISED"]["B2"]["verdict"] == "CONDITIONAL"
+    assert C.evaluate_region_access({"H01": rr_for_b2["H01"]}, g_r, dumps_r)["REVISED"]["B2"]["verdict"] == "NOT FEASIBLE WITHIN AUDITED BOUNDARIES"
+    rr_b2_mut = {"H01": rr_for_b2["H01"], "H02": dict(rr_for_b2["H02"], state="NOT_FEASIBLE")}
+    _expect_fail("M:h01_fails_b2", lambda: _check(C.evaluate_region_access(rr_b2_mut, g_r, dumps_r)["REVISED"]["B2"]["verdict"] == "CONDITIONAL"))
 
     # Real sample_b3mid run (U01 present in COR_U01_1M, no AVE_0 -> UNVERIFIED; C01/C02 stay UNVERIFIED on missing heights)
     sb = C.analyze([FX / "sample_b3mid_phone_low.json", FX / "sample_b3mid_desktop_high.json"])

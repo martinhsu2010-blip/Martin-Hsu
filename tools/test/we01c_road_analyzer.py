@@ -538,8 +538,6 @@ def evaluate_road(
 ) -> dict[str, Any]:
     opts = opts or {}
     rid = road_spec["id"]
-    if rid == "C01" and opts.get("c01_width_14"):
-        road_spec = dict(road_spec, carriageway_width_m=14.0, corridor_half_width_m=11.0)
     d_lo = dumps["PHONE_LOW"]
     cl_res = build_centerline(road_spec, opts=opts)
     cl = cl_res["centerline_exact"]
@@ -882,8 +880,6 @@ def evaluate_region_access(
             if opts.get("verdict_from_parcel_counts") and cap_inv is not None:
                 c_dir = (((cap_inv.get("scenarios") or {}).get(sid) or {}).get("regions") or {}).get(rid, {}).get("capacities", {}).get("C_direct", 0)
                 verdict, reasons = ("FEASIBLE", ["DERIVED_FROM_PARCEL_COUNTS"]) if c_dir > 0 else ("NOT FEASIBLE WITHIN AUDITED BOUNDARIES", ["DERIVED_FROM_PARCEL_COUNTS"])
-            elif opts.get("h01_fails_b2") and rid == "B2" and "H01" in nf_hits:
-                verdict, reasons = "NOT FEASIBLE WITHIN AUDITED BOUNDARIES", ["H01_FAILED"]
             elif ex_hits:
                 verdict, reasons = "FEASIBLE", ["EXISTING_MAIN_COMPONENT_ACCESS"]
             elif cond_hits:
