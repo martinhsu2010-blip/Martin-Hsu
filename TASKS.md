@@ -11,7 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-016D WE-01D Internal streets, conditional capacity and feasibility verdicts (read-only audit tooling; LOW risk, LARGE volume) (Registered 2026-11-27, D-056; approved by Martin 2026-11-27 20:17; gates PASS; T-016E NOT registered)
+### T-016D WE-01D Internal streets, conditional capacity and feasibility verdicts (read-only audit tooling; LOW risk, LARGE volume) (Registered 2026-11-27, D-056; approved by Martin 2026-11-27 20:17; gates PASS; PR #121 merged e0afd90, Done (D-057); T-016E NOT registered)
 Owner: Gemini
 Implementer: Gemini (Stage 3; per-task exception, D-056)
 Reviewer: Claude
@@ -21,7 +21,7 @@ Branch/PR: `gemini/T-016D-we01d-final-feasibility`
 Spec: `specs/T-016D-spec-v1.0.md` (entry point, Claude conditions G0-D1..D16 win) + ChatGPT draft `specs/T-016D-draft-v1.0-chatgpt.md` + T-016B/T-016C specs and the WE-01 v1.2/v1.3/v1.4 documents
 Scope: new `tools/test/we01d_feasibility_analyzer.py` + `tools/test/we01d_feasibility_analyzer_check.py`, plus one bounded edit of `tools/test/we01b_capacity_analyzer.py` (optional `seed_parcels` for `place_layout`, <= 20 lines, B outputs byte-identical). Python stdlib; line ceiling 2,250 combined (analyzer <= 1,500, check <= 750, target 1,900, final); reports at about 800, about 1,500 lines and before finishing. Region-filtered candidate budget 1,280 per region and scenario; max 3 streets per region (30-150 m, 11 m corridor, 6 %); outputs `internal_streets.json`, `conditional_parcels.json`, `feasibility.json`. SVG/report -> T-016E; final B8 baseline measured by Claude after merge.
 Gates (v1.2): B2, B3, B5, B6, B7, B12 re-checked; B4, B9 inherited; B8 (Claude), B10 and B11 (Martin) after T-016E. A passing T-016D is not a feasibility result.
-Status: registered; implementation prompt given to Martin for Gemini.
+Status: Done. PR #121 (Gemini, head a8142f1; analyzer 1,442 + check 467 = 1,909 lines, B edit +10/-5) merged e0afd90 on Martin's "合併" 2026-11-27 22:33; Claude independent verification PASS (D-057); check wired into CI. Gates B2, B3, B5, B6, B7, B12 re-checked; B8 (Claude, after merge), B10 and B11 (Martin) after T-016E. Not a final feasibility acceptance.
 
 ### T-016C WE-01C Road feasibility survey (read-only audit tooling; LOW risk, SMALL volume) (Registered 2026-11-27, D-054; approved by Martin 2026-11-27 16:00; gates PASS 16:01; PR #118 merged 9f20b19, Done (D-055); T-016D registered separately, D-056)
 Owner: Gemini
