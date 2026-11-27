@@ -11,6 +11,16 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
+### T-016A WE-01A Runtime dump analysis and land classification (read-only audit tooling; LOW risk, SMALL volume) (Registered 2026-11-27, D-051; Gemini start waits for Claude's sample dump)
+Owner: Gemini
+Implementer: Gemini (Stage 3; per-task exception, D-051)
+Reviewer: Claude
+Priority: P1
+Base commit: main 84319439 (vh-2026-11-27-02); re-confirm at start
+Branch/PR: `gemini/T-016A-we01a-land-analyzer`
+Spec: `specs/WE-01-spec-v1.2.md` (v1.2 + Claude conditions C1-C6; approved by Martin 2026-11-27 11:24, WE-01A only; D-051)
+Scope: new `tools/test/we01a_land_analyzer.py` + `tools/test/we01a_land_analyzer_check.py` only (Python stdlib; <=800 lines target, 1,000 ceiling). Reads Claude-supplied JSON dumps (PHONE_LOW + DESKTOP_HIGH); no game, CACHE or docs change. Claude supplies runtime dumps, fixtures path `tools/fixtures/we01/` and heavy verification. WE-01B (T-016B) is separate and needs its own G0 + approval. No residential, road, terrain or art authorization.
+
 ### T-014B3 Site A facade geometry: recessed glazing, projecting frames, Near/Far LOD (world/render; HIGH risk, SMALL volume) (Released vh-2026-11-27-02, PR #102, D-049; device FPS accepted by Martin 2026-11-27 (D-050: phone day 68.4 avg, tablet night 65.6 avg / 58 low); art accepted provisionally by Martin 2026-11-27 (D-050a); not a rollout authorization)
 Owner: Gemini
 Implementer: Gemini (Stage 3; exception to default Codex routing because Codex usage is low; D-048)
