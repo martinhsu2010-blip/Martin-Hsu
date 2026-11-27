@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-27 | (docs only, no game release) | Claude | base 84319439 | WE-01A (T-016A) v1.2 + Claude conditions registered (D-051); Gemini start waits for the sample dump
 - 2026-11-27 | vh-2026-11-27-02 | Claude (impl. Gemini) | PR #102 | T-014B3: Site A Near facade geometry (recessed glazing, projecting frames), shared layout, layer-31 Near/Far LOD; new t014b3 test in CI; stray .pyc removed; known: Building A day window brightness above the 1.05 cap (Martin accepted); awaiting Martin device FPS and ART judgement
 - 2026-11-27 | (docs only, no game release) | Claude | base 6205bc5 | T-014B3 v1.2 registered (D-048) and pre-start gates PASS (D-048a)
 - 2026-11-27 | vh-2026-11-27-01 | Claude (impl. Gemini) | PR #99 ea098f9 + CACHE bump | T-014B2.1: anisotropic filtering (2 LOW / 4 otherwise) on the Site A facade atlas only; awaiting Martin tablet check of oblique wall sharpness
