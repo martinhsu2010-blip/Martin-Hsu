@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-27 | (docs only, no game release) | Claude | base de90f1c | T-016D (WE-01D streets, conditional capacity, verdicts) registered after Martin's approval 20:17 (D-056): `specs/T-016D-spec-v1.0.md` + verbatim draft, ceiling 2,250 (1,500 / 750), budget 1,280, one bounded B seed edit; T-016E (SVG/report) not registered
 - 2026-11-27 | (tooling only, no game release) | Claude | commit 9f20b19 | T-016C WE-01C road analyzer merged (PR #118, D-055), check wired into CI; six candidate roads and nine region verdicts measured; T-016D not registered
 - 2026-11-27 | (docs only, no game release) | Claude | base cafe4759 | T-016C amendment (D-054a): G0-C5 replaced by single-contiguous-run junction rule (validated on formal dumps), ceiling 1,600 (analyzer <= 1,050, check <= 550) final; T-016D not registered
 - 2026-11-27 | (docs only, no game release) | Claude | base 585de82 | T-016C (WE-01C road feasibility) registered after Martin's approval 16:00 (D-054): `specs/T-016C-spec-v1.0.md` + verbatim draft, ceiling 1,400 lines, beach not a failure; T-016D not registered
