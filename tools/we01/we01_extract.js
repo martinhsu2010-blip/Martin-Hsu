@@ -8,13 +8,14 @@ async (OPT) => {
     { id: 'B1', name: 'Oceanfront Heights', r: [90, 930, 390, 1230] },
     { id: 'B2', name: 'Vista Hills', r: [-900, 820, -500, 1070] },
     { id: 'B3', name: 'Palmwood Quarter', r: [-640, -810, -340, -610] }];
-  const BUF = 100;
+  const BUF = OPT.buf ?? 100;
   const surv = REG.map(g => [g.r[0] - BUF, g.r[1] - BUF, g.r[2] + BUF, g.r[3] + BUF]);
   const ROUTES = { C01: [[221, 890], [240, 960], [240, 1200]], C02: [[110, 960], [170, 960], [240, 960]],
     H01: [[-635, 682], [-800, 800], [-800, 1030]], H02: [[-800, 1030], [-420, 1000], [-240, 880]],
     X01: [[-240, 880], [0, 960], [110, 960]], U01: [[-600, -720], [-510, -720], [-420, -720]] };
+  const CB = OPT.corBand ?? 60;
   const COR = Object.entries(ROUTES).filter(([id]) => !OPT.routes || OPT.routes.includes(id)).map(([id, p]) => { const xs = p.map(q => q[0]), zs = p.map(q => q[1]);
-    return { id, r: [Math.min(...xs) - 60, Math.min(...zs) - 60, Math.max(...xs) + 60, Math.max(...zs) + 60] }; });
+    return { id, r: [Math.min(...xs) - CB, Math.min(...zs) - CB, Math.max(...xs) + CB, Math.max(...zs) + CB] }; });
   const WIN = surv.concat(COR.map(c => c.r)).map(r => [r[0] - 10, r[1] - 10, r[2] + 10, r[3] + 10]);
   const inWin = b => WIN.some(w => inter(b, w));
 
@@ -158,12 +159,13 @@ async (OPT) => {
     addFp(aabbFp('SWK_AVE_' + ax + '_' + k, 'SIDEWALK', 'ROAD_NET.avenueSidewalks', [xa, -RN.avenueZ, xb, z1], 0, 0.3, true, false, false))); });
   RN.crossZ.forEach(cz => { const x0 = RN.pavedCrossWest(cz); [[cz + RN.crossHalf, cz + RN.crossHalf + 6], [cz - RN.crossHalf - 6, cz - RN.crossHalf]].forEach(([za, zb], k) =>
     addFp(aabbFp('SWK_CRS_' + cz + '_' + k, 'SIDEWALK', 'ROAD_NET.crossSidewalks', [x0, za, RN.pavedCrossEast, zb], 0, 0.3, true, false, false))); });
-  RN.ribbons.forEach((r, i) => addRoad('RIB_' + i, r.pts.map(P3), r.half, 'UNKNOWN', 'ROAD_NET.ribbons'));
+  RN.ribbons.forEach((r, i) => addRoad('RIB_' + i, r.pts.map(P3), r.half, 'GROUND', 'ROAD_NET.ribbons')); // source: planar curve roads, no y on points (rendered with y||0)
   addRoad('HILL_ROAD', RN.hillRoad.pts.map(P3), RN.hillRoad.half, 'GROUND', 'ROAD_NET.hillRoad');
   RN.terrainRoads.forEach((r, i) => addRoad('TRD_' + i, r.pts.map(P3), r.half, 'GROUND', 'ROAD_NET.terrainRoads'));
   RN.suburbRoads.forEach((r, i) => addRoad('SUBR_' + i, r.pts.map(P3), r.half, 'GROUND', 'ROAD_NET.suburbRoads'));
-  addRoad('RING', RN.ring.pts.map(P3), RN.ring.half, 'UNKNOWN', 'ROAD_NET.ring');
-  RN.spurs.forEach((r, i) => addRoad('SPUR_' + i, r.pts.map(P3), r.half, 'UNKNOWN', 'ROAD_NET.spurs'));
+  const elevOf = pts => { const ys = pts.map(p => p[1]), lo = Math.min(...ys), hi = Math.max(...ys); return hi - lo > 0.05 ? 'RAMP' : (hi > 0.5 ? 'ELEVATED' : 'GROUND'); };
+  addRoad('RING', RN.ring.pts.map(P3), RN.ring.half, elevOf(RN.ring.pts.map(P3)), 'ROAD_NET.ring');
+  RN.spurs.forEach((r, i) => addRoad('SPUR_' + i, r.pts.map(P3), r.half, elevOf(r.pts.map(P3)), 'ROAD_NET.spurs'));
   RN.roundabouts.forEach((r, i) => { const n = 48, pg = []; for (let k = 0; k < n; k++) pg.push([r.x + Math.cos(k / n * 2 * Math.PI) * r.rOut, r.z + Math.sin(k / n * 2 * Math.PI) * r.rOut]);
     const f = mk('RBT_' + i, 'ROAD', 'ROAD_NET.roundabouts', 'CONSERVATIVE_AABB', rect2poly([r.x - r.rOut, r.z - r.rOut, r.x + r.rOut, r.z + r.rOut]), 0, 0.3, true, true, false); f.geometry_type = 'AABB'; addFp(f); });
   const nodeList = [...nodes.values()].filter(n => true);

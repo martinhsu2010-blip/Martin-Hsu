@@ -2,7 +2,7 @@
 
 Usage (from the repo root, with Chrome + Playwright installed):
   python3 tools/we01/we01_run.py full   OUTDIR   # PHONE_LOW and DESKTOP_HIGH, two independent loads each, fingerprint check
-  python3 tools/we01/we01_run.py sample OUTDIR   # trimmed schema-valid sample dumps (3 small regions + corridor U01)
+  python3 tools/we01/we01_run.py sample|b3mid|roads OUTDIR   # trimmed schema-valid sample dumps (sample: 3 small regions + U01; b3mid: B3 mid-size land; roads: six corridors, 25 m band)
 Reads the game from the working tree; writes JSON dumps only. See tools/fixtures/we01/SCHEMA_NOTES.md.
 """
 import sys, json, time, hashlib, importlib.util, functools, http.server, threading
@@ -17,6 +17,14 @@ t = importlib.util.module_from_spec(spec); sys.modules["t"] = t; spec.loader.exe
 MINI = {"regions": [{"id": "B1", "name": "SAMPLE Oceanfront Heights", "r": [350, 1000, 390, 1040]},
                     {"id": "B2", "name": "SAMPLE Vista Hills", "r": [-640, 830, -600, 870]},
                     {"id": "B3", "name": "SAMPLE Palmwood Quarter", "r": [-580, -790, -540, -750]}], "routes": ["U01"]}
+
+TINY = [{"id": "B1", "name": "SAMPLE Oceanfront Heights", "r": [350, 1000, 390, 1040]},
+        {"id": "B2", "name": "SAMPLE Vista Hills", "r": [-640, 830, -600, 870]}]
+MODES = {"sample": MINI,
+         # B3 mid-size fragmented land (x -540..-240, z -860..-710, 20 m buffer) + U01 corridor (WE-01B fixtures)
+         "b3mid": {"regions": TINY + [{"id": "B3", "name": "SAMPLE Palmwood Quarter (mid)", "r": [-540, -860, -240, -710]}], "routes": ["U01"], "buf": 20, "corBand": 25},
+         # all six candidate road corridors with a 25 m band (WE-01C fixtures)
+         "roads": {"regions": TINY + [{"id": "B3", "name": "SAMPLE Palmwood Quarter", "r": [-580, -790, -540, -750]}], "routes": ["C01", "C02", "H01", "H02", "X01", "U01"], "buf": 20, "corBand": 25}}
 
 def serve():
     H = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(ROOT)); H.log_message = lambda *a, **k: None
@@ -39,8 +47,8 @@ if __name__ == "__main__":
     with sync_playwright() as p:
         b = p.chromium.launch(channel="chrome", headless=True, args=["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"])
         for preset in ("PHONE_LOW", "DESKTOP_HIGH"):
-            if mode == "sample":
-                run(b, url, preset, f"sample_{preset.lower()}.json", outdir, MINI)
+            if mode in MODES:
+                run(b, url, preset, f"{mode}_{preset.lower()}.json" if mode != "sample" else f"sample_{preset.lower()}.json", outdir, MODES[mode])
             else:
                 a = run(b, url, preset, f"world_{preset.lower()}_A.json", outdir); c = run(b, url, preset, f"world_{preset.lower()}_B.json", outdir)
                 same = a["metadata"]["static_fingerprint"] == c["metadata"]["static_fingerprint"]; ok &= same; print(preset, "A==B static fingerprint:", same)

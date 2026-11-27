@@ -45,3 +45,11 @@ Input view = physical_ground bounds/top_y, terrain_regions, water/beach polygons
 
 ## Revision
 2026-11-27 (D-051b): extractor `we01-extract-1` now tags facade scene boxes as BUILDING with `parent_id`; before this the land analysis showed almost no L2 land because facade boxes were OTHER (-> L5). Sample fingerprints changed to `3503a715...` (PHONE_LOW) and `06f4e416...` (DESKTOP_HIGH).
+
+2026-11-27 (D-051e): `roads.segments[].elevation_type` is now resolved for every segment: ribbons (`RIB_*`) GROUND (planar curve roads, points have no y and are rendered with y||0; centerline y = 0), `RING` ELEVATED (constant y = 10), `SPUR_*` RAMP (y runs 0..10); no segment remains UNKNOWN in the full dumps. `static_fingerprint` of the full dumps changed (PHONE_LOW `e473d222...`, DESKTOP_HIGH `52653bc5...`); the sample dumps do not contain these roads and keep `3503a715...` / `06f4e416...`. WE-01A land areas are unchanged (verified: `terrain_survey.csv` and `preset_diff.json` byte-identical, `land_inventory.json` identical apart from fingerprints and file hashes).
+
+## WE-01B / WE-01C fixtures (Claude-owned, read-only for Gemini)
+Generated with `python3 tools/we01/we01_run.py b3mid|roads OUTDIR` (options `buf` = survey buffer, `corBand` = corridor band around the control-point bounding box; production dumps use 100 m and 60 m).
+- `sample_b3mid_{phone_low,desktop_high}.json`: B3 mid-size real land `x -540..-240, z -860..-710` (20 m buffer) plus tiny B1/B2 and the U01 corridor. Fragmented real land: strips, facade boxes, Site A protection, avenue sidewalks. Fingerprints `ff03b600...` (PHONE_LOW), `dacb0f82...` (DESKTOP_HIGH).
+- `sample_roads_{phone_low,desktop_high}.json`: all six candidate corridors C01, C02, H01, H02, X01, U01 with a 25 m band (T-016C fixtures). Fingerprints `de7b8d06...`, `9cd01dad...`.
+- `we01a_common_l0_cells.csv`: cross-preset common L0 5 m cells of the full dumps (`region_id,x_center,z_center`; cell = centre +/- 2.5 m; 16,040 cells = 401,000 m2 over the 100 m survey buffers). SHA-256 `e46ab316dfcf1f884bc5c029a8359a5e4baa80e5774cfcb5fbcaaf49ebb2613e`. Use for the T-016B consistency invariant (each cell's 25 1 m cells must be free in the 1 m base mask).
