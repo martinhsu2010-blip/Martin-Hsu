@@ -11,6 +11,16 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
+### T-014B3 Site A facade geometry: recessed glazing, projecting frames, Near/Far LOD (world/render; HIGH risk, SMALL volume) (Approved v1.2 D-048; ready for Gemini)
+Owner: Gemini
+Implementer: Gemini (Stage 3; exception to default Codex routing because Codex usage is low; D-048)
+Reviewer: Claude
+Priority: P1
+Base commit: main 6205bc5 (vh-2026-11-27-01)
+Branch/PR: `gemini/T-014B3-facade-geometry`
+Spec: `specs/T-014B3-spec-v1.2.md` (approved by Martin 2026-11-27 08:54; D-048, pre-start gates D-048a PASS)
+Scope: `index.html` + new test file(s) only. Existing six meshes untouched (= Far); new Near meshes in a sibling group; layer-31 switching; golden atlas/mask hashes unchanged. Residential out of scope. No ART PASS implied; device FPS and ART judged by Martin.
+
 ### T-014B2 Site A commercial + office facades / R8 night windows (world/render/shader; HIGH risk, SMALL volume) (Released vh-2026-11-26-01, PR #97, commit a0da29d; Martin reported no device performance impact 2026-11-27 (subjective); follow-up T-014B2.1 anisotropy released vh-2026-11-27-01, PR #99, D-047; ART PASS not granted)
 Owner: Gemini
 Implementer: Gemini (Stage 3; exception to default Codex routing because Codex usage is nearly exhausted; D-045)
