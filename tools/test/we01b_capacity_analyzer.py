@@ -884,11 +884,16 @@ def _corridor_near_mask(x0: int, z0: int, w: int, h: int, bboxes: list[tuple[flo
 def place_layout(
     valid_by_proto: dict[str, dict[int, ValidMask]], access_fn: Callable | None,
     region_id: str, order: str | None = None, opts: dict[str, Any] | None = None,
+    seed_parcels: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     opts, order = opts or {}, order or "row_major"
     protos = [p for p in REGION_RULES[region_id]["prototypes"] if p in valid_by_proto]
     allow_ov = bool(opts.get("allow_overlap"))
-    placed, boxes, counts, cursors, exhausted = [], [], {p: 0 for p in protos}, {p: 0 for p in protos}, set()
+    seeds = [dict(s) for s in (seed_parcels or [])]
+    n_seeds, placed, boxes = len(seeds), list(seeds), [tuple(s["bounds"]) for s in seeds]
+    counts, cursors, exhausted = {p: 0 for p in protos}, {p: 0 for p in protos}, set()
+    for s in seeds:
+        counts[s["prototype"]] = counts.get(s["prototype"], 0) + 1
     cbboxes = getattr(access_fn, "corridor_bboxes", None) if access_fn is not None else None
     either: dict[str, bytearray] = {}
     for p in protos:
@@ -980,11 +985,11 @@ def place_layout(
         if not moved:
             break
 
-    while placed and not check_ratio(counts, region_id):
-        rem = next((i for i in range(len(placed) - 1, -1, -1) if check_ratio({k: v - (1 if k == placed[i]["prototype"] else 0) for k, v in counts.items()}, region_id)), len(placed) - 1)
+    while len(placed) > n_seeds and not check_ratio(counts, region_id):
+        rem = next((i for i in range(len(placed) - 1, n_seeds - 1, -1) if check_ratio({k: v - (1 if k == placed[i]["prototype"] else 0) for k, v in counts.items()}, region_id)), len(placed) - 1)
         counts[placed.pop(rem)["prototype"]] -= 1
-    for idx, item in enumerate(placed, 1):
-        item["id"] = f"{region_id}_{item['prototype']}_{idx:03d}"
+    for idx in range(n_seeds, len(placed)):
+        placed[idx]["id"] = f"{region_id}_{placed[idx]['prototype']}_{idx + 1:03d}"
     return {
         "parcels": placed, "count": sum(i["buildings"] for i in placed),
         "units": sum(i["units"] for i in placed), "prototype_counts": dict(sorted(counts.items())),
