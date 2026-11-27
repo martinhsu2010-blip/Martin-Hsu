@@ -60,3 +60,5 @@ jobs:
         run: node tools/test/t014b1_site_a_check.mjs
       - name: T-014B3 facade geometry check
         run: node tools/test/t014b3_facade_geometry_check.mjs
+      - name: WE-01A land analyzer check (T-016A)
+        run: python3 tools/test/we01a_land_analyzer_check.py
