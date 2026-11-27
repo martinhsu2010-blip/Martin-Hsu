@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-27 | (docs only, no game release) | Claude | base c9f2585 | T-016B line ceiling raised 1,050 -> 1,600 by Martin after Gemini's checkpoint-1 stop (D-052a); analyzer 1,022 lines, check script pending
 - 2026-11-27 | (docs only, no game release) | Claude | base e9ee12e | T-016B (WE-01B parcel capacity) registered after Martin's approval 13:46 (D-052): spec entry point `specs/T-016B-spec-v1.4.md`, ChatGPT v1.3/v1.4/errata copied verbatim into `specs/`, REVISED-v2 polygons frozen, T-016C/T-016D not registered; pre-start gates PASS 13:47
 - 2026-11-27 | (docs/tools only, no game release) | Claude | base 8eeb16f | WE-01 v1.3 pre-start items (D-051e): road elevation types resolved, dumps/fingerprints and WE-01A outputs regenerated (areas unchanged), WE-01B/C fixtures added
 - 2026-11-27 | (docs only, no game release) | Claude | base 6b1e312 | WE-01A (T-016A) Gate A10 accepted by Martin (D-051d); formal outputs regenerated from the full dumps, hashes in D-051d; WE-01B needs its own G0
