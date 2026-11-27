@@ -64,3 +64,5 @@ jobs:
         run: python3 tools/test/we01a_land_analyzer_check.py
       - name: WE-01B capacity analyzer check (T-016B)
         run: python3 tools/test/we01b_capacity_analyzer_check.py
+      - name: WE-01C road analyzer check (T-016C)
+        run: python3 tools/test/we01c_road_analyzer_check.py
