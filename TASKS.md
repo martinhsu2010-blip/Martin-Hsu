@@ -11,7 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-016B WE-01B Parcel capacity analyzer (read-only audit tooling; LOW risk, SMALL volume) (Registered 2026-11-27, D-052; gates PASS 13:47; approved by Martin 2026-11-27 13:46; T-016C roads and T-016D streets/verdicts NOT registered)
+### T-016B WE-01B Parcel capacity analyzer (read-only audit tooling; LOW risk, SMALL volume) (Registered 2026-11-27, D-052; gates PASS 13:47; approved by Martin 2026-11-27 13:46; PR #114 merged 215ba1b after Claude review PASS, check wired into CI, Done (D-053); T-016C roads and T-016D streets/verdicts NOT registered)
 Owner: Gemini
 Implementer: Gemini (Stage 3; per-task exception, D-052)
 Reviewer: Claude
@@ -21,7 +21,7 @@ Branch/PR: `gemini/T-016B-we01b-capacity-analyzer`
 Spec: `specs/T-016B-spec-v1.4.md` (entry point, Claude conditions win) + `specs/WE-01-spec-v1.2.md`, `specs/WE-01-v1.3-amendment.md`, `specs/WE-01-v1.4-amendment.md`, `specs/WE-01-v1.4-errata-T016B.md`; REVISED-v2 polygons (`polygon_revision = 2`) frozen in D-052
 Scope: new `tools/test/we01b_capacity_analyzer.py` + `tools/test/we01b_capacity_analyzer_check.py` only (Python stdlib; line ceiling 1,900 combined (analyzer <= 1,300, check <= 600), raised by Martin, D-052a/D-052b; report before finishing). Reads Claude-supplied dumps (PHONE_LOW + DESKTOP_HIGH) and the read-only fixtures in `tools/fixtures/we01/`. Two-layer design: `geom_valid` (no road access) and `evaluate_access` (replaceable corridors). `C_conditional` = `PENDING_T016D`. No game, CACHE, CI or docs change by Gemini; Claude wires the check into CI after acceptance.
 Gates (v1.2): B1, B2, B3, B6, B7, B9, B12 (B4 -> T-016C; B5, B10, B11 and final B8 -> T-016D). A passing T-016B is not a feasibility result.
-Status: registered; implementation prompt given to Martin for Gemini.
+Status: Done. PR #114 (Gemini, head 52f2eba; analyzer 1,274 + check 592 = 1,866 lines) merged 215ba1b on Martin's "合併" 2026-11-27 15:38; Claude independent verification PASS (D-053). Gates B1, B2, B3, B6, B7, B9, B12 covered; B4 -> T-016C; B5, B10, B11 and final B8 -> T-016D.
 
 ### T-016A WE-01A Runtime dump analysis and land classification (read-only audit tooling; LOW risk, SMALL volume) (Registered 2026-11-27, D-051; gates PASS D-051a; PR #106 merged e4764a0 after round 1 (D-051b, D-051c); check wired into CI; Done: Martin accepted A10 2026-11-27 12:33, D-051d)
 Owner: Gemini

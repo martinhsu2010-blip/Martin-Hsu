@@ -62,3 +62,5 @@ jobs:
         run: node tools/test/t014b3_facade_geometry_check.mjs
       - name: WE-01A land analyzer check (T-016A)
         run: python3 tools/test/we01a_land_analyzer_check.py
+      - name: WE-01B capacity analyzer check (T-016B)
+        run: python3 tools/test/we01b_capacity_analyzer_check.py

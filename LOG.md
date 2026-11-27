@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-27 | (docs/CI only, no game release) | Claude | base 215ba1b | T-016B PR #114 merged after Claude review PASS and Martin's "合併" (D-053); WE-01B check wired into CI; REVISED-v2 C_direct B1 5 / B2 0 / B3 17 (not a verdict)
 - 2026-11-27 | (docs only, no game release) | Claude | base 38ed1c5 | T-016B line ceiling 1,600 -> 1,900 (analyzer <= 1,300, check <= 600) by Martin after Gemini's checkpoint 2 (D-052b)
 - 2026-11-27 | (docs only, no game release) | Claude | base c9f2585 | T-016B line ceiling raised 1,050 -> 1,600 by Martin after Gemini's checkpoint-1 stop (D-052a); analyzer 1,022 lines, check script pending
 - 2026-11-27 | (docs only, no game release) | Claude | base e9ee12e | T-016B (WE-01B parcel capacity) registered after Martin's approval 13:46 (D-052): spec entry point `specs/T-016B-spec-v1.4.md`, ChatGPT v1.3/v1.4/errata copied verbatim into `specs/`, REVISED-v2 polygons frozen, T-016C/T-016D not registered; pre-start gates PASS 13:47
