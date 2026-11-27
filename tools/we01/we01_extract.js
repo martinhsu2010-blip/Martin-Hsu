@@ -114,7 +114,9 @@ async (OPT) => {
   const seen = new Set(); const scn2 = [];
   for (const s of scn) { const k = s.b.map(mmv).join(',') + '|' + mmv(s.y0) + '|' + mmv(s.y1); if (seen.has(k)) continue; seen.add(k); scn2.push(s); }
   scn2.sort((a, b) => { for (let i = 0; i < 4; i++) { const d = mmv(a.b[i]) - mmv(b.b[i]); if (d) return d; } return mmv(a.y0) - mmv(b.y0) || mmv(a.y1) - mmv(b.y1); });
-  scn2.forEach((s, i) => addFp(aabbFp('SCN_' + i, 'OTHER', 'SCENE_BOX3', s.b, s.y0, s.y1, true, false, false)));
+  const bldg = fps.filter(f => f.category === 'BUILDING');
+  const owner = s => { const cx = (s.b[0] + s.b[2]) / 2, cz = (s.b[1] + s.b[3]) / 2; return bldg.find(f => f.bounds[0] - 2 <= cx && cx <= f.bounds[2] + 2 && f.bounds[1] - 2 <= cz && cz <= f.bounds[3] + 2); };
+  scn2.forEach((s, i) => { const o = owner(s); const f = aabbFp('SCN_' + i, o ? 'BUILDING' : 'OTHER', 'SCENE_BOX3', s.b, s.y0, s.y1, true, false, false); if (o) f.parent_id = o.id; addFp(f); });
 
   // ---------- Site A ----------
   const sc = W.showcaseSiteA;
@@ -199,7 +201,7 @@ async (OPT) => {
     issues: [
       { id: 'ISS_TRAFFIC', severity: 'INFO', category: 'traffic_routes', affected_region_ids: [], affected_polygon: null, message: 'Static traffic routes (ROAD_NET.routes) are not mapped to road segments in this extraction; empty traffic_route_ids does not mean no traffic.', source_ref: 'extractor' },
       { id: 'ISS_SIDEWALK', severity: 'INFO', category: 'sidewalks', affected_region_ids: [], affected_polygon: null, message: 'Avenue and cross-street sidewalks are conservative 6 m strips outside the carriageway (CONSERVATIVE_AABB); other roads carry no sidewalk footprint.', source_ref: 'extractor' },
-      { id: 'ISS_SCENE', severity: 'INFO', category: 'scene_box3', affected_region_ids: [], affected_polygon: null, message: 'SCENE_BOX3 footprints are conservative world AABBs of visible meshes and instances (<=40 m); tree crowns and facade windows inflate obstacles.', source_ref: 'extractor' },
+      { id: 'ISS_SCENE', severity: 'INFO', category: 'scene_box3', affected_region_ids: [], affected_polygon: null, message: 'SCENE_BOX3 footprints are conservative world AABBs of visible meshes and instances (<=40 m); tree crowns inflate obstacles. Boxes whose centre lies within 2 m of a building footprint are category BUILDING with parent_id (facade parts), the rest are OTHER.', source_ref: 'extractor' },
       { id: 'ISS_PLAYABLE', severity: 'INFO', category: 'world_bounds', affected_region_ids: [], affected_polygon: null, message: 'playable_bounds and map_ui_bounds were not extracted (null); all candidate regions lie inside the 3200 m ground mesh and the 4800 m physical ground.', source_ref: 'extractor' }] };
   dump.roads.completeness = 'COMPLETE';
   dump.metadata.static_fingerprint = await sha(canon(fpView(dump)));
