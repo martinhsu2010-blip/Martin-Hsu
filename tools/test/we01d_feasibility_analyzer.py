@@ -40,6 +40,7 @@ STREET_JUNCTION_MAX_RUN_M = 30.0
 MAX_STREETS_PER_REGION = 3
 CANDIDATE_BUDGET = 1280
 TIER2_VERIFY_LIMIT = 24
+SCORE_LATTICE_STEP = 3
 TARGET_AREA_M2 = 250000.0
 CONSERVATION_TOL_M2 = 1.0
 VERDICT_NOT_FEASIBLE = "NOT FEASIBLE WITHIN AUDITED BOUNDARIES"
@@ -166,6 +167,20 @@ def _vert_any_to_cell(vbuf: bytearray, w: int, h: int) -> bytearray:
     return out
 
 
+def _poly_slab_xspan(edges: list[tuple[list[float], list[float]]], za: float, zb: float) -> tuple[float, float] | None:
+    xs_hit: list[float] = []
+    for p0, p1 in edges:
+        if za <= p0[1] <= zb:
+            xs_hit.append(p0[0])
+        dz = p1[1] - p0[1]
+        if abs(dz) > 1e-12:
+            for zv in (za, zb):
+                t = (zv - p0[1]) / dz
+                if 0.0 <= t <= 1.0:
+                    xs_hit.append(p0[0] + t * (p1[0] - p0[0]))
+    return (min(xs_hit), max(xs_hit)) if xs_hit else None
+
+
 def _paint_corridors_to_mask(buf: bytearray, x0: int, z0: int, w: int, h: int, cors: list[dict[str, Any]]) -> None:
     for c in cors:
         pts, b = c["polygon"], tuple(c["bounds"])
@@ -193,20 +208,10 @@ def _paint_corridors_to_mask(buf: bytearray, x0: int, z0: int, w: int, h: int, c
         edges = [(pts[i], pts[(i + 1) % len(pts)]) for i in range(len(pts))]
         for iz in range(iz0, iz1 + 1):
             za, zb = z0 + iz, z0 + iz + 1
-            xs_hit: list[float] = []
-            for p0, p1 in edges:
-                if za <= p0[1] <= zb:
-                    xs_hit.append(p0[0])
-                dz = p1[1] - p0[1]
-                if abs(dz) > 1e-12:
-                    for zv in (za, zb):
-                        t = (zv - p0[1]) / dz
-                        if 0.0 <= t <= 1.0:
-                            xs_hit.append(p0[0] + t * (p1[0] - p0[0]))
-            if not xs_hit:
+            sp = _poly_slab_xspan(edges, za, zb)
+            if sp is None:
                 continue
-            ix0 = max(0, math.floor(min(xs_hit)) - x0)
-            ix1 = min(w - 1, math.floor(max(xs_hit)) - x0)
+            ix0, ix1 = max(0, math.floor(sp[0]) - x0), min(w - 1, math.floor(sp[1]) - x0)
             row = iz * w
             for ix in range(ix0, ix1 + 1):
                 hit, oa = fp_intersects_cell(pts, False, b, x0 + ix, za, x0 + ix + 1, zb)
@@ -221,15 +226,34 @@ def _mask_out_corridors_from_vm(vm: Any, cors: list[dict[str, Any]]) -> Any:
     out[:] = vm
     hw, hh, x0, z0, w, h = vm.pw // 2, vm.ph // 2, vm.x0, vm.z0, vm.w, vm.h
     for c in cors:
-        pts, is_r, b = c["polygon"], c.get("is_rect", is_axis_rect(c["polygon"])), tuple(c["bounds"])
-        ix0, ix1 = max(0, math.floor(b[0] - hw) - x0), min(w - 1, math.ceil(b[2] + hw) - x0)
+        pts, b = c["polygon"], tuple(c["bounds"])
+        is_r = bool(c["is_rect"]) if "is_rect" in c else is_axis_rect(pts)
         iz0, iz1 = max(0, math.floor(b[1] - hh) - z0), min(h - 1, math.ceil(b[3] + hh) - z0)
+        if is_r:
+            ix0, ix1 = max(0, math.floor(b[0] - hw) - x0), min(w - 1, math.ceil(b[2] + hw) - x0)
+            if ix1 < ix0:
+                continue
+            for iz in range(iz0, iz1 + 1):
+                cz = z0 + iz
+                if min(cz + hh, b[3]) - max(cz - hh, b[1]) <= 1e-6:
+                    continue
+                row = iz * w
+                for ix in range(ix0, ix1 + 1):
+                    if out[row + ix] and min(x0 + ix + hw, b[2]) - max(x0 + ix - hw, b[0]) > 1e-6:
+                        out[row + ix] = 0
+            continue
+        edges = [(pts[i], pts[(i + 1) % len(pts)]) for i in range(len(pts))]
         for iz in range(iz0, iz1 + 1):
-            row, cz = iz * w, z0 + iz
+            cz = z0 + iz
+            sp = _poly_slab_xspan(edges, cz - hh, cz + hh)
+            if sp is None:
+                continue
+            ix0, ix1 = max(0, math.floor(sp[0] - hw) - x0), min(w - 1, math.ceil(sp[1] + hw) - x0)
+            row = iz * w
             for ix in range(ix0, ix1 + 1):
                 if out[row + ix]:
                     cx = x0 + ix
-                    hit, oa = fp_intersects_cell(pts, is_r, b, cx - hw, cz - hh, cx + hw, cz + hh)
+                    hit, oa = fp_intersects_cell(pts, False, b, cx - hw, cz - hh, cx + hw, cz + hh)
                     if hit and oa > 1e-6:
                         out[row + ix] = 0
     return out
@@ -510,21 +534,34 @@ def _tier1_check_street(
                     return False, {"reason": "TIER1_SLOPE_OR_HEIGHT"}
         else:
             x0, z0, w, vw = m_com.x0, m_com.z0, m_com.w, m_com.w + 1
-            ix0, ix1 = max(0, math.floor(post_b[0]) - x0), min(w - 1, math.floor(post_b[2]) - x0)
             iz0, iz1 = max(0, math.floor(post_b[1]) - z0), min(m_com.h - 1, math.floor(post_b[3]) - z0)
+            edges = [(post_pts[i], post_pts[(i + 1) % len(post_pts)]) for i in range(len(post_pts))]
+            chk_grade = not opts.get("ignore_street_grade")
+            near_src = [(c["polygon"], bool(c["is_rect"]) if "is_rect" in c else is_axis_rect(c["polygon"]), tuple(c["bounds"])) for c in cand["source"]["corridors"] if _bbox_overlaps(post_b, tuple(c["bounds"]), pad=1.5)]
             for iz in range(iz0, iz1 + 1):
+                za, zb = z0 + iz, z0 + iz + 1
+                sp = _poly_slab_xspan(edges, za, zb)
+                if sp is None:
+                    continue
+                ix0, ix1 = max(0, math.floor(sp[0]) - x0), min(w - 1, math.floor(sp[1]) - x0)
                 row, vr0, vr1 = iz * w, iz * vw, (iz + 1) * vw
                 for ix in range(ix0, ix1 + 1):
-                    hit, oa = fp_intersects_cell(post_pts, False, post_b, x0 + ix, z0 + iz, x0 + ix + 1, z0 + iz + 1)
+                    blocked = not m_com.base_free[row + ix]
+                    if blocked and near_src and not m_com.protected[row + ix] and not m_com.unknown_cell[row + ix]:
+                        cx0, cx1 = x0 + ix, x0 + ix + 1
+                        if any(fp_intersects_cell(cp, cr, cb, cx0, za, cx1, zb)[0] for cp, cr, cb in near_src):
+                            blocked = False
+                    bad_g = chk_grade and (
+                        m_com.v_unknown[vr0 + ix] or m_com.v_unknown[vr0 + ix + 1] or m_com.v_unknown[vr1 + ix] or m_com.v_unknown[vr1 + ix + 1]
+                        or m_com.v_s1_3[vr0 + ix] or m_com.v_s1_3[vr0 + ix + 1] or m_com.v_s1_3[vr1 + ix] or m_com.v_s1_3[vr1 + ix + 1]
+                        or m_com.v_s4[vr0 + ix] or m_com.v_s4[vr0 + ix + 1] or m_com.v_s4[vr1 + ix] or m_com.v_s4[vr1 + ix + 1]
+                    )
+                    if not (blocked or bad_g):
+                        continue
+                    hit, oa = fp_intersects_cell(post_pts, False, post_b, x0 + ix, za, x0 + ix + 1, zb)
                     if not (hit and oa > 1e-6):
                         continue
-                    if not m_com.base_free[row + ix]:
-                        return False, {"reason": "TIER1_BLOCKED_OR_UNKNOWN"}
-                    if not opts.get("ignore_street_grade"):
-                        if (m_com.v_unknown[vr0 + ix] or m_com.v_unknown[vr0 + ix + 1] or m_com.v_unknown[vr1 + ix] or m_com.v_unknown[vr1 + ix + 1]
-                                or m_com.v_s1_3[vr0 + ix] or m_com.v_s1_3[vr0 + ix + 1] or m_com.v_s1_3[vr1 + ix] or m_com.v_s1_3[vr1 + ix + 1]
-                                or m_com.v_s4[vr0 + ix] or m_com.v_s4[vr0 + ix + 1] or m_com.v_s4[vr1 + ix] or m_com.v_s4[vr1 + ix + 1]):
-                            return False, {"reason": "TIER1_SLOPE_OR_HEIGHT"}
+                    return False, {"reason": "TIER1_BLOCKED_OR_UNKNOWN" if blocked else "TIER1_SLOPE_OR_HEIGHT"}
 
     return True, {
         "corridor": cor_dict, "steps": steps, "junction_run_m": _r3(run_len),
@@ -572,6 +609,20 @@ def _tier2_verify_street(
 
 # --- G0-D8: Greedy street scoring & selection ---
 
+def _corridor_obb(pts: list[list[float]]) -> tuple[float, float, float, float, float, float, float, float, float, float, float, float] | None:
+    if len(pts) != 4:
+        return None
+    e0x, e0z = pts[1][0] - pts[0][0], pts[1][1] - pts[0][1]
+    e1x, e1z = pts[2][0] - pts[1][0], pts[2][1] - pts[1][1]
+    l0, l1 = math.hypot(e0x, e0z), math.hypot(e1x, e1z)
+    if l0 <= 1e-6 or l1 <= 1e-6 or abs(e0x * e1x + e0z * e1z) > 1e-3 * l0 * l1:
+        return None
+    mx = 0.25 * (pts[0][0] + pts[1][0] + pts[2][0] + pts[3][0])
+    mz = 0.25 * (pts[0][1] + pts[1][1] + pts[2][1] + pts[3][1])
+    ux, uz, nx, nz = e0x / l0, e0z / l0, e1x / l1, e1z / l1
+    return (mx, mz, ux, uz, abs(ux), abs(uz), l0 * 0.5, nx, nz, abs(nx), abs(nz), l1 * 0.5)
+
+
 def _make_cond_access_fn(corridors: list[dict[str, Any]], graph: dict[str, Any] | None, opts: dict[str, Any]) -> Callable:
     """Wrapper over public evaluate_access that returns existing_only=True for place_layout while preserving real flag."""
     empty = {"ok": False, "side": None, "gap_m": None, "contact_m": 0.0, "corridor_ids": [], "connectivity": "UNVERIFIED", "existing_only": False, "real_existing_only": False, "reasons": ["NO_ROAD_ACCESS"]}
@@ -579,14 +630,32 @@ def _make_cond_access_fn(corridors: list[dict[str, Any]], graph: dict[str, Any] 
         fn0: Any = lambda _b: empty
         fn0.corridor_bboxes = []
         return fn0
-    pad = 2.01
+    pad = 2.02
+    pad_sq = pad * pad
     bboxes = [(c["bounds"][0] - pad, c["bounds"][1] - pad, c["bounds"][2] + pad, c["bounds"][3] + pad) for c in corridors]
+    obbs = [None if c.get("is_rect") else _corridor_obb(c["polygon"]) for c in corridors]
     ux0, uz0, ux1, uz1 = min(b[0] for b in bboxes), min(b[1] for b in bboxes), max(b[2] for b in bboxes), max(b[3] for b in bboxes)
 
     def fn(box: tuple[int, int, int, int]) -> dict[str, Any]:
         if box[2] < ux0 or box[0] > ux1 or box[3] < uz0 or box[1] > uz1:
             return empty
-        near = [c for c, bb in zip(corridors, bboxes) if box[2] >= bb[0] and box[0] <= bb[2] and box[3] >= bb[1] and box[1] <= bb[3]]
+        cx, cz = (box[0] + box[2]) * 0.5, (box[1] + box[3]) * 0.5
+        phw, phh = (box[2] - box[0]) * 0.5, (box[3] - box[1]) * 0.5
+        rad_lim = math.hypot(phw, phh) + pad
+        near = []
+        for c, bb, obb in zip(corridors, bboxes, obbs):
+            if box[2] < bb[0] or box[0] > bb[2] or box[3] < bb[1] or box[1] > bb[3]:
+                continue
+            if obb is not None:
+                mx, mz, ux, uz, aux, auz, hl, nx, nz, anx, anz, hw = obb
+                dx, dz = cx - mx, cz - mz
+                gu = max(0.0, abs(dx * ux + dz * uz) - hl - (phw * aux + phh * auz))
+                gn = max(0.0, abs(dx * nx + dz * nz) - hw - (phw * anx + phh * anz))
+                if gu * gu + gn * gn > pad_sq:
+                    continue
+            elif not c.get("is_rect") and dist_point_to_poly(cx, cz, c["polygon"]) > rad_lim:
+                continue
+            near.append(c)
         if not near:
             return empty
         acc = evaluate_access(box, near, graph=graph, opts=opts)
@@ -615,30 +684,37 @@ def _rect_access_ok(px0: float, pz0: float, px1: float, pz1: float, sx0: float, 
     return False
 
 
-def _unserved_by_z(v_com: dict[str, dict[int, Any]], base_cors: list[dict[str, Any]], seed_boxes: list[tuple[int, int, int, int]], graph: dict[str, Any], opts: dict[str, Any]) -> dict[int, tuple[list[int], list[list[tuple[int, int]]]]]:
-    """Build row-bucketed {cz: (sorted_cx_list, sizes_list)} of unserved geom-valid centers."""
+def _unserved_by_z(
+    v_com: dict[str, dict[int, Any]], base_cors: list[dict[str, Any]],
+    seed_boxes: list[tuple[int, int, int, int]], graph: dict[str, Any],
+    opts: dict[str, Any], lattice_step: int = SCORE_LATTICE_STEP,
+) -> dict[int, tuple[list[int], list[list[tuple[int, int]]]]]:
+    """Build row-bucketed {cz: (sorted_cx_list, sizes_list)} of unserved geom-valid centers on origin-anchored lattice."""
     af = _make_cond_access_fn(base_cors, graph, opts)
     near_bbs = getattr(af, "corridor_bboxes", [])
+    step = max(1, int(lattice_step))
     rows: dict[int, dict[int, list[tuple[int, int]]]] = {}
     for p, orients in v_com.items():
         for o, vm in orients.items():
             vm_clean = _mask_out_corridors_from_vm(vm, base_cors)
-            hw, hh, x0, z0, w = vm_clean.pw // 2, vm_clean.ph // 2, vm_clean.x0, vm_clean.z0, vm_clean.w
-            pos = 0
-            while True:
-                pos = vm_clean.find(1, pos)
-                if pos == -1:
-                    break
-                iz, ix = divmod(pos, w)
-                cx, cz = x0 + ix, z0 + iz
-                box = (cx - hw, cz - hh, cx + hw, cz + hh)
-                pos += 1
-                if seed_boxes and any(box[0] < sb[2] and box[2] > sb[0] and box[1] < sb[3] and box[3] > sb[1] for sb in seed_boxes):
-                    continue
-                if near_bbs and any(box[2] >= bb[0] and box[0] <= bb[2] and box[3] >= bb[1] and box[1] <= bb[3] for bb in near_bbs):
-                    if af(box)["ok"]:
+            if vm_clean.find(1) == -1:
+                continue
+            hw, hh, x0, z0, w, h = vm_clean.pw // 2, vm_clean.ph // 2, vm_clean.x0, vm_clean.z0, vm_clean.w, vm_clean.h
+            for iz in range(0, h, step):
+                row_off, cz = iz * w, z0 + iz
+                for ix in range(0, w, step):
+                    if not vm_clean[row_off + ix]:
                         continue
-                rows.setdefault(cz, {}).setdefault(cx, []).append((hw, hh))
+                    cx = x0 + ix
+                    box = (cx - hw, cz - hh, cx + hw, cz + hh)
+                    if seed_boxes and any(box[0] < sb[2] and box[2] > sb[0] and box[1] < sb[3] and box[3] > sb[1] for sb in seed_boxes):
+                        continue
+                    if near_bbs and any(box[2] >= bb[0] and box[0] <= bb[2] and box[3] >= bb[1] and box[1] <= bb[3] for bb in near_bbs):
+                        if af(box)["ok"]:
+                            continue
+                    lst = rows.setdefault(cz, {}).setdefault(cx, [])
+                    if (hw, hh) not in lst:
+                        lst.append((hw, hh))
     out: dict[int, tuple[list[int], list[list[tuple[int, int]]]]] = {}
     for cz, xmap in rows.items():
         xs = sorted(xmap)
@@ -646,28 +722,157 @@ def _unserved_by_z(v_com: dict[str, dict[int, Any]], base_cors: list[dict[str, A
     return out
 
 
-def _score_street_candidate(cor_dict: dict[str, Any], unserved_rows: dict[int, tuple[list[int], list[list[tuple[int, int]]]]], max_hw: int, max_hh: int, opts: dict[str, Any]) -> set[tuple[int, int]]:
+def _lin_iv(a: float, b: float, lo: float, hi: float, s0: float, s1: float) -> tuple[float, float] | None:
+    if abs(b) <= 1e-12:
+        return (s0, s1) if lo <= a <= hi else None
+    u0, u1 = (lo - a) / b, (hi - a) / b
+    if u0 > u1:
+        u0, u1 = u1, u0
+    r0, r1 = (s0 if s0 > u0 else u0), (s1 if s1 < u1 else u1)
+    return (r0, r1) if r0 <= r1 else None
+
+
+def _side_contact_len(
+    ax: float, az: float, vx: float, vz: float, slen: float,
+    sx: float, sz: float, ux: float, uz: float, nx: float, nz: float,
+    seg_len: float, shw: float, g: float,
+) -> float:
+    """Exact 0.25 m grid contact span of {s in [0, slen] : dist(A + s*V, OBB) <= g} via convex flat slabs + corner disks."""
+    t0, du = (ax - sx) * ux + (az - sz) * uz, vx * ux + vz * uz
+    d0, dn = (ax - sx) * nx + (az - sz) * nz, vx * nx + vz * nz
+    lo_s, hi_s = slen + 1.0, -1.0
+    iv = _lin_iv(t0, du, 0.0, seg_len, 0.0, slen)
+    if iv is not None:
+        iv = _lin_iv(d0, dn, -shw - g, shw + g, iv[0], iv[1])
+        if iv is not None:
+            lo_s, hi_s = min(lo_s, iv[0]), max(hi_s, iv[1])
+    iv = _lin_iv(d0, dn, -shw, shw, 0.0, slen)
+    if iv is not None:
+        iv = _lin_iv(t0, du, -g, seg_len + g, iv[0], iv[1])
+        if iv is not None:
+            lo_s, hi_s = min(lo_s, iv[0]), max(hi_s, iv[1])
+    g2 = g * g
+    for tc, dc in ((0.0, shw), (0.0, -shw), (seg_len, shw), (seg_len, -shw)):
+        dt, dd = t0 - tc, d0 - dc
+        b = dt * du + dd * dn
+        disc = b * b - (dt * dt + dd * dd - g2)
+        if disc >= 0.0:
+            rt = math.sqrt(disc)
+            a, e = max(0.0, -b - rt), min(slen, -b + rt)
+            if a <= e:
+                lo_s, hi_s = min(lo_s, a), max(hi_s, e)
+    if hi_s < lo_s:
+        return 0.0
+    qa, qb = math.ceil(lo_s * 4.0 - 1e-9) * 0.25, math.floor(hi_s * 4.0 + 1e-9) * 0.25
+    return max(0.0, qb - qa)
+
+
+def _oblique_box_r7_classify(
+    px0: float, pz0: float, px1: float, pz1: float, clear_disjoint: bool,
+    sx: float, sz: float, ux: float, uz: float, nx: float, nz: float, seg_len: float, shw: float,
+) -> int:
+    """Exact-safe 3-way R7 classifier for an AABB vs oblique OBB: -1 definitely False, +1 definitely True, 0 boundary."""
+    w, h = px1 - px0, pz1 - pz0
+    sides = ((px0, pz0, 1.0, 0.0, w), (px0, pz1, 1.0, 0.0, w), (px0, pz0, 0.0, 1.0, h), (px1, pz0, 0.0, 1.0, h))
+    max_out = 0.0
+    for ax, az, vx, vz, slen in sides:
+        lo = _side_contact_len(ax, az, vx, vz, slen, sx, sz, ux, uz, nx, nz, seg_len, shw, 2.005)
+        if lo > max_out:
+            max_out = lo
+        if clear_disjoint and lo >= 8.0 - 1e-9:
+            if _side_contact_len(ax, az, vx, vz, slen, sx, sz, ux, uz, nx, nz, seg_len, shw, 1.995) >= 8.0 - 1e-9:
+                return 1
+    return -1 if max_out < 8.0 - 1e-9 else 0
+
+
+def _score_street_candidate(
+    cor_dict: dict[str, Any], start: list[float], end: list[float],
+    unserved_rows: dict[int, tuple[list[int], list[list[tuple[int, int]]]]],
+    max_hw: int, max_hh: int, opts: dict[str, Any],
+) -> set[tuple[int, int]]:
     cb = cor_dict["bounds"]
     sx0, sz0, sx1, sz1 = cb[0], cb[1], cb[2], cb[3]
     is_rect = bool(cor_dict.get("is_rect"))
-    x_lo, x_hi = math.floor(sx0 - max_hw - 2.01), math.ceil(sx1 + max_hw + 2.01)
-    z_lo, z_hi = math.floor(sz0 - max_hh - 2.01), math.ceil(sz1 + max_hh + 2.01)
+    x_lo, x_hi = math.floor(sx0 - max_hw - 2.02), math.ceil(sx1 + max_hw + 2.02)
+    z_lo, z_hi = math.floor(sz0 - max_hh - 2.02), math.ceil(sz1 + max_hh + 2.02)
     gained: set[tuple[int, int]] = set()
+    if is_rect:
+        for cz in range(z_lo, z_hi + 1):
+            row = unserved_rows.get(cz)
+            if row is None:
+                continue
+            xs, szs = row
+            idx, n = bisect_left(xs, x_lo), len(xs)
+            while idx < n and xs[idx] <= x_hi:
+                cx = xs[idx]
+                for phw, phh in szs[idx]:
+                    if _rect_access_ok(cx - phw, cz - phh, cx + phw, cz + phh, sx0, sz0, sx1, sz1):
+                        gained.add((cx, cz))
+                        break
+                idx += 1
+        return gained
+
+    # Oblique corridor: exact-safe centerline segment strip + 4-axis SAT distance/overlap + 3-way convex R7 classifier
+    sx, sz, ex, ez = float(start[0]), float(start[1]), float(end[0]), float(end[1])
+    dx, dz = ex - sx, ez - sz
+    seg_len = math.hypot(dx, dz)
+    ux, uz = (dx / seg_len, dz / seg_len) if seg_len > 1e-9 else (1.0, 0.0)
+    nx, nz = -uz, ux
+    abs_ux, abs_uz, abs_nx, abs_nz = abs(ux), abs(uz), abs(nx), abs(nz)
+    shw = STREET_HW_M
+    max_ru = max_hw * abs_ux + max_hh * abs_uz
+    max_rn = max_hw * abs_nx + max_hh * abs_nz
+    gap_lim = 2.02
+    gap_lim_sq = gap_lim * gap_lim
+    ovl_eps = 0.02
+
     for cz in range(z_lo, z_hi + 1):
         row = unserved_rows.get(cz)
         if row is None:
             continue
+        rx_lo, rx_hi = x_lo, x_hi
+        dz_c = cz - sz
+        if abs_nx > 1e-9:
+            c0 = sx - dz_c * nz / nx
+            span_n = (shw + max_rn + gap_lim) / abs_nx
+            rx_lo = max(rx_lo, math.floor(c0 - span_n))
+            rx_hi = min(rx_hi, math.ceil(c0 + span_n))
+        if abs_ux > 1e-9:
+            a_u = sx + (-max_ru - gap_lim - dz_c * uz) / ux
+            b_u = sx + (seg_len + max_ru + gap_lim - dz_c * uz) / ux
+            if a_u > b_u:
+                a_u, b_u = b_u, a_u
+            rx_lo = max(rx_lo, math.floor(a_u))
+            rx_hi = min(rx_hi, math.ceil(b_u))
+        if rx_lo > rx_hi:
+            continue
         xs, szs = row
-        idx = bisect_left(xs, x_lo)
-        n = len(xs)
-        while idx < n and xs[idx] <= x_hi:
+        idx, n = bisect_left(xs, rx_lo), len(xs)
+        while idx < n and xs[idx] <= rx_hi:
             cx = xs[idx]
-            for hw, hh in szs[idx]:
-                if is_rect:
-                    if _rect_access_ok(cx - hw, cz - hh, cx + hw, cz + hh, sx0, sz0, sx1, sz1):
-                        gained.add((cx, cz))
-                        break
-                elif evaluate_access((cx - hw, cz - hh, cx + hw, cz + hh), [cor_dict], opts=opts)["ok"]:
+            dx_c = cx - sx
+            tc = dx_c * ux + dz_c * uz
+            dc = dx_c * nx + dz_c * nz
+            abs_dc = abs(dc)
+            for phw, phh in szs[idx]:
+                ru = phw * abs_ux + phh * abs_uz
+                rn = phw * abs_nx + phh * abs_nz
+                gu = max(0.0, -(tc + ru), (tc - ru) - seg_len)
+                gn = max(0.0, abs_dc - rn - shw)
+                if gu * gu + gn * gn > gap_lim_sq:
+                    continue
+                gx = max(0.0, sx0 - (cx + phw), (cx - phw) - sx1)
+                gz = max(0.0, sz0 - (cz + phh), (cz - phh) - sz1)
+                if gx * gx + gz * gz > gap_lim_sq:
+                    continue
+                if (cx - phw < sx1 - ovl_eps and cx + phw > sx0 + ovl_eps and cz - phh < sz1 - ovl_eps and cz + phh > sz0 + ovl_eps
+                        and tc + ru > ovl_eps and tc - ru < seg_len - ovl_eps and abs_dc < shw + rn - ovl_eps):
+                    continue
+                clear_disj = (gu >= 0.01 or gn >= 0.01 or gx >= 0.01 or gz >= 0.01)
+                cls = _oblique_box_r7_classify(cx - phw, cz - phh, cx + phw, cz + phh, clear_disj, sx, sz, ux, uz, nx, nz, seg_len, shw)
+                if cls < 0:
+                    continue
+                if cls > 0 or evaluate_access((cx - phw, cz - phh, cx + phw, cz + phh), [cor_dict], opts=opts)["ok"]:
                     gained.add((cx, cz))
                     break
             idx += 1
@@ -687,6 +892,7 @@ def select_internal_streets(
     beach_regions = dumps["PHONE_LOW"]["world"].get("beach_regions", [])
     street_dumps = _make_street_dumps(dumps, region_id, reg_rect)
     max_streets = int(opts.get("max_streets_per_region", MAX_STREETS_PER_REGION))
+    lattice_step = max(1, int(opts.get("score_lattice_step", SCORE_LATTICE_STEP)))
 
     all_ex_cors = corridors_from_graph(graph, include_unverified=True)
     all_cond_cors = [c for s in sources if s["source_type"] == "CONDITIONAL_ROAD" for c in s["corridors"]]
@@ -694,11 +900,13 @@ def select_internal_streets(
 
     protos = REGION_RULES[region_id]["prototypes"]
     max_hw = max(max(PROTOTYPES[p]["parcel"]) // 2 for p in protos)
-    unserved_rows = _unserved_by_z(v_com, base_cors, seed_boxes, graph, opts)
+    unserved_rows = _unserved_by_z(v_com, base_cors, seed_boxes, graph, opts, lattice_step=lattice_step)
+    unserved_initial = sum(len(xs) for xs, _ in unserved_rows.values())
 
     # Run Tier-1 prefilter once (Round 0) and cache surviving candidates across rounds
     t1_pool: list[tuple[dict[str, Any], dict[str, Any]]] = []
-    rejection_counts: dict[str, int] = {}
+    tier1_rej: dict[str, int] = {}
+    tier2_rej: dict[str, int] = {}
     for cand in cands:
         src_ids = {c["id"] for c in cand["source"]["corridors"]}
         other_cors = [c for c in all_road_cors if c["id"] not in src_ids]
@@ -707,18 +915,37 @@ def select_internal_streets(
             t1_pool.append((cand, info1))
         else:
             r_key = str(info1.get("reason") or "TIER1_REJECTED")
-            rejection_counts[r_key] = rejection_counts.get(r_key, 0) + 1
+            tier1_rej[r_key] = tier1_rej.get(r_key, 0) + 1
+    tier1_passed_count = len(t1_pool)
+
+    # Precompute Round-0 lattice scores and candidate neighborhood bboxes once; incrementally update dirty entries across rounds
+    nb_pad = max_hw + 2.05
+    nb_by_id: dict[str, tuple[float, float, float, float]] = {}
+    score_cache: dict[str, set[tuple[int, int]]] = {}
+    zero_gain_count = 0
+    if unserved_rows and t1_pool:
+        for cand, info1 in t1_pool:
+            sid = cand["street_id"]
+            cb = info1["corridor"]["bounds"]
+            nb_by_id[sid] = (cb[0] - nb_pad, cb[1] - nb_pad, cb[2] + nb_pad, cb[3] + nb_pad)
+            g = _score_street_candidate(info1["corridor"], cand["start"], cand["end"], unserved_rows, max_hw, max_hw, opts)
+            score_cache[sid] = g
+            if not g:
+                zero_gain_count += 1
+    else:
+        zero_gain_count = len(t1_pool)
 
     selected: list[dict[str, Any]] = []
     sel_cors: list[dict[str, Any]] = []
     tier2_verified = 0
+    tier2_rejected = 0
 
     for _round in range(max_streets):
         if not unserved_rows or not t1_pool:
             break
         scored: list[tuple[int, int, int, dict[str, Any], dict[str, Any], set[tuple[int, int]]]] = []
         for cand, info1 in t1_pool:
-            gained = _score_street_candidate(info1["corridor"], unserved_rows, max_hw, max_hw, opts)
+            gained = score_cache.get(cand["street_id"])
             if gained:
                 scored.append((-len(gained), cand["length_m"], cand["order_index"], cand, info1, gained))
         if not scored:
@@ -735,14 +962,18 @@ def select_internal_streets(
             tier2_verified += 1
             ok2, info2 = _tier2_verify_street(cand, info1, street_dumps, graph, opts)
             if not ok2:
+                tier2_rejected += 1
                 failed_t2.add(cand["street_id"])
-                for rs in info2["reasons"]:
-                    rejection_counts[rs] = rejection_counts.get(rs, 0) + 1
+                t2_rs = info2["reasons"] or ([f"TIER2_{info2['eval']['geom_corridor_state']}"] if info2["eval"]["geom_corridor_state"] != "LEGAL" else ["TIER2_OBSTACLE"])
+                for rs in t2_rs:
+                    tier2_rej[rs] = tier2_rej.get(rs, 0) + 1
                 continue
             chosen = (cand, info1, info2, gained, -neg_sc)
             break
         if failed_t2:
             t1_pool = [(c, inf) for c, inf in t1_pool if c["street_id"] not in failed_t2]
+            for fid in failed_t2:
+                score_cache.pop(fid, None)
         if chosen is None:
             break
 
@@ -770,8 +1001,11 @@ def select_internal_streets(
         new_cor = info1["corridor"]
         sel_cors.append(new_cor)
         nc_b = tuple(new_cor["bounds"])
-        # Prune newly served and overlapping centers from row buckets
-        z_lo, z_hi = math.floor(nc_b[1] - max_hw - 2.01), math.ceil(nc_b[3] + max_hw + 2.01)
+        sel_nb = (nc_b[0] - nb_pad, nc_b[1] - nb_pad, nc_b[2] + nb_pad, nc_b[3] + nb_pad)
+        # Prune newly served and overlapping lattice centers, tracking removed vs shrunk cells
+        removed_cells: set[tuple[int, int]] = set(gained)
+        shrunk_cells: set[tuple[int, int]] = set()
+        z_lo, z_hi = math.floor(nc_b[1] - max_hw - 2.02), math.ceil(nc_b[3] + max_hw + 2.02)
         for cz in list(unserved_rows):
             if cz < z_lo or cz > z_hi:
                 continue
@@ -782,19 +1016,49 @@ def select_internal_streets(
                     continue
                 kept = [(hw, hh) for hw, hh in sizes if not _corridor_overlaps_box(new_cor, (cx - hw, cz - hh, cx + hw, cz + hh))]
                 if kept:
+                    if len(kept) < len(sizes):
+                        shrunk_cells.add((cx, cz))
                     nxs.append(cx)
                     nszs.append(kept)
+                else:
+                    removed_cells.add((cx, cz))
             if nxs:
                 unserved_rows[cz] = (nxs, nszs)
             else:
                 del unserved_rows[cz]
         # Remove selected street and any remaining candidate overlapping it
-        t1_pool = [(c, inf) for c, inf in t1_pool if c["street_id"] != cand["street_id"] and not _poly_overlaps_poly(inf["corridor"]["polygon"], tuple(inf["corridor"]["bounds"]), new_cor["polygon"], new_cor["is_rect"], nc_b)]
+        next_pool: list[tuple[dict[str, Any], dict[str, Any]]] = []
+        for c, inf in t1_pool:
+            cid = c["street_id"]
+            if cid == cand["street_id"] or _poly_overlaps_poly(inf["corridor"]["polygon"], tuple(inf["corridor"]["bounds"]), new_cor["polygon"], new_cor["is_rect"], nc_b):
+                score_cache.pop(cid, None)
+                continue
+            next_pool.append((c, inf))
+        t1_pool = next_pool
+        # Incrementally update only candidates whose neighborhood intersects the selected corridor / newly served cells
+        for c, inf in t1_pool:
+            cid = c["street_id"]
+            prev = score_cache.get(cid)
+            if not prev:
+                continue
+            if _bbox_overlaps(nb_by_id[cid], sel_nb):
+                prev.difference_update(removed_cells)
+                if shrunk_cells and not prev.isdisjoint(shrunk_cells):
+                    score_cache[cid] = _score_street_candidate(inf["corridor"], c["start"], c["end"], unserved_rows, max_hw, max_hw, opts)
 
+    combined_rej: dict[str, int] = dict(tier1_rej)
+    for k, v in tier2_rej.items():
+        combined_rej[k] = combined_rej.get(k, 0) + v
     return {
         "candidate_count": total_filtered, "checked_count": min(total_filtered, int(opts.get("candidate_budget", CANDIDATE_BUDGET))),
+        "tier1_passed_count": tier1_passed_count, "tier1_rejected_count": sum(tier1_rej.values()),
+        "tier1_rejection_counts": dict(sorted(tier1_rej.items())),
+        "zero_gain_count": zero_gain_count,
+        "tier2_verified_count": tier2_verified, "tier2_rejected_count": tier2_rejected,
+        "tier2_rejection_counts": dict(sorted(tier2_rej.items())),
         "selected_count": len(selected), "search_budget_exhausted": budget_exhausted,
-        "tier2_verified_count": tier2_verified, "rejection_summary": dict(sorted(rejection_counts.items())),
+        "score_lattice_step": lattice_step, "unserved_lattice_centers_initial": unserved_initial,
+        "rejection_summary": dict(sorted(combined_rej.items())),
         "selected_streets": selected,
     }
 
@@ -1130,7 +1394,19 @@ def analyze(
         "compatibility_key": compat, "sources": {"t016b_analyzer_version": B_VERSION, "t016c_analyzer_version": C_VERSION, **loaded["hashes"]},
         "presets": {p: {"static_fingerprint": dumps[p]["metadata"]["static_fingerprint"], "file_sha256": dumps[p].get("_file_sha256")} for p in ("PHONE_LOW", "DESKTOP_HIGH")},
     }
-    int_st_doc = dict(common_hdr, scenarios=streets_out)
+    st_summary = {
+        sid: {
+            rid: {
+                "candidate_count": st["candidate_count"], "tier1_passed_count": st["tier1_passed_count"],
+                "zero_gain_count": st["zero_gain_count"], "tier2_verified_count": st["tier2_verified_count"],
+                "selected_count": st["selected_count"], "tier1_rejection_counts": st["tier1_rejection_counts"],
+                "tier2_rejection_counts": st["tier2_rejection_counts"], "rejection_summary": st["rejection_summary"],
+            }
+            for rid, st in regs.items()
+        }
+        for sid, regs in streets_out.items()
+    }
+    int_st_doc = dict(common_hdr, summary=st_summary, scenarios=streets_out)
     int_st_doc["deterministic_sha256"] = _det_hash(int_st_doc)
     cond_p_doc = dict(common_hdr, scenarios=parcels_out)
     cond_p_doc["deterministic_sha256"] = _det_hash(cond_p_doc)

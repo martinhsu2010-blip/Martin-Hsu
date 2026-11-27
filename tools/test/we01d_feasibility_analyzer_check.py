@@ -6,6 +6,7 @@ import copy
 import hashlib
 import inspect
 import json
+import math
 from pathlib import Path
 import sys
 import tempfile
@@ -327,11 +328,15 @@ def test_d24_d25_d26_and_real_samples(td: Path) -> None:
     for sid, sc in fe["scenarios"].items():
         for rid, lr in sc["land_accounting"]["regions"].items():
             assert lr["conservation_error_m2"] <= 1.0, f"Conservation failed {sid}/{rid}"
-    # Verify H01 (NOT_FEASIBLE) is never a source in internal_streets
+    # Verify H01 (NOT_FEASIBLE) is never a source and per-scenario/region diagnostic summary is present
     st_doc = json.loads((td / "sr_d_0/internal_streets.json").read_text(encoding="utf-8"))
+    assert "summary" in st_doc
     for sid, regs in st_doc["scenarios"].items():
         for rid, r in regs.items():
             assert all(s["source_road_id"] != "H01" for s in r["selected_streets"])
+            sm = st_doc["summary"][sid][rid]
+            for k in ("candidate_count", "tier1_passed_count", "zero_gain_count", "tier2_verified_count", "selected_count", "tier1_rejection_counts", "tier2_rejection_counts", "rejection_summary"):
+                assert k in r and k in sm and sm[k] == r[k]
 
     # D24: file_sha256 change alone passes; tampered fingerprint / declared hash / mismatched direct parcel IDs rejected
     lo_alt_d = json.loads(lo.read_text(encoding="utf-8"))
@@ -368,6 +373,75 @@ def test_d24_d25_d26_and_real_samples(td: Path) -> None:
     _expect_fail("M:allow_unverified_sources", lambda: _check(all(s["id"] != "H01" for s in D._extract_sources(g_lo, rs_obj, set(), {"allow_unverified_sources": True}))))
 
 
+def test_perf_oblique_500x500_and_parity(td: Path) -> None:
+    # 1. Exact brute-force parity of oblique SAT + 3-way convex R7 scoring across 8deg, 14deg, and 45deg streets
+    for ang in (8.0, 14.0, 45.0):
+        rad = math.radians(ang)
+        st_pt, en_pt = [10.0, 50.0], [10.0 + 80.0 * math.cos(rad), 50.0 + 80.0 * math.sin(rad)]
+        cor = D._street_corridor_dict(f"PAR_{int(ang)}", st_pt[0], st_pt[1], en_pt[0], en_pt[1])
+        rows = {cz: (list(range(0, 100, 3)), [[(12, 11), (11, 12)] for _ in range(0, 100, 3)]) for cz in range(0, 100, 3)}
+        fast = D._score_street_candidate(cor, st_pt, en_pt, rows, 12, 12, {})
+        brute = {
+            (cx, cz)
+            for cz, (xs, szs) in rows.items()
+            for cx, szl in zip(xs, szs)
+            if any(B.evaluate_access((cx - hw, cz - hh, cx + hw, cz + hh), [cor])["ok"] for hw, hh in szl)
+        }
+        assert fast == brute, f"Oblique scoring parity mismatch at {ang}deg: fast={len(fast)} brute={len(brute)}"
+
+    # 2. Synthetic 500m x 500m flat oblique performance regression (both 8deg selecting 3 streets & 45deg zero-gain)
+    g1m = _grid_1m("B2_1M", "B2", -20, -20, 520, 520)
+
+    def _run_stress(sx: float, sz: float, ex: float, ez: float) -> tuple[dict, float, int]:
+        dx, dz = ex - sx, ez - sz
+        seg_l = math.hypot(dx, dz)
+        nx, nz = -dz / seg_l * 5.0, dx / seg_l * 5.0
+        rpoly = [[sx - nx, sz - nz], [ex - nx, ez - nz], [ex + nx, ez + nz], [sx + nx, sz + nz]]
+        rfp = _fp("RD_OBL", "ROAD", list(W.poly_bounds(rpoly)), sg="ROADS", gt="POLYGON", prec="EXACT_OUTLINE")
+        rfp["polygon"] = rpoly
+        seg = _seg("AVE_0", [[sx, 0, sz], [ex, 0, ez]], w=10.0, fp_ids=["RD_OBL"])
+        d_lo = make_dump(preset="PHONE_LOW", regions=[_reg("B2", [0, 0, 500, 500])], footprints=[rfp], roads={"nodes": [], "segments": [seg], "completeness": "COMPLETE"}, pg_bounds=[-100, -100, 600, 600])
+        d_lo["height_grids"] = [g1m]
+        d_lo["metadata"]["static_fingerprint"] = W.compute_static_fingerprint(d_lo)
+        d_hi = dict(d_lo, metadata=dict(d_lo["metadata"], preset="DESKTOP_HIGH"))
+        d_hi["metadata"]["static_fingerprint"] = W.compute_static_fingerprint(d_hi)
+        dumps = {"PHONE_LOW": d_lo, "DESKTOP_HIGH": d_hi}
+        graph = B.build_road_graph(d_lo)
+        ex_cors = B.corridors_from_graph(graph, include_unverified=False)
+        m = B.build_masks(d_lo, "S", "B2", [0, 0, 500, 500])
+        v = {p: {o: B.geom_valid(m, p, o) for o in (0, 90)} for p in B.REGION_RULES["B2"]["prototypes"]}
+        src = {"id": "AVE_0", "source_type": "EXISTING_ROAD", "centerline": [[sx, sz], [ex, ez]], "carriageway_width_m": 10.0, "corridors": ex_cors, "dependency_chains": [[]], "beach_encroachment_m2": 0.0}
+
+        orig_ea = D.evaluate_access
+        calls = [0]
+
+        def _counted_ea(*args, **kwargs):
+            calls[0] += 1
+            return orig_ea(*args, **kwargs)
+
+        D.evaluate_access = _counted_ea
+        try:
+            t0 = time.monotonic()
+            res = D.select_internal_streets("S", "B2", [0, 0, 500, 500], [src], m, v, ex_cors, [], dumps, graph, {})
+            dt = time.monotonic() - t0
+        finally:
+            D.evaluate_access = orig_ea
+        return res, dt, calls[0]
+
+    # 8deg oblique: 180 candidates, >20k unserved lattice centers, selects 3 oblique streets under <= 5.0 s & <= 3000 calls
+    res8, dt8, calls8 = _run_stress(40.0, 210.0, 460.0, 270.0)
+    assert res8["candidate_count"] >= 150 and res8["tier1_passed_count"] >= 150 and res8["unserved_lattice_centers_initial"] >= 5000
+    assert res8["selected_count"] == 3 and res8["tier2_verified_count"] >= 3
+    assert dt8 <= 5.0, f"500x500 8deg oblique exceeded 5.0 s budget: {dt8:.2f}s"
+    assert calls8 <= 3000, f"500x500 8deg oblique evaluate_access calls exceeded bound: {calls8}"
+
+    # 45deg oblique: 250 candidates, >20k unserved lattice centers, all T1 survivors zero-gain, <= 5.0 s & <= 500 calls
+    res45, dt45, calls45 = _run_stress(40.0, 40.0, 460.0, 460.0)
+    assert res45["candidate_count"] >= 150 and res45["tier1_passed_count"] >= 150 and res45["zero_gain_count"] == res45["tier1_passed_count"]
+    assert res45["selected_count"] == 0 and dt45 <= 5.0 and calls45 <= 500
+    print(f"  [PERF] 500x500 8deg: {dt8:.2f}s ({calls8} calls, 3 sel) | 45deg: {dt45:.2f}s ({calls45} calls, 0 sel)")
+
+
 def main() -> int:
     t0 = time.monotonic()
     suites = [
@@ -375,6 +449,7 @@ def main() -> int:
         ("D01-D05/D23 candidates, 3-street cap, budget", test_d01_to_d05_d23_candidates_and_budget),
         ("D06-D18/D27-D28 legality, conflicts, cross-preset, accounting", test_d06_to_d18_legality_conflicts_cross_preset_accounting),
         ("D19-D22 verdicts (25ha/40/60/D3) & priority", test_d19_to_d22_verdicts_and_priority),
+        ("PERF 500x500 oblique stress & exact brute-force parity", test_perf_oblique_500x500_and_parity),
         ("D24-D26 linkage, schema, determinism & real sample_roads", test_d24_d25_d26_and_real_samples),
     ]
     with tempfile.TemporaryDirectory() as tmp:
@@ -384,7 +459,7 @@ def main() -> int:
             fn(td)
             print(f"PASS [{label}] ({time.monotonic() - ts:.2f}s)")
     elapsed = time.monotonic() - t0
-    print(f"RESULT: PASS (WE-01D D01-D28 + G0-D1..D16 + B seed_parcels + all mutants RED + real sample_roads in {elapsed:.2f}s)")
+    print(f"RESULT: PASS (WE-01D D01-D28 + G0-D1..D16 + B seed_parcels + perf 500x500 oblique + all mutants RED + real sample_roads in {elapsed:.2f}s)")
     return 0
 
 
