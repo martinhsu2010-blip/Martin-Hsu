@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-27 | (docs only, no game release) | Claude | base 6b1e312 | WE-01A (T-016A) Gate A10 accepted by Martin (D-051d); formal outputs regenerated from the full dumps, hashes in D-051d; WE-01B needs its own G0
 - 2026-11-27 | (docs/tools only, no game release) | Claude | base e4764a0 | WE-01A PR #106 merged (D-051c): Gemini round 1 accepted (analyzer unchanged, 17/17 mutants caught, 1,043 lines); analyzer check added to CI; A10 acceptance pending
 - 2026-11-27 | (docs/tools only, no game release) | Claude | base ab3a869 | WE-01A PR #106 review round 1 (D-051b): extractor fix (facade boxes BUILDING), samples regenerated, test-coverage change request to Gemini
 - 2026-11-27 | (docs/tools only, no game release) | Claude | base 43eff41 | WE-01A (T-016A) pre-start gates PASS (D-051a): extractor tools/we01, sample dumps + schema notes in tools/fixtures/we01; C2 note corrected

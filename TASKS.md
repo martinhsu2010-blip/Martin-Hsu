@@ -11,7 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-016A WE-01A Runtime dump analysis and land classification (read-only audit tooling; LOW risk, SMALL volume) (Registered 2026-11-27, D-051; gates PASS D-051a; PR #106 merged e4764a0 after round 1 (D-051b, D-051c); check wired into CI; Done pending Martin's A10 acceptance of the land results)
+### T-016A WE-01A Runtime dump analysis and land classification (read-only audit tooling; LOW risk, SMALL volume) (Registered 2026-11-27, D-051; gates PASS D-051a; PR #106 merged e4764a0 after round 1 (D-051b, D-051c); check wired into CI; Done: Martin accepted A10 2026-11-27 12:33, D-051d)
 Owner: Gemini
 Implementer: Gemini (Stage 3; per-task exception, D-051)
 Reviewer: Claude
