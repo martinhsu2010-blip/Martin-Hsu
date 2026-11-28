@@ -11,15 +11,26 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
+### T-018A2 WE-03A2 Device Frame-Time Diagnostics (diagnostics only, no behaviour change; HIGH risk, SMALL volume) (Registered 2026-11-29, D-068/D-069; approved by Martin 2026-11-29 02:03)
+Owner: Claude
+Implementer: Codex
+Reviewer: Claude (diff review and independent verification); ChatGPT (read-only review); Martin accepts after device evidence
+Priority: P1
+Base commit: full `origin/main` SHA confirmed when Codex starts (registration confirmed main `9538c297fb7cb7dc702a6e5d7d1f21e502bbb251` before this PR); Engineering BASE `e8d5250fce0ea5f07f68840481cb95d2eca803fb`; CACHE `vh-2026-11-27-02` (Claude bumps it at release)
+Spec: `specs/T-018A2-spec-v1.0.md` (entry point, Claude conditions A2-C1..C13 win) + ChatGPT draft `specs/T-018A2-draft-v1.0-chatgpt.md` + `specs/T-018A2-g0-review-v1.0.md`; governance `specs/WE-03-budget-governance-v1.0.md`
+Scope: `index.html` diagnostics block only (<= 250 added+changed lines, WE03A2-DIAG banners, active only with `?fps=1`), `tools/test/we03_a2_diagnostics_check.mjs`, `tools/test/we03_a2_browser_check.py` (<= 700 lines combined). No `sw.js`, manifest, save, pacing, quality, physics or rendering change; no streaming.
+Gates: A2-G01..G18 plus negative controls (A2-C11); CI green; Claude and ChatGPT review; device matrix 3x3 per A2-C12 (B4 >= 0.97 x fpsCap); Martin acceptance.
+Status: Registered; Codex may start (single active code PR lock free). T-018B and later, budget values, streaming and WE-04..WE-09 not authorized. ChatGPT concurrence with A2-C1..C13 requested, not yet recorded; Claude owes Martin a device operation sheet before device acceptance.
+
 ### T-018 WE-03 C+ Hybrid World Streaming Architecture (series umbrella, not a code task; HIGH-risk series, decomposed into small sequential tasks) (Registered 2026-11-28, D-065; approved by Martin 2026-11-28 21:20)
 Owner: Claude
-Implementer: none (umbrella). Subtasks: T-018A1 (Claude), A2, B, C1, C2, C3, C4, D, E1, E2 (Codex), F1 (Gemini, LOW), F2 (Claude); only T-018A1 is registered.
+Implementer: none (umbrella). Subtasks: T-018A1 (Claude), A2, B, C1, C2, C3, C4, D, E1, E2 (Codex), F1 (Gemini, LOW), F2 (Claude); T-018A1 and T-018A2 are registered.
 Reviewer: Claude (series review); ChatGPT is design owner; Martin approves each subtask and accepts WE-03.
 Priority: P1
 Base commit: Engineering BASE `e8d5250fce0ea5f07f68840481cb95d2eca803fb` (game source equals Audit BASE `84319439243b51aa8d119e33eb62a0637feea887`; CACHE `vh-2026-11-27-02`); each subtask records its own baseline SHA.
 Spec: `specs/WE-03-series-spec-v1.0.md` (entry point, Claude conditions B1, B2, B4, B5, B6 and N1-N11 win) + ChatGPT draft `specs/WE-03-draft-v1.0-chatgpt.md` + `specs/WE-03-g0-review-v1.0.md`
 Scope: series constraints and subtask sequence only. No game file, `sw.js`, CACHE, `vh_save`, WE-01/WE-02 artifact or verdict is touched or authorized; WE-04..WE-09 not authorized; draft section 22 budgets stay provisional until T-018A1 is accepted and Martin confirms revised budgets.
-Status: Registered; T-018A1 is Done (D-067). Every other subtask, starting with T-018A2, is registered only when its own spec is approved by Martin.
+Status: Registered; T-018A1 is Done (D-067); T-018A2 registered (D-069). Every other subtask, starting with T-018B, is registered only when its own spec is approved by Martin. Budget governance (plan C) adopted by D-068; no numeric budget approved.
 
 ### T-018A1 WE-03A Performance Baseline and Architecture Calibration (read-only measurement tooling and reports; LOW risk, LARGE volume) (Registered 2026-11-28, D-065; approved by Martin 2026-11-28 21:20; pre-start gates PASS)
 Owner: Claude
