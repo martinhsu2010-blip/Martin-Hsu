@@ -1,0 +1,2087 @@
+{
+ "baseline_analysis": {
+  "gate_stability": {
+   "deterministic_counts_stable": true,
+   "frame_time_p50_repeat_ratio_range": [
+    0.6944,
+    1.1902
+   ],
+   "frame_time_usable_as_hard_gate": false,
+   "p99_note": "P99 of 120 samples is the 2nd largest sample: low statistical power"
+  },
+  "longest_frames_ms": [
+   [
+    28599.8,
+    "TABLET_MED/CBD/23:00"
+   ],
+   [
+    26742.1,
+    "TABLET_MED/CBD/23:00"
+   ],
+   [
+    24962.2,
+    "TABLET_MED/CBD/12:00"
+   ]
+  ],
+  "physics_control": {
+   "DESKTOP_HIGH": {
+    "median_ms_overall": 27.8,
+    "pairs": 5,
+    "ratio_max": 0.99012,
+    "ratio_min": 0.9702,
+    "status": "STABLE",
+    "within_band": true
+   },
+   "PHONE_LOW": {
+    "median_ms_overall": 9.3,
+    "pairs": 5,
+    "ratio_max": 1.05376,
+    "ratio_min": 0.89474,
+    "status": "INCONCLUSIVE",
+    "within_band": false
+   },
+   "PHONE_MED": {
+    "median_ms_overall": 10.8,
+    "pairs": 5,
+    "ratio_max": 1.09434,
+    "ratio_min": 0.96087,
+    "status": "STABLE",
+    "within_band": true
+   },
+   "TABLET_MED": {
+    "median_ms_overall": 11.4,
+    "pairs": 5,
+    "ratio_max": 1.35088,
+    "ratio_min": 0.93651,
+    "status": "INCONCLUSIVE",
+    "within_band": false
+   }
+  },
+  "present": true,
+  "repeat_sessions": {
+   "DESKTOP_HIGH/B3/12:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     1291,
+     1291
+    ],
+    "frame_ms_p50": [
+     40.9,
+     28.4
+    ],
+    "frame_ms_p95": [
+     64.8,
+     45.3
+    ],
+    "frame_p50_ratio": 0.6944,
+    "triangles_equal": true,
+    "triangles_p50": [
+     7243986,
+     7243986
+    ]
+   },
+   "DESKTOP_HIGH/B3/23:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     1315,
+     1315
+    ],
+    "frame_ms_p50": [
+     33.9,
+     33.7
+    ],
+    "frame_ms_p95": [
+     51.7,
+     53.1
+    ],
+    "frame_p50_ratio": 0.9941,
+    "triangles_equal": true,
+    "triangles_p50": [
+     7056478,
+     7056478
+    ]
+   },
+   "DESKTOP_HIGH/CBD/12:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     889,
+     889
+    ],
+    "frame_ms_p50": [
+     41.5,
+     33.4
+    ],
+    "frame_ms_p95": [
+     75.3,
+     56.6
+    ],
+    "frame_p50_ratio": 0.8048,
+    "triangles_equal": true,
+    "triangles_p50": [
+     6138350,
+     6138350
+    ]
+   },
+   "DESKTOP_HIGH/CBD/23:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     1041,
+     1041
+    ],
+    "frame_ms_p50": [
+     31.8,
+     35
+    ],
+    "frame_ms_p95": [
+     64,
+     54.9
+    ],
+    "frame_p50_ratio": 1.1006,
+    "triangles_equal": true,
+    "triangles_p50": [
+     6390532,
+     6390532
+    ]
+   },
+   "PHONE_LOW/B3/12:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     474,
+     474
+    ],
+    "frame_ms_p50": [
+     17.6,
+     15.2
+    ],
+    "frame_ms_p95": [
+     34.8,
+     30.9
+    ],
+    "frame_p50_ratio": 0.8636,
+    "triangles_equal": true,
+    "triangles_p50": [
+     779584,
+     779584
+    ]
+   },
+   "PHONE_LOW/B3/23:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     480,
+     480
+    ],
+    "frame_ms_p50": [
+     15.6,
+     16.8
+    ],
+    "frame_ms_p95": [
+     26.4,
+     34.4
+    ],
+    "frame_p50_ratio": 1.0769,
+    "triangles_equal": true,
+    "triangles_p50": [
+     789172,
+     789172
+    ]
+   },
+   "PHONE_LOW/CBD/12:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     317,
+     317
+    ],
+    "frame_ms_p50": [
+     16.3,
+     14.7
+    ],
+    "frame_ms_p95": [
+     35.3,
+     24.3
+    ],
+    "frame_p50_ratio": 0.9018,
+    "triangles_equal": true,
+    "triangles_p50": [
+     672908,
+     672908
+    ]
+   },
+   "PHONE_LOW/CBD/23:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     319,
+     319
+    ],
+    "frame_ms_p50": [
+     15.6,
+     14.1
+    ],
+    "frame_ms_p95": [
+     33.1,
+     23.9
+    ],
+    "frame_p50_ratio": 0.9038,
+    "triangles_equal": true,
+    "triangles_p50": [
+     678120,
+     678120
+    ]
+   },
+   "PHONE_MED/B3/12:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     590,
+     590
+    ],
+    "frame_ms_p50": [
+     18.4,
+     21.9
+    ],
+    "frame_ms_p95": [
+     35,
+     37.4
+    ],
+    "frame_p50_ratio": 1.1902,
+    "triangles_equal": true,
+    "triangles_p50": [
+     2324502,
+     2324502
+    ]
+   },
+   "PHONE_MED/B3/23:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     608,
+     608
+    ],
+    "frame_ms_p50": [
+     20.1,
+     20.1
+    ],
+    "frame_ms_p95": [
+     36.7,
+     44.1
+    ],
+    "frame_p50_ratio": 1.0,
+    "triangles_equal": true,
+    "triangles_p50": [
+     2325610,
+     2325610
+    ]
+   },
+   "PHONE_MED/CBD/12:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     372,
+     372
+    ],
+    "frame_ms_p50": [
+     21.2,
+     17.9
+    ],
+    "frame_ms_p95": [
+     41.1,
+     46.4
+    ],
+    "frame_p50_ratio": 0.8443,
+    "triangles_equal": true,
+    "triangles_p50": [
+     2051716,
+     2051716
+    ]
+   },
+   "PHONE_MED/CBD/23:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     386,
+     386
+    ],
+    "frame_ms_p50": [
+     23,
+     19.3
+    ],
+    "frame_ms_p95": [
+     38.3,
+     39.6
+    ],
+    "frame_p50_ratio": 0.8391,
+    "triangles_equal": true,
+    "triangles_p50": [
+     2059806,
+     2059806
+    ]
+   },
+   "TABLET_MED/B3/12:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     590,
+     590
+    ],
+    "frame_ms_p50": [
+     21.7,
+     20.2
+    ],
+    "frame_ms_p95": [
+     41.7,
+     35.9
+    ],
+    "frame_p50_ratio": 0.9309,
+    "triangles_equal": true,
+    "triangles_p50": [
+     2324502,
+     2324502
+    ]
+   },
+   "TABLET_MED/B3/23:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     601,
+     601
+    ],
+    "frame_ms_p50": [
+     23.1,
+     21.5
+    ],
+    "frame_ms_p95": [
+     42.1,
+     41.9
+    ],
+    "frame_p50_ratio": 0.9307,
+    "triangles_equal": true,
+    "triangles_p50": [
+     2324278,
+     2324278
+    ]
+   },
+   "TABLET_MED/CBD/12:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     374,
+     374
+    ],
+    "frame_ms_p50": [
+     23.1,
+     25.5
+    ],
+    "frame_ms_p95": [
+     43.1,
+     41.8
+    ],
+    "frame_p50_ratio": 1.1039,
+    "triangles_equal": true,
+    "triangles_p50": [
+     2100828,
+     2100828
+    ]
+   },
+   "TABLET_MED/CBD/23:00": {
+    "draw_calls_equal": true,
+    "draw_calls_p50": [
+     387,
+     387
+    ],
+    "frame_ms_p50": [
+     20.2,
+     18.8
+    ],
+    "frame_ms_p95": [
+     37.4,
+     35.6
+    ],
+    "frame_p50_ratio": 0.9307,
+    "triangles_equal": true,
+    "triangles_p50": [
+     2059808,
+     2059808
+    ]
+   }
+  },
+  "resource_ranges": {
+   "DESKTOP_HIGH": {
+    "bodies_range": [
+     625,
+     722
+    ],
+    "geometry_mib_range": [
+     279.7,
+     279.7
+    ],
+    "texture_mib_range": [
+     388.3,
+     388.3
+    ]
+   },
+   "PHONE_LOW": {
+    "bodies_range": [
+     505,
+     549
+    ],
+    "geometry_mib_range": [
+     18.9,
+     22.4
+    ],
+    "texture_mib_range": [
+     33.4,
+     49.4
+    ]
+   },
+   "PHONE_MED": {
+    "bodies_range": [
+     524,
+     568
+    ],
+    "geometry_mib_range": [
+     109.0,
+     111.9
+    ],
+    "texture_mib_range": [
+     388.3,
+     388.3
+    ]
+   },
+   "TABLET_MED": {
+    "bodies_range": [
+     526,
+     569
+    ],
+    "geometry_mib_range": [
+     109.6,
+     109.6
+    ],
+    "texture_mib_range": [
+     388.3,
+     388.3
+    ]
+   }
+  },
+  "source_class": "MEASURED_HEADLESS"
+ },
+ "baseline_metrics_sha256": "6ef849304bd04f4d97dd6f658f5013df5ae2d7c4b025c5824c89fb09cff324bf",
+ "benefit": {
+  "finding": "Four shared prototypes: resident geometry and the shared atlas do not depend on the number of buildings, so geometry/texture savings from streaming are structurally ~0 under Control A with the same LOD strategy; collision bodies are the only large saving (1 body per building assumed).",
+  "recommended_gate_revision": {
+   "replace": "geometry+texture resident peak >= 20 % lower",
+   "source_class": "PROPOSED_LIMIT",
+   "with": [
+    "active collision bodies P95 >= 20 % lower than all-resident (analytic expectation ~56 % for 57 buildings)",
+    "visual object instances alive P95 reported (no ratio gate)",
+    "draw calls P95 +<=5 %",
+    "frame-time ratio only with a valid control; otherwise INCONCLUSIVE",
+    "geometry/texture savings evaluated on the unique-asset model for WE-06 and reported, not gated"
+   ]
+  },
+  "sets": {
+   "40": {
+    "DESKTOP_HIGH": {
+     "body_saving_vs_all_resident_r217": 0.55,
+     "max_active_bodies_r180": 14,
+     "max_active_bodies_r217": 18
+    },
+    "PHONE_LOW": {
+     "body_saving_vs_all_resident_r217": 0.55,
+     "max_active_bodies_r180": 14,
+     "max_active_bodies_r217": 18
+    },
+    "PHONE_MED": {
+     "body_saving_vs_all_resident_r217": 0.55,
+     "max_active_bodies_r180": 14,
+     "max_active_bodies_r217": 18
+    },
+    "TABLET_MED": {
+     "body_saving_vs_all_resident_r217": 0.55,
+     "max_active_bodies_r180": 14,
+     "max_active_bodies_r217": 18
+    },
+    "buildings": 40,
+    "shared_prototype_model_resident_triangles": 57490,
+    "unique_asset_model_all_resident_triangles": 446360
+   },
+   "57": {
+    "DESKTOP_HIGH": {
+     "body_saving_vs_all_resident_r217": 0.561,
+     "max_active_bodies_r180": 19,
+     "max_active_bodies_r217": 25
+    },
+    "PHONE_LOW": {
+     "body_saving_vs_all_resident_r217": 0.561,
+     "max_active_bodies_r180": 19,
+     "max_active_bodies_r217": 25
+    },
+    "PHONE_MED": {
+     "body_saving_vs_all_resident_r217": 0.561,
+     "max_active_bodies_r180": 19,
+     "max_active_bodies_r217": 25
+    },
+    "TABLET_MED": {
+     "body_saving_vs_all_resident_r217": 0.561,
+     "max_active_bodies_r180": 19,
+     "max_active_bodies_r217": 25
+    },
+    "buildings": 57,
+    "shared_prototype_model_resident_triangles": 57490,
+    "unique_asset_model_all_resident_triangles": 623550
+   },
+   "60": {
+    "DESKTOP_HIGH": {
+     "body_saving_vs_all_resident_r217": 0.567,
+     "max_active_bodies_r180": 20,
+     "max_active_bodies_r217": 26
+    },
+    "PHONE_LOW": {
+     "body_saving_vs_all_resident_r217": 0.567,
+     "max_active_bodies_r180": 20,
+     "max_active_bodies_r217": 26
+    },
+    "PHONE_MED": {
+     "body_saving_vs_all_resident_r217": 0.567,
+     "max_active_bodies_r180": 20,
+     "max_active_bodies_r217": 26
+    },
+    "TABLET_MED": {
+     "body_saving_vs_all_resident_r217": 0.567,
+     "max_active_bodies_r180": 20,
+     "max_active_bodies_r217": 26
+    },
+    "buildings": 60,
+    "shared_prototype_model_resident_triangles": 57490,
+    "unique_asset_model_all_resident_triangles": 655440
+   }
+  },
+  "source_class": "ANALYTIC_ESTIMATE"
+ },
+ "chunks": {
+  "coverage_vectors": [
+   {
+    "chunks128": [
+     0
+    ],
+    "max": 128,
+    "min": 0
+   },
+   {
+    "chunks128": [
+     0,
+     1
+    ],
+    "max": 128.0001,
+    "min": 0
+   },
+   {
+    "chunks128": [
+     -1
+    ],
+    "max": 0,
+    "min": -128
+   },
+   {
+    "chunks128": [
+     -2,
+     -1
+    ],
+    "max": 0,
+    "min": -128.0001
+   },
+   {
+    "chunks128": [
+     0,
+     1
+    ],
+    "max": 136,
+    "min": 120
+   },
+   {
+    "chunks128": [
+     -1,
+     0
+    ],
+    "max": 5,
+    "min": -5
+   },
+   {
+    "chunks128": [
+     1
+    ],
+    "max": 256,
+    "min": 128
+   }
+  ],
+  "footprint_definition": "WE-02 parcel bounds_internal rectangle (orientation 0/90 only, WE-02 G0-W7): footprint == parcel bounds",
+  "grids": {
+   "128": {
+    "coverage_sum": 101,
+    "cross_chunk_parcels": 34,
+    "lod0_triangles_per_owner_chunk_max": 104000,
+    "max_chunks_covered": 4,
+    "occupied_owner_chunks": 16,
+    "parcels_per_chunk_max": 8,
+    "parcels_per_chunk_p50": 3.0
+   },
+   "256": {
+    "coverage_sum": 81,
+    "cross_chunk_parcels": 20,
+    "lod0_triangles_per_owner_chunk_max": 168000,
+    "max_chunks_covered": 4,
+    "occupied_owner_chunks": 10,
+    "parcels_per_chunk_max": 10,
+    "parcels_per_chunk_p50": 5.0
+   },
+   "64": {
+    "coverage_sum": 127,
+    "cross_chunk_parcels": 42,
+    "lod0_triangles_per_owner_chunk_max": 32000,
+    "max_chunks_covered": 4,
+    "occupied_owner_chunks": 33,
+    "parcels_per_chunk_max": 3,
+    "parcels_per_chunk_p50": 2
+   }
+  },
+  "index_vectors": [
+   {
+    "chunk128": -1,
+    "v": -1
+   },
+   {
+    "chunk128": -1,
+    "v": -2
+   },
+   {
+    "chunk128": -1,
+    "v": -3
+   },
+   {
+    "chunk128": -1,
+    "v": -128
+   },
+   {
+    "chunk128": -2,
+    "v": -128.0001
+   },
+   {
+    "chunk128": 0,
+    "v": 0
+   },
+   {
+    "chunk128": 0,
+    "v": 127.9999
+   },
+   {
+    "chunk128": 1,
+    "v": 128
+   }
+  ],
+  "parent_vectors": [
+   {
+    "c": -3,
+    "parent": -2
+   },
+   {
+    "c": -2,
+    "parent": -1
+   },
+   {
+    "c": -1,
+    "parent": -1
+   },
+   {
+    "c": 0,
+    "parent": 0
+   },
+   {
+    "c": 1,
+    "parent": 0
+   },
+   {
+    "c": 2,
+    "parent": 1
+   },
+   {
+    "c": 3,
+    "parent": 1
+   }
+  ],
+  "source_class": "ANALYTIC_ESTIMATE"
+ },
+ "device_protocol": {
+  "a2_required_fields": [
+   "P50/P95/P99 frame time",
+   "count > 50 ms",
+   "count > 100 ms",
+   "longest frame",
+   "preset",
+   "resScale",
+   "fpsCap",
+   "CACHE name",
+   "existing average/min text kept"
+  ],
+  "devices": [
+   "Samsung Galaxy S26 Ultra",
+   "Samsung Galaxy Tab S11"
+  ],
+  "fixed": [
+   "preset set manually",
+   "auto quality off",
+   "dynamic resolution off"
+  ],
+  "fps_acceptance": {
+   "cap_30_threshold": 29.1,
+   "note": "tolerance for timing, not a lower target",
+   "rule": "average FPS >= fps_cap x 0.97"
+  },
+  "limitation": "until A2 ships, ?fps=1 gives only a 1 s average and minimum: not sufficient as a baseline",
+  "other_thresholds_unchanged": {
+   "min_1s_fps": 24,
+   "over_100ms_ratio": 0.005,
+   "p95_ms": 40,
+   "p99_ms": 66.7
+  },
+  "presets": [
+   "PHONE_LOW",
+   "PHONE_MED",
+   "TABLET_MED"
+  ],
+  "procedure": {
+   "frame_source": "in-game diagnostics, never screen recording",
+   "loads": [
+    40,
+    60
+   ],
+   "paths": [
+    "day",
+    "night",
+    "chunk switch"
+   ],
+   "run_seconds_min": 120,
+   "runs_per_load": 3,
+   "warmup_min": 3
+  },
+  "record": [
+   "release/CACHE",
+   "commit SHA",
+   "device, OS, browser version",
+   "resolution and orientation",
+   "refresh rate",
+   "FPS cap",
+   "preset",
+   "resScale",
+   "auto-quality state",
+   "time of day",
+   "load (40/60 buildings)",
+   "thermal state if available"
+  ],
+  "source_class": "PROPOSED_LIMIT",
+  "url_flag": "?fps=1"
+ },
+ "district_plan_sha256": "e4b74807f1cdb9b8d52539a226bf251ef1c873ef74371b8abbf8615592e81f0f",
+ "engineering_base": "e8d5250fce0ea5f07f68840481cb95d2eca803fb",
+ "index_html_blob": "c45ff475d96f2d3b7f81b31392df44ed2a997035",
+ "l0_cells_sha256": "e46ab316dfcf1f884bc5c029a8359a5e4baa80e5774cfcb5fbcaaf49ebb2613e",
+ "presets": {
+  "DESKTOP_HIGH": {
+   "existing_lod": "updateFacadeLOD + Site A showcase LOD only (no residential LOD)",
+   "fps_cap": 60,
+   "npc_draw_dist_m": 130,
+   "proposed_mapping": {
+    "approved": false,
+    "cpu_budget_ms_p95": 4,
+    "fog_transmittance_at_lod": [
+     0.961,
+     0.779,
+     0.237
+    ],
+    "hysteresis": {
+     "cooldown_ms": 500,
+     "downgrade_factor": 1.1,
+     "upgrade_factor": 0.9
+    },
+    "lod_m": [
+     200,
+     500,
+     1200
+    ],
+    "preload_s": 4,
+    "rule": "draft anchor",
+    "source_class": "PROPOSED_LIMIT",
+    "streaming_enabled": false,
+    "update_interval_ms": 100
+   },
+   "quality_config": {
+    "bloom": true,
+    "fog": 0.001,
+    "npcs": 16.0,
+    "pixelRatio": 2.0,
+    "props": 1.0,
+    "shadow": 2048.0,
+    "smaa": false,
+    "ssao": true,
+    "traffic": 52.0
+   },
+   "shadow_range_m": 110,
+   "source_class": "SOURCE_CONFIRMED"
+  },
+  "DESKTOP_MED": {
+   "existing_lod": "updateFacadeLOD + Site A showcase LOD only (no residential LOD)",
+   "fps_cap": 60,
+   "npc_draw_dist_m": 100,
+   "proposed_mapping": {
+    "approved": false,
+    "cpu_budget_ms_p95": 4,
+    "fog_transmittance_at_lod": [
+     0.977,
+     0.862,
+     0.417
+    ],
+    "hysteresis": {
+     "cooldown_ms": 500,
+     "downgrade_factor": 1.1,
+     "upgrade_factor": 0.9
+    },
+    "lod_m": [
+     140,
+     350,
+     850
+    ],
+    "preload_s": 4,
+    "rule": "MED tier: pixelRatio 1.0, shadow 2048, no ssao",
+    "source_class": "PROPOSED_LIMIT",
+    "streaming_enabled": false,
+    "update_interval_ms": 200
+   },
+   "quality_config": {
+    "bloom": true,
+    "fog": 0.0011,
+    "npcs": 16.0,
+    "pixelRatio": 1.0,
+    "props": 1.0,
+    "shadow": 2048.0,
+    "smaa": false,
+    "ssao": false,
+    "traffic": 40.0
+   },
+   "shadow_range_m": 85,
+   "source_class": "SOURCE_CONFIRMED"
+  },
+  "DESKTOP_ULTRA": {
+   "existing_lod": "updateFacadeLOD + Site A showcase LOD only (no residential LOD)",
+   "fps_cap": 60,
+   "npc_draw_dist_m": 170,
+   "proposed_mapping": {
+    "approved": false,
+    "cpu_budget_ms_p95": 4,
+    "fog_transmittance_at_lod": [
+     0.979,
+     0.878,
+     0.445
+    ],
+    "hysteresis": {
+     "cooldown_ms": 500,
+     "downgrade_factor": 1.1,
+     "upgrade_factor": 0.9
+    },
+    "lod_m": [
+     240,
+     600,
+     1500
+    ],
+    "preload_s": 4,
+    "rule": "fog 0.0006: LOD2 raised so fog transmittance at LOD2 stays comparable",
+    "source_class": "PROPOSED_LIMIT",
+    "streaming_enabled": false,
+    "update_interval_ms": 100
+   },
+   "quality_config": {
+    "bloom": true,
+    "fog": 0.0006,
+    "npcs": 24.0,
+    "pixelRatio": 2.0,
+    "props": 1.0,
+    "shadow": 4096.0,
+    "smaa": true,
+    "ssao": true,
+    "traffic": 68.0
+   },
+   "shadow_range_m": 130,
+   "source_class": "SOURCE_CONFIRMED"
+  },
+  "IGPU_HIGH": {
+   "existing_lod": "updateFacadeLOD + Site A showcase LOD only (no residential LOD)",
+   "fps_cap": 60,
+   "npc_draw_dist_m": 130,
+   "proposed_mapping": {
+    "approved": false,
+    "cpu_budget_ms_p95": 2,
+    "fog_transmittance_at_lod": [
+     0.977,
+     0.862,
+     0.417
+    ],
+    "hysteresis": {
+     "cooldown_ms": 500,
+     "downgrade_factor": 1.1,
+     "upgrade_factor": 0.9
+    },
+    "lod_m": [
+     140,
+     350,
+     850
+    ],
+    "preload_s": 4,
+    "rule": "HIGH tier on iGPU: no ssao, smaa",
+    "source_class": "PROPOSED_LIMIT",
+    "streaming_enabled": false,
+    "update_interval_ms": 100
+   },
+   "quality_config": {
+    "bloom": true,
+    "fog": 0.0011,
+    "npcs": 14.0,
+    "pixelRatio": 1.25,
+    "props": 1.0,
+    "shadow": 2048.0,
+    "smaa": true,
+    "ssao": false,
+    "traffic": 44.0
+   },
+   "shadow_range_m": 110,
+   "source_class": "SOURCE_CONFIRMED"
+  },
+  "IGPU_LOW": {
+   "existing_lod": "updateFacadeLOD + Site A showcase LOD only (no residential LOD)",
+   "fps_cap": 60,
+   "npc_draw_dist_m": 70,
+   "proposed_mapping": {
+    "approved": false,
+    "cpu_budget_ms_p95": 2,
+    "fog_transmittance_at_lod": [
+     0.975,
+     0.852,
+     0.339
+    ],
+    "hysteresis": {
+     "cooldown_ms": 500,
+     "downgrade_factor": 1.1,
+     "upgrade_factor": 0.9
+    },
+    "lod_m": [
+     100,
+     250,
+     650
+    ],
+    "preload_s": 4,
+    "rule": "LOW tier, 60 FPS cap on weak GPU",
+    "source_class": "PROPOSED_LIMIT",
+    "streaming_enabled": false,
+    "update_interval_ms": 250
+   },
+   "quality_config": {
+    "bloom": false,
+    "fog": 0.0016,
+    "npcs": 8.0,
+    "pixelRatio": 1.0,
+    "props": 0.6,
+    "shadow": 1024.0,
+    "smaa": false,
+    "ssao": false,
+    "traffic": 20.0
+   },
+   "shadow_range_m": 60,
+   "source_class": "SOURCE_CONFIRMED"
+  },
+  "IGPU_MED": {
+   "existing_lod": "updateFacadeLOD + Site A showcase LOD only (no residential LOD)",
+   "fps_cap": 60,
+   "npc_draw_dist_m": 100,
+   "proposed_mapping": {
+    "approved": false,
+    "cpu_budget_ms_p95": 2,
+    "fog_transmittance_at_lod": [
+     0.979,
+     0.878,
+     0.445
+    ],
+    "hysteresis": {
+     "cooldown_ms": 500,
+     "downgrade_factor": 1.1,
+     "upgrade_factor": 0.9
+    },
+    "lod_m": [
+     120,
+     300,
+     750
+    ],
+    "preload_s": 4,
+    "rule": "MED tier",
+    "source_class": "PROPOSED_LIMIT",
+    "streaming_enabled": false,
+    "update_interval_ms": 200
+   },
+   "quality_config": {
+    "bloom": true,
+    "fog": 0.0012,
+    "npcs": 12.0,
+    "pixelRatio": 1.0,
+    "props": 0.8,
+    "shadow": 2048.0,
+    "smaa": false,
+    "ssao": false,
+    "traffic": 34.0
+   },
+   "shadow_range_m": 85,
+   "source_class": "SOURCE_CONFIRMED"
+  },
+  "PHONE_LOW": {
+   "existing_lod": "updateFacadeLOD + Site A showcase LOD only (no residential LOD)",
+   "fps_cap": 30,
+   "npc_draw_dist_m": 70,
+   "proposed_mapping": {
+    "approved": false,
+    "cpu_budget_ms_p95": 2,
+    "fog_transmittance_at_lod": [
+     0.965,
+     0.798,
+     0.218
+    ],
+    "hysteresis": {
+     "cooldown_ms": 500,
+     "downgrade_factor": 1.1,
+     "upgrade_factor": 0.9
+    },
+    "lod_m": [
+     100,
+     250,
+     650
+    ],
+    "preload_s": 4,
+    "rule": "draft anchor",
+    "source_class": "PROPOSED_LIMIT",
+    "streaming_enabled": false,
+    "update_interval_ms": 250
+   },
+   "quality_config": {
+    "bloom": false,
+    "fog": 0.0019,
+    "npcs": 8.0,
+    "pixelRatio": 1.0,
+    "props": 0.5,
+    "shadow": 1024.0,
+    "smaa": false,
+    "ssao": false,
+    "traffic": 22.0
+   },
+   "shadow_range_m": 60,
+   "source_class": "SOURCE_CONFIRMED"
+  },
+  "PHONE_MED": {
+   "existing_lod": "updateFacadeLOD + Site A showcase LOD only (no residential LOD)",
+   "fps_cap": 30,
+   "npc_draw_dist_m": 100,
+   "proposed_mapping": {
+    "approved": false,
+    "cpu_budget_ms_p95": 2,
+    "fog_transmittance_at_lod": [
+     0.972,
+     0.838,
+     0.332
+    ],
+    "hysteresis": {
+     "cooldown_ms": 500,
+     "downgrade_factor": 1.1,
+     "upgrade_factor": 0.9
+    },
+    "lod_m": [
+     120,
+     300,
+     750
+    ],
+    "preload_s": 4,
+    "rule": "draft anchor",
+    "source_class": "PROPOSED_LIMIT",
+    "streaming_enabled": false,
+    "update_interval_ms": 200
+   },
+   "quality_config": {
+    "bloom": true,
+    "fog": 0.0014,
+    "npcs": 10.0,
+    "pixelRatio": 1.5,
+    "props": 0.75,
+    "shadow": 1024.0,
+    "smaa": false,
+    "ssao": false,
+    "traffic": 30.0
+   },
+   "shadow_range_m": 85,
+   "source_class": "SOURCE_CONFIRMED"
+  },
+  "TABLET_HIGH": {
+   "existing_lod": "updateFacadeLOD + Site A showcase LOD only (no residential LOD)",
+   "fps_cap": 30,
+   "npc_draw_dist_m": 130,
+   "proposed_mapping": {
+    "approved": false,
+    "cpu_budget_ms_p95": 2,
+    "fog_transmittance_at_lod": [
+     0.966,
+     0.804,
+     0.28
+    ],
+    "hysteresis": {
+     "cooldown_ms": 500,
+     "downgrade_factor": 1.1,
+     "upgrade_factor": 0.9
+    },
+    "lod_m": [
+     170,
+     425,
+     1025
+    ],
+    "preload_s": 4,
+    "rule": "between TABLET_MED and DESKTOP_HIGH (pixelRatio 1.75, ssao)",
+    "source_class": "PROPOSED_LIMIT",
+    "streaming_enabled": false,
+    "update_interval_ms": 100
+   },
+   "quality_config": {
+    "bloom": true,
+    "fog": 0.0011,
+    "npcs": 14.0,
+    "pixelRatio": 1.75,
+    "props": 1.0,
+    "shadow": 2048.0,
+    "smaa": false,
+    "ssao": true,
+    "traffic": 46.0
+   },
+   "shadow_range_m": 110,
+   "source_class": "SOURCE_CONFIRMED"
+  },
+  "TABLET_LOW": {
+   "existing_lod": "updateFacadeLOD + Site A showcase LOD only (no residential LOD)",
+   "fps_cap": 30,
+   "npc_draw_dist_m": 70,
+   "proposed_mapping": {
+    "approved": false,
+    "cpu_budget_ms_p95": 2,
+    "fog_transmittance_at_lod": [
+     0.965,
+     0.798,
+     0.218
+    ],
+    "hysteresis": {
+     "cooldown_ms": 500,
+     "downgrade_factor": 1.1,
+     "upgrade_factor": 0.9
+    },
+    "lod_m": [
+     100,
+     250,
+     650
+    ],
+    "preload_s": 4,
+    "rule": "LOW tier: same fog/shadow/pixel ratio as PHONE_LOW",
+    "source_class": "PROPOSED_LIMIT",
+    "streaming_enabled": false,
+    "update_interval_ms": 250
+   },
+   "quality_config": {
+    "bloom": false,
+    "fog": 0.0019,
+    "npcs": 8.0,
+    "pixelRatio": 1.0,
+    "props": 0.5,
+    "shadow": 1024.0,
+    "smaa": false,
+    "ssao": false,
+    "traffic": 28.0
+   },
+   "shadow_range_m": 60,
+   "source_class": "SOURCE_CONFIRMED"
+  },
+  "TABLET_MED": {
+   "existing_lod": "updateFacadeLOD + Site A showcase LOD only (no residential LOD)",
+   "fps_cap": 30,
+   "npc_draw_dist_m": 100,
+   "proposed_mapping": {
+    "approved": false,
+    "cpu_budget_ms_p95": 2,
+    "fog_transmittance_at_lod": [
+     0.972,
+     0.838,
+     0.353
+    ],
+    "hysteresis": {
+     "cooldown_ms": 500,
+     "downgrade_factor": 1.1,
+     "upgrade_factor": 0.9
+    },
+    "lod_m": [
+     140,
+     350,
+     850
+    ],
+    "preload_s": 4,
+    "rule": "draft anchor",
+    "source_class": "PROPOSED_LIMIT",
+    "streaming_enabled": false,
+    "update_interval_ms": 200
+   },
+   "quality_config": {
+    "bloom": true,
+    "fog": 0.0012,
+    "npcs": 12.0,
+    "pixelRatio": 1.5,
+    "props": 0.75,
+    "shadow": 2048.0,
+    "smaa": false,
+    "ssao": false,
+    "traffic": 32.0
+   },
+   "shadow_range_m": 85,
+   "source_class": "SOURCE_CONFIRMED"
+  }
+ },
+ "schema": "we03-calibration-v1",
+ "source_inventory": {
+  "call_lines": {
+   "physicsWorld.step": [
+    12522
+   ],
+   "refreshTreeColliders": [
+    5455,
+    5500,
+    9397,
+    12521
+   ],
+   "teleportTo": [
+    9315,
+    9379,
+    10396
+   ],
+   "updateFacadeLOD": [
+    4295,
+    4299,
+    12536
+   ],
+   "updateShowcaseSiteALOD": [
+    12225,
+    12233,
+    12237,
+    12238,
+    12242,
+    12537
+   ]
+  },
+  "items": [
+   {
+    "follow_up_subtask": "T-018B/C3",
+    "id": "A01-01",
+    "integration_risk_assessment": "residential streaming must not change the one-shot world build order or the Site A atlas lifetime",
+    "source_class": "SOURCE_CONFIRMED",
+    "symbols": [
+     {
+      "def_lines": [
+       6086
+      ],
+      "pattern": "function buildRealisticWorld\\("
+     },
+     {
+      "def_lines": [
+       5822
+      ],
+      "pattern": "function buildSuburbs\\("
+     },
+     {
+      "def_lines": [
+       7126
+      ],
+      "pattern": "function buildCityDetails\\("
+     },
+     {
+      "def_lines": [
+       10960
+      ],
+      "pattern": "function buildShowcaseSiteA\\("
+     }
+    ],
+    "topic": "world initialisation"
+   },
+   {
+    "follow_up_subtask": "T-018E1",
+    "id": "A01-02",
+    "integration_risk_assessment": "streaming work must run inside animate() under the frame budget; renderer is shared with post-FX",
+    "source_class": "SOURCE_CONFIRMED",
+    "symbols": [
+     {
+      "def_lines": [
+       2035
+      ],
+      "pattern": "new THREE\\.WebGLRenderer\\("
+     },
+     {
+      "def_lines": [
+       12463
+      ],
+      "pattern": "function animate\\(now\\)"
+     }
+    ],
+    "topic": "renderer and animation loop"
+   },
+   {
+    "follow_up_subtask": "T-018D",
+    "id": "A01-03",
+    "integration_risk_assessment": "a single step per frame: body add/remove needs a safe point before it",
+    "source_class": "SOURCE_CONFIRMED",
+    "symbols": [
+     {
+      "def_lines": [
+       12522
+      ],
+      "pattern": "physicsWorld\\.step\\("
+     }
+    ],
+    "topic": "physics step"
+   },
+   {
+    "follow_up_subtask": "T-018D",
+    "id": "A01-04",
+    "integration_risk_assessment": "closest existing collision-streaming precedent: radius 140/180 m, 0.5 s interval, interaction guard",
+    "source_class": "SOURCE_CONFIRMED",
+    "symbols": [
+     {
+      "def_lines": [
+       5422
+      ],
+      "pattern": "const TREE_COLLIDERS = "
+     },
+     {
+      "def_lines": [
+       5437
+      ],
+      "pattern": "function initTreeColliders\\("
+     },
+     {
+      "def_lines": [
+       5500
+      ],
+      "pattern": "function refreshTreeColliders\\("
+     },
+     {
+      "def_lines": [
+       5471
+      ],
+      "pattern": "function treeInteracting\\("
+     }
+    ],
+    "topic": "TREE_COLLIDERS (precedent)"
+   },
+   {
+    "follow_up_subtask": "T-018C4",
+    "id": "A01-05",
+    "integration_risk_assessment": "two independent LOD controllers already exist; the new controller must not touch their resources",
+    "source_class": "SOURCE_CONFIRMED",
+    "symbols": [
+     {
+      "def_lines": [
+       4299
+      ],
+      "pattern": "function updateFacadeLOD\\("
+     },
+     {
+      "def_lines": [
+       12242
+      ],
+      "pattern": "function updateShowcaseSiteALOD\\("
+     }
+    ],
+    "topic": "existing LOD systems"
+   },
+   {
+    "follow_up_subtask": "T-018C1",
+    "id": "A01-06",
+    "integration_risk_assessment": "no central registry; disposal is ad hoc, so registry must own only its own resources",
+    "source_class": "SOURCE_CONFIRMED",
+    "symbols": [
+     {
+      "def_lines": [
+       11532
+      ],
+      "pattern": "function buildShowcaseFacadeMaps\\("
+     },
+     {
+      "def_lines": [
+       4312
+      ],
+      "pattern": "function loadPolyHavenModels\\("
+     },
+     {
+      "def_lines": [
+       2262,
+       2507,
+       5710,
+       9745,
+       10940,
+       12360
+      ],
+      "pattern": "\\.dispose\\(\\)"
+     }
+    ],
+    "topic": "material, geometry, texture lifecycle"
+   },
+   {
+    "follow_up_subtask": "T-018E2",
+    "id": "A01-07",
+    "integration_risk_assessment": "teleportTo has side effects (tree colliders, Site A LOD); destination readiness has no hook",
+    "source_class": "SOURCE_CONFIRMED",
+    "symbols": [
+     {
+      "def_lines": [
+       10387
+      ],
+      "pattern": "function fastTravelTo\\("
+     },
+     {
+      "def_lines": [
+       10211
+      ],
+      "pattern": "const FAST_TRAVEL = "
+     },
+     {
+      "def_lines": [
+       9379
+      ],
+      "pattern": "function teleportTo\\("
+     }
+    ],
+    "topic": "fast travel and respawn"
+   },
+   {
+    "follow_up_subtask": "T-018E1",
+    "id": "A01-08",
+    "integration_risk_assessment": "quality switch rebuilds shadow maps/post-FX; streaming budgets must follow the preset",
+    "source_class": "SOURCE_CONFIRMED",
+    "symbols": [
+     {
+      "def_lines": [
+       2476
+      ],
+      "pattern": "function applyQualitySetting\\("
+     },
+     {
+      "def_lines": [
+       1564
+      ],
+      "pattern": "const QUALITY_CONFIG = "
+     },
+     {
+      "def_lines": [
+       1600
+      ],
+      "pattern": "function detectDevice\\("
+     }
+    ],
+    "topic": "quality switching and reset"
+   },
+   {
+    "follow_up_subtask": "T-018A2/C2",
+    "id": "A01-09",
+    "integration_risk_assessment": "diagnostic surface is the only test hook; streaming adds fields without breaking existing keys",
+    "source_class": "SOURCE_CONFIRMED",
+    "symbols": [
+     {
+      "def_lines": [
+       12558
+      ],
+      "pattern": "window\\.__VH = "
+     }
+    ],
+    "topic": "window.__VH diagnostics"
+   },
+   {
+    "follow_up_subtask": "T-018A2",
+    "id": "A01-10",
+    "integration_risk_assessment": "readout gives 1 s average/min only; no percentile or frame-time list",
+    "source_class": "SOURCE_CONFIRMED",
+    "symbols": [
+     {
+      "def_lines": [
+       12432
+      ],
+      "pattern": "function createFpsReadout\\("
+     },
+     {
+      "def_lines": [
+       12461
+      ],
+      "pattern": "get\\('fps'\\)==='1'"
+     }
+    ],
+    "topic": "?fps=1 behaviour"
+   }
+  ],
+  "position_reset_inventory": {
+   "SHOWCASE_SITE_A_bypass": [
+    10388
+   ],
+   "direct_position_set_lines": [
+    7871,
+    8396,
+    8688,
+    9090,
+    9101,
+    9159,
+    9168,
+    9388,
+    9393
+   ],
+   "fastTravelTo_checks": [
+    10389,
+    10394
+   ],
+   "teleportTo_definition_and_callers": [
+    9315,
+    9379,
+    10396
+   ]
+  }
+ },
+ "speed": {
+  "code_derived_ceilings_mps": {
+   "base_nitro": 113.08,
+   "base_no_nitro": 81.94,
+   "max_upgrade_nitro": 167.36,
+   "max_upgrade_no_nitro": 121.28,
+   "note": "force limits only; drag/terrain may prevent reaching them; not a game rule",
+   "on_foot_run": 8.8,
+   "source_class": "ANALYTIC_ESTIMATE"
+  },
+  "hysteresis_skip_risk": {
+   "DESKTOP_HIGH|code_ceiling_base_nitro": {
+    "lod_band_m": [
+     40.0,
+     100.0,
+     240.0
+    ],
+    "step_exceeds_band": [
+     false,
+     false,
+     false
+    ],
+    "step_m": 11.31
+   },
+   "DESKTOP_HIGH|code_ceiling_max": {
+    "lod_band_m": [
+     40.0,
+     100.0,
+     240.0
+    ],
+    "step_exceeds_band": [
+     false,
+     false,
+     false
+    ],
+    "step_m": 16.74
+   },
+   "DESKTOP_HIGH|measured_peak": {
+    "lod_band_m": [
+     40.0,
+     100.0,
+     240.0
+    ],
+    "step_exceeds_band": [
+     false,
+     false,
+     false
+    ],
+    "step_m": 11.29
+   },
+   "PHONE_LOW|code_ceiling_base_nitro": {
+    "lod_band_m": [
+     20.0,
+     50.0,
+     130.0
+    ],
+    "step_exceeds_band": [
+     true,
+     false,
+     false
+    ],
+    "step_m": 28.27
+   },
+   "PHONE_LOW|code_ceiling_max": {
+    "lod_band_m": [
+     20.0,
+     50.0,
+     130.0
+    ],
+    "step_exceeds_band": [
+     true,
+     false,
+     false
+    ],
+    "step_m": 41.84
+   },
+   "PHONE_LOW|measured_peak": {
+    "lod_band_m": [
+     20.0,
+     50.0,
+     130.0
+    ],
+    "step_exceeds_band": [
+     true,
+     false,
+     false
+    ],
+    "step_m": 28.21
+   },
+   "PHONE_MED|code_ceiling_base_nitro": {
+    "lod_band_m": [
+     24.0,
+     60.0,
+     150.0
+    ],
+    "step_exceeds_band": [
+     false,
+     false,
+     false
+    ],
+    "step_m": 22.62
+   },
+   "PHONE_MED|code_ceiling_max": {
+    "lod_band_m": [
+     24.0,
+     60.0,
+     150.0
+    ],
+    "step_exceeds_band": [
+     true,
+     false,
+     false
+    ],
+    "step_m": 33.47
+   },
+   "PHONE_MED|measured_peak": {
+    "lod_band_m": [
+     24.0,
+     60.0,
+     150.0
+    ],
+    "step_exceeds_band": [
+     false,
+     false,
+     false
+    ],
+    "step_m": 22.57
+   },
+   "TABLET_MED|code_ceiling_base_nitro": {
+    "lod_band_m": [
+     28.0,
+     70.0,
+     170.0
+    ],
+    "step_exceeds_band": [
+     false,
+     false,
+     false
+    ],
+    "step_m": 22.62
+   },
+   "TABLET_MED|code_ceiling_max": {
+    "lod_band_m": [
+     28.0,
+     70.0,
+     170.0
+    ],
+    "step_exceeds_band": [
+     true,
+     false,
+     false
+    ],
+    "step_m": 33.47
+   },
+   "TABLET_MED|measured_peak": {
+    "lod_band_m": [
+     28.0,
+     70.0,
+     170.0
+    ],
+    "step_exceeds_band": [
+     false,
+     false,
+     false
+    ],
+    "step_m": 22.57
+   }
+  },
+  "measured_peak_lower_bounds_mps": {
+   "note": "peak on one 1.7 km straight; lower bound only",
+   "runs": {
+    "default|L1|nitro": 68.11,
+    "default|L1|plain": 68.07,
+    "default|L5|nitro": 100.81,
+    "porsche911|L1|nitro": 82.0,
+    "porsche911|L1|plain": 77.92,
+    "porsche911|L5|nitro": 112.85
+   },
+   "source_class": "MEASURED_HEADLESS"
+  },
+  "shapes_per_building": {
+   "basis": "draft s.22 ratio 128 shapes / 32 bodies = 4; PROPOSED_LIMIT",
+   "precedent": "buildHouseColliders: one Box shape per house, 16 houses per static body",
+   "proposed_bodies_per_building": 1,
+   "proposed_initial_cap": 4,
+   "source_class": "SOURCE_CONFIRMED"
+  },
+  "source_constants": {
+   "default_vmax_kmh": 245,
+   "max_upgrade_level": 5,
+   "nitro_boost": 1.38,
+   "on_foot_run_mps": 8.8,
+   "source_class": "SOURCE_CONFIRMED",
+   "tree_colliders": {
+    "cell": 32.0,
+    "enter": 140.0,
+    "interval": 0.5,
+    "leave": 180.0
+   },
+   "upgrade_step": 0.12,
+   "vmax_kmh_by_model": [
+    295,
+    270,
+    265
+   ]
+  },
+  "step_distance_m_per_update": {
+   "code_ceiling_base_nitro@100ms": 11.31,
+   "code_ceiling_base_nitro@200ms": 22.62,
+   "code_ceiling_base_nitro@250ms": 28.27,
+   "code_ceiling_max@100ms": 16.74,
+   "code_ceiling_max@200ms": 33.47,
+   "code_ceiling_max@250ms": 41.84,
+   "measured_peak@100ms": 11.29,
+   "measured_peak@200ms": 22.57,
+   "measured_peak@250ms": 28.21
+  },
+  "t_ready_method": {
+   "claimed_measured": false,
+   "owner": "T-018D/E1 (A1 has no streaming system)",
+   "source_class": "PROPOSED_LIMIT",
+   "terms": [
+    "queue wait",
+    "scheduler update delay",
+    "collision body creation time",
+    "physics safe-point wait"
+   ]
+  }
+ },
+ "triangles": {
+  "fov": {
+   "aspect_16x9_h_fov": 91.5,
+   "aspect_20x9_h_fov": 104.1,
+   "vertical_fov_deg": 60
+  },
+  "method": "57 WE-02 parcels at bounds centres, 20 m viewpoint grid x[-1100,600) z[-1000,1400), 15 deg headings, draft triangle caps, no fog/occlusion/height",
+  "metric_definition": "triangle count of resident (omni) or view-cone building meshes at their LOD; shadow-pass triangles reported separately; renderer.info.render.triangles in MEASURED tables includes every pass",
+  "presets": {
+   "DESKTOP_HIGH": {
+    "contribution_at_cone96_worst_viewpoint": {
+     "R01/LOD0": 60000,
+     "R01/LOD1": 6000,
+     "R02/LOD0": 140000,
+     "R05/LOD1": 4800,
+     "R05/LOD2": 2100
+    },
+    "omni_resident_upper_bound": [
+     230900,
+     0,
+     920,
+     0
+    ],
+    "replay_path": {
+     "S1_B1_border_sweep": {
+      "max": 179700,
+      "p50": 58700,
+      "p95": 150700,
+      "samples": 168
+     },
+     "S2_B2_reversal": {
+      "max": 65900,
+      "p50": 24750,
+      "p95": 59700,
+      "samples": 160
+     },
+     "S3_B3_diagonal": {
+      "max": 91400,
+      "p50": 0,
+      "p95": 86000,
+      "samples": 160
+     },
+     "S4_far_view_avenue": {
+      "max": 13750,
+      "p50": 4500,
+      "p95": 11900,
+      "samples": 200
+     },
+     "S5_destination_switch": {
+      "max": 62300,
+      "p50": 53600,
+      "p95": 62300,
+      "samples": 120
+     },
+     "S6_high_speed_pass": {
+      "max": 124000,
+      "p50": 4560,
+      "p95": 90000,
+      "samples": 156
+     }
+    },
+    "shadow_pass_extra_at_cone96_worst": 44000,
+    "shadow_range_m": 110,
+    "view_cone": {
+     "cone96_reference": [
+      206000,
+      0,
+      880,
+      45
+     ],
+     "hfov_16x9_91.5": [
+      206000,
+      0,
+      880,
+      45
+     ],
+     "hfov_20x9_104.2": [
+      206000,
+      0,
+      880,
+      45
+     ]
+    }
+   },
+   "PHONE_LOW": {
+    "contribution_at_cone96_worst_viewpoint": {
+     "R01/LOD0": 24000,
+     "R01/LOD1": 15000,
+     "R02/LOD0": 80000,
+     "R02/LOD1": 15000,
+     "R05/LOD2": 2550
+    },
+    "omni_resident_upper_bound": [
+     192650,
+     60,
+     1000,
+     0
+    ],
+    "replay_path": {
+     "S1_B1_border_sweep": {
+      "max": 81450,
+      "p50": 20000,
+      "p95": 76600,
+      "samples": 168
+     },
+     "S2_B2_reversal": {
+      "max": 25000,
+      "p50": 6300,
+      "p95": 21100,
+      "samples": 160
+     },
+     "S3_B3_diagonal": {
+      "max": 38730,
+      "p50": 0,
+      "p95": 36130,
+      "samples": 160
+     },
+     "S4_far_view_avenue": {
+      "max": 2880,
+      "p50": 1080,
+      "p95": 2730,
+      "samples": 200
+     },
+     "S5_destination_switch": {
+      "max": 22450,
+      "p50": 19300,
+      "p95": 22450,
+      "samples": 120
+     },
+     "S6_high_speed_pass": {
+      "max": 64300,
+      "p50": 0,
+      "p95": 27000,
+      "samples": 156
+     }
+    },
+    "shadow_pass_extra_at_cone96_worst": 32000,
+    "shadow_range_m": 60,
+    "view_cone": {
+     "cone96_reference": [
+      106000,
+      -20,
+      1000,
+      15
+     ],
+     "hfov_16x9_91.5": [
+      106000,
+      -20,
+      1000,
+      15
+     ],
+     "hfov_20x9_104.2": [
+      111000,
+      -20,
+      1000,
+      15
+     ]
+    }
+   },
+   "PHONE_MED": {
+    "contribution_at_cone96_worst_viewpoint": {
+     "R01/LOD0": 36000,
+     "R01/LOD1": 12000,
+     "R02/LOD0": 60000,
+     "R02/LOD1": 20000,
+     "R05/LOD2": 2700
+    },
+    "omni_resident_upper_bound": [
+     217250,
+     100,
+     980,
+     0
+    ],
+    "replay_path": {
+     "S1_B1_border_sweep": {
+      "max": 101650,
+      "p50": 22700,
+      "p95": 86650,
+      "samples": 168
+     },
+     "S2_B2_reversal": {
+      "max": 34400,
+      "p50": 10000,
+      "p95": 29600,
+      "samples": 160
+     },
+     "S3_B3_diagonal": {
+      "max": 53830,
+      "p50": 0,
+      "p95": 47480,
+      "samples": 160
+     },
+     "S4_far_view_avenue": {
+      "max": 3420,
+      "p50": 1830,
+      "p95": 3270,
+      "samples": 200
+     },
+     "S5_destination_switch": {
+      "max": 31500,
+      "p50": 25800,
+      "p95": 31500,
+      "samples": 120
+     },
+     "S6_high_speed_pass": {
+      "max": 72000,
+      "p50": 0,
+      "p95": 39100,
+      "samples": 156
+     }
+    },
+    "shadow_pass_extra_at_cone96_worst": 52000,
+    "shadow_range_m": 85,
+    "view_cone": {
+     "cone96_reference": [
+      123000,
+      -20,
+      1040,
+      345
+     ],
+     "hfov_16x9_91.5": [
+      119000,
+      0,
+      900,
+      45
+     ],
+     "hfov_20x9_104.2": [
+      129000,
+      0,
+      920,
+      30
+     ]
+    }
+   },
+   "TABLET_MED": {
+    "contribution_at_cone96_worst_viewpoint": {
+     "R01/LOD0": 36000,
+     "R01/LOD1": 12000,
+     "R02/LOD0": 80000,
+     "R02/LOD1": 15000,
+     "R05/LOD2": 2700
+    },
+    "omni_resident_upper_bound": [
+     226700,
+     80,
+     980,
+     0
+    ],
+    "replay_path": {
+     "S1_B1_border_sweep": {
+      "max": 123700,
+      "p50": 27600,
+      "p95": 107250,
+      "samples": 168
+     },
+     "S2_B2_reversal": {
+      "max": 48600,
+      "p50": 11300,
+      "p95": 38600,
+      "samples": 160
+     },
+     "S3_B3_diagonal": {
+      "max": 71840,
+      "p50": 0,
+      "p95": 61840,
+      "samples": 160
+     },
+     "S4_far_view_avenue": {
+      "max": 3570,
+      "p50": 2730,
+      "p95": 3570,
+      "samples": 200
+     },
+     "S5_destination_switch": {
+      "max": 42700,
+      "p50": 34800,
+      "p95": 42700,
+      "samples": 120
+     },
+     "S6_high_speed_pass": {
+      "max": 76000,
+      "p50": 0,
+      "p95": 50600,
+      "samples": 156
+     }
+    },
+    "shadow_pass_extra_at_cone96_worst": 24000,
+    "shadow_range_m": 85,
+    "view_cone": {
+     "cone96_reference": [
+      143000,
+      100,
+      1120,
+      255
+     ],
+     "hfov_16x9_91.5": [
+      134700,
+      140,
+      1080,
+      225
+     ],
+     "hfov_20x9_104.2": [
+      146700,
+      140,
+      920,
+      135
+     ]
+    }
+   }
+  },
+  "source_class": "ANALYTIC_ESTIMATE"
+ }
+}

@@ -72,3 +72,5 @@ jobs:
         run: python3 tools/test/we01e_report_builder_check.py
       - name: WE-02 masterplan generator, verifier and negative controls (T-017)
         run: python3 tools/we02/we02_check.py
+      - name: WE-03A calibration independent check and negative controls (T-018A1)
+        run: python3 tools/we03/we03_calibration_check.py --skip-git
