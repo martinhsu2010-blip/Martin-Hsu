@@ -19,7 +19,7 @@ Priority: P1
 Base commit: Engineering BASE `e8d5250fce0ea5f07f68840481cb95d2eca803fb` (game source equals Audit BASE `84319439243b51aa8d119e33eb62a0637feea887`; CACHE `vh-2026-11-27-02`); each subtask records its own baseline SHA.
 Spec: `specs/WE-03-series-spec-v1.0.md` (entry point, Claude conditions B1, B2, B4, B5, B6 and N1-N11 win) + ChatGPT draft `specs/WE-03-draft-v1.0-chatgpt.md` + `specs/WE-03-g0-review-v1.0.md`
 Scope: series constraints and subtask sequence only. No game file, `sw.js`, CACHE, `vh_save`, WE-01/WE-02 artifact or verdict is touched or authorized; WE-04..WE-09 not authorized; draft section 22 budgets stay provisional until T-018A1 is accepted and Martin confirms revised budgets.
-Status: Registered; only T-018A1 is open. Every other subtask is registered when its own spec is approved.
+Status: Registered; T-018A1 is Done (D-067). Every other subtask, starting with T-018A2, is registered only when its own spec is approved by Martin.
 
 ### T-018A1 WE-03A Performance Baseline and Architecture Calibration (read-only measurement tooling and reports; LOW risk, LARGE volume) (Registered 2026-11-28, D-065; approved by Martin 2026-11-28 21:20; pre-start gates PASS)
 Owner: Claude
@@ -30,7 +30,7 @@ Base commit: `e8d5250fce0ea5f07f68840481cb95d2eca803fb`
 Spec: `specs/T-018A1-spec-v1.0.md` (entry point, Claude conditions A1-C1..C15 win) + ChatGPT draft `specs/T-018A1-draft-v1.0-chatgpt.md` + `specs/T-018A1-g0-review-v1.0.md`
 Scope: `tools/we03/` (baseline <= 600, calibration <= 500, independent check <= 400 lines; stdlib plus the existing Playwright for the browser harness only) and `specs/we03/` (baseline_report.md, baseline_metrics.json, calibration_report.md, proposed_budgets.json, fixture_plan.json). 48 headless combinations (4 presets x 6 locations x 12:00/23:00, 120 frames each), 16 repeat sessions, 20 physics self-control pairs, speed and readiness calibration, chunk and fixture plan, analytic triangle and benefit analysis, device protocol.
 Gates: A1-G01..G18 plus negative controls; independent check wired into CI by Claude; ChatGPT read-only review; Martin acceptance.
-Status: Built; revision 1.1 merged (PR #133) after ChatGPT's review rounds (R01-R06, R1-F01..F04, R1-F03a all answered; final verdict: no further design review required). D-066 exceptions approved by Martin (B3 GLOBAL_STRESS_ONLY, check ceiling 450, is 446). Artifact validation PASS, 33/33 negative controls red; measurement validity INCONCLUSIVE (physics control on all four presets, frame-time gate, B3 density, TABLET_MED/CBD stall attribution qualified). Waiting for Martin's acceptance. A1 approves no budget; A2 and later subtasks, device FPS/VRAM claims and WE-04..WE-09 are not authorized. No game file, sw.js, CACHE, save format or WE-01/WE-02 artifact is touched.
+Status: Done (accepted by Martin 2026-11-29, D-067). Merged in PRs #132 and #133 (main eeec550). Accepted with its limits: artifact validation PASS, 33/33 negative controls red; measurement validity INCONCLUSIVE (physics control, frame-time gate, B3 density; TABLET_MED/CBD stall attribution qualified, headless only). No budget approved; T-018A2 and later subtasks, WE-04..WE-09 and device FPS/VRAM claims are not authorized. No game file, sw.js, CACHE, save format or WE-01/WE-02 artifact was touched.
 
 ### T-017 WE-02 World Expansion Masterplan (documentation and offline artifact tooling; LOW risk) (Registered 2026-11-28, D-061; approved by Martin 2026-11-28 19:20; pre-start gates PASS)
 Owner: Claude
