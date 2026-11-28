@@ -187,11 +187,12 @@ for(const [i,[check,a,b,reason]] of negative.entries()) {
 // Preserve the original completed-bin FPS readout; an empty bin after a stall counts as zero.
 const binsFixture=fixture();
 for(let second=0;second<61;second++) {
-    const n=second%3+5;
+    const n=second===0?1:second%3+5;
     for(let i=0;i<n;i++)binsFixture.frame(second*1000+i*1000/n);
 }
 binsFixture.frame(61000);
 assert.equal(binsFixture.snapshot().rollingAverageFps,6);
+assert.match(binsFixture.output.textContent,/60s 6\.0 Low FPS 5/);
 assert.equal(binsFixture.snapshot().lowest1sFps,5);
 binsFixture.frame(65001);assert.equal(binsFixture.snapshot().lowest1sFps,0);
 

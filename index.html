@@ -12530,9 +12530,11 @@
             function display(s) {
                 const f=n=>Number.isFinite(n)?n.toFixed(1):'—';
                 const preset=s.preset??PROFILE+'_'+STATE.quality;
+                const liveAvg=binCount?bins.reduce((a,b)=>a+b,0)/binCount:U;
+                const liveLow=binCount?Math.min(...bins.subarray(0,binCount)):'—';
                 output.textContent=[
-                    s.phase+' #'+s.segmentId+' '+s.segmentStatus+' N '+s.sampleCount+' Avg '+f(s.averageFps)+' 60s '+f(s.rollingAverageFps)+' Low FPS '+(s.lowest1sFps===U?'—':s.lowest1sFps)+' '+preset+' x'+(s.resScale??STATE.resScale)+' cap '+(s.fpsCap??STATE.fpsCap),
-                    'P50/95/99 '+f(s.frameP50)+'/'+f(s.frameP95)+'/'+f(s.frameP99)+' >50/100 '+s.over50+'/'+s.over100+' max '+f(s.longestFrame),
+                    s.phase+' #'+s.segmentId+' '+s.segmentStatus+' N '+s.sampleCount+' Avg '+f(s.averageFps)+' 60s '+f(liveAvg)+' Low FPS '+liveLow+' '+preset+' x'+(s.resScale??STATE.resScale)+' cap '+(s.fpsCap??STATE.fpsCap),
+                    'P50/95/99 '+f(s.frameP50)+'/'+f(s.frameP95)+'/'+f(s.frameP99)+' >50/100 '+s.over50+'/'+s.over100+' max '+f(s.longestFrame)+' min1s '+f(s.lowest1sFps),
                     'CPU95 P/U/R '+f(s.physicsP95)+'/'+f(s.gameUpdateP95)+'/'+f(s.renderP95)+' B/S/C '+s.bodies+'/'+s.shapes+'/'+s.contacts,
                     'Draw/Tri/Prog '+s.drawCalls+'/'+s.triangles+'/'+s.programs+' Hz N/A CACHE '+cache+' rel '+(cache===U?'N/A':cache.slice(3))
                 ].join('\n');
