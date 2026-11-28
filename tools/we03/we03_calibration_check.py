@@ -22,6 +22,7 @@ RADII = (140, 180, 217, 260, 350)
 LODR = {"PHONE_LOW": (100, 250, 650), "PHONE_MED": (120, 300, 750), "TABLET_MED": (140, 350, 850), "DESKTOP_HIGH": (200, 500, 1200)}
 COMP = {"40": {"R01": 9, "R02": 5, "R05": 22, "R08": 4}, "57": {"R01": 12, "R02": 7, "R05": 33, "R08": 5}, "60": {"R01": 13, "R02": 7, "R05": 34, "R08": 6}, "120": {"R01": 26, "R02": 14, "R05": 68, "R08": 12}}
 ALLOW = ("tools/we03/", "specs/we03/", "specs/WE-03-", "specs/T-018A1-", "TASKS.md", "DECISIONS.md", "LOG.md", "HANDOFF.md", ".github/workflows/pwa-cache-check.yml")
+REV0_PHYSICS_SHA256 = "47e5d5c81628b68a14c1134c768a3dcc8e39bc3523b9c01b88a44d7eafd996d0"    # sha256 of the PR #132 physics_pairs (canonical JSON): the retained revision-0 evidence must be byte-for-byte that
 ARRAYS = ("frame_ms", "draw_calls", "triangles", "shadow_triangles", "shadow_calls", "render_pass_triangles", "render_passes")
 
 
@@ -70,9 +71,10 @@ def v_phys(b, d):
     """A1-C5: every pair is two fresh sessions (alternating order), both sides ready, same bodies/shapes; the status must follow the control band; the original reused-page evidence stays."""
     f = []; pp = b.get("physics_pairs", {}); v1 = b.get("physics_pairs_v1_reused_pages")
     if not v1 or v1.get("superseded_by") != "physics_pairs" or not v1.get("data"): f.append("physics: original reused-page evidence (physics_pairs_v1_reused_pages) not retained")
+    elif hashlib.sha256(json.dumps(v1["data"], sort_keys=True, separators=(",", ":")).encode()).hexdigest() != REV0_PHYSICS_SHA256: f.append("physics: retained revision-0 evidence differs from PR #132")
     for p in FOUR:
         rec = pp.get(p)
-        if not rec or rec.get("session_model") != "fresh_session_per_side" or len(rec["pairs"]) < 5 or rec["control_band"] != [0.90909, 1.1]: f.append(f"physics {p}: needs >= 5 pairs, session_model fresh_session_per_side, band 0.90909..1.1"); continue
+        if not rec or rec.get("session_model") != "fresh_session_per_side" or len(rec["pairs"]) < 5 or rec["control_band"] != [0.90909, 1.1] or (rec["warmup_steps"], rec["recorded_steps"], rec["step"]) != (900, 360, "physicsWorld.step(1/60,1/60,3)"): f.append(f"physics {p}: needs >= 5 pairs, session_model fresh_session_per_side, band 0.90909..1.1, 900 warm-up + 360 recorded steps of physicsWorld.step(1/60,1/60,3)"); continue
         for i, x in enumerate(rec["pairs"]):
             ma, mb = statistics.median(x["samples_ms_A"]), statistics.median(x["samples_ms_B"])
             if len(x["samples_ms_A"]) != 360 or len(x["samples_ms_B"]) != 360 or not close(mb / ma, x["ratio_B_over_A"], 2e-3): f.append(f"physics {p}[{i}] samples/ratio")
@@ -283,7 +285,7 @@ def v_tri(d, plan, fp, sr):
         got = (t["omni_resident_upper_bound"][0], t["view_cone"]["cone96_reference"][0], t["view_cone"]["hfov_16x9_91.5"][0], t["view_cone"]["hfov_20x9_104.2"][0])
         if got != (w["omni"], w[halves[0]], w[halves[1]], w[halves[2]]): f.append(f"{name}: triangle analysis differs {got} vs {(w['omni'], w[halves[0]], w[halves[1]], w[halves[2]])}")
         shr = sr[name.split("_")[1]]; sh = tri_at(pts, *at[halves[0]], r, sh_r=shr)[1]
-        if t["shadow_range_m"] != shr or t["shadow_pass_extra_at_cone96_worst"] != sh or t["all_pass_estimate_at_cone96_worst"] != w[halves[0]] + sh: f.append(f"{name}: shadow estimate differs from the independent derivation")
+        if t["shadow_range_m"] != shr or t["shadow_pass_extra_at_cone96_worst"] != sh or t["cone96_peak_viewpoint_plus_shadow_estimate"] != w[halves[0]] + sh: f.append(f"{name}: shadow estimate differs from the independent derivation")
         for sc in fp["replay_scenarios"]:
             ps = [tri_at(pts, x, z, r, halves[0], h, shr) for x, z, h in samples(sc)]; a, c = [u for u, _ in ps], [u + v for u, v in ps]; rp = t["replay_path"][sc["name"]]
             if (rp["p95"], rp["max"], rp["p95_incl_shadow"], rp["max_incl_shadow"]) != (rank(a, 95), max(a), rank(c, 95), max(c)): f.append(f"{name}/{sc['name']}: replay P95 differs from the independent derivation")
@@ -429,6 +431,8 @@ def main():
             ("physics sides differ in bodies", lambda: v_phys(M(base, lambda x: pairs(x)[0]["bodies"].update(B=1)), d), "bodies/shapes differ"),
             ("physics readiness not reached", lambda: v_phys(M(base, lambda x: pairs(x)[0]["ph_done"].update(A=False)), d), "readiness"),
             ("physics status faked STABLE", lambda: v_phys(base, M(d, lambda x: pcd(x)["DESKTOP_HIGH"].update(status="STABLE"))), "from the control band"),
+            ("physics step protocol changed", lambda: v_phys(M(base, lambda x: x["physics_pairs"]["TABLET_MED"].update(warmup_steps=300)), d), "900 warm-up + 360 recorded"),
+            ("retained revision-0 physics evidence altered", lambda: v_phys(M(base, lambda x: x["physics_pairs_v1_reused_pages"]["data"]["PHONE_LOW"]["pairs"][0].update(ratio_B_over_A=1.5)), d), "differs from PR #132"),
             ("original physics evidence dropped", lambda: v_phys(M(base, lambda x: x.pop("physics_pairs_v1_reused_pages")), d), "not retained")):
         mut(name, fn, key)
     green = [n for n, ok in neg if not ok]

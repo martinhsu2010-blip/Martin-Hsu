@@ -1859,16 +1859,16 @@
    "vertical_fov_deg": 60
   },
   "limitations": [
-   "no fog or occlusion: LOD2 meshes at the far edge are largely faded by fog (see fog_transmittance_at_lod2_edge), so counts are upper bounds",
+   "no fog or occlusion: LOD2 meshes at the far edge are largely faded by fog (see fog_transmittance_at_lod2_edge), so counts can overstate the far field; the model samples building centres on a 20 m viewpoint grid and is not a strict bound",
    "2-D distances, ground-level camera: height and terrain relief not modelled",
    "worst case is a single viewpoint, not a P95; replay P95 uses six scripted paths only",
    "no budget is validated by this block"
   ],
   "method": "57 WE-02 parcels at bounds centres, 20 m viewpoint grid x[-1100,600) z[-1000,1400), 15 deg headings, draft triangle caps, no fog/occlusion/height",
-  "metric_definition": "view-cone and omni columns count building meshes at their LOD in ONE pass (no shadow); all_pass_estimate and p95_incl_shadow add the shadow-pass extra and are the only analytic values comparable to renderer.info.render.triangles (all passes) in MEASURED tables",
+  "metric_definition": "view-cone and omni columns count building meshes at their LOD in ONE pass (no shadow); cone96_peak_viewpoint_plus_shadow_estimate and p95_incl_shadow add the shadow-pass extra and are the only analytic values comparable to renderer.info.render.triangles (all passes) in MEASURED tables",
   "presets": {
    "DESKTOP_HIGH": {
-    "all_pass_estimate_at_cone96_worst": 250000,
+    "cone96_peak_viewpoint_plus_shadow_estimate": 250000,
     "contribution_at_cone96_worst_viewpoint": {
      "R01/LOD0": 60000,
      "R01/LOD1": 6000,
@@ -1957,7 +1957,7 @@
     }
    },
    "PHONE_LOW": {
-    "all_pass_estimate_at_cone96_worst": 138000,
+    "cone96_peak_viewpoint_plus_shadow_estimate": 138000,
     "contribution_at_cone96_worst_viewpoint": {
      "R01/LOD0": 24000,
      "R01/LOD1": 15000,
@@ -2046,7 +2046,7 @@
     }
    },
    "PHONE_MED": {
-    "all_pass_estimate_at_cone96_worst": 175000,
+    "cone96_peak_viewpoint_plus_shadow_estimate": 175000,
     "contribution_at_cone96_worst_viewpoint": {
      "R01/LOD0": 36000,
      "R01/LOD1": 12000,
@@ -2135,7 +2135,7 @@
     }
    },
    "TABLET_MED": {
-    "all_pass_estimate_at_cone96_worst": 167000,
+    "cone96_peak_viewpoint_plus_shadow_estimate": 167000,
     "contribution_at_cone96_worst_viewpoint": {
      "R01/LOD0": 36000,
      "R01/LOD1": 12000,

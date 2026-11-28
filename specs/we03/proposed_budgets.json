@@ -203,7 +203,7 @@
     "source_class": "PROPOSED_LIMIT",
     "value": 350000
    },
-   "analytic_all_pass_worst_triangles": {
+   "analytic_cone96_peak_plus_shadow_triangles": {
     "basis": "cone96 worst viewpoint + shadow-pass extra; comparable to renderer.info all-pass triangles",
     "source_class": "ANALYTIC_ESTIMATE",
     "unit": "triangles",
@@ -277,7 +277,7 @@
     "value": 4
    },
    "triangle_budget_comparison": {
-    "note": "analytic worst 250000 and replay P95 incl. shadow 246700 versus proposed 350000: upper-bound estimates without fog, occlusion or height, not measured P95; no budget is validated",
+    "note": "analytic worst 250000 and replay P95 incl. shadow 246700 versus proposed 350000: sampled centre-point estimates without fog, occlusion or height (not a strict bound, not a measured P95); no budget is validated",
     "status": "NOT_VALIDATED"
    }
   },
@@ -312,7 +312,7 @@
     "source_class": "PROPOSED_LIMIT",
     "value": 120000
    },
-   "analytic_all_pass_worst_triangles": {
+   "analytic_cone96_peak_plus_shadow_triangles": {
     "basis": "cone96 worst viewpoint + shadow-pass extra; comparable to renderer.info all-pass triangles",
     "source_class": "ANALYTIC_ESTIMATE",
     "unit": "triangles",
@@ -386,7 +386,7 @@
     "value": 2
    },
    "triangle_budget_comparison": {
-    "note": "analytic worst 138000 and replay P95 incl. shadow 133000 versus proposed 120000: upper-bound estimates without fog, occlusion or height, not measured P95; no budget is validated",
+    "note": "analytic worst 138000 and replay P95 incl. shadow 133000 versus proposed 120000: sampled centre-point estimates without fog, occlusion or height (not a strict bound, not a measured P95); no budget is validated",
     "status": "NOT_VALIDATED"
    }
   },
@@ -421,7 +421,7 @@
     "source_class": "PROPOSED_LIMIT",
     "value": 160000
    },
-   "analytic_all_pass_worst_triangles": {
+   "analytic_cone96_peak_plus_shadow_triangles": {
     "basis": "cone96 worst viewpoint + shadow-pass extra; comparable to renderer.info all-pass triangles",
     "source_class": "ANALYTIC_ESTIMATE",
     "unit": "triangles",
@@ -495,7 +495,7 @@
     "value": 2
    },
    "triangle_budget_comparison": {
-    "note": "analytic worst 175000 and replay P95 incl. shadow 189000 versus proposed 160000: upper-bound estimates without fog, occlusion or height, not measured P95; no budget is validated",
+    "note": "analytic worst 175000 and replay P95 incl. shadow 189000 versus proposed 160000: sampled centre-point estimates without fog, occlusion or height (not a strict bound, not a measured P95); no budget is validated",
     "status": "NOT_VALIDATED"
    }
   },
@@ -530,7 +530,7 @@
     "source_class": "PROPOSED_LIMIT",
     "value": 200000
    },
-   "analytic_all_pass_worst_triangles": {
+   "analytic_cone96_peak_plus_shadow_triangles": {
     "basis": "cone96 worst viewpoint + shadow-pass extra; comparable to renderer.info all-pass triangles",
     "source_class": "ANALYTIC_ESTIMATE",
     "unit": "triangles",
@@ -604,7 +604,7 @@
     "value": 2
    },
    "triangle_budget_comparison": {
-    "note": "analytic worst 167000 and replay P95 incl. shadow 193000 versus proposed 200000: upper-bound estimates without fog, occlusion or height, not measured P95; no budget is validated",
+    "note": "analytic worst 167000 and replay P95 incl. shadow 193000 versus proposed 200000: sampled centre-point estimates without fog, occlusion or height (not a strict bound, not a measured P95); no budget is validated",
     "status": "NOT_VALIDATED"
    }
   }
