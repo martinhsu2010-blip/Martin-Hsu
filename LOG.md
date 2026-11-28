@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-29 | (docs only, no game release) | Claude | main ca0547f | D-071: Martin selects the Implementer (Codex/Gemini alternatives presented by ChatGPT) for new tasks; COLLAB v3.6 section 5.1 sentence added; not retroactive; no game change, no CACHE bump
 - 2026-11-29 | (docs only, no game release) | Claude | main 831fc72 | ChatGPT concurrence with T-018A2 v1.1 and A2-C1..C17 recorded (D-070); no new blocker; no game change, no CACHE bump
 - 2026-11-29 | (docs only, no game release) | Claude | main 72ec6a3 | T-018A2 spec v1.1 adopted with A2-C14..C17 (D-070): B4 scope clarified, device day/night grouping by observed timeOfDay; no game change, no CACHE bump, no budget value approved
 - 2026-11-29 | (docs only, no game release) | Claude | main 9538c29 | T-018A2 (device frame-time diagnostics) registered and WE-03 budget governance adopted (D-068/D-069): spec v1.0 + ChatGPT draft + Claude G0 review stored; Codex may start; no game change, no CACHE bump, no budget value approved, T-018B not authorized
