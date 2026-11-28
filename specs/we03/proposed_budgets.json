@@ -1,0 +1,494 @@
+{
+ "device_protocol": {
+  "a2_required_fields": [
+   "P50/P95/P99 frame time",
+   "count > 50 ms",
+   "count > 100 ms",
+   "longest frame",
+   "preset",
+   "resScale",
+   "fpsCap",
+   "CACHE name",
+   "existing average/min text kept"
+  ],
+  "devices": [
+   "Samsung Galaxy S26 Ultra",
+   "Samsung Galaxy Tab S11"
+  ],
+  "fixed": [
+   "preset set manually",
+   "auto quality off",
+   "dynamic resolution off"
+  ],
+  "fps_acceptance": {
+   "cap_30_threshold": 29.1,
+   "note": "tolerance for timing, not a lower target",
+   "rule": "average FPS >= fps_cap x 0.97"
+  },
+  "limitation": "until A2 ships, ?fps=1 gives only a 1 s average and minimum: not sufficient as a baseline",
+  "other_thresholds_unchanged": {
+   "min_1s_fps": 24,
+   "over_100ms_ratio": 0.005,
+   "p95_ms": 40,
+   "p99_ms": 66.7
+  },
+  "presets": [
+   "PHONE_LOW",
+   "PHONE_MED",
+   "TABLET_MED"
+  ],
+  "procedure": {
+   "frame_source": "in-game diagnostics, never screen recording",
+   "loads": [
+    40,
+    60
+   ],
+   "paths": [
+    "day",
+    "night",
+    "chunk switch"
+   ],
+   "run_seconds_min": 120,
+   "runs_per_load": 3,
+   "warmup_min": 3
+  },
+  "record": [
+   "release/CACHE",
+   "commit SHA",
+   "device, OS, browser version",
+   "resolution and orientation",
+   "refresh rate",
+   "FPS cap",
+   "preset",
+   "resScale",
+   "auto-quality state",
+   "time of day",
+   "load (40/60 buildings)",
+   "thermal state if available"
+  ],
+  "source_class": "PROPOSED_LIMIT",
+  "url_flag": "?fps=1"
+ },
+ "note": "A1 closure does not approve any value; PROPOSED_LIMIT rows come from WE-03 draft s.22 and stay provisional until ChatGPT, Claude and Martin confirm",
+ "preset_mapping": {
+  "DESKTOP_HIGH": {
+   "basis": "draft anchor",
+   "source_class": "PROPOSED_LIMIT",
+   "value": [
+    200,
+    500,
+    1200
+   ]
+  },
+  "DESKTOP_MED": {
+   "basis": "MED tier: pixelRatio 1.0, shadow 2048, no ssao",
+   "source_class": "PROPOSED_LIMIT",
+   "value": [
+    140,
+    350,
+    850
+   ]
+  },
+  "DESKTOP_ULTRA": {
+   "basis": "fog 0.0006: LOD2 raised so fog transmittance at LOD2 stays comparable",
+   "source_class": "PROPOSED_LIMIT",
+   "value": [
+    240,
+    600,
+    1500
+   ]
+  },
+  "IGPU_HIGH": {
+   "basis": "HIGH tier on iGPU: no ssao, smaa",
+   "source_class": "PROPOSED_LIMIT",
+   "value": [
+    140,
+    350,
+    850
+   ]
+  },
+  "IGPU_LOW": {
+   "basis": "LOW tier, 60 FPS cap on weak GPU",
+   "source_class": "PROPOSED_LIMIT",
+   "value": [
+    100,
+    250,
+    650
+   ]
+  },
+  "IGPU_MED": {
+   "basis": "MED tier",
+   "source_class": "PROPOSED_LIMIT",
+   "value": [
+    120,
+    300,
+    750
+   ]
+  },
+  "PHONE_LOW": {
+   "basis": "draft anchor",
+   "source_class": "PROPOSED_LIMIT",
+   "value": [
+    100,
+    250,
+    650
+   ]
+  },
+  "PHONE_MED": {
+   "basis": "draft anchor",
+   "source_class": "PROPOSED_LIMIT",
+   "value": [
+    120,
+    300,
+    750
+   ]
+  },
+  "TABLET_HIGH": {
+   "basis": "between TABLET_MED and DESKTOP_HIGH (pixelRatio 1.75, ssao)",
+   "source_class": "PROPOSED_LIMIT",
+   "value": [
+    170,
+    425,
+    1025
+   ]
+  },
+  "TABLET_LOW": {
+   "basis": "LOW tier: same fog/shadow/pixel ratio as PHONE_LOW",
+   "source_class": "PROPOSED_LIMIT",
+   "value": [
+    100,
+    250,
+    650
+   ]
+  },
+  "TABLET_MED": {
+   "basis": "draft anchor",
+   "source_class": "PROPOSED_LIMIT",
+   "value": [
+    140,
+    350,
+    850
+   ]
+  }
+ },
+ "presets": {
+  "DESKTOP_HIGH": {
+   "active_bodies": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 60
+   },
+   "active_shapes": {
+    "basis": "draft s.22; 4 shapes per body",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 240
+   },
+   "added_draw_calls_p95": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 75
+   },
+   "added_geometry_buffer_mib": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 48
+   },
+   "added_texture_mib": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 96
+   },
+   "added_triangles_p95": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 350000
+   },
+   "analytic_cone96_worst_triangles": {
+    "basis": "calibration_data.json triangles",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 206000
+   },
+   "analytic_replay_p95_max_over_scenarios": {
+    "basis": "96 deg cone along replay paths",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 150700
+   },
+   "base_headless": {
+    "bodies_max": 722,
+    "combinations": 12,
+    "draw_calls_p50_max": 1373,
+    "draw_calls_p50_median": 704.5,
+    "frame_ms_p50_median": 33.65,
+    "physics_ratio_range": [
+     0.9702,
+     0.99012
+    ],
+    "shapes_max": 4250,
+    "source_class": "MEASURED_HEADLESS",
+    "triangles_p50_max": 7243986,
+    "triangles_p50_median": 5432103.5
+   },
+   "device_avg_fps": {
+    "basis": "avg >= fps_cap x 0.97 (29.1 at cap 30); measured by Martin after A2",
+    "source_class": "PENDING_DEVICE",
+    "value": "PENDING_DEVICE"
+   },
+   "device_frame_time_p95_ms": {
+    "basis": "draft s.25 initial acceptance",
+    "source_class": "PENDING_DEVICE",
+    "value": 40
+   },
+   "device_frame_time_p99_ms": {
+    "basis": "draft s.25 initial acceptance",
+    "source_class": "PENDING_DEVICE",
+    "value": 66.7
+   },
+   "lod_m": {
+    "basis": "draft s.8.2",
+    "source_class": "PROPOSED_LIMIT",
+    "value": [
+     200,
+     500,
+     1200
+    ]
+   },
+   "physics_step_median_ratio": {
+    "basis": "draft s.22; control band 1/1.10..1.10 decides validity",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 1.25
+   },
+   "streaming_cpu_ms_p95": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 4
+   }
+  },
+  "PHONE_LOW": {
+   "active_bodies": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 32
+   },
+   "active_shapes": {
+    "basis": "draft s.22; 4 shapes per body",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 128
+   },
+   "added_draw_calls_p95": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 30
+   },
+   "added_geometry_buffer_mib": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 16
+   },
+   "added_texture_mib": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 32
+   },
+   "added_triangles_p95": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 120000
+   },
+   "analytic_cone96_worst_triangles": {
+    "basis": "calibration_data.json triangles",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 106000
+   },
+   "analytic_replay_p95_max_over_scenarios": {
+    "basis": "96 deg cone along replay paths",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 76600
+   },
+   "base_headless": {
+    "bodies_max": 549,
+    "combinations": 12,
+    "draw_calls_p50_max": 495,
+    "draw_calls_p50_median": 243.0,
+    "frame_ms_p50_median": 15.6,
+    "physics_ratio_range": [
+     0.89474,
+     1.05376
+    ],
+    "shapes_max": 4084,
+    "source_class": "MEASURED_HEADLESS",
+    "triangles_p50_max": 790076,
+    "triangles_p50_median": 677113.0
+   },
+   "device_avg_fps": {
+    "basis": "avg >= fps_cap x 0.97 (29.1 at cap 30); measured by Martin after A2",
+    "source_class": "PENDING_DEVICE",
+    "value": "PENDING_DEVICE"
+   },
+   "device_frame_time_p95_ms": {
+    "basis": "draft s.25 initial acceptance",
+    "source_class": "PENDING_DEVICE",
+    "value": 40
+   },
+   "device_frame_time_p99_ms": {
+    "basis": "draft s.25 initial acceptance",
+    "source_class": "PENDING_DEVICE",
+    "value": 66.7
+   },
+   "lod_m": {
+    "basis": "draft s.8.2",
+    "source_class": "PROPOSED_LIMIT",
+    "value": [
+     100,
+     250,
+     650
+    ]
+   },
+   "physics_step_median_ratio": {
+    "basis": "draft s.22; control band 1/1.10..1.10 decides validity",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 1.2
+   },
+   "streaming_cpu_ms_p95": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 2
+   }
+  },
+  "TABLET_MED": {
+   "active_bodies": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 40
+   },
+   "active_shapes": {
+    "basis": "draft s.22; 4 shapes per body",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 160
+   },
+   "added_draw_calls_p95": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 45
+   },
+   "added_geometry_buffer_mib": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 24
+   },
+   "added_texture_mib": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 48
+   },
+   "added_triangles_p95": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 200000
+   },
+   "analytic_cone96_worst_triangles": {
+    "basis": "calibration_data.json triangles",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 143000
+   },
+   "analytic_replay_p95_max_over_scenarios": {
+    "basis": "96 deg cone along replay paths",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 107250
+   },
+   "base_headless": {
+    "bodies_max": 569,
+    "combinations": 12,
+    "draw_calls_p50_max": 640,
+    "draw_calls_p50_median": 276.0,
+    "frame_ms_p50_median": 20.2,
+    "physics_ratio_range": [
+     0.93651,
+     1.35088
+    ],
+    "shapes_max": 4118,
+    "source_class": "MEASURED_HEADLESS",
+    "triangles_p50_max": 2324502,
+    "triangles_p50_median": 1857521.5
+   },
+   "device_avg_fps": {
+    "basis": "avg >= fps_cap x 0.97 (29.1 at cap 30); measured by Martin after A2",
+    "source_class": "PENDING_DEVICE",
+    "value": "PENDING_DEVICE"
+   },
+   "device_frame_time_p95_ms": {
+    "basis": "draft s.25 initial acceptance",
+    "source_class": "PENDING_DEVICE",
+    "value": 40
+   },
+   "device_frame_time_p99_ms": {
+    "basis": "draft s.25 initial acceptance",
+    "source_class": "PENDING_DEVICE",
+    "value": 66.7
+   },
+   "lod_m": {
+    "basis": "draft s.8.2",
+    "source_class": "PROPOSED_LIMIT",
+    "value": [
+     140,
+     350,
+     850
+    ]
+   },
+   "physics_step_median_ratio": {
+    "basis": "draft s.22; control band 1/1.10..1.10 decides validity",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 1.2
+   },
+   "streaming_cpu_ms_p95": {
+    "basis": "draft s.22",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 2
+   }
+  }
+ },
+ "schema": "we03-proposed-budgets-v1",
+ "speed_ceilings_mps": {
+  "base_nitro": {
+   "basis": "force-limit derivation from index.html constants",
+   "source_class": "ANALYTIC_ESTIMATE",
+   "unit": "m/s",
+   "value": 113.08
+  },
+  "base_no_nitro": {
+   "basis": "force-limit derivation from index.html constants",
+   "source_class": "ANALYTIC_ESTIMATE",
+   "unit": "m/s",
+   "value": 81.94
+  },
+  "max_upgrade_nitro": {
+   "basis": "force-limit derivation from index.html constants",
+   "source_class": "ANALYTIC_ESTIMATE",
+   "unit": "m/s",
+   "value": 167.36
+  },
+  "max_upgrade_no_nitro": {
+   "basis": "force-limit derivation from index.html constants",
+   "source_class": "ANALYTIC_ESTIMATE",
+   "unit": "m/s",
+   "value": 121.28
+  },
+  "on_foot_run": {
+   "basis": "force-limit derivation from index.html constants",
+   "source_class": "ANALYTIC_ESTIMATE",
+   "unit": "m/s",
+   "value": 8.8
+  }
+ },
+ "status": "PROPOSED_NOT_APPROVED",
+ "streaming_benefit_targets": {
+  "basis": "A09",
+  "source_class": "PROPOSED_LIMIT",
+  "value": "see calibration_data.json benefit.recommended_gate_revision"
+ }
+}

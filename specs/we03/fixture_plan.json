@@ -1,0 +1,3629 @@
+{
+ "beach_regions": [
+  [
+   [
+    225,
+    -1100
+   ],
+   [
+    465,
+    -1100
+   ],
+   [
+    465,
+    1100
+   ],
+   [
+    225,
+    1100
+   ]
+  ]
+ ],
+ "classification": "SYNTHETIC_ONLY objects are not legal parcels, road-access or construction evidence; never written to district_plan.json",
+ "composition": {
+  "120": {
+   "R01": 26,
+   "R02": 14,
+   "R05": 68,
+   "R08": 12
+  },
+  "40": {
+   "R01": 9,
+   "R02": 5,
+   "R05": 22,
+   "R08": 4
+  },
+  "57": {
+   "R01": 12,
+   "R02": 7,
+   "R05": 33,
+   "R08": 5
+  },
+  "60": {
+   "R01": 13,
+   "R02": 7,
+   "R05": 34,
+   "R08": 6
+  }
+ },
+ "corridor_ids": [
+  "C02",
+  "ENVELOPE_B1_ST_0085",
+  "ENVELOPE_B1_ST_0305",
+  "H02",
+  "X01"
+ ],
+ "objects": [
+  {
+   "b": [
+    38,
+    897,
+    80,
+    931
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     7
+    ]
+   ],
+   "id": "B1_R01_002",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    0,
+    7
+   ],
+   "phase": 1,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    128,
+    897,
+    170,
+    931
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     7
+    ]
+   ],
+   "id": "B1_R01_004",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    1,
+    7
+   ],
+   "phase": 1,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -10,
+    966,
+    32,
+    1000
+   ],
+   "coverage_chunks_128": [
+    [
+     -1,
+     7
+    ],
+    [
+     0,
+     7
+    ]
+   ],
+   "id": "B1_R01_006",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    0,
+    7
+   ],
+   "phase": 1,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    116,
+    966,
+    158,
+    1000
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     7
+    ],
+    [
+     1,
+     7
+    ]
+   ],
+   "id": "B1_R01_008",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    1,
+    7
+   ],
+   "phase": 2,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    53,
+    1008,
+    95,
+    1042
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     7
+    ],
+    [
+     0,
+     8
+    ]
+   ],
+   "id": "B1_R01_012",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    0,
+    8
+   ],
+   "phase": 1,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    116,
+    1042,
+    158,
+    1076
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     8
+    ],
+    [
+     1,
+     8
+    ]
+   ],
+   "id": "B1_R01_016",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    1,
+    8
+   ],
+   "phase": 2,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    53,
+    1084,
+    95,
+    1118
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     8
+    ]
+   ],
+   "id": "B1_R01_020",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    0,
+    8
+   ],
+   "phase": 1,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -10,
+    897,
+    38,
+    939
+   ],
+   "coverage_chunks_128": [
+    [
+     -1,
+     7
+    ],
+    [
+     0,
+     7
+    ]
+   ],
+   "id": "B1_R02_001",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    0,
+    7
+   ],
+   "phase": 1,
+   "proto": "R02",
+   "region": "B1"
+  },
+  {
+   "b": [
+    80,
+    897,
+    128,
+    939
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     7
+    ]
+   ],
+   "id": "B1_R02_003",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    0,
+    7
+   ],
+   "phase": 1,
+   "proto": "R02",
+   "region": "B1"
+  },
+  {
+   "b": [
+    170,
+    897,
+    218,
+    939
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     7
+    ]
+   ],
+   "id": "B1_R02_005",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    1,
+    7
+   ],
+   "phase": 1,
+   "proto": "R02",
+   "region": "B1"
+  },
+  {
+   "b": [
+    53,
+    966,
+    101,
+    1008
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     7
+    ]
+   ],
+   "id": "B1_R02_007",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    0,
+    7
+   ],
+   "phase": 1,
+   "proto": "R02",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -8,
+    1000,
+    40,
+    1042
+   ],
+   "coverage_chunks_128": [
+    [
+     -1,
+     7
+    ],
+    [
+     -1,
+     8
+    ],
+    [
+     0,
+     7
+    ],
+    [
+     0,
+     8
+    ]
+   ],
+   "id": "B1_R02_009",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    0,
+    7
+   ],
+   "phase": 1,
+   "proto": "R02",
+   "region": "B1"
+  },
+  {
+   "b": [
+    116,
+    1000,
+    164,
+    1042
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     7
+    ],
+    [
+     0,
+     8
+    ],
+    [
+     1,
+     7
+    ],
+    [
+     1,
+     8
+    ]
+   ],
+   "id": "B1_R02_011",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    1,
+    7
+   ],
+   "phase": 2,
+   "proto": "R02",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -8,
+    1042,
+    40,
+    1084
+   ],
+   "coverage_chunks_128": [
+    [
+     -1,
+     8
+    ],
+    [
+     0,
+     8
+    ]
+   ],
+   "id": "B1_R02_013",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    0,
+    8
+   ],
+   "phase": 2,
+   "proto": "R02",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -446,
+    969,
+    -424,
+    993
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     7
+    ]
+   ],
+   "id": "B2_R05_037",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -4,
+    7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -535,
+    976,
+    -513,
+    1000
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     7
+    ]
+   ],
+   "id": "B2_R05_040",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -560,
+    978,
+    -538,
+    1002
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     7
+    ]
+   ],
+   "id": "B2_R05_041",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -586,
+    980,
+    -564,
+    1004
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     7
+    ]
+   ],
+   "id": "B2_R05_042",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -611,
+    982,
+    -589,
+    1006
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     7
+    ]
+   ],
+   "id": "B2_R05_044",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -636,
+    984,
+    -614,
+    1008
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     7
+    ]
+   ],
+   "id": "B2_R05_045",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -662,
+    986,
+    -640,
+    1010
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     7
+    ]
+   ],
+   "id": "B2_R05_046",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -6,
+    7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -687,
+    988,
+    -665,
+    1012
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     7
+    ]
+   ],
+   "id": "B2_R05_048",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -6,
+    7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -432,
+    1007,
+    -408,
+    1029
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     7
+    ],
+    [
+     -4,
+     8
+    ]
+   ],
+   "id": "B2_R05_051",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -4,
+    7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -457,
+    1009,
+    -433,
+    1031
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     7
+    ],
+    [
+     -4,
+     8
+    ]
+   ],
+   "id": "B2_R05_052",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -4,
+    7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -483,
+    1011,
+    -459,
+    1033
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     7
+    ],
+    [
+     -4,
+     8
+    ]
+   ],
+   "id": "B2_R05_054",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -4,
+    7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -508,
+    1013,
+    -484,
+    1035
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     7
+    ],
+    [
+     -4,
+     8
+    ]
+   ],
+   "id": "B2_R05_055",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -4,
+    8
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -533,
+    1015,
+    -509,
+    1037
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     7
+    ],
+    [
+     -5,
+     8
+    ],
+    [
+     -4,
+     7
+    ],
+    [
+     -4,
+     8
+    ]
+   ],
+   "id": "B2_R05_056",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    8
+   ],
+   "phase": 2,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -559,
+    1017,
+    -535,
+    1039
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     7
+    ],
+    [
+     -5,
+     8
+    ]
+   ],
+   "id": "B2_R05_057",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    8
+   ],
+   "phase": 2,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -584,
+    1019,
+    -560,
+    1041
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     7
+    ],
+    [
+     -5,
+     8
+    ]
+   ],
+   "id": "B2_R05_058",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    8
+   ],
+   "phase": 2,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -609,
+    1021,
+    -585,
+    1043
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     7
+    ],
+    [
+     -5,
+     8
+    ]
+   ],
+   "id": "B2_R05_059",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    8
+   ],
+   "phase": 2,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -635,
+    1023,
+    -611,
+    1045
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     7
+    ],
+    [
+     -5,
+     8
+    ]
+   ],
+   "id": "B2_R05_060",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    8
+   ],
+   "phase": 2,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -660,
+    1025,
+    -636,
+    1047
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     8
+    ],
+    [
+     -5,
+     8
+    ]
+   ],
+   "id": "B2_R05_061",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -6,
+    8
+   ],
+   "phase": 2,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -402,
+    -863,
+    -360,
+    -829
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     -7
+    ],
+    [
+     -3,
+     -7
+    ]
+   ],
+   "id": "B3_R01_001",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -3,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R01",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -360,
+    -863,
+    -318,
+    -829
+   ],
+   "coverage_chunks_128": [
+    [
+     -3,
+     -7
+    ]
+   ],
+   "id": "B3_R01_006",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -3,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R01",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -294,
+    -863,
+    -260,
+    -821
+   ],
+   "coverage_chunks_128": [
+    [
+     -3,
+     -7
+    ]
+   ],
+   "id": "B3_R01_011",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -3,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R01",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -402,
+    -807,
+    -360,
+    -773
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     -7
+    ],
+    [
+     -3,
+     -7
+    ]
+   ],
+   "id": "B3_R01_016",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -3,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R01",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -360,
+    -781,
+    -326,
+    -739
+   ],
+   "coverage_chunks_128": [
+    [
+     -3,
+     -7
+    ],
+    [
+     -3,
+     -6
+    ]
+   ],
+   "id": "B3_R01_021",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -3,
+    -6
+   ],
+   "phase": 2,
+   "proto": "R01",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -646,
+    -872,
+    -622,
+    -850
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -7
+    ],
+    [
+     -5,
+     -7
+    ]
+   ],
+   "id": "B3_R05_003",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -582,
+    -863,
+    -558,
+    -841
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     -7
+    ]
+   ],
+   "id": "B3_R05_004",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -558,
+    -863,
+    -534,
+    -841
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     -7
+    ]
+   ],
+   "id": "B3_R05_005",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -496,
+    -863,
+    -472,
+    -841
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     -7
+    ]
+   ],
+   "id": "B3_R05_008",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -4,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -472,
+    -863,
+    -448,
+    -841
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     -7
+    ]
+   ],
+   "id": "B3_R05_009",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -4,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -318,
+    -863,
+    -294,
+    -841
+   ],
+   "coverage_chunks_128": [
+    [
+     -3,
+     -7
+    ]
+   ],
+   "id": "B3_R05_010",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -3,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -402,
+    -829,
+    -378,
+    -807
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     -7
+    ],
+    [
+     -3,
+     -7
+    ]
+   ],
+   "id": "B3_R05_013",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -4,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -284,
+    -821,
+    -260,
+    -799
+   ],
+   "coverage_chunks_128": [
+    [
+     -3,
+     -7
+    ]
+   ],
+   "id": "B3_R05_014",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -3,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -644,
+    -812,
+    -620,
+    -790
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -7
+    ],
+    [
+     -5,
+     -7
+    ]
+   ],
+   "id": "B3_R05_015",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -644,
+    -790,
+    -620,
+    -768
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -7
+    ],
+    [
+     -5,
+     -7
+    ]
+   ],
+   "id": "B3_R05_018",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -284,
+    -775,
+    -260,
+    -753
+   ],
+   "coverage_chunks_128": [
+    [
+     -3,
+     -7
+    ],
+    [
+     -3,
+     -6
+    ]
+   ],
+   "id": "B3_R05_019",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -3,
+    -6
+   ],
+   "phase": 2,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -402,
+    -773,
+    -378,
+    -751
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     -7
+    ],
+    [
+     -4,
+     -6
+    ],
+    [
+     -3,
+     -7
+    ],
+    [
+     -3,
+     -6
+    ]
+   ],
+   "id": "B3_R05_020",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -4,
+    -6
+   ],
+   "phase": 2,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -644,
+    -768,
+    -620,
+    -746
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -6
+    ],
+    [
+     -5,
+     -6
+    ]
+   ],
+   "id": "B3_R05_023",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    -6
+   ],
+   "phase": 2,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -646,
+    -746,
+    -622,
+    -724
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -6
+    ],
+    [
+     -5,
+     -6
+    ]
+   ],
+   "id": "B3_R05_024",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    -6
+   ],
+   "phase": 2,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -646,
+    -724,
+    -622,
+    -702
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -6
+    ],
+    [
+     -5,
+     -6
+    ]
+   ],
+   "id": "B3_R05_025",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    -6
+   ],
+   "phase": 2,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -646,
+    -910,
+    -622,
+    -872
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -8
+    ],
+    [
+     -6,
+     -7
+    ],
+    [
+     -5,
+     -8
+    ],
+    [
+     -5,
+     -7
+    ]
+   ],
+   "id": "B3_R08_002",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R08",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -534,
+    -863,
+    -496,
+    -839
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     -7
+    ],
+    [
+     -4,
+     -7
+    ]
+   ],
+   "id": "B3_R08_007",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R08",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -644,
+    -850,
+    -620,
+    -812
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -7
+    ],
+    [
+     -5,
+     -7
+    ]
+   ],
+   "id": "B3_R08_012",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -5,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R08",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -298,
+    -799,
+    -260,
+    -775
+   ],
+   "coverage_chunks_128": [
+    [
+     -3,
+     -7
+    ]
+   ],
+   "id": "B3_R08_017",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -3,
+    -7
+   ],
+   "phase": 1,
+   "proto": "R08",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -326,
+    -777,
+    -302,
+    -739
+   ],
+   "coverage_chunks_128": [
+    [
+     -3,
+     -7
+    ],
+    [
+     -3,
+     -6
+    ]
+   ],
+   "id": "B3_R08_022",
+   "kind": "WE02_PARCEL",
+   "owner_chunk_128": [
+    -3,
+    -6
+   ],
+   "phase": 2,
+   "proto": "R08",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -350,
+    -820,
+    -308,
+    -786
+   ],
+   "coverage_chunks_128": [
+    [
+     -3,
+     -7
+    ]
+   ],
+   "id": "SYN_B3_R01_001",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -3,
+    -7
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B3"
+  },
+  {
+   "b": [
+    -645,
+    -600,
+    -621,
+    -578
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -5
+    ],
+    [
+     -5,
+     -5
+    ]
+   ],
+   "id": "SYN_B3_R05_001",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -5,
+    -5
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    70,
+    1140,
+    108,
+    1164
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     8
+    ],
+    [
+     0,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R08_001",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    0,
+    9
+   ],
+   "phase": null,
+   "proto": "R08",
+   "region": "B1"
+  },
+  {
+   "b": [
+    310,
+    1195,
+    352,
+    1229
+   ],
+   "coverage_chunks_128": [
+    [
+     2,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R01_001",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    2,
+    9
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -950,
+    890,
+    -908,
+    924
+   ],
+   "coverage_chunks_128": [
+    [
+     -8,
+     6
+    ],
+    [
+     -8,
+     7
+    ]
+   ],
+   "id": "SYN_B2_R01_001",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -8,
+    7
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B2"
+  },
+  {
+   "b": [
+    335,
+    1130,
+    377,
+    1164
+   ],
+   "coverage_chunks_128": [
+    [
+     2,
+     8
+    ],
+    [
+     2,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R01_002",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    2,
+    8
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    15,
+    1235,
+    57,
+    1269
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R01_003",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    0,
+    9
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -705,
+    1070,
+    -663,
+    1104
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     8
+    ]
+   ],
+   "id": "SYN_B2_R01_002",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -6,
+    8
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B2"
+  },
+  {
+   "b": [
+    155,
+    1085,
+    197,
+    1119
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     8
+    ]
+   ],
+   "id": "SYN_B1_R01_004",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    8
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    295,
+    1285,
+    337,
+    1319
+   ],
+   "coverage_chunks_128": [
+    [
+     2,
+     10
+    ]
+   ],
+   "id": "SYN_B1_R01_005",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    2,
+    10
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -895,
+    885,
+    -853,
+    919
+   ],
+   "coverage_chunks_128": [
+    [
+     -7,
+     6
+    ],
+    [
+     -7,
+     7
+    ]
+   ],
+   "id": "SYN_B2_R01_003",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -7,
+    7
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B2"
+  },
+  {
+   "b": [
+    230,
+    1195,
+    272,
+    1229
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     9
+    ],
+    [
+     2,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R01_006",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    9
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    335,
+    1240,
+    377,
+    1274
+   ],
+   "coverage_chunks_128": [
+    [
+     2,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R01_007",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    2,
+    9
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -495,
+    1060,
+    -453,
+    1094
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     8
+    ]
+   ],
+   "id": "SYN_B2_R01_004",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -4,
+    8
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B2"
+  },
+  {
+   "b": [
+    250,
+    1140,
+    292,
+    1174
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     8
+    ],
+    [
+     1,
+     9
+    ],
+    [
+     2,
+     8
+    ],
+    [
+     2,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R01_008",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    2,
+    9
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -10,
+    1180,
+    32,
+    1214
+   ],
+   "coverage_chunks_128": [
+    [
+     -1,
+     9
+    ],
+    [
+     0,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R01_009",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    0,
+    9
+   ],
+   "phase": null,
+   "proto": "R01",
+   "region": "B1"
+  },
+  {
+   "b": [
+    215,
+    1280,
+    263,
+    1322
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     10
+    ],
+    [
+     2,
+     10
+    ]
+   ],
+   "id": "SYN_B1_R02_001",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    10
+   ],
+   "phase": null,
+   "proto": "R02",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -765,
+    910,
+    -717,
+    952
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     7
+    ]
+   ],
+   "id": "SYN_B2_R02_001",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -6,
+    7
+   ],
+   "phase": null,
+   "proto": "R02",
+   "region": "B2"
+  },
+  {
+   "b": [
+    155,
+    1270,
+    203,
+    1312
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     9
+    ],
+    [
+     1,
+     10
+    ]
+   ],
+   "id": "SYN_B1_R02_002",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    10
+   ],
+   "phase": null,
+   "proto": "R02",
+   "region": "B1"
+  },
+  {
+   "b": [
+    105,
+    1170,
+    153,
+    1212
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     9
+    ],
+    [
+     1,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R02_003",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    9
+   ],
+   "phase": null,
+   "proto": "R02",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -725,
+    855,
+    -677,
+    897
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     6
+    ],
+    [
+     -6,
+     7
+    ]
+   ],
+   "id": "SYN_B2_R02_002",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -6,
+    6
+   ],
+   "phase": null,
+   "proto": "R02",
+   "region": "B2"
+  },
+  {
+   "b": [
+    175,
+    1175,
+    223,
+    1217
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R02_004",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    9
+   ],
+   "phase": null,
+   "proto": "R02",
+   "region": "B1"
+  },
+  {
+   "b": [
+    165,
+    1220,
+    213,
+    1262
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R02_005",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    9
+   ],
+   "phase": null,
+   "proto": "R02",
+   "region": "B1"
+  },
+  {
+   "b": [
+    185,
+    1015,
+    209,
+    1037
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     7
+    ],
+    [
+     1,
+     8
+    ]
+   ],
+   "id": "SYN_B1_R05_001",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -570,
+    1130,
+    -546,
+    1152
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     8
+    ]
+   ],
+   "id": "SYN_B2_R05_001",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -5,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -645,
+    -540,
+    -621,
+    -518
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -5
+    ],
+    [
+     -5,
+     -5
+    ]
+   ],
+   "id": "SYN_B3_R05_002",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -5,
+    -5
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    350,
+    1295,
+    374,
+    1317
+   ],
+   "coverage_chunks_128": [
+    [
+     2,
+     10
+    ]
+   ],
+   "id": "SYN_B1_R05_002",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    2,
+    10
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -740,
+    1040,
+    -716,
+    1062
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     8
+    ]
+   ],
+   "id": "SYN_B2_R05_002",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -6,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -645,
+    -575,
+    -621,
+    -553
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -5
+    ],
+    [
+     -5,
+     -5
+    ]
+   ],
+   "id": "SYN_B3_R05_003",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -5,
+    -5
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    265,
+    1305,
+    289,
+    1327
+   ],
+   "coverage_chunks_128": [
+    [
+     2,
+     10
+    ]
+   ],
+   "id": "SYN_B1_R05_003",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    2,
+    10
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -720,
+    1130,
+    -696,
+    1152
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     8
+    ]
+   ],
+   "id": "SYN_B2_R05_003",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -6,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -645,
+    -645,
+    -621,
+    -623
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -6
+    ],
+    [
+     -6,
+     -5
+    ],
+    [
+     -5,
+     -6
+    ],
+    [
+     -5,
+     -5
+    ]
+   ],
+   "id": "SYN_B3_R05_004",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -5,
+    -5
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    190,
+    1125,
+    214,
+    1147
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     8
+    ]
+   ],
+   "id": "SYN_B1_R05_004",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -620,
+    895,
+    -596,
+    917
+   ],
+   "coverage_chunks_128": [
+    [
+     -5,
+     6
+    ],
+    [
+     -5,
+     7
+    ]
+   ],
+   "id": "SYN_B2_R05_004",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -5,
+    7
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    -645,
+    -680,
+    -621,
+    -658
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     -6
+    ],
+    [
+     -5,
+     -6
+    ]
+   ],
+   "id": "SYN_B3_R05_005",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -5,
+    -6
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B3"
+  },
+  {
+   "b": [
+    180,
+    835,
+    204,
+    857
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     6
+    ]
+   ],
+   "id": "SYN_B1_R05_005",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    6
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -930,
+    1025,
+    -906,
+    1047
+   ],
+   "coverage_chunks_128": [
+    [
+     -8,
+     8
+    ]
+   ],
+   "id": "SYN_B2_R05_005",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -8,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    215,
+    1245,
+    239,
+    1267
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R05_006",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    9
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    190,
+    985,
+    214,
+    1007
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     7
+    ]
+   ],
+   "id": "SYN_B1_R05_007",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    7
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -690,
+    930,
+    -666,
+    952
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     7
+    ]
+   ],
+   "id": "SYN_B2_R05_006",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -6,
+    7
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    95,
+    1235,
+    119,
+    1257
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R05_008",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    0,
+    9
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    175,
+    1050,
+    199,
+    1072
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     8
+    ]
+   ],
+   "id": "SYN_B1_R05_009",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -980,
+    1085,
+    -956,
+    1107
+   ],
+   "coverage_chunks_128": [
+    [
+     -8,
+     8
+    ]
+   ],
+   "id": "SYN_B2_R05_007",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -8,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    40,
+    1275,
+    64,
+    1297
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     9
+    ],
+    [
+     0,
+     10
+    ]
+   ],
+   "id": "SYN_B1_R05_010",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    0,
+    10
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    175,
+    1150,
+    199,
+    1172
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     8
+    ],
+    [
+     1,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R05_011",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    9
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -985,
+    1135,
+    -961,
+    1157
+   ],
+   "coverage_chunks_128": [
+    [
+     -8,
+     8
+    ],
+    [
+     -8,
+     9
+    ]
+   ],
+   "id": "SYN_B2_R05_008",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -8,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    40,
+    1165,
+    64,
+    1187
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R05_012",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    0,
+    9
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    75,
+    1260,
+    99,
+    1282
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     9
+    ],
+    [
+     0,
+     10
+    ]
+   ],
+   "id": "SYN_B1_R05_013",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    0,
+    9
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -695,
+    900,
+    -671,
+    922
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     7
+    ]
+   ],
+   "id": "SYN_B2_R05_009",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -6,
+    7
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    280,
+    1230,
+    304,
+    1252
+   ],
+   "coverage_chunks_128": [
+    [
+     2,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R05_014",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    2,
+    9
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    130,
+    835,
+    154,
+    857
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     6
+    ]
+   ],
+   "id": "SYN_B1_R05_015",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    6
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -780,
+    1115,
+    -756,
+    1137
+   ],
+   "coverage_chunks_128": [
+    [
+     -7,
+     8
+    ],
+    [
+     -6,
+     8
+    ]
+   ],
+   "id": "SYN_B2_R05_010",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -6,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    250,
+    1250,
+    274,
+    1272
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     9
+    ],
+    [
+     2,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R05_016",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    2,
+    9
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    260,
+    1105,
+    284,
+    1127
+   ],
+   "coverage_chunks_128": [
+    [
+     2,
+     8
+    ]
+   ],
+   "id": "SYN_B1_R05_017",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    2,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -740,
+    985,
+    -716,
+    1007
+   ],
+   "coverage_chunks_128": [
+    [
+     -6,
+     7
+    ]
+   ],
+   "id": "SYN_B2_R05_011",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -6,
+    7
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B2"
+  },
+  {
+   "b": [
+    220,
+    1100,
+    244,
+    1122
+   ],
+   "coverage_chunks_128": [
+    [
+     1,
+     8
+    ]
+   ],
+   "id": "SYN_B1_R05_018",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    1,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -10,
+    1110,
+    14,
+    1132
+   ],
+   "coverage_chunks_128": [
+    [
+     -1,
+     8
+    ],
+    [
+     0,
+     8
+    ]
+   ],
+   "id": "SYN_B1_R05_019",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    0,
+    8
+   ],
+   "phase": null,
+   "proto": "R05",
+   "region": "B1"
+  },
+  {
+   "b": [
+    95,
+    1290,
+    133,
+    1314
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     10
+    ],
+    [
+     1,
+     10
+    ]
+   ],
+   "id": "SYN_B1_R08_002",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    0,
+    10
+   ],
+   "phase": null,
+   "proto": "R08",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -925,
+    830,
+    -887,
+    854
+   ],
+   "coverage_chunks_128": [
+    [
+     -8,
+     6
+    ],
+    [
+     -7,
+     6
+    ]
+   ],
+   "id": "SYN_B2_R08_001",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -8,
+    6
+   ],
+   "phase": null,
+   "proto": "R08",
+   "region": "B2"
+  },
+  {
+   "b": [
+    280,
+    1255,
+    318,
+    1279
+   ],
+   "coverage_chunks_128": [
+    [
+     2,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R08_003",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    2,
+    9
+   ],
+   "phase": null,
+   "proto": "R08",
+   "region": "B1"
+  },
+  {
+   "b": [
+    35,
+    1205,
+    73,
+    1229
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R08_004",
+   "intended_region": "B1",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    0,
+    9
+   ],
+   "phase": null,
+   "proto": "R08",
+   "region": "B1"
+  },
+  {
+   "b": [
+    -510,
+    950,
+    -472,
+    974
+   ],
+   "coverage_chunks_128": [
+    [
+     -4,
+     7
+    ]
+   ],
+   "id": "SYN_B2_R08_002",
+   "intended_region": "B2",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    -4,
+    7
+   ],
+   "phase": null,
+   "proto": "R08",
+   "region": "B2"
+  },
+  {
+   "b": [
+    5,
+    1135,
+    43,
+    1159
+   ],
+   "coverage_chunks_128": [
+    [
+     0,
+     8
+    ],
+    [
+     0,
+     9
+    ]
+   ],
+   "id": "SYN_B1_R08_005",
+   "intended_region": "B3",
+   "kind": "SYNTHETIC_ONLY",
+   "owner_chunk_128": [
+    0,
+    8
+   ],
+   "phase": null,
+   "proto": "R08",
+   "region": "B1"
+  }
+ ],
+ "placed_outside_intended_region": [
+  "SYN_B1_R08_001",
+  "SYN_B1_R01_002",
+  "SYN_B1_R01_004",
+  "SYN_B1_R01_006",
+  "SYN_B1_R01_008",
+  "SYN_B1_R02_002",
+  "SYN_B1_R02_004",
+  "SYN_B1_R05_006",
+  "SYN_B1_R05_008",
+  "SYN_B1_R05_010",
+  "SYN_B1_R05_012",
+  "SYN_B1_R05_014",
+  "SYN_B1_R05_016",
+  "SYN_B1_R05_018",
+  "SYN_B1_R08_003",
+  "SYN_B1_R08_005"
+ ],
+ "replay_scenarios": [
+  {
+   "description": "out and back along the z=1024 chunk border (8 x 128) through B1",
+   "kind": "path",
+   "name": "S1_B1_border_sweep",
+   "sim_seconds": 84,
+   "speed_mps": 12,
+   "waypoints": [
+    [
+     -10,
+     1024
+    ],
+    [
+     490,
+     1024
+    ],
+    [
+     -10,
+     1024
+    ]
+   ]
+  },
+  {
+   "description": "drive east then reverse direction across x chunk borders in B2",
+   "kind": "path",
+   "name": "S2_B2_reversal",
+   "sim_seconds": 80,
+   "speed_mps": 15,
+   "waypoints": [
+    [
+     -1000,
+     945
+    ],
+    [
+     -400,
+     945
+    ],
+    [
+     -1000,
+     945
+    ]
+   ]
+  },
+  {
+   "description": "slow diagonal through B3, crossing x=-512 and z=-768 borders",
+   "kind": "path",
+   "name": "S3_B3_diagonal",
+   "sim_seconds": 80,
+   "speed_mps": 8,
+   "waypoints": [
+    [
+     -740,
+     -910
+    ],
+    [
+     -240,
+     -510
+    ]
+   ]
+  },
+  {
+   "description": "far observation: avenue x=0 from CBD towards B3 at low speed",
+   "kind": "path",
+   "name": "S4_far_view_avenue",
+   "sim_seconds": 100,
+   "speed_mps": 6,
+   "waypoints": [
+    [
+     0,
+     -100
+    ],
+    [
+     0,
+     -700
+    ]
+   ]
+  },
+  {
+   "description": "test-only destination switch B1 -> B3 -> B2 with 20 s holds",
+   "hold_seconds": 20,
+   "kind": "teleport_hold",
+   "name": "S5_destination_switch",
+   "sim_seconds": 60,
+   "stops": [
+    [
+     240,
+     1080
+    ],
+    [
+     -490,
+     -710
+    ],
+    [
+     -700,
+     945
+    ]
+   ]
+  },
+  {
+   "description": "three peak-speed passes along avenue x=0 past the planned district edge",
+   "kind": "path",
+   "name": "S6_high_speed_pass",
+   "sim_seconds": 78,
+   "speed_mps": 68,
+   "waypoints": [
+    [
+     0,
+     -880
+    ],
+    [
+     0,
+     880
+    ],
+    [
+     0,
+     -880
+    ],
+    [
+     0,
+     880
+    ]
+   ]
+  }
+ ],
+ "schema": "we03-fixture-plan-v1",
+ "seed": 20261128,
+ "sets": {
+  "120": [
+   "B1_R01_002",
+   "B1_R01_004",
+   "B1_R01_006",
+   "B1_R01_008",
+   "B1_R01_012",
+   "B1_R01_016",
+   "B1_R01_020",
+   "B1_R02_001",
+   "B1_R02_003",
+   "B1_R02_005",
+   "B1_R02_007",
+   "B1_R02_009",
+   "B1_R02_011",
+   "B1_R02_013",
+   "B2_R05_037",
+   "B2_R05_040",
+   "B2_R05_041",
+   "B2_R05_042",
+   "B2_R05_044",
+   "B2_R05_045",
+   "B2_R05_046",
+   "B2_R05_048",
+   "B2_R05_051",
+   "B2_R05_052",
+   "B2_R05_054",
+   "B2_R05_055",
+   "B2_R05_056",
+   "B2_R05_057",
+   "B2_R05_058",
+   "B2_R05_059",
+   "B2_R05_060",
+   "B2_R05_061",
+   "B3_R01_001",
+   "B3_R01_006",
+   "B3_R01_011",
+   "B3_R01_016",
+   "B3_R01_021",
+   "B3_R05_003",
+   "B3_R05_004",
+   "B3_R05_005",
+   "B3_R05_008",
+   "B3_R05_009",
+   "B3_R05_010",
+   "B3_R05_013",
+   "B3_R05_014",
+   "B3_R05_015",
+   "B3_R05_018",
+   "B3_R05_019",
+   "B3_R05_020",
+   "B3_R05_023",
+   "B3_R05_024",
+   "B3_R05_025",
+   "B3_R08_002",
+   "B3_R08_007",
+   "B3_R08_012",
+   "B3_R08_017",
+   "B3_R08_022",
+   "SYN_B3_R01_001",
+   "SYN_B3_R05_001",
+   "SYN_B1_R08_001",
+   "SYN_B1_R01_001",
+   "SYN_B2_R01_001",
+   "SYN_B1_R01_002",
+   "SYN_B1_R01_003",
+   "SYN_B2_R01_002",
+   "SYN_B1_R01_004",
+   "SYN_B1_R01_005",
+   "SYN_B2_R01_003",
+   "SYN_B1_R01_006",
+   "SYN_B1_R01_007",
+   "SYN_B2_R01_004",
+   "SYN_B1_R01_008",
+   "SYN_B1_R01_009",
+   "SYN_B1_R02_001",
+   "SYN_B2_R02_001",
+   "SYN_B1_R02_002",
+   "SYN_B1_R02_003",
+   "SYN_B2_R02_002",
+   "SYN_B1_R02_004",
+   "SYN_B1_R02_005",
+   "SYN_B1_R05_001",
+   "SYN_B2_R05_001",
+   "SYN_B3_R05_002",
+   "SYN_B1_R05_002",
+   "SYN_B2_R05_002",
+   "SYN_B3_R05_003",
+   "SYN_B1_R05_003",
+   "SYN_B2_R05_003",
+   "SYN_B3_R05_004",
+   "SYN_B1_R05_004",
+   "SYN_B2_R05_004",
+   "SYN_B3_R05_005",
+   "SYN_B1_R05_005",
+   "SYN_B2_R05_005",
+   "SYN_B1_R05_006",
+   "SYN_B1_R05_007",
+   "SYN_B2_R05_006",
+   "SYN_B1_R05_008",
+   "SYN_B1_R05_009",
+   "SYN_B2_R05_007",
+   "SYN_B1_R05_010",
+   "SYN_B1_R05_011",
+   "SYN_B2_R05_008",
+   "SYN_B1_R05_012",
+   "SYN_B1_R05_013",
+   "SYN_B2_R05_009",
+   "SYN_B1_R05_014",
+   "SYN_B1_R05_015",
+   "SYN_B2_R05_010",
+   "SYN_B1_R05_016",
+   "SYN_B1_R05_017",
+   "SYN_B2_R05_011",
+   "SYN_B1_R05_018",
+   "SYN_B1_R05_019",
+   "SYN_B1_R08_002",
+   "SYN_B2_R08_001",
+   "SYN_B1_R08_003",
+   "SYN_B1_R08_004",
+   "SYN_B2_R08_002",
+   "SYN_B1_R08_005"
+  ],
+  "40": [
+   "B1_R01_002",
+   "B1_R01_004",
+   "B1_R01_006",
+   "B1_R01_012",
+   "B1_R01_020",
+   "B1_R02_001",
+   "B1_R02_003",
+   "B1_R02_005",
+   "B1_R02_007",
+   "B1_R02_009",
+   "B2_R05_037",
+   "B2_R05_040",
+   "B2_R05_041",
+   "B2_R05_042",
+   "B2_R05_044",
+   "B2_R05_045",
+   "B2_R05_046",
+   "B2_R05_048",
+   "B2_R05_051",
+   "B2_R05_052",
+   "B2_R05_054",
+   "B2_R05_055",
+   "B3_R01_001",
+   "B3_R01_006",
+   "B3_R01_011",
+   "B3_R01_016",
+   "B3_R05_003",
+   "B3_R05_004",
+   "B3_R05_005",
+   "B3_R05_008",
+   "B3_R05_009",
+   "B3_R05_010",
+   "B3_R05_013",
+   "B3_R05_014",
+   "B3_R05_015",
+   "B3_R05_018",
+   "B3_R08_002",
+   "B3_R08_007",
+   "B3_R08_012",
+   "B3_R08_017"
+  ],
+  "57": [
+   "B1_R01_002",
+   "B1_R01_004",
+   "B1_R01_006",
+   "B1_R01_008",
+   "B1_R01_012",
+   "B1_R01_016",
+   "B1_R01_020",
+   "B1_R02_001",
+   "B1_R02_003",
+   "B1_R02_005",
+   "B1_R02_007",
+   "B1_R02_009",
+   "B1_R02_011",
+   "B1_R02_013",
+   "B2_R05_037",
+   "B2_R05_040",
+   "B2_R05_041",
+   "B2_R05_042",
+   "B2_R05_044",
+   "B2_R05_045",
+   "B2_R05_046",
+   "B2_R05_048",
+   "B2_R05_051",
+   "B2_R05_052",
+   "B2_R05_054",
+   "B2_R05_055",
+   "B2_R05_056",
+   "B2_R05_057",
+   "B2_R05_058",
+   "B2_R05_059",
+   "B2_R05_060",
+   "B2_R05_061",
+   "B3_R01_001",
+   "B3_R01_006",
+   "B3_R01_011",
+   "B3_R01_016",
+   "B3_R01_021",
+   "B3_R05_003",
+   "B3_R05_004",
+   "B3_R05_005",
+   "B3_R05_008",
+   "B3_R05_009",
+   "B3_R05_010",
+   "B3_R05_013",
+   "B3_R05_014",
+   "B3_R05_015",
+   "B3_R05_018",
+   "B3_R05_019",
+   "B3_R05_020",
+   "B3_R05_023",
+   "B3_R05_024",
+   "B3_R05_025",
+   "B3_R08_002",
+   "B3_R08_007",
+   "B3_R08_012",
+   "B3_R08_017",
+   "B3_R08_022"
+  ],
+  "60": [
+   "B1_R01_002",
+   "B1_R01_004",
+   "B1_R01_006",
+   "B1_R01_008",
+   "B1_R01_012",
+   "B1_R01_016",
+   "B1_R01_020",
+   "B1_R02_001",
+   "B1_R02_003",
+   "B1_R02_005",
+   "B1_R02_007",
+   "B1_R02_009",
+   "B1_R02_011",
+   "B1_R02_013",
+   "B2_R05_037",
+   "B2_R05_040",
+   "B2_R05_041",
+   "B2_R05_042",
+   "B2_R05_044",
+   "B2_R05_045",
+   "B2_R05_046",
+   "B2_R05_048",
+   "B2_R05_051",
+   "B2_R05_052",
+   "B2_R05_054",
+   "B2_R05_055",
+   "B2_R05_056",
+   "B2_R05_057",
+   "B2_R05_058",
+   "B2_R05_059",
+   "B2_R05_060",
+   "B2_R05_061",
+   "B3_R01_001",
+   "B3_R01_006",
+   "B3_R01_011",
+   "B3_R01_016",
+   "B3_R01_021",
+   "B3_R05_003",
+   "B3_R05_004",
+   "B3_R05_005",
+   "B3_R05_008",
+   "B3_R05_009",
+   "B3_R05_010",
+   "B3_R05_013",
+   "B3_R05_014",
+   "B3_R05_015",
+   "B3_R05_018",
+   "B3_R05_019",
+   "B3_R05_020",
+   "B3_R05_023",
+   "B3_R05_024",
+   "B3_R05_025",
+   "B3_R08_002",
+   "B3_R08_007",
+   "B3_R08_012",
+   "B3_R08_017",
+   "B3_R08_022",
+   "SYN_B3_R01_001",
+   "SYN_B3_R05_001",
+   "SYN_B1_R08_001"
+  ]
+ },
+ "site_a_protection": [
+  -561,
+  -831,
+  -441,
+  -753
+ ],
+ "source_class": "ANALYTIC_ESTIMATE",
+ "terrain_applied": true,
+ "terrain_thresholds": {
+  "max_span_m": 1.5,
+  "min_height_m": -0.1,
+  "source_class": "PROPOSED_LIMIT"
+ }
+}
