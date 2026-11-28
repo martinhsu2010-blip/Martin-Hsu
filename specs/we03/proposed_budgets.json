@@ -203,14 +203,26 @@
     "source_class": "PROPOSED_LIMIT",
     "value": 350000
    },
+   "analytic_cone96_peak_plus_shadow_triangles": {
+    "basis": "cone96 worst viewpoint + shadow-pass extra; comparable to renderer.info all-pass triangles",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 250000
+   },
    "analytic_cone96_worst_triangles": {
     "basis": "calibration_data.json triangles",
     "source_class": "ANALYTIC_ESTIMATE",
     "unit": "triangles",
     "value": 206000
    },
+   "analytic_replay_p95_incl_shadow_max": {
+    "basis": "replay P95 + shadow-pass extra, max over scenarios",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 246700
+   },
    "analytic_replay_p95_max_over_scenarios": {
-    "basis": "96 deg cone along replay paths",
+    "basis": "96 deg cone along replay paths, single pass (no shadow)",
     "source_class": "ANALYTIC_ESTIMATE",
     "unit": "triangles",
     "value": 150700
@@ -222,8 +234,8 @@
     "draw_calls_p50_median": 704.5,
     "frame_ms_p50_median": 33.65,
     "physics_ratio_range": [
-     0.9702,
-     0.99012
+     0.86522,
+     1.0473
     ],
     "shapes_max": 4250,
     "source_class": "MEASURED_HEADLESS",
@@ -263,6 +275,10 @@
     "basis": "draft s.22",
     "source_class": "PROPOSED_LIMIT",
     "value": 4
+   },
+   "triangle_budget_comparison": {
+    "note": "analytic worst 250000 and replay P95 incl. shadow 246700 versus proposed 350000: sampled centre-point estimates without fog, occlusion or height (not a strict bound, not a measured P95); no budget is validated",
+    "status": "NOT_VALIDATED"
    }
   },
   "PHONE_LOW": {
@@ -296,14 +312,26 @@
     "source_class": "PROPOSED_LIMIT",
     "value": 120000
    },
+   "analytic_cone96_peak_plus_shadow_triangles": {
+    "basis": "cone96 worst viewpoint + shadow-pass extra; comparable to renderer.info all-pass triangles",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 138000
+   },
    "analytic_cone96_worst_triangles": {
     "basis": "calibration_data.json triangles",
     "source_class": "ANALYTIC_ESTIMATE",
     "unit": "triangles",
     "value": 106000
    },
+   "analytic_replay_p95_incl_shadow_max": {
+    "basis": "replay P95 + shadow-pass extra, max over scenarios",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 133000
+   },
    "analytic_replay_p95_max_over_scenarios": {
-    "basis": "96 deg cone along replay paths",
+    "basis": "96 deg cone along replay paths, single pass (no shadow)",
     "source_class": "ANALYTIC_ESTIMATE",
     "unit": "triangles",
     "value": 76600
@@ -315,8 +343,8 @@
     "draw_calls_p50_median": 243.0,
     "frame_ms_p50_median": 15.6,
     "physics_ratio_range": [
-     0.89474,
-     1.05376
+     0.88679,
+     1.12371
     ],
     "shapes_max": 4084,
     "source_class": "MEASURED_HEADLESS",
@@ -356,6 +384,119 @@
     "basis": "draft s.22",
     "source_class": "PROPOSED_LIMIT",
     "value": 2
+   },
+   "triangle_budget_comparison": {
+    "note": "analytic worst 138000 and replay P95 incl. shadow 133000 versus proposed 120000: sampled centre-point estimates without fog, occlusion or height (not a strict bound, not a measured P95); no budget is validated",
+    "status": "NOT_VALIDATED"
+   }
+  },
+  "PHONE_MED": {
+   "active_bodies": {
+    "basis": "INTERPOLATED midpoint of the draft s.22 PHONE_LOW and TABLET_MED rows (the draft has no PHONE_MED row); not approved",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 36
+   },
+   "active_shapes": {
+    "basis": "INTERPOLATED midpoint of the draft s.22 PHONE_LOW and TABLET_MED rows (the draft has no PHONE_MED row); not approved",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 144
+   },
+   "added_draw_calls_p95": {
+    "basis": "INTERPOLATED midpoint of the draft s.22 PHONE_LOW and TABLET_MED rows (the draft has no PHONE_MED row); not approved",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 38
+   },
+   "added_geometry_buffer_mib": {
+    "basis": "INTERPOLATED midpoint of the draft s.22 PHONE_LOW and TABLET_MED rows (the draft has no PHONE_MED row); not approved",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 20
+   },
+   "added_texture_mib": {
+    "basis": "INTERPOLATED midpoint of the draft s.22 PHONE_LOW and TABLET_MED rows (the draft has no PHONE_MED row); not approved",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 40
+   },
+   "added_triangles_p95": {
+    "basis": "INTERPOLATED midpoint of the draft s.22 PHONE_LOW and TABLET_MED rows (the draft has no PHONE_MED row); not approved",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 160000
+   },
+   "analytic_cone96_peak_plus_shadow_triangles": {
+    "basis": "cone96 worst viewpoint + shadow-pass extra; comparable to renderer.info all-pass triangles",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 175000
+   },
+   "analytic_cone96_worst_triangles": {
+    "basis": "calibration_data.json triangles",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 123000
+   },
+   "analytic_replay_p95_incl_shadow_max": {
+    "basis": "replay P95 + shadow-pass extra, max over scenarios",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 189000
+   },
+   "analytic_replay_p95_max_over_scenarios": {
+    "basis": "96 deg cone along replay paths, single pass (no shadow)",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 86650
+   },
+   "base_headless": {
+    "bodies_max": 568,
+    "combinations": 12,
+    "draw_calls_p50_max": 635,
+    "draw_calls_p50_median": 282.5,
+    "frame_ms_p50_median": 18.55,
+    "physics_ratio_range": [
+     1.01357,
+     1.16667
+    ],
+    "shapes_max": 4113,
+    "source_class": "MEASURED_HEADLESS",
+    "triangles_p50_max": 2325610,
+    "triangles_p50_median": 1855448.5
+   },
+   "device_avg_fps": {
+    "basis": "avg >= fps_cap x 0.97 (29.1 at cap 30); measured by Martin after A2",
+    "source_class": "PENDING_DEVICE",
+    "value": "PENDING_DEVICE"
+   },
+   "device_frame_time_p95_ms": {
+    "basis": "draft s.25 initial acceptance",
+    "source_class": "PENDING_DEVICE",
+    "value": 40
+   },
+   "device_frame_time_p99_ms": {
+    "basis": "draft s.25 initial acceptance",
+    "source_class": "PENDING_DEVICE",
+    "value": 66.7
+   },
+   "lod_m": {
+    "basis": "draft s.8.2",
+    "source_class": "PROPOSED_LIMIT",
+    "value": [
+     120,
+     300,
+     750
+    ]
+   },
+   "physics_step_median_ratio": {
+    "basis": "INTERPOLATED midpoint of the draft s.22 PHONE_LOW and TABLET_MED rows (the draft has no PHONE_MED row); not approved",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 1.2
+   },
+   "streaming_cpu_ms_p95": {
+    "basis": "INTERPOLATED midpoint of the draft s.22 PHONE_LOW and TABLET_MED rows (the draft has no PHONE_MED row); not approved",
+    "source_class": "PROPOSED_LIMIT",
+    "value": 2
+   },
+   "triangle_budget_comparison": {
+    "note": "analytic worst 175000 and replay P95 incl. shadow 189000 versus proposed 160000: sampled centre-point estimates without fog, occlusion or height (not a strict bound, not a measured P95); no budget is validated",
+    "status": "NOT_VALIDATED"
    }
   },
   "TABLET_MED": {
@@ -389,14 +530,26 @@
     "source_class": "PROPOSED_LIMIT",
     "value": 200000
    },
+   "analytic_cone96_peak_plus_shadow_triangles": {
+    "basis": "cone96 worst viewpoint + shadow-pass extra; comparable to renderer.info all-pass triangles",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 167000
+   },
    "analytic_cone96_worst_triangles": {
     "basis": "calibration_data.json triangles",
     "source_class": "ANALYTIC_ESTIMATE",
     "unit": "triangles",
     "value": 143000
    },
+   "analytic_replay_p95_incl_shadow_max": {
+    "basis": "replay P95 + shadow-pass extra, max over scenarios",
+    "source_class": "ANALYTIC_ESTIMATE",
+    "unit": "triangles",
+    "value": 193000
+   },
    "analytic_replay_p95_max_over_scenarios": {
-    "basis": "96 deg cone along replay paths",
+    "basis": "96 deg cone along replay paths, single pass (no shadow)",
     "source_class": "ANALYTIC_ESTIMATE",
     "unit": "triangles",
     "value": 107250
@@ -408,8 +561,8 @@
     "draw_calls_p50_median": 276.0,
     "frame_ms_p50_median": 20.2,
     "physics_ratio_range": [
-     0.93651,
-     1.35088
+     0.86897,
+     1.09091
     ],
     "shapes_max": 4118,
     "source_class": "MEASURED_HEADLESS",
@@ -449,6 +602,10 @@
     "basis": "draft s.22",
     "source_class": "PROPOSED_LIMIT",
     "value": 2
+   },
+   "triangle_budget_comparison": {
+    "note": "analytic worst 167000 and replay P95 incl. shadow 193000 versus proposed 200000: sampled centre-point estimates without fog, occlusion or height (not a strict bound, not a measured P95); no budget is validated",
+    "status": "NOT_VALIDATED"
    }
   }
  },

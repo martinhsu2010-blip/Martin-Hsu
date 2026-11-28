@@ -18,9 +18,11 @@ FOUR = ["PHONE_LOW", "PHONE_MED", "TABLET_MED", "DESKTOP_HIGH"]
 LOCS = ["B1", "B2", "B3", "SiteA", "CBD", "Suburbs"]
 TIMES = ["12:00", "23:00"]
 TRI = {"R01": (12000, 3000, 300), "R02": (20000, 5000, 600), "R05": (5000, 1200, 150), "R08": (8000, 2000, 240)}
-LODR = {"PHONE_LOW": (100, 250, 650), "TABLET_MED": (140, 350, 850), "DESKTOP_HIGH": (200, 500, 1200)}
+RADII = (140, 180, 217, 260, 350)
+LODR = {"PHONE_LOW": (100, 250, 650), "PHONE_MED": (120, 300, 750), "TABLET_MED": (140, 350, 850), "DESKTOP_HIGH": (200, 500, 1200)}
 COMP = {"40": {"R01": 9, "R02": 5, "R05": 22, "R08": 4}, "57": {"R01": 12, "R02": 7, "R05": 33, "R08": 5}, "60": {"R01": 13, "R02": 7, "R05": 34, "R08": 6}, "120": {"R01": 26, "R02": 14, "R05": 68, "R08": 12}}
 ALLOW = ("tools/we03/", "specs/we03/", "specs/WE-03-", "specs/T-018A1-", "TASKS.md", "DECISIONS.md", "LOG.md", "HANDOFF.md", ".github/workflows/pwa-cache-check.yml")
+REV0_PHYSICS_SHA256 = "47e5d5c81628b68a14c1134c768a3dcc8e39bc3523b9c01b88a44d7eafd996d0"    # sha256 of the PR #132 physics_pairs (canonical JSON): the retained revision-0 evidence must be byte-for-byte that
 ARRAYS = ("frame_ms", "draw_calls", "triangles", "shadow_triangles", "shadow_calls", "render_pass_triangles", "render_passes")
 
 
@@ -31,7 +33,7 @@ def close(a, b, tol=1e-3): return abs(a - b) <= tol * max(1.0, abs(b))
 
 
 # ------------------------------------------------------------------ baseline structure and provenance (A1-G03..G06, G16)
-def v_baseline(b):
+def v_baseline(b, d=None):
     f = []
     if not b or b.get("schema") != "we03-baseline-v1": return ["baseline: missing or wrong schema"]
     env = b.get("environment", {})
@@ -60,16 +62,27 @@ def v_baseline(b):
             if c.get("ph_done") is False: f.append(f"{name}/{k}: Poly Haven models never finished (__phDone)")
             if c.get("preset") != "PHONE_LOW" and c.get("ph_done") is None: f.append(f"{name}/{k}: ph_done not recorded")
             if "page_errors" not in c or c["resources"]["bodies"] <= 0 or c["resources"]["shapes"] <= 0: f.append(f"{name}/{k}: resources/page_errors missing")
-    pp = b.get("physics_pairs", {})
-    for p in FOUR:
-        rec = pp.get(p)
-        if not rec or len(rec["pairs"]) < 5: f.append(f"physics pairs < 5 for {p}"); continue
-        for i, x in enumerate(rec["pairs"]):
-            if len(x["samples_ms_A"]) != 360 or len(x["samples_ms_B"]) != 360: f.append(f"physics {p}[{i}] sample count")
-            ma, mb = statistics.median(x["samples_ms_A"]), statistics.median(x["samples_ms_B"])
-            if not close(mb / ma, x["ratio_B_over_A"], 2e-3): f.append(f"physics {p}[{i}] ratio does not match samples")
     sp = b.get("speed", {}).get("runs", [])
     if len(sp) < 4: f.append("speed runs missing")
+    return f + v_phys(b, d)
+
+
+def v_phys(b, d):
+    """A1-C5: every pair is two fresh sessions (alternating order), both sides ready, same bodies/shapes; the status must follow the control band; the original reused-page evidence stays."""
+    f = []; pp = b.get("physics_pairs", {}); v1 = b.get("physics_pairs_v1_reused_pages")
+    if not v1 or v1.get("superseded_by") != "physics_pairs" or not v1.get("data"): f.append("physics: original reused-page evidence (physics_pairs_v1_reused_pages) not retained")
+    elif hashlib.sha256(json.dumps(v1["data"], sort_keys=True, separators=(",", ":")).encode()).hexdigest() != REV0_PHYSICS_SHA256: f.append("physics: retained revision-0 evidence differs from PR #132")
+    for p in FOUR:
+        rec = pp.get(p)
+        if not rec or rec.get("session_model") != "fresh_session_per_side" or len(rec["pairs"]) < 5 or rec["control_band"] != [0.90909, 1.1] or (rec["warmup_steps"], rec["recorded_steps"], rec["step"]) != (900, 360, "physicsWorld.step(1/60,1/60,3)"): f.append(f"physics {p}: needs >= 5 pairs, session_model fresh_session_per_side, band 0.90909..1.1, 900 warm-up + 360 recorded steps of physicsWorld.step(1/60,1/60,3)"); continue
+        for i, x in enumerate(rec["pairs"]):
+            ma, mb = statistics.median(x["samples_ms_A"]), statistics.median(x["samples_ms_B"])
+            if len(x["samples_ms_A"]) != 360 or len(x["samples_ms_B"]) != 360 or not close(mb / ma, x["ratio_B_over_A"], 2e-3): f.append(f"physics {p}[{i}] samples/ratio")
+            if x["order"] != (["A", "B"] if i % 2 == 0 else ["B", "A"]): f.append(f"physics {p}[{i}] order does not alternate")
+            if x["bodies"]["A"] != x["bodies"]["B"] or x["shapes"]["A"] != x["shapes"]["B"] or min(x["bodies"].values()) <= 0 or min(x["shapes"].values()) <= 0: f.append(f"physics {p}[{i}] bodies/shapes differ or empty")
+            if any(x["ph_done"][k] is not (None if p == "PHONE_LOW" else True) for k in "AB"): f.append(f"physics {p}[{i}] readiness (__phDone) not reached")
+        want = "STABLE" if all(rec["control_band"][0] <= x["ratio_B_over_A"] <= rec["control_band"][1] for x in rec["pairs"]) else "INCONCLUSIVE"
+        if d and d["baseline_analysis"]["physics_control"][p]["status"] != want: f.append(f"physics {p}: status {d['baseline_analysis']['physics_control'][p]['status']} != {want} from the control band")
     return f
 
 
@@ -100,6 +113,8 @@ def v_source(src_lines, src, d):
     rs = inv["position_reset_inventory"]
     for ln in rs["direct_position_set_lines"]:
         if not re.search(r"position\.set\(", src_lines[ln - 1]): f.append(f"position reset line {ln}")
+    al = [i + 1 for i, l in enumerate(src_lines) if re.search(r"^\s*\S*[bB]ody\.position\.set\(", l)]
+    if rs["all_body_position_set_lines"] != al or sorted(rs["direct_position_set_lines"] + rs["creation_or_other_sites"]) != al: f.append("position reset inventory incomplete: every body.position.set line must be a listed reset or a listed construction site")
     own = sorted(i + 1 for i, l in enumerate(src_lines) if re.search(r"\bteleportTo\(", l))
     if own != sorted(rs["teleportTo_definition_and_callers"]): f.append("teleportTo caller inventory differs from source")
     # presets: independent parse (line by line)
@@ -174,7 +189,7 @@ def poly_hits(poly, r):
     return abs(sum(pts[i][0] * pts[(i + 1) % len(pts)][1] - pts[(i + 1) % len(pts)][0] * pts[i][1] for i in range(len(pts)))) / 2 > 1e-6
 
 
-def v_fixture(fp, plan, cors, cells, terrain, idx_fn=idx):
+def v_fixture(fp, plan, cors, cells, terrain, beach=(), idx_fn=idx):
     f = []; objs = fp["objects"]; ids = [o["id"] for o in objs]
     if len(ids) != len(set(ids)): f.append("duplicate object ID")
     byid = {o["id"]: o for o in objs}
@@ -204,6 +219,15 @@ def v_fixture(fp, plan, cors, cells, terrain, idx_fn=idx):
             hs = [terrain.get(c) for c in ci]
             if None in hs or max(hs) - min(hs) > fp["terrain_thresholds"]["max_span_m"] or min(hs) < fp["terrain_thresholds"]["min_height_m"]: f.append(f"{o['id']} fails the terrain check")
     if not terrain: f.append("terrain heights missing: synthetic sites cannot be checked")
+    st = {k: set(v) for k, v in fp["sets"].items()}
+    if not (st["40"] < st["57"] < st["60"] < st["120"] and st["120"] == set(ids)): f.append("sets are not nested 40 < 57 < 60 < 120 or set 120 is not every object")
+    ex = [o for o in syn if o["id"] in st["60"]]; b3 = fp["b3_density_test"]
+    for o in syn:
+        want = "GLOBAL_STRESS_ONLY" if o["region"] != o["intended_region"] else "B3_DENSITY" if o["region"] == "B3" else "REGION_DENSITY"
+        if o["classification"] != want: f.append(f"{o['id']}: fallback classification {o['classification']} != {want}")
+        if any(ov(o["b"], [min(q[0] for q in poly), min(q[1] for q in poly), max(q[0] for q in poly), max(q[1] for q in poly)]) for poly in beach): f.append(f"{o['id']} overlaps a beach region")
+    if sorted(fp["placed_outside_intended_region"]) != sorted(o["id"] for o in syn if o["region"] != o["intended_region"]): f.append("fallback list differs from the objects")
+    if len(ex) != 3 or (b3["status"] == "INCONCLUSIVE") != any(o["region"] != "B3" for o in ex) or (b3["status"] == "INCONCLUSIVE" and b3["scope_exception"] != "APPROVED_D-066") or b3["we01_land_constraints_relaxed"]: f.append("b3_density_test inconsistent with the three 60-set synthetic buildings")
     for o in objs:
         if o["owner_chunk_128"] != [idx_fn((o["b"][0] + o["b"][2]) / 2, 128), idx_fn((o["b"][1] + o["b"][3]) / 2, 128)]: f.append(f"{o['id']} owner chunk")
     sc = fp["replay_scenarios"]
@@ -213,6 +237,27 @@ def v_fixture(fp, plan, cors, cells, terrain, idx_fn=idx):
 
 
 # ------------------------------------------------------------------ triangles (A1-G12), own implementation
+def samples(sc):
+    if sc["kind"] == "teleport_hold": return [(x, z, 0.0) for x, z in sc["stops"] for _ in range(sc["hold_seconds"] * 2)]
+    wp = sc["waypoints"]; legs = [(wp[i], wp[i + 1], math.dist(wp[i], wp[i + 1])) for i in range(len(wp) - 1)]; tot = sum(l[2] for l in legs); out = []
+    for k in range(int(sc["sim_seconds"] * 2)):
+        s = min(sc["speed_mps"] * k / 2, tot - 1e-6)
+        for p, q, L in legs:
+            if s <= L: out.append((p[0] + (q[0] - p[0]) * s / L, p[1] + (q[1] - p[1]) * s / L, math.atan2(q[1] - p[1], q[0] - p[0]))); break
+            s -= L
+    return out
+
+
+def tri_at(pts, gx, gz, r, half=None, hd=0.0, sh_r=0):
+    """Triangles at one viewpoint: view-cone/omni single pass, and the shadow-pass extra for meshes within sh_r."""
+    t = sh = 0
+    for x, z, pr in pts:
+        d = math.hypot(x - gx, z - gz); w = TRI[pr][0 if d <= r[0] else 1 if d <= r[1] else 2]
+        if d <= sh_r: sh += w
+        if d <= r[2] and (half is None or d < 1e-9 or abs((math.atan2(z - gz, x - gx) - hd + math.pi) % (2 * math.pi) - math.pi) <= half): t += w
+    return t, sh
+
+
 def worst(pts, r, halves):
     best = {"omni": 0, **{h: 0 for h in halves}}; at = {}
     for gx in range(-1100, 600, 20):
@@ -228,31 +273,36 @@ def worst(pts, r, halves):
                 hr = math.radians(deg)
                 for h in todo:
                     t = sum(w for a, w in near if a is not None and abs((a - hr + math.pi) % (2 * math.pi) - math.pi) <= h)
-                    if t > best[h]: best[h] = t
-    return best
+                    if t > best[h]: best[h] = t; at[h] = (gx, gz)
+    return best, at
 
 
-def v_tri(d, plan):
+def v_tri(d, plan, fp, sr):
     f = []; pts = [((p["bounds_internal"][0] + p["bounds_internal"][2]) / 2, (p["bounds_internal"][1] + p["bounds_internal"][3]) / 2, p["prototype_id"]) for p in plan["parcels"] if p["phase"] <= 2]
     G0 = {"PHONE_LOW": (192650, 106000), "TABLET_MED": (226700, 143000), "DESKTOP_HIGH": (230900, 206000)}
     for name, r in LODR.items():
-        halves = [math.radians(a) / 2 for a in (96, 91.5, 104.2)]; w = worst(pts, r, halves); t = d["triangles"]["presets"][name]
+        halves = [math.radians(a) / 2 for a in (96, 91.5, 104.2)]; w, at = worst(pts, r, halves); t = d["triangles"]["presets"][name]
         got = (t["omni_resident_upper_bound"][0], t["view_cone"]["cone96_reference"][0], t["view_cone"]["hfov_16x9_91.5"][0], t["view_cone"]["hfov_20x9_104.2"][0])
         if got != (w["omni"], w[halves[0]], w[halves[1]], w[halves[2]]): f.append(f"{name}: triangle analysis differs {got} vs {(w['omni'], w[halves[0]], w[halves[1]], w[halves[2]])}")
-        if w["omni"] != G0[name][0]: f.append(f"{name}: omni upper bound {w['omni']} does not reproduce the G0 reference {G0[name][0]}")
-        if abs(w[halves[0]] - G0[name][1]) > 0.01 * G0[name][1]: f.append(f"{name}: cone-96 {w[halves[0]]} does not reproduce G0 {G0[name][1]} within 1 %")
+        shr = sr[name.split("_")[1]]; sh = tri_at(pts, *at[halves[0]], r, sh_r=shr)[1]
+        if t["shadow_range_m"] != shr or t["shadow_pass_extra_at_cone96_worst"] != sh or t["cone96_peak_viewpoint_plus_shadow_estimate"] != w[halves[0]] + sh: f.append(f"{name}: shadow estimate differs from the independent derivation")
+        for sc in fp["replay_scenarios"]:
+            ps = [tri_at(pts, x, z, r, halves[0], h, shr) for x, z, h in samples(sc)]; a, c = [u for u, _ in ps], [u + v for u, v in ps]; rp = t["replay_path"][sc["name"]]
+            if (rp["p95"], rp["max"], rp["p95_incl_shadow"], rp["max_incl_shadow"]) != (rank(a, 95), max(a), rank(c, 95), max(c)): f.append(f"{name}/{sc['name']}: replay P95 differs from the independent derivation")
+        if name in G0 and w["omni"] != G0[name][0]: f.append(f"{name}: omni upper bound {w['omni']} does not reproduce the G0 reference {G0[name][0]}")
+        if name in G0 and abs(w[halves[0]] - G0[name][1]) > 0.01 * G0[name][1]: f.append(f"{name}: cone-96 {w[halves[0]]} does not reproduce G0 {G0[name][1]} within 1 %")
     return f
 
 
 def v_benefit(d, fp):
-    f = []; byid = {o["id"]: o for o in fp["objects"]}
+    f = []; byid = {o["id"]: o for o in fp["objects"]}; paths = [samples(sc) for sc in fp["replay_scenarios"]]; ben = d["benefit"]
+    if ben["assumptions"]["bodies_per_building"] != 1 or ben["assumptions"]["radii_m"] != list(RADII): f.append("benefit assumptions (1 body per building, radius list) missing")
     for n in ("40", "57", "60"):
-        pts = [((byid[i]["b"][0] + byid[i]["b"][2]) / 2, (byid[i]["b"][1] + byid[i]["b"][3]) / 2) for i in fp["sets"][n]]
-        best = max(sum(1 for x, z in pts if math.hypot(x - gx, z - gz) <= 217) for gx in range(-1100, 600, 40) for gz in range(-1000, 1400, 40))
-        row = d["benefit"]["sets"][n]["PHONE_LOW"]
-        sets = d["benefit"]["sets"][n]
-        if sets["shared_prototype_model_resident_triangles"] != sum(sum(v) for v in TRI.values()) or sets["unique_asset_model_all_resident_triangles"] != sum(sum(TRI[byid[i]["proto"]]) for i in fp["sets"][n]): f.append(f"benefit set {n}: Control A resident model differs (no duplicated resources allowed)")
-        if row["max_active_bodies_r217"] != best or not close(row["body_saving_vs_all_resident_r217"], round(1 - best / len(pts), 3), 2e-3): f.append(f"benefit set {n}: active-body numbers differ")
+        pts = [((byid[i]["b"][0] + byid[i]["b"][2]) / 2, (byid[i]["b"][1] + byid[i]["b"][3]) / 2) for i in fp["sets"][n]]; row = ben["sets"][n]
+        if row["shared_prototype_model_resident_triangles"] != sum(sum(v) for v in TRI.values()) or row["unique_asset_model_all_resident_triangles"] != sum(sum(TRI[byid[i]["proto"]]) for i in fp["sets"][n]): f.append(f"benefit set {n}: Control A resident model differs (no duplicated resources allowed)")
+        for R in RADII:
+            cnt = lambda gx, gz: sum(1 for x, z in pts if math.hypot(x - gx, z - gz) <= R); peak = max(cnt(gx, gz) for gx in range(-1100, 600, 40) for gz in range(-1000, 1400, 40)); rep = [cnt(x, z) for p in paths for x, z, _ in p]; r = row["by_radius"][str(R)]
+            if (r["max_active_bodies_peak_grid"], r["replay_active_p95"], r["replay_active_max"]) != (peak, rank(rep, 95), max(rep)) or not close(r["saving_peak"], round(1 - peak / len(pts), 3), 2e-3) or not close(r["saving_replay_p95"], round(1 - rank(rep, 95) / len(pts), 3), 2e-3): f.append(f"benefit set {n} r{R}: active-body numbers differ")
     return f
 
 
@@ -282,7 +332,12 @@ def v_labels(d, bud, base):
         if c == "PENDING_DEVICE" and o.get("value") not in ("PENDING_DEVICE", 40, 66.7): f.append(f"budget {'/'.join(path)}: device value")
     for path, o in walk(d):
         if o.get("source_class") == "MEASURED_HEADLESS" and path[:1] not in (("speed",), ("baseline_analysis",)): f.append(f"calibration_data {'/'.join(path)}: MEASURED_HEADLESS outside speed/baseline_analysis")
+    if sorted(bud["presets"]) != sorted(FOUR): f.append(f"budget presets must be exactly {FOUR} (a measured preset has no budget row)")
+    exp = lambda k: "PROPOSED_LIMIT" if k.startswith(("added_", "active_", "physics_", "streaming_", "lod_")) else "ANALYTIC_ESTIMATE" if k.startswith("analytic_") else "PENDING_DEVICE" if k.startswith("device_") else None
+    if sorted(bud["preset_mapping"]) != sorted(PRESETS11) or any(o["source_class"] != "PROPOSED_LIMIT" for o in bud["preset_mapping"].values()): f.append("preset_mapping must cover the 11 presets, all PROPOSED_LIMIT")
     for name, p in bud["presets"].items():
+        f += [f"budget {name}.{k}: expected class {exp(k)}, got {o['source_class']}" for k, o in p.items() if exp(k) and o["source_class"] != exp(k)]
+        if p.get("triangle_budget_comparison", {}).get("status") != "NOT_VALIDATED": f.append(f"budget {name}: triangle budget must stay NOT_VALIDATED")
         for k in ("added_draw_calls_p95", "added_triangles_p95", "active_bodies", "active_shapes", "physics_step_median_ratio", "streaming_cpu_ms_p95", "device_avg_fps"):
             if k not in p: f.append(f"budget {name}.{k} missing")
     if bud["status"] != "PROPOSED_NOT_APPROVED": f.append("budgets must stay PROPOSED_NOT_APPROVED")
@@ -318,6 +373,7 @@ def main():
     plan = J(ROOT / "specs/we02/district_plan.json"); src = (ROOT / "index.html").read_text(); lines = src.splitlines()
     cells = {(math.floor(float(r["x_center"]) / 5), math.floor(float(r["z_center"]) / 5)): r["region_id"] for r in csv.DictReader(open(ROOT / "tools/fixtures/we01/we01a_common_l0_cells.csv"))}
     t = base.get("terrain_l0") or {}; terrain = {(math.floor(x / 5), math.floor(z / 5)): h for x, z, h in zip(t.get("x", []), t.get("z", []), t.get("height_m", []))}
+    beach = J(ROOT / "tools/fixtures/we01/e_formal/map_geometry.json")["beach_regions"]; sr = dict(zip(("LOW", "MED", "HIGH", "ULTRA"), map(int, re.search(r"shadowRange: \{ LOW: (\d+), MED: (\d+), HIGH: (\d+), ULTRA: (\d+)", src).groups())))
     st = J(ROOT / "tools/fixtures/we01/e_formal/internal_streets.json"); rs = J(ROOT / "tools/fixtures/we01/e_formal/road_survey.json")
     streets = {s["street_id"]: s["corridor_geometry"]["polygon"] for r in ("B1", "B2", "B3") for s in st["scenarios"]["ENVELOPE"][r]["selected_streets"]}
     cand = {}
@@ -325,40 +381,59 @@ def main():
         if c["id"].startswith("CAND_"): cand.setdefault(c["id"].split("_")[1], []).append(c["polygon"])
     eng = sorted({i["id"] for ph in plan["phases"].values() for i in ph["engineering"]["items"]}); cors = {i: ([streets[i]] if i in streets else cand[i]) for i in eng}
     fails = {}
-    checks = {"baseline": lambda: v_baseline(base), "source": lambda: v_source(lines, src, d), "chunks": lambda: v_chunks(d, plan), "fixture": lambda: v_fixture(fp, plan, cors, cells, terrain),
-              "triangles": lambda: v_tri(d, plan), "benefit": lambda: v_benefit(d, fp), "labels": lambda: v_labels(d, bud, base), "runtime": lambda: v_runtime(base, d), "protected": lambda: v_protected(base)}
+    checks = {"baseline": lambda: v_baseline(base, d), "source": lambda: v_source(lines, src, d), "chunks": lambda: v_chunks(d, plan), "fixture": lambda: v_fixture(fp, plan, cors, cells, terrain, beach),
+              "triangles": lambda: v_tri(d, plan, fp, sr), "benefit": lambda: v_benefit(d, fp), "labels": lambda: v_labels(d, bud, base), "runtime": lambda: v_runtime(base, d), "protected": lambda: v_protected(base)}
     for k, fn in checks.items(): fails[k] = fn()
     changed = None if a.skip_git else git_changed()
     fails["allowlist"] = v_changed_files(changed) if changed is not None else []
     print("git allowlist:", "skipped (no history)" if changed is None else f"{len(changed)} changed paths")
     for k, v in fails.items(): print(("PASS " if not v else "FAIL ") + k, *([] if not v else [f"\n   - {m}" for m in v[:8]]))
     bad = [k for k, v in fails.items() if v]
+    pc = d["baseline_analysis"]["physics_control"]; print("artifact validation:", "FAIL" if bad else "PASS", "| measurement validity: physics control", {p: pc[p]["status"] for p in FOUR}, "| frame time as hard gate:", "usable" if d["baseline_analysis"]["gate_stability"]["frame_time_usable_as_hard_gate"] else "INCONCLUSIVE", "| B3 density:", fp["b3_density_test"]["status"])
     # ---- negative controls: every mutation must turn at least one validator red
     neg = []
     def mut(name, fn, key):
         r = [m for m in fn() if key in m]; neg.append((name, bool(r)))      # red only when the validator names the expected defect
         print(("  RED   " if r else "  GREEN (control failed) ") + name + (f"  <- {r[0][:90]}" if r else ""))
-    cp = copy.deepcopy
-    def m_preset(): x = cp(d); del x["presets"]["TABLET_HIGH"]; return v_source(lines, src, x)
-    def m_combo(): x = cp(base); x["combinations"].pop("PHONE_LOW/B1/12:00"); return v_baseline(x)
-    def m_short(): x = cp(base); k = next(iter(x["combinations"])); [x["combinations"][k]["samples"].__setitem__(n, x["combinations"][k]["samples"][n][:100]) for n in ARRAYS]; x["combinations"][k]["recorded_frames"] = 100; return v_baseline(x)
-    def m_dup(): x = cp(fp); x["objects"].append(cp(x["objects"][0])); return v_fixture(x, plan, cors, cells, terrain)
-    def m_neg(): return v_chunks(d, plan, idx_fn=lambda v, g: int(v // g) if v >= 0 else int(-(-v // g)))
-    def m_overlap(): x = cp(fp); s = next(o for o in x["objects"] if o["kind"] == "SYNTHETIC_ONLY"); p = x["objects"][0]; s["b"] = [p["b"][0] + 1, p["b"][1] + 1, p["b"][0] + 20, p["b"][1] + 20]; return v_fixture(x, plan, cors, cells, terrain)
-    def m_proto(): x = cp(fp); next(o for o in x["objects"] if o["proto"] == "R05")["proto"] = "R01"; return v_fixture(x, plan, cors, cells, terrain)
-    def m_site(): x = cp(fp); s = next(o for o in x["objects"] if o["kind"] == "SYNTHETIC_ONLY"); s["b"] = [-540, -820, -500, -790]; return v_fixture(x, plan, cors, cells, terrain)
-    def m_unmeasured(): x = cp(bud); x["presets"]["PHONE_LOW"]["active_bodies"]["source_class"] = "MEASURED_HEADLESS"; return v_labels(d, x, base)
-    def m_analytic(): x = cp(d); x["triangles"]["source_class"] = "MEASURED_HEADLESS"; return v_labels(x, bud, base)
-    def m_manifest(): return v_protected(base, {"manifest.webmanifest": "0" * 40}) + v_changed_files(["manifest.webmanifest"])
-    def m_game(): return v_changed_files(["index.html"])
-    def m_runtime(): x = cp(base); x["preset_runtime"]["TABLET_MED"]["settings"]["fpsCap"] = 60; return v_runtime(x, d)
-    def m_ceiling(): x = cp(d); x["speed"]["code_derived_ceilings_mps"]["max_upgrade_nitro"] = 81.9; return v_labels(x, bud, base)
-    def m_tri(): x = cp(d); x["triangles"]["presets"]["PHONE_LOW"]["omni_resident_upper_bound"][0] += 1; return v_tri(x, plan)
-    for name, fn, key in (("missing preset", m_preset, "missing from calibration_data"), ("missing measurement combination", m_combo, "missing measurement combinations"), ("recorded frames < 120", m_short, "frames"),
-                          ("duplicate object ID", m_dup, "duplicate object ID"), ("negative-coordinate indexing error", m_neg, "negative/boundary index"), ("synthetic buildings overlap", m_overlap, "overlap"),
-                          ("wrong prototype counts", m_proto, "composition"), ("synthetic invades Site A", m_site, "invades Site A"), ("unmeasured value labelled measured", m_unmeasured, "MEASURED_HEADLESS outside base_headless"),
-                          ("analytic estimate labelled MEASURED", m_analytic, "must be ANALYTIC_ESTIMATE"), ("manifest.webmanifest modified", m_manifest, "manifest.webmanifest"), ("index.html modified", m_game, "unapproved change: index.html"),
-                          ("triangle analysis tampered", m_tri, "triangle analysis differs"), ("device profile mismatch (tablet measured as iGPU)", m_runtime, "preset_runtime TABLET_MED"), ("speed ceiling below a measured peak", m_ceiling, "exceeds the code-derived ceiling")):
+    def M(o, fn): x = copy.deepcopy(o); fn(x); return x
+    fx = lambda x: v_fixture(x, plan, cors, cells, terrain, beach); syn0 = lambda x: next(o for o in x["objects"] if o["kind"] == "SYNTHETIC_ONLY"); moved0 = lambda x: next(o for o in x["objects"] if o["id"] in x["placed_outside_intended_region"])
+    pcd = lambda x: x["baseline_analysis"]["physics_control"]; pairs = lambda x, p="PHONE_MED": x["physics_pairs"][p]["pairs"]; inv = lambda x: x["source_inventory"]["position_reset_inventory"]
+    def combo(x): k = next(iter(x["combinations"])); [x["combinations"][k]["samples"].__setitem__(n, x["combinations"][k]["samples"][n][:100]) for n in ARRAYS]; x["combinations"][k]["recorded_frames"] = 100
+    def overlap(x): p = x["objects"][0]; syn0(x)["b"] = [p["b"][0] + 1, p["b"][1] + 1, p["b"][0] + 20, p["b"][1] + 20]
+    for name, fn, key in (
+            ("missing preset", lambda: v_source(lines, src, M(d, lambda x: x["presets"].pop("TABLET_HIGH"))), "missing from calibration_data"),
+            ("missing measurement combination", lambda: v_baseline(M(base, lambda x: x["combinations"].pop("PHONE_LOW/B1/12:00"))), "missing measurement combinations"),
+            ("recorded frames < 120", lambda: v_baseline(M(base, combo)), "frames"),
+            ("duplicate object ID", lambda: fx(M(fp, lambda x: x["objects"].append(copy.deepcopy(x["objects"][0])))), "duplicate object ID"),
+            ("negative-coordinate indexing error", lambda: v_chunks(d, plan, idx_fn=lambda v, g: int(v // g) if v >= 0 else int(-(-v // g))), "negative/boundary index"),
+            ("synthetic buildings overlap", lambda: fx(M(fp, overlap)), "overlap"),
+            ("wrong prototype counts", lambda: fx(M(fp, lambda x: next(o for o in x["objects"] if o["proto"] == "R05").update(proto="R01"))), "composition"),
+            ("synthetic invades Site A", lambda: fx(M(fp, lambda x: syn0(x).update(b=[-540, -820, -500, -790]))), "invades Site A"),
+            ("synthetic on a beach region", lambda: fx(M(fp, lambda x: syn0(x).update(b=[300, 0, 330, 30]))), "beach region"),
+            ("sets not nested", lambda: fx(M(fp, lambda x: x["sets"]["60"].pop(0))), "not nested"),
+            ("fallback misclassified", lambda: fx(M(fp, lambda x: moved0(x).update(classification="B3_DENSITY"))), "fallback classification"),
+            ("B3 density claimed as placed", lambda: fx(M(fp, lambda x: x["b3_density_test"].update(status="PLACED"))), "b3_density_test inconsistent"),
+            ("unmeasured value labelled measured", lambda: v_labels(d, M(bud, lambda x: x["presets"]["PHONE_LOW"]["active_bodies"].update(source_class="MEASURED_HEADLESS")), base), "MEASURED_HEADLESS outside base_headless"),
+            ("analytic estimate labelled MEASURED", lambda: v_labels(M(d, lambda x: x["triangles"].update(source_class="MEASURED_HEADLESS")), bud, base), "must be ANALYTIC_ESTIMATE"),
+            ("budget label swapped", lambda: v_labels(d, M(bud, lambda x: x["presets"]["PHONE_LOW"]["added_triangles_p95"].update(source_class="ANALYTIC_ESTIMATE")), base), "expected class PROPOSED_LIMIT"),
+            ("PHONE_MED budget row dropped", lambda: v_labels(d, M(bud, lambda x: x["presets"].pop("PHONE_MED")), base), "budget presets must be exactly"),
+            ("manifest.webmanifest modified", lambda: v_protected(base, {"manifest.webmanifest": "0" * 40}) + v_changed_files(["manifest.webmanifest"]), "manifest.webmanifest"),
+            ("index.html modified", lambda: v_changed_files(["index.html"]), "unapproved change: index.html"),
+            ("triangle analysis tampered", lambda: v_tri(M(d, lambda x: x["triangles"]["presets"]["PHONE_LOW"]["omni_resident_upper_bound"].__setitem__(0, 192651)), plan, fp, sr), "triangle analysis differs"),
+            ("shadow estimate tampered", lambda: v_tri(M(d, lambda x: x["triangles"]["presets"]["PHONE_LOW"].update(shadow_pass_extra_at_cone96_worst=1)), plan, fp, sr), "shadow estimate differs"),
+            ("replay P95 tampered", lambda: v_tri(M(d, lambda x: x["triangles"]["presets"]["PHONE_LOW"]["replay_path"]["S1_B1_border_sweep"].update(p95=1)), plan, fp, sr), "replay P95 differs"),
+            ("benefit active bodies tampered", lambda: v_benefit(M(d, lambda x: x["benefit"]["sets"]["57"]["by_radius"]["217"].update(max_active_bodies_peak_grid=1)), fp), "active-body numbers differ"),
+            ("device profile mismatch (tablet measured as iGPU)", lambda: v_runtime(M(base, lambda x: x["preset_runtime"]["TABLET_MED"]["settings"].update(fpsCap=60)), d), "preset_runtime TABLET_MED"),
+            ("speed ceiling below a measured peak", lambda: v_labels(M(d, lambda x: x["speed"]["code_derived_ceilings_mps"].update(max_upgrade_nitro=81.9)), bud, base), "exceeds the code-derived ceiling"),
+            ("position reset inventory incomplete", lambda: v_source(lines, src, M(d, lambda x: inv(x)["creation_or_other_sites"].pop())), "position reset inventory incomplete"),
+            ("physics pairs from reused pages", lambda: v_phys(M(base, lambda x: [r.pop("session_model") for r in x["physics_pairs"].values()]), d), "session_model fresh_session_per_side"),
+            ("physics pair order not alternating", lambda: v_phys(M(base, lambda x: pairs(x)[1].update(order=["A", "B"])), d), "order does not alternate"),
+            ("physics sides differ in bodies", lambda: v_phys(M(base, lambda x: pairs(x)[0]["bodies"].update(B=1)), d), "bodies/shapes differ"),
+            ("physics readiness not reached", lambda: v_phys(M(base, lambda x: pairs(x)[0]["ph_done"].update(A=False)), d), "readiness"),
+            ("physics status faked STABLE", lambda: v_phys(base, M(d, lambda x: pcd(x)["DESKTOP_HIGH"].update(status="STABLE"))), "from the control band"),
+            ("physics step protocol changed", lambda: v_phys(M(base, lambda x: x["physics_pairs"]["TABLET_MED"].update(warmup_steps=300)), d), "900 warm-up + 360 recorded"),
+            ("retained revision-0 physics evidence altered", lambda: v_phys(M(base, lambda x: x["physics_pairs_v1_reused_pages"]["data"]["PHONE_LOW"]["pairs"][0].update(ratio_B_over_A=1.5)), d), "differs from PR #132"),
+            ("original physics evidence dropped", lambda: v_phys(M(base, lambda x: x.pop("physics_pairs_v1_reused_pages")), d), "not retained")):
         mut(name, fn, key)
     green = [n for n, ok in neg if not ok]
     print(f"negative controls: {len(neg) - len(green)}/{len(neg)} red")

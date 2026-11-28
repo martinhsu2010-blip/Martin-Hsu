@@ -149,7 +149,7 @@ PHYS_JS = r"""({warm, rec, x, z}) => {
   for (let i = 0; i < warm; i++) w.step(1/60, 1/60, 3);
   const s = new Array(rec);
   for (let i = 0; i < rec; i++) { const t0 = performance.now(); w.step(1/60, 1/60, 3); s[i] = performance.now() - t0; }
-  return { samples: s, bodies: w.bodies.length };
+  return { samples: s, bodies: w.bodies.length, shapes: w.bodies.reduce((a, b) => a + b.shapes.length, 0) };
 }"""
 
 SPEED_JS = r"""({x, z, heading, seconds, upgrade, nitro, hz, model}) => {
@@ -177,7 +177,8 @@ STALL_JS = r"""({x, z, hour, frames}) => {
   for (let i = 0; i < frames; i++) {
     now += 1000 / 60; r.info.reset(); const t0 = performance.now(); window.__animate(now); const ms = performance.now() - t0;
     const cur = [(r.info.programs || []).length, r.info.memory.textures, r.info.memory.geometries];
-    if (ms > 500 || cur.some((v, k) => v !== last[k])) out.push({frame: i, ms: Math.round(ms), d_programs: cur[0] - last[0], d_textures: cur[1] - last[1], d_geometries: cur[2] - last[2]});
+    if (ms > 500 || cur.some((v, k) => v !== last[k])) out.push({frame: i, ms: Math.round(ms), d_programs: cur[0] - last[0], d_textures: cur[1] - last[1], d_geometries: cur[2] - last[2],
+      new_programs: cur[0] > last[0] ? r.info.programs.slice(last[0]).slice(0, 3).map(q => ({name: q.name || "", type: q.type, key: String(q.cacheKey).slice(0, 60)})) : []});
     last = cur;
   }
   return out;
@@ -277,29 +278,34 @@ def phase_render(H, pw, url, out, preset_list, repeat):
                 save(out, out["_path"])
 
 
+def physics_side(H, pw, url, preset):
+    """One side of a self-control pair: a fresh Chrome and a fresh page of the same commit, measured once, then closed (A1-C5)."""
+    browser = launch(pw); ctx, page, _, load_ms, ph = open_page(H, browser, url, preset)
+    try:
+        r = page.evaluate(PHYS_JS, {"warm": PHYS_WARM, "rec": PHYS_REC, "x": -60, "z": 0})
+    finally:
+        ctx.close(); browser.close()
+    r.update({"ph_done": ph, "load_ms": round(load_ms)}); return r
+
+
 def phase_physics(H, pw, url, out, preset_list):
+    """C5 pair = two fresh sessions of the same commit, order alternating between pairs. The first run reused two pages for five pairs; that evidence is kept under physics_pairs_v1_reused_pages."""
+    old = out.get("physics_pairs")
+    if old and not any("session_model" in v for v in old.values()) and "physics_pairs_v1_reused_pages" not in out:
+        out["physics_pairs_v1_reused_pages"] = {"superseded_by": "physics_pairs", "reason": "two pages were reused for all five pairs, which is not the A1-C5 pair (two fresh sessions); kept unchanged as evidence", "data": old}
+        out["physics_pairs"] = {}
     for preset in preset_list:
-        if preset in out.setdefault("physics_pairs", {}) and len(out["physics_pairs"][preset]["pairs"]) >= PHYS_PAIRS:
-            continue
-        browser = launch(pw)
-        ca, pa, _, _, pha = open_page(H, browser, url, preset)
-        cb, pb, _, _, phb = open_page(H, browser, url, preset)
-        pairs = []
-        try:
-            for i in range(PHYS_PAIRS):
-                order = [("A", pa), ("B", pb)] if i % 2 == 0 else [("B", pb), ("A", pa)]
-                rec = {}
-                for nm, pg in order:
-                    rec[nm] = pg.evaluate(PHYS_JS, {"warm": PHYS_WARM, "rec": PHYS_REC, "x": -60, "z": 0})
-                ma, mb = statistics.median(rec["A"]["samples"]), statistics.median(rec["B"]["samples"])
-                pairs.append({"order": [o[0] for o in order], "median_ms_A": round(ma, 5), "median_ms_B": round(mb, 5), "ratio_B_over_A": round(mb / ma, 5),
-                              "bodies": rec["A"]["bodies"], "samples_ms_A": [round(v, 5) for v in rec["A"]["samples"]], "samples_ms_B": [round(v, 5) for v in rec["B"]["samples"]]})
-                print("pair", preset, i, pairs[-1]["median_ms_A"], pairs[-1]["median_ms_B"], pairs[-1]["ratio_B_over_A"], flush=True)
-        finally:
-            ca.close(); cb.close(); browser.close()
-        out["physics_pairs"][preset] = {"measurement_class": "MEASURED_HEADLESS", "warmup_steps": PHYS_WARM, "recorded_steps": PHYS_REC, "step": "physicsWorld.step(1/60,1/60,3)",
-                                        "control_band": [round(1 / 1.10, 5), 1.10], "ph_done": [pha, phb], "pairs": pairs}
-        save(out, out["_path"])
+        rec_p = out.setdefault("physics_pairs", {}).setdefault(preset, {"measurement_class": "MEASURED_HEADLESS", "session_model": "fresh_session_per_side", "warmup_steps": PHYS_WARM, "recorded_steps": PHYS_REC, "step": "physicsWorld.step(1/60,1/60,3)",
+                                                                     "control_band": [round(1 / 1.10, 5), 1.10], "pairs": []})
+        while len(rec_p["pairs"]) < PHYS_PAIRS:
+            i = len(rec_p["pairs"]); order = ["A", "B"] if i % 2 == 0 else ["B", "A"]; rec = {}
+            for nm in order:
+                rec[nm] = physics_side(H, pw, url, preset)
+            ma, mb = statistics.median(rec["A"]["samples"]), statistics.median(rec["B"]["samples"])
+            rec_p["pairs"].append({"order": order, "median_ms_A": round(ma, 5), "median_ms_B": round(mb, 5), "ratio_B_over_A": round(mb / ma, 5),
+                                   "bodies": {k: rec[k]["bodies"] for k in "AB"}, "shapes": {k: rec[k]["shapes"] for k in "AB"}, "ph_done": {k: rec[k]["ph_done"] for k in "AB"}, "load_ms": {k: rec[k]["load_ms"] for k in "AB"},
+                                   "samples_ms_A": [round(v, 5) for v in rec["A"]["samples"]], "samples_ms_B": [round(v, 5) for v in rec["B"]["samples"]]})
+            print("pair", preset, i, order, rec_p["pairs"][-1]["ratio_B_over_A"], flush=True); save(out, out["_path"])
 
 
 def phase_presets(H, pw, url, out):
@@ -338,19 +344,32 @@ def phase_speed(H, pw, url, out):
             save(out, out["_path"])
 
 
+def cpu_profile(cdp):
+    prof = cdp.send("Profiler.stop")["profile"]; nodes = {n["id"]: n["callFrame"] for n in prof["nodes"]}; agg = {}
+    for sid, dt in zip(prof["samples"], prof["timeDeltas"]):
+        cf = nodes[sid]; k = f"{cf['functionName'] or '(anonymous)'} {cf['url'].split('/')[-1]}:{cf['lineNumber'] + 1}".strip(); agg[k] = agg.get(k, 0) + dt
+    return [{"function": k, "self_ms": round(v / 1000)} for k, v in sorted(agg.items(), key=lambda kv: -kv[1])[:6]]
+
+
 def phase_stall(H, pw, url, out):
-    """Re-run the scenes whose recorded frames contained multi-second stalls with per-frame program/texture/geometry counters (diagnosis only, never a gate)."""
-    st = out.setdefault("stall_probe", {"measurement_class": "MEASURED_HEADLESS", "note": "frame index counts from the first frame after load (warm-up included); a stall with new programs/textures is a first-use shader compile or upload, not steady-state cost", "runs": {}})
+    """Re-run the scenes whose recorded frames contained multi-second stalls with per-frame program/texture/geometry counters, new program names and a CDP sampling profile (diagnosis only, never a gate).
+    The first counter-only run is kept as stall_probe_v1_counters."""
+    old = out.get("stall_probe")
+    if old and "stall_probe_v1_counters" not in out and not any("profile" in v for v in old["runs"].values()):
+        out["stall_probe_v1_counters"] = old; del out["stall_probe"]
+    st = out.setdefault("stall_probe", {"measurement_class": "MEASURED_HEADLESS", "note": "frame index counts from the first frame after load (warm-up included); the sampling profile covers the whole run, so a single multi-second stall dominates it; software GL (SwiftShader) only", "runs": {}})
     for preset, loc, x, z, tname, hour in STALL_SCENES:
         k = f"{preset}/{loc}/{tname}"
         if k in st["runs"]:
             continue
         browser = launch(pw); ctx, page, errs, load_ms, ph = open_page(H, browser, url, preset)
         try:
-            st["runs"][k] = page.evaluate(STALL_JS, {"x": x, "z": z, "hour": hour, "frames": WARM + FRAMES})
+            cdp = ctx.new_cdp_session(page); cdp.send("Profiler.enable"); cdp.send("Profiler.setSamplingInterval", {"interval": 1000}); cdp.send("Profiler.start")
+            ev = page.evaluate(STALL_JS, {"x": x, "z": z, "hour": hour, "frames": WARM + FRAMES})
+            st["runs"][k] = {"events": ev, "profile": cpu_profile(cdp)}
         finally:
             ctx.close(); browser.close()
-        print("stall", k, st["runs"][k][-3:], flush=True); save(out, out["_path"])
+        print("stall", k, [(e["frame"], e["ms"], [q["name"] for q in e["new_programs"]]) for e in ev if e["ms"] > 500][:3], st["runs"][k]["profile"][:2], flush=True); save(out, out["_path"])
 
 
 def phase_terrain(H, pw, url, out):

@@ -24,6 +24,7 @@ SHADOW_RANGE = {"LOW": 60, "MED": 85, "HIGH": 110, "ULTRA": 130}
 COMP = {40: {"R01": 9, "R02": 5, "R05": 22, "R08": 4}, 57: {"R01": 12, "R02": 7, "R05": 33, "R08": 5},
         60: {"R01": 13, "R02": 7, "R05": 34, "R08": 6}, 120: {"R01": 26, "R02": 14, "R05": 68, "R08": 12}}
 GRIDS = (64, 128, 256)
+RADII = (140, 180, 217, 260, 350)   # active-body radius sensitivity (m); 217 m is the G0 estimate radius
 SEED = 20261128
 
 
@@ -67,8 +68,10 @@ def inventory(lines):
     calls = {k: [i + 1 for i, l in enumerate(lines) if re.search(r, l)] for k, r in CALL_RE.items()}
     resets = {"teleportTo_definition_and_callers": calls["teleportTo"],
               "direct_position_set_lines": [i + 1 for i, l in enumerate(lines) if re.search(r"(PLAYER\.body|chassisBody)\.position\.set\(", l)],
+              "all_body_position_set_lines": [i + 1 for i, l in enumerate(lines) if re.search(r"^\s*\S*[bB]ody\.position\.set\(", l)],
               "fastTravelTo_checks": [i + 1 for i, l in enumerate(lines) if "DELIVERY.job && !bypassDelivery" in l],
               "SHOWCASE_SITE_A_bypass": [i + 1 for i, l in enumerate(lines) if "bypassDelivery" in l and "SHOWCASE_SITE_A" in l]}
+    resets["creation_or_other_sites"] = [n for n in resets["all_body_position_set_lines"] if n not in resets["direct_position_set_lines"]]    # static/dynamic body construction helpers, not player or car resets
     return {"items": items, "call_lines": calls, "position_reset_inventory": resets}
 
 
@@ -126,9 +129,7 @@ def speed_block(src, baseline):
     tc = dict(re.findall(r"(\w+):\s*([\d.]+)", re.search(r"const TREE_COLLIDERS = \{([^;]*?),\s*elapsed", src).group(1)))
     vtop, upg = max(vmax + [default_v]), 1 + (maxlvl - 1) * step
     ceil = {"base_no_nitro": vtop / 3.6, "base_nitro": vtop * nitro / 3.6, "max_upgrade_no_nitro": vtop * upg / 3.6, "max_upgrade_nitro": vtop * upg * nitro / 3.6, "on_foot_run": run}
-    meas = {}
-    for r in (baseline or {}).get("speed", {}).get("runs", []):
-        meas[f"{r['model'] or 'default'}|L{r['upgrade']}|{'nitro' if r['nitro'] else 'plain'}"] = round(r["peak_mps"], 2)
+    meas = {f"{r['model'] or 'default'}|L{r['upgrade']}|{'nitro' if r['nitro'] else 'plain'}": round(r["peak_mps"], 2) for r in (baseline or {}).get("speed", {}).get("runs", [])}
     top = max(list(meas.values()) + [0])
     steps = {f"{v_name}@{ms}ms": round(v * ms / 1000, 2) for v_name, v in (("measured_peak", top), ("code_ceiling_base_nitro", ceil["base_nitro"]), ("code_ceiling_max", ceil["max_upgrade_nitro"])) for ms in (100, 200, 250)}
     skip = {}
@@ -235,8 +236,8 @@ def fixture_block(plan, terrain):
     syn = []; counter = {}
     def add(proto, order):
         region, b = place(proto, order); k = counter.setdefault((region, proto), 0) + 1; counter[(region, proto)] = k
-        o = {"id": f"SYN_{region}_{proto}_{k:03d}", "region": region, "intended_region": order[0], "proto": proto, "phase": None, "b": b, "kind": "SYNTHETIC_ONLY"}; syn.append(o); taken.append(b)
-    for proto in ("R01", "R05", "R08"): add(proto, ["B3", "B1", "B2"])                            # 57 -> 60: the B3 shortfall (draft s.9 / A1-C9); B3 has no free rectangle left, so these fall back to B1/B2
+        o = {"id": f"SYN_{region}_{proto}_{k:03d}", "region": region, "intended_region": order[0], "classification": "B3_DENSITY" if region == order[0] == "B3" else "GLOBAL_STRESS_ONLY" if region != order[0] else "REGION_DENSITY", "proto": proto, "phase": None, "b": b, "kind": "SYNTHETIC_ONLY"}; syn.append(o); taken.append(b)
+    for proto in ("R01", "R05", "R08"): add(proto, ["B3", "B1", "B2"])                            # 57 -> 60: the B3 shortfall (draft s.9 / A1-C9); B3 fits only the R01 and R05 extras, so the R08 extra falls back to B1/B2
     s60 = list(syn)
     rot = ["B1", "B2", "B3"]
     for proto, n in (("R01", 13), ("R02", 7), ("R05", 34), ("R08", 6)):
@@ -248,7 +249,7 @@ def fixture_block(plan, terrain):
     sets = {"40": [p["id"] for p in parcels if p["phase"] == 1], "57": [p["id"] for p in parcels], "60": [p["id"] for p in parcels] + [s["id"] for s in s60], "120": [o["id"] for o in objs]}
     comp = {k: {pr: sum(1 for o in objs if o["id"] in set(v) and o["proto"] == pr) for pr in TRI} for k, v in sets.items()}
     moved = [o["id"] for o in syn if o["region"] != o["intended_region"]]
-    return {"objects": objs, "sets": sets, "composition": comp, "placed_outside_intended_region": moved, "corridor_ids": ids, "beach_regions": beach, "site_a_protection": site, "terrain_applied": bool(hmap)}
+    return {"objects": objs, "sets": sets, "composition": comp, "placed_outside_intended_region": moved, "b3_density_test": {"status": "INCONCLUSIVE" if any(o["id"] in moved for o in syn if o["id"] in {x["id"] for x in s60}) else "PLACED", "reason": f"A1-C9 asks for 3 extra buildings in B3; only {sum(1 for o in syn if o['id'] in {x['id'] for x in s60} and o['region'] == 'B3')} fit on free WE-01 land in B3, the rest fell back to B1/B2 and are GLOBAL_STRESS_ONLY", "scope_exception": "APPROVED_D-066", "we01_land_constraints_relaxed": False}, "corridor_ids": ids, "beach_regions": beach, "site_a_protection": site, "terrain_applied": bool(hmap)}
 
 
 TERRAIN_SPAN_M, TERRAIN_MIN_M = 1.5, -0.1    # PROPOSED_LIMIT: footprint height span and minimum ground height for synthetic sites (measured L0 land is flat at 0.0)
@@ -316,14 +317,18 @@ def path_samples(sc):
     return out
 
 
-def triangle_block(plan, fx, scs):
+def shadow_tri(pts, gx, gz, r, sh_r):
+    return sum(TRI[pr][0 if d <= r[0] else 1 if d <= r[1] else 2] for x, z, pr in pts for d in [math.hypot(x - gx, z - gz)] if d <= sh_r)
+
+
+def triangle_block(plan, fx, scs, presets):
     objs = [o for o in fx["objects"] if o["id"] in set(fx["sets"]["57"])]; pts = pts_of(objs); res = {}
     for name, r in LOD.items():
         fovs = (("cone96_reference", 96), ("hfov_16x9_91.5", 91.5), ("hfov_20x9_104.2", 104.2)); wm = worst_multi(pts, r, [math.radians(a) / 2 for _, a in fovs])
         om = wm["omni"]; fov = {k: wm[math.radians(a) / 2] for k, a in fovs}
         sh_r = SHADOW_RANGE[{"PHONE_LOW": "LOW", "PHONE_MED": "MED", "TABLET_MED": "MED", "DESKTOP_HIGH": "HIGH"}[name]]
         gx, gz = fov["cone96_reference"][1], fov["cone96_reference"][2]
-        shadow = sum(TRI[pr][0 if math.hypot(x - gx, z - gz) <= r[0] else 1 if math.hypot(x - gx, z - gz) <= r[1] else 2] for x, z, pr in pts if math.hypot(x - gx, z - gz) <= sh_r)
+        shadow = shadow_tri(pts, gx, gz, r, sh_r)
         contrib = {}
         for x, z, pr in pts:
             d = math.hypot(x - gx, z - gz)
@@ -331,32 +336,30 @@ def triangle_block(plan, fx, scs):
                 k = f"{pr}/LOD{0 if d <= r[0] else 1 if d <= r[1] else 2}"; contrib[k] = contrib.get(k, 0) + TRI[pr][0 if d <= r[0] else 1 if d <= r[1] else 2]
         replay = {}
         for sc in scs:
-            vals = [tri_view(pts, x, z, r, math.radians(96) / 2, h) for x, z, h in path_samples(sc)]
-            replay[sc["name"]] = {"samples": len(vals), "p50": pct(vals, 50), "p95": pct(vals, 95), "max": max(vals)}
-        res[name] = {"omni_resident_upper_bound": list(om), "view_cone": {k: list(v) for k, v in fov.items()}, "shadow_pass_extra_at_cone96_worst": shadow, "shadow_range_m": sh_r,
+            ps = path_samples(sc); vals = [tri_view(pts, x, z, r, math.radians(96) / 2, h) for x, z, h in ps]; allp = [a + shadow_tri(pts, x, z, r, sh_r) for a, (x, z, _) in zip(vals, ps)]
+            replay[sc["name"]] = {"samples": len(vals), "p50": pct(vals, 50), "p95": pct(vals, 95), "max": max(vals), "p95_incl_shadow": pct(allp, 95), "max_incl_shadow": max(allp)}
+        res[name] = {"omni_resident_upper_bound": list(om), "view_cone": {k: list(v) for k, v in fov.items()}, "shadow_pass_extra_at_cone96_worst": shadow, "cone96_peak_viewpoint_plus_shadow_estimate": fov["cone96_reference"][0] + shadow, "shadow_range_m": sh_r, "fog_transmittance_at_lod2_edge": presets[name]["proposed_mapping"]["fog_transmittance_at_lod"][2],
                      "contribution_at_cone96_worst_viewpoint": dict(sorted(contrib.items())), "replay_path": replay}
     fov_note = {"vertical_fov_deg": 60, "aspect_16x9_h_fov": round(math.degrees(2 * math.atan(math.tan(math.radians(30)) * 16 / 9)), 1), "aspect_20x9_h_fov": round(math.degrees(2 * math.atan(math.tan(math.radians(30)) * 20 / 9)), 1)}
     return {"source_class": "ANALYTIC_ESTIMATE", "method": "57 WE-02 parcels at bounds centres, 20 m viewpoint grid x[-1100,600) z[-1000,1400), 15 deg headings, draft triangle caps, no fog/occlusion/height",
-            "metric_definition": "triangle count of resident (omni) or view-cone building meshes at their LOD; shadow-pass triangles reported separately; renderer.info.render.triangles in MEASURED tables includes every pass",
+            "metric_definition": "view-cone and omni columns count building meshes at their LOD in ONE pass (no shadow); cone96_peak_viewpoint_plus_shadow_estimate and p95_incl_shadow add the shadow-pass extra and are the only analytic values comparable to renderer.info.render.triangles (all passes) in MEASURED tables",
+            "limitations": ["no fog or occlusion: LOD2 meshes at the far edge are largely faded by fog (see fog_transmittance_at_lod2_edge), so counts can overstate the far field; the model samples building centres on a 20 m viewpoint grid and is not a strict bound", "2-D distances, ground-level camera: height and terrain relief not modelled", "worst case is a single viewpoint, not a P95; replay P95 uses six scripted paths only", "no budget is validated by this block"],
             "fov": fov_note, "presets": res}
 
 
 # ------------------------------------------------------------------ A09 benefit
-def benefit_block(fx, tri):
-    objs = {o["id"]: o for o in fx["objects"]}; out = {"source_class": "ANALYTIC_ESTIMATE", "sets": {}}
+def benefit_block(fx, scs):
+    objs = {o["id"]: o for o in fx["objects"]}; out = {"source_class": "ANALYTIC_ESTIMATE", "assumptions": {"bodies_per_building": 1, "radii_m": RADII, "peak_grid_m": 40, "replay_p95": "pooled 2 Hz samples of the six replay scenarios (96 deg is irrelevant: bodies are omnidirectional)"}, "sets": {}}
+    paths = [path_samples(sc) for sc in scs]
     for n in ("40", "57", "60"):
-        ids = fx["sets"][n]; allb = [objs[i] for i in ids]; pts = pts_of(allb)
-        row = {"buildings": len(ids)}
-        for name, r in LOD.items():
-            act = max(sum(1 for x, z, _ in pts if math.hypot(x - gx, z - gz) <= R) for R in (180,) for gx in range(-1100, 600, 40) for gz in range(-1000, 1400, 40))
-            act_far = max(sum(1 for x, z, _ in pts if math.hypot(x - gx, z - gz) <= 217) for gx in range(-1100, 600, 40) for gz in range(-1000, 1400, 40))
-            row[name] = {"max_active_bodies_r180": act, "max_active_bodies_r217": act_far, "body_saving_vs_all_resident_r217": round(1 - act_far / len(ids), 3)}
-        row["unique_asset_model_all_resident_triangles"] = sum(sum(TRI[o["proto"]]) for o in allb)
-        row["shared_prototype_model_resident_triangles"] = sum(sum(v) for v in TRI.values())
-        out["sets"][n] = row
-    out["finding"] = ("Four shared prototypes: resident geometry and the shared atlas do not depend on the number of buildings, so geometry/texture savings from streaming are structurally ~0 "
-                      "under Control A with the same LOD strategy; collision bodies are the only large saving (1 body per building assumed)." )
-    out["recommended_gate_revision"] = {"source_class": "PROPOSED_LIMIT", "replace": "geometry+texture resident peak >= 20 % lower", "with": ["active collision bodies P95 >= 20 % lower than all-resident (analytic expectation ~56 % for 57 buildings)",
+        pts = pts_of([objs[i] for i in fx["sets"][n]]); N = len(pts); cnt = lambda gx, gz, R: sum(1 for x, z, _ in pts if math.hypot(x - gx, z - gz) <= R); row = {"buildings": N, "by_radius": {}}
+        for R in RADII:
+            peak = max(cnt(gx, gz, R) for gx in range(-1100, 600, 40) for gz in range(-1000, 1400, 40)); rep = [cnt(x, z, R) for ps in paths for x, z, _ in ps]
+            row["by_radius"][str(R)] = {"max_active_bodies_peak_grid": peak, "replay_active_p95": pct(rep, 95), "replay_active_max": max(rep), "saving_peak": round(1 - peak / N, 3), "saving_replay_p95": round(1 - pct(rep, 95) / N, 3)}
+        row["unique_asset_model_all_resident_triangles"] = sum(sum(TRI[objs[i]["proto"]]) for i in fx["sets"][n]); row["shared_prototype_model_resident_triangles"] = sum(sum(v) for v in TRI.values()); out["sets"][n] = row
+    out["finding"] = ("Four shared prototypes: resident geometry and the shared atlas do not depend on the number of buildings, so geometry/texture savings from streaming are structurally ~0 under Control A with the same LOD strategy; "
+                      "collision bodies are the only large saving, and it is conditional on 1 body per building and on the active radius (see by_radius: peak-grid maximum and replay P95 differ, and the saving falls as the radius grows).")
+    out["recommended_gate_revision"] = {"source_class": "PROPOSED_LIMIT", "replace": "geometry+texture resident peak >= 20 % lower", "with": ["active collision bodies P95 >= 20 % lower than all-resident at the radius chosen by D/E1 (see by_radius; the 56 % figure is the peak-grid saving at 217 m for 57 buildings, not a replay P95)",
         "visual object instances alive P95 reported (no ratio gate)", "draw calls P95 +<=5 %", "frame-time ratio only with a valid control; otherwise INCONCLUSIVE", "geometry/texture savings evaluated on the unique-asset model for WE-06 and reported, not gated"]}
     return out
 
@@ -374,20 +377,20 @@ def device_protocol():
 
 # ------------------------------------------------------------------ A11 budgets and reports
 def v(value, cls, basis, unit=None):
-    d = {"value": value, "source_class": cls, "basis": basis}
-    if unit: d["unit"] = unit
-    return d
+    return {"value": value, "source_class": cls, "basis": basis, **({"unit": unit} if unit else {})}
 
 
 def budgets(q, base, tri, speed):
     out = {"schema": "we03-proposed-budgets-v1", "status": "PROPOSED_NOT_APPROVED", "note": "A1 closure does not approve any value; PROPOSED_LIMIT rows come from WE-03 draft s.22 and stay provisional until ChatGPT, Claude and Martin confirm", "presets": {}}
-    adds = {"PHONE_LOW": (30, 120000, 16, 32, 32, 128, 1.20, 2), "TABLET_MED": (45, 200000, 24, 48, 40, 160, 1.20, 2), "DESKTOP_HIGH": (75, 350000, 48, 96, 60, 240, 1.25, 4)}
+    adds = {"PHONE_LOW": (30, 120000, 16, 32, 32, 128, 1.20, 2), "PHONE_MED": (38, 160000, 20, 40, 36, 144, 1.20, 2), "TABLET_MED": (45, 200000, 24, 48, 40, 160, 1.20, 2), "DESKTOP_HIGH": (75, 350000, 48, 96, 60, 240, 1.25, 4)}
     for name, (dc, tr, geo, tex, bod, shp, ratio, cpu) in adds.items():
-        cone = tri["presets"][name]["view_cone"]["cone96_reference"][0]; rep = max(r["p95"] for r in tri["presets"][name]["replay_path"].values())
-        b = {"added_draw_calls_p95": v(dc, "PROPOSED_LIMIT", "draft s.22"), "added_triangles_p95": v(tr, "PROPOSED_LIMIT", "draft s.22"), "analytic_cone96_worst_triangles": v(cone, "ANALYTIC_ESTIMATE", "calibration_data.json triangles", "triangles"),
-             "analytic_replay_p95_max_over_scenarios": v(rep, "ANALYTIC_ESTIMATE", "96 deg cone along replay paths", "triangles"), "added_geometry_buffer_mib": v(geo, "PROPOSED_LIMIT", "draft s.22"), "added_texture_mib": v(tex, "PROPOSED_LIMIT", "draft s.22"),
-             "active_bodies": v(bod, "PROPOSED_LIMIT", "draft s.22"), "active_shapes": v(shp, "PROPOSED_LIMIT", "draft s.22; 4 shapes per body"), "physics_step_median_ratio": v(ratio, "PROPOSED_LIMIT", "draft s.22; control band 1/1.10..1.10 decides validity"),
-             "streaming_cpu_ms_p95": v(cpu, "PROPOSED_LIMIT", "draft s.22"), "lod_m": v(list(LOD[name]), "PROPOSED_LIMIT", "draft s.8.2"),
+        tp = tri["presets"][name]; cone = tp["view_cone"]["cone96_reference"][0]; rep = max(r["p95"] for r in tp["replay_path"].values()); rep_sh = max(r["p95_incl_shadow"] for r in tp["replay_path"].values()); itp = name == "PHONE_MED"
+        src = (lambda d: "INTERPOLATED midpoint of the draft s.22 PHONE_LOW and TABLET_MED rows (the draft has no PHONE_MED row); not approved") if itp else (lambda d: d)
+        b = {"added_draw_calls_p95": v(dc, "PROPOSED_LIMIT", src("draft s.22")), "added_triangles_p95": v(tr, "PROPOSED_LIMIT", src("draft s.22")), "analytic_cone96_worst_triangles": v(cone, "ANALYTIC_ESTIMATE", "calibration_data.json triangles", "triangles"),
+             "analytic_replay_p95_max_over_scenarios": v(rep, "ANALYTIC_ESTIMATE", "96 deg cone along replay paths, single pass (no shadow)", "triangles"), "analytic_cone96_peak_plus_shadow_triangles": v(cone + tp["shadow_pass_extra_at_cone96_worst"], "ANALYTIC_ESTIMATE", "cone96 worst viewpoint + shadow-pass extra; comparable to renderer.info all-pass triangles", "triangles"),
+             "analytic_replay_p95_incl_shadow_max": v(rep_sh, "ANALYTIC_ESTIMATE", "replay P95 + shadow-pass extra, max over scenarios", "triangles"), "triangle_budget_comparison": {"status": "NOT_VALIDATED", "note": f"analytic worst {cone + tp['shadow_pass_extra_at_cone96_worst']} and replay P95 incl. shadow {rep_sh} versus proposed {tr}: sampled centre-point estimates without fog, occlusion or height (not a strict bound, not a measured P95); no budget is validated"}, "added_geometry_buffer_mib": v(geo, "PROPOSED_LIMIT", src("draft s.22")), "added_texture_mib": v(tex, "PROPOSED_LIMIT", src("draft s.22")),
+             "active_bodies": v(bod, "PROPOSED_LIMIT", src("draft s.22")), "active_shapes": v(shp, "PROPOSED_LIMIT", src("draft s.22; 4 shapes per body")), "physics_step_median_ratio": v(ratio, "PROPOSED_LIMIT", src("draft s.22; control band 1/1.10..1.10 decides validity")),
+             "streaming_cpu_ms_p95": v(cpu, "PROPOSED_LIMIT", src("draft s.22")), "lod_m": v(list(LOD[name]), "PROPOSED_LIMIT", "draft s.8.2"),
              "device_avg_fps": v("PENDING_DEVICE", "PENDING_DEVICE", "avg >= fps_cap x 0.97 (29.1 at cap 30); measured by Martin after A2"),
              "device_frame_time_p95_ms": v(40, "PENDING_DEVICE", "draft s.25 initial acceptance"), "device_frame_time_p99_ms": v(66.7, "PENDING_DEVICE", "draft s.25 initial acceptance")}
         if base and name in base["presets"]:
@@ -444,12 +447,15 @@ def baseline_analysis(base):
 
 def md_calibration(d, fx, bud):
     t = d["triangles"]["presets"]; L = ["# T-018A1 calibration report (WE-03A)", "", "Generated by `tools/we03/we03_calibration.py`; independently re-derived by `we03_calibration_check.py`. All numbers here are ANALYTIC_ESTIMATE or SOURCE_CONFIRMED unless a row says MEASURED_HEADLESS. Nothing is approved by A1.", "",
-                                         "## Triangle analysis (A08)", "", "| preset | omni upper bound | cone 96 deg | cone 91.5 | cone 104.2 | shadow extra | replay P95 max |", "|---|---|---|---|---|---|---|"]
+                                         "## Triangle analysis (A08)", "", "Single-pass columns exclude the shadow pass; `cone96 peak + shadow` is the shadow extra evaluated at the cone96 peak viewpoint (not a global maximum of the sum) and `replay P95 + shadow` adds it per sample; both are the only analytic values comparable to measured all-pass triangles. Sampled centre-point model without fog, occlusion or height, so not a strict bound; nothing here validates a budget.", "",
+                                         "| preset | omni upper bound | cone 96 deg | cone 91.5 | cone 104.2 | shadow extra | cone96 peak + shadow | replay P95 max | replay P95 + shadow |", "|---|---|---|---|---|---|---|---|---|"]
     for n, r in t.items():
-        L.append(f"| {n} | {r['omni_resident_upper_bound'][0]:,} | {r['view_cone']['cone96_reference'][0]:,} | {r['view_cone']['hfov_16x9_91.5'][0]:,} | {r['view_cone']['hfov_20x9_104.2'][0]:,} | {r['shadow_pass_extra_at_cone96_worst']:,} | {max(x['p95'] for x in r['replay_path'].values()):,} |")
+        L.append(f"| {n} | {r['omni_resident_upper_bound'][0]:,} | {r['view_cone']['cone96_reference'][0]:,} | {r['view_cone']['hfov_16x9_91.5'][0]:,} | {r['view_cone']['hfov_20x9_104.2'][0]:,} | {r['shadow_pass_extra_at_cone96_worst']:,} | {r['cone96_peak_viewpoint_plus_shadow_estimate']:,} | {max(x['p95'] for x in r['replay_path'].values()):,} | {max(x['p95_incl_shadow'] for x in r['replay_path'].values()):,} |")
     L += ["", "## Chunks (A06)", "", "| grid | occupied chunks | max parcels/chunk | cross-chunk parcels | max chunks covered |", "|---|---|---|---|---|"]
     for g, r in d["chunks"]["grids"].items(): L.append(f"| {g} m | {r['occupied_owner_chunks']} | {r['parcels_per_chunk_max']} | {r['cross_chunk_parcels']} | {r['max_chunks_covered']} |")
-    L += ["", "## Fixtures (A07)", "", f"Composition: {json.dumps(fx['composition'])}", "", "## Streaming benefit (A09)", "", d["benefit"]["finding"], "", "## Speed and readiness (A05)", "", f"Code-derived ceilings (m/s): {json.dumps(d['speed']['code_derived_ceilings_mps'])}", "",
+    L += ["", "## Fixtures (A07)", "", f"Composition: {json.dumps(fx['composition'])}", f"B3 density test: {fx['b3_density_test']['status']} ({fx['b3_density_test']['reason']}; scope exception {fx['b3_density_test']['scope_exception']}); fallback objects are GLOBAL_STRESS_ONLY.", "", "## Streaming benefit (A09)", "", d["benefit"]["finding"], "",
+          "Active collision bodies by radius, 57 buildings, 1 body per building (peak = 40 m grid maximum; replay = P95 over the six scripted paths):", "", "| radius m | peak active | replay P95 active | saving at peak | saving at replay P95 |", "|---|---|---|---|---|",
+          *[f"| {R} | {r['max_active_bodies_peak_grid']} | {r['replay_active_p95']} | {r['saving_peak']:.1%} | {r['saving_replay_p95']:.1%} |" for R, r in d["benefit"]["sets"]["57"]["by_radius"].items()], "", "## Speed and readiness (A05)", "", f"Code-derived ceilings (m/s): {json.dumps(d['speed']['code_derived_ceilings_mps'])}", "",
           f"Measured lower bounds: {json.dumps(d['speed']['measured_peak_lower_bounds_mps']['runs'])}", "", "See `proposed_budgets.json` for the labelled budget rows."]
     return "\n".join(L) + "\n"
 
@@ -478,9 +484,9 @@ def main():
     bp = out / "baseline_metrics.json"; base = json.load(open(bp)) if bp.exists() else None; terrain = (base or {}).get("terrain_l0")
     q = parse_quality(src); presets = presets_block(q); spd = speed_block(src, base); fx = fixture_block(plan, terrain); scs = scenarios()
     parcels = [{"id": o["id"], "proto": o["proto"], "b": o["b"]} for o in fx["objects"] if o["kind"] == "WE02_PARCEL"]
-    tri = triangle_block(plan, fx, scs); data = {"schema": "we03-calibration-v1", "engineering_base": ENGINEERING_BASE, "index_html_blob": sh("git", "hash-object", "index.html"), "district_plan_sha256": sha(REPO / "specs/we02/district_plan.json"),
+    tri = triangle_block(plan, fx, scs, presets); data = {"schema": "we03-calibration-v1", "engineering_base": ENGINEERING_BASE, "index_html_blob": sh("git", "hash-object", "index.html"), "district_plan_sha256": sha(REPO / "specs/we02/district_plan.json"),
                                                  "l0_cells_sha256": sha(L0_CSV), "baseline_metrics_sha256": sha(bp) if bp.exists() else None, "source_inventory": inventory(lines), "presets": presets, "speed": spd, "chunks": chunk_block(parcels),
-                                                 "triangles": tri, "benefit": benefit_block(fx, tri), "device_protocol": device_protocol(), "baseline_analysis": baseline_analysis(base)}
+                                                 "triangles": tri, "benefit": benefit_block(fx, scs), "device_protocol": device_protocol(), "baseline_analysis": baseline_analysis(base)}
     fxp = {"schema": "we03-fixture-plan-v1", "classification": "SYNTHETIC_ONLY objects are not legal parcels, road-access or construction evidence; never written to district_plan.json", "seed": SEED, "terrain_thresholds": {"max_span_m": TERRAIN_SPAN_M, "min_height_m": TERRAIN_MIN_M, "source_class": "PROPOSED_LIMIT"},
            **fx, "replay_scenarios": scs, "source_class": "ANALYTIC_ESTIMATE"}
     bud = budgets(presets, base_summary(base), tri, spd)
