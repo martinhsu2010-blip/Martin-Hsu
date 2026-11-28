@@ -11,6 +11,27 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
+### T-018 WE-03 C+ Hybrid World Streaming Architecture (series umbrella, not a code task; HIGH-risk series, decomposed into small sequential tasks) (Registered 2026-11-28, D-065; approved by Martin 2026-11-28 21:20)
+Owner: Claude
+Implementer: none (umbrella). Subtasks: T-018A1 (Claude), A2, B, C1, C2, C3, C4, D, E1, E2 (Codex), F1 (Gemini, LOW), F2 (Claude); only T-018A1 is registered.
+Reviewer: Claude (series review); ChatGPT is design owner; Martin approves each subtask and accepts WE-03.
+Priority: P1
+Base commit: Engineering BASE `e8d5250fce0ea5f07f68840481cb95d2eca803fb` (game source equals Audit BASE `84319439243b51aa8d119e33eb62a0637feea887`; CACHE `vh-2026-11-27-02`); each subtask records its own baseline SHA.
+Spec: `specs/WE-03-series-spec-v1.0.md` (entry point, Claude conditions B1, B2, B4, B5, B6 and N1-N11 win) + ChatGPT draft `specs/WE-03-draft-v1.0-chatgpt.md` + `specs/WE-03-g0-review-v1.0.md`
+Scope: series constraints and subtask sequence only. No game file, `sw.js`, CACHE, `vh_save`, WE-01/WE-02 artifact or verdict is touched or authorized; WE-04..WE-09 not authorized; draft section 22 budgets stay provisional until T-018A1 is accepted and Martin confirms revised budgets.
+Status: Registered; only T-018A1 is open. Every other subtask is registered when its own spec is approved.
+
+### T-018A1 WE-03A Performance Baseline and Architecture Calibration (read-only measurement tooling and reports; LOW risk, LARGE volume) (Registered 2026-11-28, D-065; approved by Martin 2026-11-28 21:20; pre-start gates PASS)
+Owner: Claude
+Implementer: Claude (`tools/we03/` and `specs/we03/`; no Codex/Gemini assignment; reason: baseline and budget evidence must be independent of the later implementers and reuses the WE-01 B8 method)
+Reviewer: ChatGPT (read-only review of method and budgets before acceptance); Martin accepts
+Priority: P1
+Base commit: `e8d5250fce0ea5f07f68840481cb95d2eca803fb`
+Spec: `specs/T-018A1-spec-v1.0.md` (entry point, Claude conditions A1-C1..C15 win) + ChatGPT draft `specs/T-018A1-draft-v1.0-chatgpt.md` + `specs/T-018A1-g0-review-v1.0.md`
+Scope: `tools/we03/` (baseline <= 600, calibration <= 500, independent check <= 400 lines; stdlib plus the existing Playwright for the browser harness only) and `specs/we03/` (baseline_report.md, baseline_metrics.json, calibration_report.md, proposed_budgets.json, fixture_plan.json). 48 headless combinations (4 presets x 6 locations x 12:00/23:00, 120 frames each), 16 repeat sessions, 20 physics self-control pairs, speed and readiness calibration, chunk and fixture plan, analytic triangle and benefit analysis, device protocol.
+Gates: A1-G01..G18 plus negative controls; independent check wired into CI by Claude; ChatGPT read-only review; Martin acceptance.
+Status: Registered, not started. No game file, sw.js, CACHE, save format, WE-01/WE-02 artifact or A2 and later subtask is touched or authorized.
+
 ### T-017 WE-02 World Expansion Masterplan (documentation and offline artifact tooling; LOW risk) (Registered 2026-11-28, D-061; approved by Martin 2026-11-28 19:20; pre-start gates PASS)
 Owner: Claude
 Implementer: Claude (artifact tooling `tools/we02/` and `specs/we02/`; no Codex/Gemini assignment)
