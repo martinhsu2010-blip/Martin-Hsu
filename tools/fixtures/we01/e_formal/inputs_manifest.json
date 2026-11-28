@@ -1,0 +1,15 @@
+{
+ "base_sha": "84319439243b51aa8d119e33eb62a0637feea887",
+ "files": {
+  "capacity_inventory.json": "0efa1a1763b64b91ac3ab671b0d8d7360c939c32c26190d4b16e8a2a5246bc1a",
+  "conditional_parcels.json": "51d8eb8e6ac60b7f36bf0ba86895aa069befe331f37d5d54e04ad1de2ded0124",
+  "feasibility.json": "6131fb4a11ab2e43ed9799307158b18b61c2e469e97f85ed78e202dbd69832b4",
+  "internal_streets.json": "adfd26957555bffbb7e5a3d9e216a4a1ecd47c871be35bb63fc8a57611c2274e",
+  "land_inventory.json": "e15e600e10a03a5d2a5f042c6e9171155b5df32f267faa5b24f1a87217838f9a",
+  "map_geometry.json": "c17cc1ce8080627e4744394e5ffefdec7e7b6d516f7eb8fd25c5f2f605e1460e",
+  "parcel_candidates.json": "e27f457a95cbe04d529563f3bc002425e8e818efc7c5571f1b741b0f3722a586",
+  "road_survey.json": "4afd52d2b51273f1e890aeda3c3ade22927124926c12a1e3aa3cefe30f3eeb27"
+ },
+ "kind": "we01e_inputs_manifest",
+ "schema_version": 1
+}

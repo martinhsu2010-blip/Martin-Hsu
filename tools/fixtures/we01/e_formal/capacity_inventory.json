@@ -1,0 +1,3635 @@
+{
+  "analyzer_version": "we01b-1.0",
+  "base_sha": "84319439243b51aa8d119e33eb62a0637feea887",
+  "compatibility_key": {
+    "base_sha": "84319439243b51aa8d119e33eb62a0637feea887",
+    "desktop_high_static_fingerprint": "52653bc578411a9eda9b314581bb16f45f3cb4eb1be623f9d39dc21ade365482",
+    "handoff_schema_version": 1,
+    "phone_low_static_fingerprint": "e473d222db998487e5fcfb187349e5006e6f619c1d15cca6bae1a2ee380352aa",
+    "polygon_revision": 2,
+    "schema_version": 1,
+    "we01a_analyzer_version": "we01a-1.0"
+  },
+  "handoff_schema_version": 1,
+  "land_artifacts": {
+    "land_inventory_sha256": "e15e600e10a03a5d2a5f042c6e9171155b5df32f267faa5b24f1a87217838f9a",
+    "land_report_sha256": "f42c705728002fbe12450612165c80c481ffc8f75d96908607be5abdbd7e9a4a"
+  },
+  "placement_policy": {
+    "order": "row_major",
+    "tie_breaking": "deficit_then_area_desc_then_orient_0_90"
+  },
+  "polygon_revision": 2,
+  "presets": {
+    "DESKTOP_HIGH": {
+      "file_sha256": "7b802de45417b51e28ec04fa8c782507149006ca7a2212d834c0e73659765578",
+      "static_fingerprint": "52653bc578411a9eda9b314581bb16f45f3cb4eb1be623f9d39dc21ade365482"
+    },
+    "PHONE_LOW": {
+      "file_sha256": "01919444a89a7d0d695ab8b0afccc1b35c4101ae288ff03629201f93284c3d24",
+      "static_fingerprint": "e473d222db998487e5fcfb187349e5006e6f619c1d15cca6bae1a2ee380352aa"
+    }
+  },
+  "prototypes": {
+    "R01": {
+      "area_m2": 1428,
+      "buildings": 1,
+      "footprint": [
+        32,
+        24
+      ],
+      "id": "R01",
+      "name": "Urban Residence",
+      "parcel": [
+        42,
+        34
+      ],
+      "proxy": false,
+      "units": 1
+    },
+    "R02": {
+      "area_m2": 2016,
+      "buildings": 1,
+      "footprint": [
+        36,
+        30
+      ],
+      "id": "R02",
+      "name": "Skyline Residence",
+      "parcel": [
+        48,
+        42
+      ],
+      "proxy": false,
+      "units": 1
+    },
+    "R05": {
+      "area_m2": 528,
+      "buildings": 1,
+      "footprint": [
+        14,
+        12
+      ],
+      "id": "R05",
+      "name": "Detached House",
+      "parcel": [
+        24,
+        22
+      ],
+      "proxy": true,
+      "units": 1
+    },
+    "R08": {
+      "area_m2": 912,
+      "buildings": 1,
+      "footprint": [
+        28,
+        14
+      ],
+      "id": "R08",
+      "name": "Four-unit Terrace Homes",
+      "parcel": [
+        38,
+        24
+      ],
+      "proxy": false,
+      "units": 4
+    }
+  },
+  "road_graph": {
+    "alias_map": {
+      "AVE_-120": "AVE_-120",
+      "AVE_-240": "AVE_-240",
+      "AVE_-420": "AVE_-420",
+      "AVE_-600": "AVE_-600",
+      "AVE_0": "AVE_0",
+      "AVE_110": "AVE_110",
+      "CRS_-600": "CRS_-600",
+      "CRS_-720": "CRS_-720",
+      "CRS_-880": "CRS_-880",
+      "CRS_880": "CRS_880",
+      "HILL_ROAD": "HILL_ROAD",
+      "RIB_0": "RIB_0",
+      "RIB_1": "RIB_1",
+      "RING": "RING",
+      "SPUR_11": "SPUR_11",
+      "SPUR_8": "SPUR_8",
+      "SUBR_1": "SUBR_1",
+      "TRD_0": "HILL_ROAD",
+      "TRD_2": "SUBR_1"
+    },
+    "connectivity": {
+      "AVE_-120": "VERIFIED",
+      "AVE_-240": "VERIFIED",
+      "AVE_-420": "VERIFIED",
+      "AVE_-600": "VERIFIED",
+      "AVE_0": "VERIFIED",
+      "AVE_110": "VERIFIED",
+      "CRS_-600": "VERIFIED",
+      "CRS_-720": "VERIFIED",
+      "CRS_-880": "VERIFIED",
+      "CRS_880": "VERIFIED",
+      "HILL_ROAD": "UNVERIFIED",
+      "RIB_0": "VERIFIED",
+      "RIB_1": "VERIFIED",
+      "RING": "UNVERIFIED",
+      "SPUR_11": "UNVERIFIED",
+      "SPUR_8": "UNVERIFIED",
+      "SUBR_1": "UNVERIFIED"
+    },
+    "dedup_ground_count": 14,
+    "dedup_main_component_count": 12,
+    "dedup_node_count": 17,
+    "duplicates": {
+      "HILL_ROAD": [
+        "HILL_ROAD",
+        "TRD_0"
+      ],
+      "SUBR_1": [
+        "SUBR_1",
+        "TRD_2"
+      ]
+    },
+    "edges": [
+      [
+        "AVE_-120",
+        "CRS_-600"
+      ],
+      [
+        "AVE_-120",
+        "CRS_-720"
+      ],
+      [
+        "AVE_-120",
+        "CRS_-880"
+      ],
+      [
+        "AVE_-120",
+        "CRS_880"
+      ],
+      [
+        "AVE_-120",
+        "RIB_1"
+      ],
+      [
+        "AVE_-240",
+        "CRS_-600"
+      ],
+      [
+        "AVE_-240",
+        "CRS_-720"
+      ],
+      [
+        "AVE_-240",
+        "CRS_-880"
+      ],
+      [
+        "AVE_-240",
+        "CRS_880"
+      ],
+      [
+        "AVE_-240",
+        "RIB_1"
+      ],
+      [
+        "AVE_-420",
+        "CRS_-600"
+      ],
+      [
+        "AVE_-420",
+        "CRS_-720"
+      ],
+      [
+        "AVE_-420",
+        "CRS_-880"
+      ],
+      [
+        "AVE_-420",
+        "RIB_1"
+      ],
+      [
+        "AVE_-600",
+        "CRS_-600"
+      ],
+      [
+        "AVE_-600",
+        "CRS_-720"
+      ],
+      [
+        "AVE_-600",
+        "CRS_-880"
+      ],
+      [
+        "AVE_0",
+        "CRS_-600"
+      ],
+      [
+        "AVE_0",
+        "CRS_-720"
+      ],
+      [
+        "AVE_0",
+        "CRS_-880"
+      ],
+      [
+        "AVE_0",
+        "CRS_880"
+      ],
+      [
+        "AVE_0",
+        "RIB_1"
+      ],
+      [
+        "AVE_110",
+        "CRS_-600"
+      ],
+      [
+        "AVE_110",
+        "CRS_-720"
+      ],
+      [
+        "AVE_110",
+        "CRS_-880"
+      ],
+      [
+        "AVE_110",
+        "CRS_880"
+      ],
+      [
+        "AVE_110",
+        "RIB_1"
+      ],
+      [
+        "CRS_-600",
+        "RIB_1"
+      ],
+      [
+        "CRS_-720",
+        "RIB_0"
+      ],
+      [
+        "CRS_-880",
+        "RIB_0"
+      ],
+      [
+        "CRS_880",
+        "RIB_0"
+      ]
+    ],
+    "main_component": [
+      "AVE_-120",
+      "AVE_-240",
+      "AVE_-420",
+      "AVE_-600",
+      "AVE_0",
+      "AVE_110",
+      "CRS_-600",
+      "CRS_-720",
+      "CRS_-880",
+      "CRS_880",
+      "RIB_0",
+      "RIB_1"
+    ],
+    "raw_connectivity": {
+      "AVE_-120": "VERIFIED",
+      "AVE_-240": "VERIFIED",
+      "AVE_-420": "VERIFIED",
+      "AVE_-600": "VERIFIED",
+      "AVE_0": "VERIFIED",
+      "AVE_110": "VERIFIED",
+      "CRS_-600": "VERIFIED",
+      "CRS_-720": "VERIFIED",
+      "CRS_-880": "VERIFIED",
+      "CRS_880": "VERIFIED",
+      "HILL_ROAD": "UNVERIFIED",
+      "RIB_0": "VERIFIED",
+      "RIB_1": "VERIFIED",
+      "RING": "UNVERIFIED",
+      "SPUR_11": "UNVERIFIED",
+      "SPUR_8": "UNVERIFIED",
+      "SUBR_1": "UNVERIFIED",
+      "TRD_0": "UNVERIFIED",
+      "TRD_2": "UNVERIFIED"
+    },
+    "raw_ground_count": 16,
+    "raw_main_component_count": 12,
+    "raw_segment_count": 19
+  },
+  "scenarios": {
+    "ENVELOPE": {
+      "gross_union_area_m2": 720000.0,
+      "regions": {
+        "B1": {
+          "areas_m2": {
+            "A_conditional": 0.0,
+            "A_direct": 142570.0,
+            "A_eligible": 142570.0,
+            "A_gross": 250000.0,
+            "A_possible": 186960.0,
+            "A_protected": 0.0,
+            "A_unavailable": 107430.0,
+            "A_unknown": 0.0,
+            "conservation_error_m2": 0.0
+          },
+          "b2_hillside_note": null,
+          "bounds_internal": [
+            -10,
+            830,
+            490,
+            1330
+          ],
+          "bounds_spec": [
+            -10,
+            490,
+            830,
+            1330
+          ],
+          "capacities": {
+            "C_common": 5,
+            "C_conditional": "PENDING_T016D",
+            "C_desktop_high": 5,
+            "C_direct": 5,
+            "C_phone_low": 5,
+            "C_preliminary": 72,
+            "C_unknown": 0,
+            "C_upper": 108,
+            "prototype_counts_direct": {
+              "R01": 2,
+              "R02": 3
+            },
+            "prototype_mix_ok": true,
+            "proxy_used": false,
+            "units_direct": 5
+          },
+          "capacity_bound_status": "SEARCH_INSUFFICIENT_UNPROVEN",
+          "conditional_candidates_summary": {
+            "FOUNDATION_REQUIRED_cells_m2": 0,
+            "INTERNAL_STREET_REQUIRED_parcels": 67,
+            "geom_valid_center_counts": {
+              "R01_0": 108135,
+              "R01_90": 108479,
+              "R02_0": 102991,
+              "R02_90": 103249
+            },
+            "reasons": [
+              "INTERNAL_STREET_REQUIRED"
+            ]
+          },
+          "direct_parcels": [
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 48.0,
+                "corridor_ids": [
+                  "SWK_CRS_880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 2016,
+              "bounds": [
+                -10,
+                897,
+                38,
+                939
+              ],
+              "buildings": 1,
+              "center": [
+                14,
+                918
+              ],
+              "id": "B1_R02_001",
+              "orientation": 0,
+              "prototype": "R02",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 42.0,
+                "corridor_ids": [
+                  "SWK_CRS_880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                38,
+                897,
+                80,
+                931
+              ],
+              "buildings": 1,
+              "center": [
+                59,
+                914
+              ],
+              "id": "B1_R01_002",
+              "orientation": 0,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 48.0,
+                "corridor_ids": [
+                  "SWK_CRS_880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 2016,
+              "bounds": [
+                80,
+                897,
+                128,
+                939
+              ],
+              "buildings": 1,
+              "center": [
+                104,
+                918
+              ],
+              "id": "B1_R02_003",
+              "orientation": 0,
+              "prototype": "R02",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 42.0,
+                "corridor_ids": [
+                  "SWK_CRS_880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                128,
+                897,
+                170,
+                931
+              ],
+              "buildings": 1,
+              "center": [
+                149,
+                914
+              ],
+              "id": "B1_R01_004",
+              "orientation": 0,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 48.0,
+                "corridor_ids": [
+                  "SWK_CRS_880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 2016,
+              "bounds": [
+                170,
+                897,
+                218,
+                939
+              ],
+              "buildings": 1,
+              "center": [
+                194,
+                918
+              ],
+              "id": "B1_R02_005",
+              "orientation": 0,
+              "prototype": "R02",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            }
+          ],
+          "exclusion_reasons": [
+            "INTERNAL_STREET_REQUIRED",
+            "OBSTACLES_WATER_BEACH_OR_S4"
+          ],
+          "gross_area_m2": 250000.0,
+          "land_use_reference": {
+            "hard_gate": false,
+            "informational_only": true,
+            "reference_band_pct": [
+              15,
+              30
+            ],
+            "residential_parcel_area_m2": 8904.0,
+            "residential_parcel_share_pct": 3.562
+          },
+          "meets_ideal_direct": false,
+          "meets_min_direct": false,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "unknown_data_summary": {
+            "A_unknown_m2": 0.0,
+            "C_unknown": 0,
+            "unverified_road_segments": [
+              "HILL_ROAD",
+              "RING",
+              "SPUR_11",
+              "SPUR_8",
+              "SUBR_1"
+            ]
+          }
+        },
+        "B2": {
+          "areas_m2": {
+            "A_conditional": 0.0,
+            "A_direct": 224080.0,
+            "A_eligible": 224080.0,
+            "A_gross": 270000.0,
+            "A_possible": 255513.0,
+            "A_protected": 0.0,
+            "A_unavailable": 45920.0,
+            "A_unknown": 0.0,
+            "conservation_error_m2": 0.0
+          },
+          "b2_hillside_note": "B2 flat R05 capacity is PROXY only; hillside housing vision requires separate terrain/foundation engineering.",
+          "bounds_internal": [
+            -1000,
+            720,
+            -400,
+            1170
+          ],
+          "bounds_spec": [
+            -1000,
+            -400,
+            720,
+            1170
+          ],
+          "capacities": {
+            "C_common": 0,
+            "C_conditional": "PENDING_T016D",
+            "C_desktop_high": 0,
+            "C_direct": 0,
+            "C_phone_low": 0,
+            "C_preliminary": 408,
+            "C_unknown": 0,
+            "C_upper": 483,
+            "prototype_counts_direct": {
+              "R05": 0
+            },
+            "prototype_mix_ok": true,
+            "proxy_used": true,
+            "units_direct": 0
+          },
+          "capacity_bound_status": "SEARCH_INSUFFICIENT_UNPROVEN",
+          "conditional_candidates_summary": {
+            "FOUNDATION_REQUIRED_cells_m2": 0,
+            "INTERNAL_STREET_REQUIRED_parcels": 408,
+            "geom_valid_center_counts": {
+              "R05_0": 197133,
+              "R05_90": 197193
+            },
+            "reasons": [
+              "INTERNAL_STREET_REQUIRED"
+            ]
+          },
+          "direct_parcels": [],
+          "exclusion_reasons": [
+            "INTERNAL_STREET_REQUIRED",
+            "OBSTACLES_WATER_BEACH_OR_S4"
+          ],
+          "gross_area_m2": 270000.0,
+          "land_use_reference": {
+            "hard_gate": false,
+            "informational_only": true,
+            "reference_band_pct": [
+              15,
+              30
+            ],
+            "residential_parcel_area_m2": 0.0,
+            "residential_parcel_share_pct": 0.0
+          },
+          "meets_ideal_direct": false,
+          "meets_min_direct": false,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "unknown_data_summary": {
+            "A_unknown_m2": 0.0,
+            "C_unknown": 0,
+            "unverified_road_segments": [
+              "HILL_ROAD",
+              "RING",
+              "SPUR_11",
+              "SPUR_8",
+              "SUBR_1"
+            ]
+          }
+        },
+        "B3": {
+          "areas_m2": {
+            "A_conditional": 0.0,
+            "A_direct": 53187.0,
+            "A_eligible": 53187.0,
+            "A_gross": 200000.0,
+            "A_possible": 106742.0,
+            "A_protected": 9360.0,
+            "A_unavailable": 137453.0,
+            "A_unknown": 0.0,
+            "conservation_error_m2": 0.0
+          },
+          "b2_hillside_note": null,
+          "bounds_internal": [
+            -740,
+            -910,
+            -240,
+            -510
+          ],
+          "bounds_spec": [
+            -740,
+            -240,
+            -910,
+            -510
+          ],
+          "capacities": {
+            "C_common": 25,
+            "C_conditional": "PENDING_T016D",
+            "C_desktop_high": 25,
+            "C_direct": 25,
+            "C_phone_low": 25,
+            "C_preliminary": 25,
+            "C_unknown": 0,
+            "C_upper": 135,
+            "prototype_counts_direct": {
+              "R01": 5,
+              "R05": 15,
+              "R08": 5
+            },
+            "prototype_mix_ok": true,
+            "proxy_used": false,
+            "units_direct": 40
+          },
+          "capacity_bound_status": "DIRECT_MET",
+          "conditional_candidates_summary": {
+            "FOUNDATION_REQUIRED_cells_m2": 0,
+            "INTERNAL_STREET_REQUIRED_parcels": 12,
+            "geom_valid_center_counts": {
+              "R01_0": 9579,
+              "R01_90": 9435,
+              "R05_0": 16375,
+              "R05_90": 16847,
+              "R08_0": 11984,
+              "R08_90": 12932
+            },
+            "reasons": []
+          },
+          "direct_parcels": [
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 42.0,
+                "corridor_ids": [
+                  "SWK_AVE_-420_0",
+                  "SWK_CRS_-880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                -402,
+                -863,
+                -360,
+                -829
+              ],
+              "buildings": 1,
+              "center": [
+                -381,
+                -846
+              ],
+              "id": "B3_R01_001",
+              "orientation": 0,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 25.0,
+                "corridor_ids": [
+                  "ROAD_CRS_-880_0",
+                  "SWK_CRS_-880_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 912,
+              "bounds": [
+                -646,
+                -910,
+                -622,
+                -872
+              ],
+              "buildings": 1,
+              "center": [
+                -634,
+                -891
+              ],
+              "id": "B3_R08_002",
+              "orientation": 90,
+              "prototype": "R08",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 4
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 9.0,
+                "corridor_ids": [
+                  "ROAD_CRS_-880_0",
+                  "SWK_CRS_-880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -646,
+                -872,
+                -622,
+                -850
+              ],
+              "buildings": 1,
+              "center": [
+                -634,
+                -861
+              ],
+              "id": "B3_R05_003",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_0",
+                  "SWK_CRS_-880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -582,
+                -863,
+                -558,
+                -841
+              ],
+              "buildings": 1,
+              "center": [
+                -570,
+                -852
+              ],
+              "id": "B3_R05_004",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_CRS_-880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -558,
+                -863,
+                -534,
+                -841
+              ],
+              "buildings": 1,
+              "center": [
+                -546,
+                -852
+              ],
+              "id": "B3_R05_005",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 42.0,
+                "corridor_ids": [
+                  "SWK_CRS_-880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                -360,
+                -863,
+                -318,
+                -829
+              ],
+              "buildings": 1,
+              "center": [
+                -339,
+                -846
+              ],
+              "id": "B3_R01_006",
+              "orientation": 0,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 38.0,
+                "corridor_ids": [
+                  "SWK_CRS_-880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 912,
+              "bounds": [
+                -534,
+                -863,
+                -496,
+                -839
+              ],
+              "buildings": 1,
+              "center": [
+                -515,
+                -851
+              ],
+              "id": "B3_R08_007",
+              "orientation": 0,
+              "prototype": "R08",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 4
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_CRS_-880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -496,
+                -863,
+                -472,
+                -841
+              ],
+              "buildings": 1,
+              "center": [
+                -484,
+                -852
+              ],
+              "id": "B3_R05_008",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_CRS_-880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -472,
+                -863,
+                -448,
+                -841
+              ],
+              "buildings": 1,
+              "center": [
+                -460,
+                -852
+              ],
+              "id": "B3_R05_009",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_CRS_-880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -318,
+                -863,
+                -294,
+                -841
+              ],
+              "buildings": 1,
+              "center": [
+                -306,
+                -852
+              ],
+              "id": "B3_R05_010",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 42.0,
+                "corridor_ids": [
+                  "SWK_AVE_-240_1",
+                  "SWK_CRS_-880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                -294,
+                -863,
+                -260,
+                -821
+              ],
+              "buildings": 1,
+              "center": [
+                -277,
+                -842
+              ],
+              "id": "B3_R01_011",
+              "orientation": 90,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 38.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 912,
+              "bounds": [
+                -644,
+                -850,
+                -620,
+                -812
+              ],
+              "buildings": 1,
+              "center": [
+                -632,
+                -831
+              ],
+              "id": "B3_R08_012",
+              "orientation": 90,
+              "prototype": "R08",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 4
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 22.0,
+                "corridor_ids": [
+                  "SWK_AVE_-420_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "WEST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -402,
+                -829,
+                -378,
+                -807
+              ],
+              "buildings": 1,
+              "center": [
+                -390,
+                -818
+              ],
+              "id": "B3_R05_013",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 22.0,
+                "corridor_ids": [
+                  "SWK_AVE_-240_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -284,
+                -821,
+                -260,
+                -799
+              ],
+              "buildings": 1,
+              "center": [
+                -272,
+                -810
+              ],
+              "id": "B3_R05_014",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 22.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -644,
+                -812,
+                -620,
+                -790
+              ],
+              "buildings": 1,
+              "center": [
+                -632,
+                -801
+              ],
+              "id": "B3_R05_015",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 34.0,
+                "corridor_ids": [
+                  "SWK_AVE_-420_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "WEST"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                -402,
+                -807,
+                -360,
+                -773
+              ],
+              "buildings": 1,
+              "center": [
+                -381,
+                -790
+              ],
+              "id": "B3_R01_016",
+              "orientation": 0,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-240_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 912,
+              "bounds": [
+                -298,
+                -799,
+                -260,
+                -775
+              ],
+              "buildings": 1,
+              "center": [
+                -279,
+                -787
+              ],
+              "id": "B3_R08_017",
+              "orientation": 0,
+              "prototype": "R08",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 4
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 22.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -644,
+                -790,
+                -620,
+                -768
+              ],
+              "buildings": 1,
+              "center": [
+                -632,
+                -779
+              ],
+              "id": "B3_R05_018",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 22.0,
+                "corridor_ids": [
+                  "SWK_AVE_-240_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -284,
+                -775,
+                -260,
+                -753
+              ],
+              "buildings": 1,
+              "center": [
+                -272,
+                -764
+              ],
+              "id": "B3_R05_019",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 22.0,
+                "corridor_ids": [
+                  "SWK_AVE_-420_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "WEST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -402,
+                -773,
+                -378,
+                -751
+              ],
+              "buildings": 1,
+              "center": [
+                -390,
+                -762
+              ],
+              "id": "B3_R05_020",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 34.0,
+                "corridor_ids": [
+                  "SWK_CRS_-720_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "NORTH"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                -360,
+                -781,
+                -326,
+                -739
+              ],
+              "buildings": 1,
+              "center": [
+                -343,
+                -760
+              ],
+              "id": "B3_R01_021",
+              "orientation": 90,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_CRS_-720_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "NORTH"
+              },
+              "area_m2": 912,
+              "bounds": [
+                -326,
+                -777,
+                -302,
+                -739
+              ],
+              "buildings": 1,
+              "center": [
+                -314,
+                -758
+              ],
+              "id": "B3_R08_022",
+              "orientation": 90,
+              "prototype": "R08",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 4
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 22.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -644,
+                -768,
+                -620,
+                -746
+              ],
+              "buildings": 1,
+              "center": [
+                -632,
+                -757
+              ],
+              "id": "B3_R05_023",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 13.0,
+                "corridor_ids": [
+                  "ROAD_CRS_-720_0",
+                  "SWK_CRS_-720_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -646,
+                -746,
+                -622,
+                -724
+              ],
+              "buildings": 1,
+              "center": [
+                -634,
+                -735
+              ],
+              "id": "B3_R05_024",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 21.0,
+                "corridor_ids": [
+                  "ROAD_CRS_-720_0",
+                  "SWK_CRS_-720_0"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -646,
+                -724,
+                -622,
+                -702
+              ],
+              "buildings": 1,
+              "center": [
+                -634,
+                -713
+              ],
+              "id": "B3_R05_025",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            }
+          ],
+          "exclusion_reasons": [
+            "OBSTACLES_WATER_BEACH_OR_S4",
+            "SITE_A_PROTECTED"
+          ],
+          "gross_area_m2": 200000.0,
+          "land_use_reference": {
+            "hard_gate": false,
+            "informational_only": true,
+            "reference_band_pct": [
+              15,
+              30
+            ],
+            "residential_parcel_area_m2": 19620.0,
+            "residential_parcel_share_pct": 9.81
+          },
+          "meets_ideal_direct": false,
+          "meets_min_direct": true,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "unknown_data_summary": {
+            "A_unknown_m2": 0.0,
+            "C_unknown": 0,
+            "unverified_road_segments": [
+              "HILL_ROAD",
+              "RING",
+              "SPUR_11",
+              "SPUR_8",
+              "SUBR_1"
+            ]
+          }
+        }
+      },
+      "totals": {
+        "C_conditional": "PENDING_T016D",
+        "C_direct": 30,
+        "C_preliminary": 505,
+        "C_upper": 726,
+        "all_regions_meet_min_direct": false
+      }
+    },
+    "INITIAL": {
+      "gross_union_area_m2": 250000.0,
+      "regions": {
+        "B1": {
+          "areas_m2": {
+            "A_conditional": 0.0,
+            "A_direct": 60650.0,
+            "A_eligible": 60650.0,
+            "A_gross": 90000.0,
+            "A_possible": 87000.0,
+            "A_protected": 0.0,
+            "A_unavailable": 29350.0,
+            "A_unknown": 0.0,
+            "conservation_error_m2": 0.0
+          },
+          "b2_hillside_note": null,
+          "bounds_internal": [
+            90,
+            930,
+            390,
+            1230
+          ],
+          "bounds_spec": [
+            90,
+            390,
+            930,
+            1230
+          ],
+          "capacities": {
+            "C_common": 0,
+            "C_conditional": "PENDING_T016D",
+            "C_desktop_high": 0,
+            "C_direct": 0,
+            "C_phone_low": 0,
+            "C_preliminary": 30,
+            "C_unknown": 0,
+            "C_upper": 50,
+            "prototype_counts_direct": {
+              "R01": 0,
+              "R02": 0
+            },
+            "prototype_mix_ok": true,
+            "proxy_used": false,
+            "units_direct": 0
+          },
+          "capacity_bound_status": "SEARCH_INSUFFICIENT_UNPROVEN",
+          "conditional_candidates_summary": {
+            "FOUNDATION_REQUIRED_cells_m2": 0,
+            "INTERNAL_STREET_REQUIRED_parcels": 30,
+            "geom_valid_center_counts": {
+              "R01_0": 40133,
+              "R01_90": 40213,
+              "R02_0": 36587,
+              "R02_90": 36647
+            },
+            "reasons": [
+              "INTERNAL_STREET_REQUIRED"
+            ]
+          },
+          "direct_parcels": [],
+          "exclusion_reasons": [
+            "INTERNAL_STREET_REQUIRED",
+            "OBSTACLES_WATER_BEACH_OR_S4"
+          ],
+          "gross_area_m2": 90000.0,
+          "land_use_reference": {
+            "hard_gate": false,
+            "informational_only": true,
+            "reference_band_pct": [
+              15,
+              30
+            ],
+            "residential_parcel_area_m2": 0.0,
+            "residential_parcel_share_pct": 0.0
+          },
+          "meets_ideal_direct": false,
+          "meets_min_direct": false,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "unknown_data_summary": {
+            "A_unknown_m2": 0.0,
+            "C_unknown": 0,
+            "unverified_road_segments": [
+              "HILL_ROAD",
+              "RING",
+              "SPUR_11",
+              "SPUR_8",
+              "SUBR_1"
+            ]
+          }
+        },
+        "B2": {
+          "areas_m2": {
+            "A_conditional": 0.0,
+            "A_direct": 99520.0,
+            "A_eligible": 99520.0,
+            "A_gross": 100000.0,
+            "A_possible": 99520.0,
+            "A_protected": 0.0,
+            "A_unavailable": 480.0,
+            "A_unknown": 0.0,
+            "conservation_error_m2": 0.0
+          },
+          "b2_hillside_note": "B2 flat R05 capacity is PROXY only; hillside housing vision requires separate terrain/foundation engineering.",
+          "bounds_internal": [
+            -900,
+            820,
+            -500,
+            1070
+          ],
+          "bounds_spec": [
+            -900,
+            -500,
+            820,
+            1070
+          ],
+          "capacities": {
+            "C_common": 0,
+            "C_conditional": "PENDING_T016D",
+            "C_desktop_high": 0,
+            "C_direct": 0,
+            "C_phone_low": 0,
+            "C_preliminary": 174,
+            "C_unknown": 0,
+            "C_upper": 188,
+            "prototype_counts_direct": {
+              "R05": 0
+            },
+            "prototype_mix_ok": true,
+            "proxy_used": true,
+            "units_direct": 0
+          },
+          "capacity_bound_status": "SEARCH_INSUFFICIENT_UNPROVEN",
+          "conditional_candidates_summary": {
+            "FOUNDATION_REQUIRED_cells_m2": 0,
+            "INTERNAL_STREET_REQUIRED_parcels": 174,
+            "geom_valid_center_counts": {
+              "R05_0": 83645,
+              "R05_90": 83537
+            },
+            "reasons": [
+              "INTERNAL_STREET_REQUIRED"
+            ]
+          },
+          "direct_parcels": [],
+          "exclusion_reasons": [
+            "INTERNAL_STREET_REQUIRED",
+            "OBSTACLES_WATER_BEACH_OR_S4"
+          ],
+          "gross_area_m2": 100000.0,
+          "land_use_reference": {
+            "hard_gate": false,
+            "informational_only": true,
+            "reference_band_pct": [
+              15,
+              30
+            ],
+            "residential_parcel_area_m2": 0.0,
+            "residential_parcel_share_pct": 0.0
+          },
+          "meets_ideal_direct": false,
+          "meets_min_direct": false,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "unknown_data_summary": {
+            "A_unknown_m2": 0.0,
+            "C_unknown": 0,
+            "unverified_road_segments": [
+              "HILL_ROAD",
+              "RING",
+              "SPUR_11",
+              "SPUR_8",
+              "SUBR_1"
+            ]
+          }
+        },
+        "B3": {
+          "areas_m2": {
+            "A_conditional": 0.0,
+            "A_direct": 16281.0,
+            "A_eligible": 16281.0,
+            "A_gross": 60000.0,
+            "A_possible": 22156.0,
+            "A_protected": 6840.0,
+            "A_unavailable": 36879.0,
+            "A_unknown": 0.0,
+            "conservation_error_m2": 0.0
+          },
+          "b2_hillside_note": null,
+          "bounds_internal": [
+            -640,
+            -810,
+            -340,
+            -610
+          ],
+          "bounds_spec": [
+            -640,
+            -340,
+            -810,
+            -610
+          ],
+          "capacities": {
+            "C_common": 5,
+            "C_conditional": "PENDING_T016D",
+            "C_desktop_high": 5,
+            "C_direct": 5,
+            "C_phone_low": 5,
+            "C_preliminary": 5,
+            "C_unknown": 0,
+            "C_upper": 27,
+            "prototype_counts_direct": {
+              "R01": 1,
+              "R05": 3,
+              "R08": 1
+            },
+            "prototype_mix_ok": true,
+            "proxy_used": false,
+            "units_direct": 8
+          },
+          "capacity_bound_status": "SEARCH_INSUFFICIENT_UNPROVEN",
+          "conditional_candidates_summary": {
+            "FOUNDATION_REQUIRED_cells_m2": 0,
+            "INTERNAL_STREET_REQUIRED_parcels": 1,
+            "geom_valid_center_counts": {
+              "R01_0": 840,
+              "R01_90": 928,
+              "R05_0": 2028,
+              "R05_90": 2163,
+              "R08_0": 1250,
+              "R08_90": 1404
+            },
+            "reasons": []
+          },
+          "direct_parcels": [
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 34.0,
+                "corridor_ids": [
+                  "SWK_AVE_-420_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "WEST"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                -402,
+                -810,
+                -360,
+                -776
+              ],
+              "buildings": 1,
+              "center": [
+                -381,
+                -793
+              ],
+              "id": "B3_R01_001",
+              "orientation": 0,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-420_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "WEST"
+              },
+              "area_m2": 912,
+              "bounds": [
+                -402,
+                -776,
+                -364,
+                -752
+              ],
+              "buildings": 1,
+              "center": [
+                -383,
+                -764
+              ],
+              "id": "B3_R08_002",
+              "orientation": 0,
+              "prototype": "R08",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 4
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_1"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -640,
+                -810,
+                -618,
+                -786
+              ],
+              "buildings": 1,
+              "center": [
+                -629,
+                -798
+              ],
+              "id": "B3_R05_003",
+              "orientation": 90,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_1"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -640,
+                -786,
+                -618,
+                -762
+              ],
+              "buildings": 1,
+              "center": [
+                -629,
+                -774
+              ],
+              "id": "B3_R05_004",
+              "orientation": 90,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 22.0,
+                "corridor_ids": [
+                  "SWK_CRS_-720_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "NORTH"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -364,
+                -763,
+                -342,
+                -739
+              ],
+              "buildings": 1,
+              "center": [
+                -353,
+                -751
+              ],
+              "id": "B3_R05_005",
+              "orientation": 90,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            }
+          ],
+          "exclusion_reasons": [
+            "OBSTACLES_WATER_BEACH_OR_S4",
+            "SITE_A_PROTECTED"
+          ],
+          "gross_area_m2": 60000.0,
+          "land_use_reference": {
+            "hard_gate": false,
+            "informational_only": true,
+            "reference_band_pct": [
+              15,
+              30
+            ],
+            "residential_parcel_area_m2": 3924.0,
+            "residential_parcel_share_pct": 6.54
+          },
+          "meets_ideal_direct": false,
+          "meets_min_direct": false,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "unknown_data_summary": {
+            "A_unknown_m2": 0.0,
+            "C_unknown": 0,
+            "unverified_road_segments": [
+              "HILL_ROAD",
+              "RING",
+              "SPUR_11",
+              "SPUR_8",
+              "SUBR_1"
+            ]
+          }
+        }
+      },
+      "totals": {
+        "C_conditional": "PENDING_T016D",
+        "C_direct": 5,
+        "C_preliminary": 209,
+        "C_upper": 265,
+        "all_regions_meet_min_direct": false
+      }
+    },
+    "REVISED": {
+      "gross_union_area_m2": 415000.0,
+      "regions": {
+        "B1": {
+          "areas_m2": {
+            "A_conditional": 0.0,
+            "A_direct": 137405.0,
+            "A_eligible": 137405.0,
+            "A_gross": 180000.0,
+            "A_possible": 172845.0,
+            "A_protected": 0.0,
+            "A_unavailable": 42595.0,
+            "A_unknown": 0.0,
+            "conservation_error_m2": 0.0
+          },
+          "b2_hillside_note": null,
+          "bounds_internal": [
+            -10,
+            880,
+            390,
+            1330
+          ],
+          "bounds_spec": [
+            -10,
+            390,
+            880,
+            1330
+          ],
+          "capacities": {
+            "C_common": 5,
+            "C_conditional": "PENDING_T016D",
+            "C_desktop_high": 5,
+            "C_direct": 5,
+            "C_phone_low": 5,
+            "C_preliminary": 72,
+            "C_unknown": 0,
+            "C_upper": 100,
+            "prototype_counts_direct": {
+              "R01": 2,
+              "R02": 3
+            },
+            "prototype_mix_ok": true,
+            "proxy_used": false,
+            "units_direct": 5
+          },
+          "capacity_bound_status": "SEARCH_INSUFFICIENT_UNPROVEN",
+          "conditional_candidates_summary": {
+            "FOUNDATION_REQUIRED_cells_m2": 0,
+            "INTERNAL_STREET_REQUIRED_parcels": 67,
+            "geom_valid_center_counts": {
+              "R01_0": 108135,
+              "R01_90": 108479,
+              "R02_0": 102991,
+              "R02_90": 103249
+            },
+            "reasons": [
+              "INTERNAL_STREET_REQUIRED"
+            ]
+          },
+          "direct_parcels": [
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 48.0,
+                "corridor_ids": [
+                  "SWK_CRS_880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 2016,
+              "bounds": [
+                -10,
+                897,
+                38,
+                939
+              ],
+              "buildings": 1,
+              "center": [
+                14,
+                918
+              ],
+              "id": "B1_R02_001",
+              "orientation": 0,
+              "prototype": "R02",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 42.0,
+                "corridor_ids": [
+                  "SWK_CRS_880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                38,
+                897,
+                80,
+                931
+              ],
+              "buildings": 1,
+              "center": [
+                59,
+                914
+              ],
+              "id": "B1_R01_002",
+              "orientation": 0,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 48.0,
+                "corridor_ids": [
+                  "SWK_CRS_880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 2016,
+              "bounds": [
+                80,
+                897,
+                128,
+                939
+              ],
+              "buildings": 1,
+              "center": [
+                104,
+                918
+              ],
+              "id": "B1_R02_003",
+              "orientation": 0,
+              "prototype": "R02",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 42.0,
+                "corridor_ids": [
+                  "SWK_CRS_880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                128,
+                897,
+                170,
+                931
+              ],
+              "buildings": 1,
+              "center": [
+                149,
+                914
+              ],
+              "id": "B1_R01_004",
+              "orientation": 0,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 48.0,
+                "corridor_ids": [
+                  "SWK_CRS_880_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "SOUTH"
+              },
+              "area_m2": 2016,
+              "bounds": [
+                170,
+                897,
+                218,
+                939
+              ],
+              "buildings": 1,
+              "center": [
+                194,
+                918
+              ],
+              "id": "B1_R02_005",
+              "orientation": 0,
+              "prototype": "R02",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            }
+          ],
+          "exclusion_reasons": [
+            "INTERNAL_STREET_REQUIRED",
+            "OBSTACLES_WATER_BEACH_OR_S4"
+          ],
+          "gross_area_m2": 180000.0,
+          "land_use_reference": {
+            "hard_gate": false,
+            "informational_only": true,
+            "reference_band_pct": [
+              15,
+              30
+            ],
+            "residential_parcel_area_m2": 8904.0,
+            "residential_parcel_share_pct": 4.947
+          },
+          "meets_ideal_direct": false,
+          "meets_min_direct": false,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "unknown_data_summary": {
+            "A_unknown_m2": 0.0,
+            "C_unknown": 0,
+            "unverified_road_segments": [
+              "HILL_ROAD",
+              "RING",
+              "SPUR_11",
+              "SPUR_8",
+              "SUBR_1"
+            ]
+          }
+        },
+        "B2": {
+          "areas_m2": {
+            "A_conditional": 0.0,
+            "A_direct": 157000.0,
+            "A_eligible": 157000.0,
+            "A_gross": 175000.0,
+            "A_possible": 173749.0,
+            "A_protected": 0.0,
+            "A_unavailable": 18000.0,
+            "A_unknown": 0.0,
+            "conservation_error_m2": 0.0
+          },
+          "b2_hillside_note": "B2 flat R05 capacity is PROXY only; hillside housing vision requires separate terrain/foundation engineering.",
+          "bounds_internal": [
+            -950,
+            770,
+            -450,
+            1120
+          ],
+          "bounds_spec": [
+            -950,
+            -450,
+            770,
+            1120
+          ],
+          "capacities": {
+            "C_common": 0,
+            "C_conditional": "PENDING_T016D",
+            "C_desktop_high": 0,
+            "C_direct": 0,
+            "C_phone_low": 0,
+            "C_preliminary": 278,
+            "C_unknown": 0,
+            "C_upper": 329,
+            "prototype_counts_direct": {
+              "R05": 0
+            },
+            "prototype_mix_ok": true,
+            "proxy_used": true,
+            "units_direct": 0
+          },
+          "capacity_bound_status": "SEARCH_INSUFFICIENT_UNPROVEN",
+          "conditional_candidates_summary": {
+            "FOUNDATION_REQUIRED_cells_m2": 0,
+            "INTERNAL_STREET_REQUIRED_parcels": 278,
+            "geom_valid_center_counts": {
+              "R05_0": 136093,
+              "R05_90": 136033
+            },
+            "reasons": [
+              "INTERNAL_STREET_REQUIRED"
+            ]
+          },
+          "direct_parcels": [],
+          "exclusion_reasons": [
+            "INTERNAL_STREET_REQUIRED",
+            "OBSTACLES_WATER_BEACH_OR_S4"
+          ],
+          "gross_area_m2": 175000.0,
+          "land_use_reference": {
+            "hard_gate": false,
+            "informational_only": true,
+            "reference_band_pct": [
+              15,
+              30
+            ],
+            "residential_parcel_area_m2": 0.0,
+            "residential_parcel_share_pct": 0.0
+          },
+          "meets_ideal_direct": false,
+          "meets_min_direct": false,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "unknown_data_summary": {
+            "A_unknown_m2": 0.0,
+            "C_unknown": 0,
+            "unverified_road_segments": [
+              "HILL_ROAD",
+              "RING",
+              "SPUR_11",
+              "SPUR_8",
+              "SUBR_1"
+            ]
+          }
+        },
+        "B3": {
+          "areas_m2": {
+            "A_conditional": 0.0,
+            "A_direct": 29310.0,
+            "A_eligible": 29310.0,
+            "A_gross": 60000.0,
+            "A_possible": 31720.0,
+            "A_protected": 9360.0,
+            "A_unavailable": 21330.0,
+            "A_unknown": 0.0,
+            "conservation_error_m2": 0.0
+          },
+          "b2_hillside_note": null,
+          "bounds_internal": [
+            -640,
+            -860,
+            -240,
+            -710
+          ],
+          "bounds_spec": [
+            -640,
+            -240,
+            -860,
+            -710
+          ],
+          "capacities": {
+            "C_common": 17,
+            "C_conditional": "PENDING_T016D",
+            "C_desktop_high": 17,
+            "C_direct": 17,
+            "C_phone_low": 17,
+            "C_preliminary": 25,
+            "C_unknown": 0,
+            "C_upper": 40,
+            "prototype_counts_direct": {
+              "R01": 4,
+              "R05": 9,
+              "R08": 4
+            },
+            "prototype_mix_ok": true,
+            "proxy_used": false,
+            "units_direct": 29
+          },
+          "capacity_bound_status": "SEARCH_INSUFFICIENT_UNPROVEN",
+          "conditional_candidates_summary": {
+            "FOUNDATION_REQUIRED_cells_m2": 0,
+            "INTERNAL_STREET_REQUIRED_parcels": 14,
+            "geom_valid_center_counts": {
+              "R01_0": 9270,
+              "R01_90": 9102,
+              "R05_0": 13310,
+              "R05_90": 13138,
+              "R08_0": 11342,
+              "R08_90": 10406
+            },
+            "reasons": [
+              "INTERNAL_STREET_REQUIRED"
+            ]
+          },
+          "direct_parcels": [
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 34.0,
+                "corridor_ids": [
+                  "SWK_AVE_-420_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "WEST"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                -402,
+                -860,
+                -360,
+                -826
+              ],
+              "buildings": 1,
+              "center": [
+                -381,
+                -843
+              ],
+              "id": "B3_R01_001",
+              "orientation": 0,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "WEST"
+              },
+              "area_m2": 912,
+              "bounds": [
+                -582,
+                -860,
+                -544,
+                -836
+              ],
+              "buildings": 1,
+              "center": [
+                -563,
+                -848
+              ],
+              "id": "B3_R08_002",
+              "orientation": 0,
+              "prototype": "R08",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 4
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 22.0,
+                "corridor_ids": [
+                  "SWK_AVE_-420_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -464,
+                -860,
+                -440,
+                -838
+              ],
+              "buildings": 1,
+              "center": [
+                -452,
+                -849
+              ],
+              "id": "B3_R05_003",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 22.0,
+                "corridor_ids": [
+                  "SWK_AVE_-240_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -284,
+                -860,
+                -260,
+                -838
+              ],
+              "buildings": 1,
+              "center": [
+                -272,
+                -849
+              ],
+              "id": "B3_R05_004",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_1"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -640,
+                -860,
+                -618,
+                -836
+              ],
+              "buildings": 1,
+              "center": [
+                -629,
+                -848
+              ],
+              "id": "B3_R05_005",
+              "orientation": 90,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 34.0,
+                "corridor_ids": [
+                  "SWK_AVE_-240_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                -302,
+                -838,
+                -260,
+                -804
+              ],
+              "buildings": 1,
+              "center": [
+                -281,
+                -821
+              ],
+              "id": "B3_R01_006",
+              "orientation": 0,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-420_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "WEST"
+              },
+              "area_m2": 912,
+              "bounds": [
+                -402,
+                -826,
+                -364,
+                -802
+              ],
+              "buildings": 1,
+              "center": [
+                -383,
+                -814
+              ],
+              "id": "B3_R08_007",
+              "orientation": 0,
+              "prototype": "R08",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 4
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_1"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -640,
+                -836,
+                -618,
+                -812
+              ],
+              "buildings": 1,
+              "center": [
+                -629,
+                -824
+              ],
+              "id": "B3_R05_008",
+              "orientation": 90,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_1"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -640,
+                -812,
+                -618,
+                -788
+              ],
+              "buildings": 1,
+              "center": [
+                -629,
+                -800
+              ],
+              "id": "B3_R05_009",
+              "orientation": 90,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 22.0,
+                "corridor_ids": [
+                  "SWK_AVE_-240_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -284,
+                -804,
+                -260,
+                -782
+              ],
+              "buildings": 1,
+              "center": [
+                -272,
+                -793
+              ],
+              "id": "B3_R05_010",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 34.0,
+                "corridor_ids": [
+                  "SWK_AVE_-420_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "WEST"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                -402,
+                -802,
+                -360,
+                -768
+              ],
+              "buildings": 1,
+              "center": [
+                -381,
+                -785
+              ],
+              "id": "B3_R01_011",
+              "orientation": 0,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-240_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 912,
+              "bounds": [
+                -298,
+                -782,
+                -260,
+                -758
+              ],
+              "buildings": 1,
+              "center": [
+                -279,
+                -770
+              ],
+              "id": "B3_R08_012",
+              "orientation": 0,
+              "prototype": "R08",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 4
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_1"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -640,
+                -788,
+                -618,
+                -764
+              ],
+              "buildings": 1,
+              "center": [
+                -629,
+                -776
+              ],
+              "id": "B3_R05_013",
+              "orientation": 90,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 22.0,
+                "corridor_ids": [
+                  "SWK_AVE_-420_0"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "WEST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -402,
+                -768,
+                -378,
+                -746
+              ],
+              "buildings": 1,
+              "center": [
+                -390,
+                -757
+              ],
+              "id": "B3_R05_014",
+              "orientation": 0,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_AVE_-600_1"
+                ],
+                "existing_only": true,
+                "gap_m": 0.0,
+                "ok": true,
+                "reasons": [],
+                "side": "EAST"
+              },
+              "area_m2": 528,
+              "bounds": [
+                -640,
+                -764,
+                -618,
+                -740
+              ],
+              "buildings": 1,
+              "center": [
+                -629,
+                -752
+              ],
+              "id": "B3_R05_015",
+              "orientation": 90,
+              "prototype": "R05",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 34.0,
+                "corridor_ids": [
+                  "SWK_CRS_-720_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "NORTH"
+              },
+              "area_m2": 1428,
+              "bounds": [
+                -360,
+                -781,
+                -326,
+                -739
+              ],
+              "buildings": 1,
+              "center": [
+                -343,
+                -760
+              ],
+              "id": "B3_R01_016",
+              "orientation": 90,
+              "prototype": "R01",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 1
+            },
+            {
+              "access": {
+                "connectivity": "VERIFIED",
+                "contact_m": 24.0,
+                "corridor_ids": [
+                  "SWK_CRS_-720_1"
+                ],
+                "existing_only": true,
+                "gap_m": 2.0,
+                "ok": true,
+                "reasons": [],
+                "side": "NORTH"
+              },
+              "area_m2": 912,
+              "bounds": [
+                -326,
+                -777,
+                -302,
+                -739
+              ],
+              "buildings": 1,
+              "center": [
+                -314,
+                -758
+              ],
+              "id": "B3_R08_017",
+              "orientation": 90,
+              "prototype": "R08",
+              "reasons": [],
+              "status": "DIRECT",
+              "terrain": {
+                "center_h_m": 0.0,
+                "height_source": "DIRECT_RUNTIME_1M",
+                "max_h_m": 0.0,
+                "max_slope_pct": 0.0,
+                "min_h_m": 0.0,
+                "slope_cls": "S0"
+              },
+              "units": 4
+            }
+          ],
+          "exclusion_reasons": [
+            "INTERNAL_STREET_REQUIRED",
+            "OBSTACLES_WATER_BEACH_OR_S4",
+            "SITE_A_PROTECTED"
+          ],
+          "gross_area_m2": 60000.0,
+          "land_use_reference": {
+            "hard_gate": false,
+            "informational_only": true,
+            "reference_band_pct": [
+              15,
+              30
+            ],
+            "residential_parcel_area_m2": 14112.0,
+            "residential_parcel_share_pct": 23.52
+          },
+          "meets_ideal_direct": false,
+          "meets_min_direct": false,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "unknown_data_summary": {
+            "A_unknown_m2": 0.0,
+            "C_unknown": 0,
+            "unverified_road_segments": [
+              "HILL_ROAD",
+              "RING",
+              "SPUR_11",
+              "SPUR_8",
+              "SUBR_1"
+            ]
+          }
+        }
+      },
+      "totals": {
+        "C_conditional": "PENDING_T016D",
+        "C_direct": 22,
+        "C_preliminary": 375,
+        "C_upper": 469,
+        "all_regions_meet_min_direct": false
+      }
+    }
+  },
+  "scenarios_internal_order": {
+    "ENVELOPE": {
+      "B1": [
+        -10,
+        830,
+        490,
+        1330
+      ],
+      "B2": [
+        -1000,
+        720,
+        -400,
+        1170
+      ],
+      "B3": [
+        -740,
+        -910,
+        -240,
+        -510
+      ]
+    },
+    "INITIAL": {
+      "B1": [
+        90,
+        930,
+        390,
+        1230
+      ],
+      "B2": [
+        -900,
+        820,
+        -500,
+        1070
+      ],
+      "B3": [
+        -640,
+        -810,
+        -340,
+        -610
+      ]
+    },
+    "REVISED": {
+      "B1": [
+        -10,
+        880,
+        390,
+        1330
+      ],
+      "B2": [
+        -950,
+        770,
+        -450,
+        1120
+      ],
+      "B3": [
+        -640,
+        -860,
+        -240,
+        -710
+      ]
+    }
+  },
+  "scenarios_spec_order": {
+    "ENVELOPE": {
+      "B1": [
+        -10,
+        490,
+        830,
+        1330
+      ],
+      "B2": [
+        -1000,
+        -400,
+        720,
+        1170
+      ],
+      "B3": [
+        -740,
+        -240,
+        -910,
+        -510
+      ]
+    },
+    "INITIAL": {
+      "B1": [
+        90,
+        390,
+        930,
+        1230
+      ],
+      "B2": [
+        -900,
+        -500,
+        820,
+        1070
+      ],
+      "B3": [
+        -640,
+        -340,
+        -810,
+        -610
+      ]
+    },
+    "REVISED": {
+      "B1": [
+        -10,
+        390,
+        880,
+        1330
+      ],
+      "B2": [
+        -950,
+        -450,
+        770,
+        1120
+      ],
+      "B3": [
+        -640,
+        -240,
+        -860,
+        -710
+      ]
+    }
+  },
+  "schema_version": 1,
+  "we01a_analyzer_version": "we01a-1.0"
+}

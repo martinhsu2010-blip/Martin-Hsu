@@ -1,0 +1,1962 @@
+{
+  "analyzer_version": "we01d-1.0",
+  "base_sha": "84319439243b51aa8d119e33eb62a0637feea887",
+  "compatibility_key": {
+    "base_sha": "84319439243b51aa8d119e33eb62a0637feea887",
+    "desktop_high_static_fingerprint": "52653bc578411a9eda9b314581bb16f45f3cb4eb1be623f9d39dc21ade365482",
+    "phone_low_static_fingerprint": "e473d222db998487e5fcfb187349e5006e6f619c1d15cca6bae1a2ee380352aa",
+    "polygon_revision": 2,
+    "schema_version": 1,
+    "t016b_analyzer_version": "we01b-1.0",
+    "t016c_analyzer_version": "we01c-1.0",
+    "t016d_analyzer_version": "we01d-1.0",
+    "we01a_analyzer_version": "we01a-1.0"
+  },
+  "deterministic_sha256": "13fe6946f05ea25306dbdf1484e82780c72b36ee703c01f5cecb3012bb4bb8ad",
+  "polygon_revision": 2,
+  "presets": {
+    "DESKTOP_HIGH": {
+      "file_sha256": "7b802de45417b51e28ec04fa8c782507149006ca7a2212d834c0e73659765578",
+      "static_fingerprint": "52653bc578411a9eda9b314581bb16f45f3cb4eb1be623f9d39dc21ade365482"
+    },
+    "PHONE_LOW": {
+      "file_sha256": "01919444a89a7d0d695ab8b0afccc1b35c4101ae288ff03629201f93284c3d24",
+      "static_fingerprint": "e473d222db998487e5fcfb187349e5006e6f619c1d15cca6bae1a2ee380352aa"
+    }
+  },
+  "scenarios": {
+    "ENVELOPE": {
+      "B1": {
+        "candidate_count": 330,
+        "checked_count": 330,
+        "excluded_sources": {
+          "C01": {
+            "conflicting_parcel_ids": [
+              "B1_R02_005"
+            ],
+            "reason": "DIRECT_PARCEL_CONFLICT"
+          }
+        },
+        "rejection_summary": {
+          "BEACH_ENCROACHMENT_NOT_APPROVED": 35,
+          "DIRECT_PARCEL_CONFLICT": 116,
+          "STREET_OUTSIDE_REGION": 79,
+          "STREET_OVERLAPS_OTHER_ROAD": 46
+        },
+        "score_lattice_step": 3,
+        "search_budget_exhausted": false,
+        "selected_count": 3,
+        "selected_streets": [
+          {
+            "corridor_geometry": {
+              "bounds": [
+                104.5,
+                960.0,
+                115.5,
+                1110.0
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "ENVELOPE_B1_ST_0085",
+              "is_rect": true,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  115.5,
+                  960.0
+                ],
+                [
+                  115.5,
+                  1110.0
+                ],
+                [
+                  104.5,
+                  1110.0
+                ],
+                [
+                  104.5,
+                  960.0
+                ]
+              ],
+              "segment_id": "ENVELOPE_B1_ST_0085",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            "dependent_parcel_ids": [
+              "B1_R01_008",
+              "B1_R02_011",
+              "B1_R01_016",
+              "B1_R02_017"
+            ],
+            "end": [
+              110.0,
+              1110.0
+            ],
+            "existing": false,
+            "external_connection": "J:X01->AVE_-240@START",
+            "external_connection_outside_region": false,
+            "junction_run_m": 6.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B1",
+            "rejection_reasons": [],
+            "scenario_id": "ENVELOPE",
+            "score_new_centers": 321,
+            "source_road_id": "C02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              110.0,
+              960.0
+            ],
+            "street_id": "ENVELOPE_B1_ST_0085",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          },
+          {
+            "corridor_geometry": {
+              "bounds": [
+                41.592,
+                960.0,
+                52.592,
+                1110.0
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "ENVELOPE_B1_ST_0305",
+              "is_rect": true,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  52.592,
+                  960.0
+                ],
+                [
+                  52.592,
+                  1110.0
+                ],
+                [
+                  41.592,
+                  1110.0
+                ],
+                [
+                  41.592,
+                  960.0
+                ]
+              ],
+              "segment_id": "ENVELOPE_B1_ST_0305",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            "dependent_parcel_ids": [
+              "B1_R02_007",
+              "B1_R02_009",
+              "B1_R01_012",
+              "B1_R02_013",
+              "B1_R02_015",
+              "B1_R02_019",
+              "B1_R01_020"
+            ],
+            "end": [
+              47.092,
+              1110.0
+            ],
+            "existing": false,
+            "external_connection": "J:X01->AVE_-240@START",
+            "external_connection_outside_region": false,
+            "junction_run_m": 5.882,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B1",
+            "rejection_reasons": [],
+            "scenario_id": "ENVELOPE",
+            "score_new_centers": 321,
+            "source_road_id": "X01",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              47.092,
+              960.0
+            ],
+            "street_id": "ENVELOPE_B1_ST_0305",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          },
+          {
+            "corridor_geometry": {
+              "bounds": [
+                179.5,
+                960.0,
+                190.5,
+                1110.0
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "ENVELOPE_B1_ST_0115",
+              "is_rect": true,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  190.5,
+                  960.0
+                ],
+                [
+                  190.5,
+                  1110.0
+                ],
+                [
+                  179.5,
+                  1110.0
+                ],
+                [
+                  179.5,
+                  960.0
+                ]
+              ],
+              "segment_id": "ENVELOPE_B1_ST_0115",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            "dependent_parcel_ids": [
+              "B1_R01_010",
+              "B1_R01_014",
+              "B1_R01_018",
+              "B1_R02_021"
+            ],
+            "end": [
+              185.0,
+              1110.0
+            ],
+            "existing": false,
+            "external_connection": "J:X01->AVE_-240@START",
+            "external_connection_outside_region": false,
+            "junction_run_m": 6.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B1",
+            "rejection_reasons": [],
+            "scenario_id": "ENVELOPE",
+            "score_new_centers": 188,
+            "source_road_id": "C02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              185.0,
+              960.0
+            ],
+            "street_id": "ENVELOPE_B1_ST_0115",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          }
+        ],
+        "tier1_passed_count": 54,
+        "tier1_rejected_count": 276,
+        "tier1_rejection_counts": {
+          "BEACH_ENCROACHMENT_NOT_APPROVED": 35,
+          "DIRECT_PARCEL_CONFLICT": 116,
+          "STREET_OUTSIDE_REGION": 79,
+          "STREET_OVERLAPS_OTHER_ROAD": 46
+        },
+        "tier2_rejected_count": 0,
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 3,
+        "unserved_lattice_centers_initial": 10795,
+        "zero_gain_count": 9
+      },
+      "B2": {
+        "candidate_count": 170,
+        "checked_count": 170,
+        "excluded_sources": {
+          "C01": {
+            "conflicting_parcel_ids": [
+              "B1_R02_005"
+            ],
+            "reason": "DIRECT_PARCEL_CONFLICT"
+          }
+        },
+        "rejection_summary": {
+          "STREET_OUTSIDE_REGION": 11,
+          "TIER1_BLOCKED_OR_UNKNOWN": 3
+        },
+        "score_lattice_step": 3,
+        "search_budget_exhausted": false,
+        "selected_count": 3,
+        "selected_streets": [
+          {
+            "corridor_geometry": {
+              "bounds": [
+                -817.279,
+                880.032,
+                -794.517,
+                1030.433
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "ENVELOPE_B2_ST_0010",
+              "is_rect": false,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  -805.483,
+                  1030.433
+                ],
+                [
+                  -817.279,
+                  880.897
+                ],
+                [
+                  -806.313,
+                  880.032
+                ],
+                [
+                  -794.517,
+                  1029.567
+                ]
+              ],
+              "segment_id": "ENVELOPE_B2_ST_0010",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            "dependent_parcel_ids": [
+              "B2_R05_005",
+              "B2_R05_008",
+              "B2_R05_011",
+              "B2_R05_014",
+              "B2_R05_017",
+              "B2_R05_020",
+              "B2_R05_023",
+              "B2_R05_026",
+              "B2_R05_029",
+              "B2_R05_032",
+              "B2_R05_035",
+              "B2_R05_039",
+              "B2_R05_047",
+              "B2_R05_050",
+              "B2_R05_053"
+            ],
+            "end": [
+              -811.796,
+              880.465
+            ],
+            "existing": false,
+            "external_connection": "J:H02->AVE_-240@END",
+            "external_connection_outside_region": false,
+            "junction_run_m": 6.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B2",
+            "rejection_reasons": [],
+            "scenario_id": "ENVELOPE",
+            "score_new_centers": 85,
+            "source_road_id": "H02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              -800.0,
+              1030.0
+            ],
+            "street_id": "ENVELOPE_B2_ST_0010",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          },
+          {
+            "corridor_geometry": {
+              "bounds": [
+                -742.512,
+                874.13,
+                -719.75,
+                1024.53
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "ENVELOPE_B2_ST_0040",
+              "is_rect": false,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  -730.716,
+                  1024.53
+                ],
+                [
+                  -742.512,
+                  874.995
+                ],
+                [
+                  -731.546,
+                  874.13
+                ],
+                [
+                  -719.75,
+                  1023.665
+                ]
+              ],
+              "segment_id": "ENVELOPE_B2_ST_0040",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            "dependent_parcel_ids": [
+              "B2_R05_003",
+              "B2_R05_006",
+              "B2_R05_009",
+              "B2_R05_012",
+              "B2_R05_015",
+              "B2_R05_018",
+              "B2_R05_021",
+              "B2_R05_024",
+              "B2_R05_027",
+              "B2_R05_030",
+              "B2_R05_033",
+              "B2_R05_036",
+              "B2_R05_043",
+              "B2_R05_049"
+            ],
+            "end": [
+              -737.029,
+              874.562
+            ],
+            "existing": false,
+            "external_connection": "J:H02->AVE_-240@END",
+            "external_connection_outside_region": false,
+            "junction_run_m": 8.824,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B2",
+            "rejection_reasons": [],
+            "scenario_id": "ENVELOPE",
+            "score_new_centers": 80,
+            "source_road_id": "H02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              -725.233,
+              1024.098
+            ],
+            "street_id": "ENVELOPE_B2_ST_0040",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          },
+          {
+            "corridor_geometry": {
+              "bounds": [
+                -493.287,
+                854.454,
+                -470.525,
+                1004.855
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "ENVELOPE_B2_ST_0140",
+              "is_rect": false,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  -481.491,
+                  1004.855
+                ],
+                [
+                  -493.287,
+                  855.319
+                ],
+                [
+                  -482.321,
+                  854.454
+                ],
+                [
+                  -470.525,
+                  1003.99
+                ]
+              ],
+              "segment_id": "ENVELOPE_B2_ST_0140",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            "dependent_parcel_ids": [
+              "B2_R05_001",
+              "B2_R05_002",
+              "B2_R05_004",
+              "B2_R05_007",
+              "B2_R05_010",
+              "B2_R05_013",
+              "B2_R05_016",
+              "B2_R05_019",
+              "B2_R05_022",
+              "B2_R05_025",
+              "B2_R05_028",
+              "B2_R05_031",
+              "B2_R05_034",
+              "B2_R05_038"
+            ],
+            "end": [
+              -487.804,
+              854.887
+            ],
+            "existing": false,
+            "external_connection": "J:H02->AVE_-240@END",
+            "external_connection_outside_region": false,
+            "junction_run_m": 9.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B2",
+            "rejection_reasons": [],
+            "scenario_id": "ENVELOPE",
+            "score_new_centers": 78,
+            "source_road_id": "H02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              -476.008,
+              1004.422
+            ],
+            "street_id": "ENVELOPE_B2_ST_0140",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          }
+        ],
+        "tier1_passed_count": 156,
+        "tier1_rejected_count": 14,
+        "tier1_rejection_counts": {
+          "STREET_OUTSIDE_REGION": 11,
+          "TIER1_BLOCKED_OR_UNKNOWN": 3
+        },
+        "tier2_rejected_count": 0,
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 3,
+        "unserved_lattice_centers_initial": 20368,
+        "zero_gain_count": 5
+      },
+      "B3": {
+        "candidate_count": 1010,
+        "checked_count": 1010,
+        "excluded_sources": {
+          "C01": {
+            "conflicting_parcel_ids": [
+              "B1_R02_005"
+            ],
+            "reason": "DIRECT_PARCEL_CONFLICT"
+          }
+        },
+        "rejection_summary": {
+          "CORRIDOR_BLOCKED": 6,
+          "CORRIDOR_BLOCKED_ROAD": 3,
+          "COR_MARGIN": 1,
+          "DIRECT_PARCEL_CONFLICT": 234,
+          "STREET_OUTSIDE_REGION": 220,
+          "STREET_OVERLAPS_OTHER_ROAD": 252,
+          "TIER1_BLOCKED_OR_UNKNOWN": 268
+        },
+        "score_lattice_step": 3,
+        "search_budget_exhausted": false,
+        "selected_count": 0,
+        "selected_streets": [],
+        "tier1_passed_count": 36,
+        "tier1_rejected_count": 974,
+        "tier1_rejection_counts": {
+          "DIRECT_PARCEL_CONFLICT": 234,
+          "STREET_OUTSIDE_REGION": 220,
+          "STREET_OVERLAPS_OTHER_ROAD": 252,
+          "TIER1_BLOCKED_OR_UNKNOWN": 268
+        },
+        "tier2_rejected_count": 6,
+        "tier2_rejection_counts": {
+          "CORRIDOR_BLOCKED": 6,
+          "CORRIDOR_BLOCKED_ROAD": 3,
+          "COR_MARGIN": 1
+        },
+        "tier2_verified_count": 6,
+        "unserved_lattice_centers_initial": 227,
+        "zero_gain_count": 30
+      }
+    },
+    "INITIAL": {
+      "B1": {
+        "candidate_count": 200,
+        "checked_count": 200,
+        "excluded_sources": {},
+        "rejection_summary": {
+          "BEACH_ENCROACHMENT_NOT_APPROVED": 55,
+          "STREET_OUTSIDE_REGION": 40,
+          "STREET_OVERLAPS_OTHER_ROAD": 19,
+          "TIER1_BLOCKED_OR_UNKNOWN": 6
+        },
+        "score_lattice_step": 3,
+        "search_budget_exhausted": false,
+        "selected_count": 3,
+        "selected_streets": [
+          {
+            "corridor_geometry": {
+              "bounds": [
+                129.5,
+                960.0,
+                140.5,
+                1110.0
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "INITIAL_B1_ST_0135",
+              "is_rect": true,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  140.5,
+                  960.0
+                ],
+                [
+                  140.5,
+                  1110.0
+                ],
+                [
+                  129.5,
+                  1110.0
+                ],
+                [
+                  129.5,
+                  960.0
+                ]
+              ],
+              "segment_id": "INITIAL_B1_ST_0135",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            "dependent_parcel_ids": [
+              "B1_R02_001",
+              "B1_R02_003",
+              "B1_R01_004",
+              "B1_R02_005",
+              "B1_R01_006",
+              "B1_R02_007",
+              "B1_R01_008"
+            ],
+            "end": [
+              135.0,
+              1110.0
+            ],
+            "existing": false,
+            "external_connection": "J:C01->CRS_880@START",
+            "external_connection_outside_region": false,
+            "junction_run_m": 6.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B1",
+            "rejection_reasons": [],
+            "scenario_id": "INITIAL",
+            "score_new_centers": 223,
+            "source_road_id": "C02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              135.0,
+              960.0
+            ],
+            "street_id": "INITIAL_B1_ST_0135",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          },
+          {
+            "corridor_geometry": {
+              "bounds": [
+                204.5,
+                960.0,
+                215.5,
+                1110.0
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "INITIAL_B1_ST_0165",
+              "is_rect": true,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  215.5,
+                  960.0
+                ],
+                [
+                  215.5,
+                  1110.0
+                ],
+                [
+                  204.5,
+                  1110.0
+                ],
+                [
+                  204.5,
+                  960.0
+                ]
+              ],
+              "segment_id": "INITIAL_B1_ST_0165",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            "dependent_parcel_ids": [
+              "B1_R01_010"
+            ],
+            "end": [
+              210.0,
+              1110.0
+            ],
+            "existing": false,
+            "external_connection": "J:C01->CRS_880@START",
+            "external_connection_outside_region": false,
+            "junction_run_m": 6.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B1",
+            "rejection_reasons": [],
+            "scenario_id": "INITIAL",
+            "score_new_centers": 154,
+            "source_road_id": "C02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              210.0,
+              960.0
+            ],
+            "street_id": "INITIAL_B1_ST_0165",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          },
+          {
+            "corridor_geometry": {
+              "bounds": [
+                150.0,
+                1182.008,
+                240.0,
+                1193.008
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "INITIAL_B1_ST_0103",
+              "is_rect": true,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  240.0,
+                  1193.008
+                ],
+                [
+                  150.0,
+                  1193.008
+                ],
+                [
+                  150.0,
+                  1182.008
+                ],
+                [
+                  240.0,
+                  1182.008
+                ]
+              ],
+              "segment_id": "INITIAL_B1_ST_0103",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            "dependent_parcel_ids": [
+              "B1_R02_011",
+              "B1_R01_014"
+            ],
+            "end": [
+              150.0,
+              1187.508
+            ],
+            "existing": false,
+            "external_connection": "J:C01->CRS_880@START",
+            "external_connection_outside_region": false,
+            "junction_run_m": 15.0,
+            "length_m": 90,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B1",
+            "rejection_reasons": [],
+            "scenario_id": "INITIAL",
+            "score_new_centers": 134,
+            "source_road_id": "C01",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              240.0,
+              1187.508
+            ],
+            "street_id": "INITIAL_B1_ST_0103",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          }
+        ],
+        "tier1_passed_count": 80,
+        "tier1_rejected_count": 120,
+        "tier1_rejection_counts": {
+          "BEACH_ENCROACHMENT_NOT_APPROVED": 55,
+          "STREET_OUTSIDE_REGION": 40,
+          "STREET_OVERLAPS_OTHER_ROAD": 19,
+          "TIER1_BLOCKED_OR_UNKNOWN": 6
+        },
+        "tier2_rejected_count": 0,
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 3,
+        "unserved_lattice_centers_initial": 3566,
+        "zero_gain_count": 5
+      },
+      "B2": {
+        "candidate_count": 130,
+        "checked_count": 130,
+        "excluded_sources": {},
+        "rejection_summary": {
+          "STREET_OUTSIDE_REGION": 57,
+          "TIER1_BLOCKED_OR_UNKNOWN": 2
+        },
+        "score_lattice_step": 3,
+        "search_budget_exhausted": false,
+        "selected_count": 3,
+        "selected_streets": [
+          {
+            "corridor_geometry": {
+              "bounds": [
+                -717.593,
+                872.162,
+                -694.827,
+                1022.562
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "INITIAL_B2_ST_0050",
+              "is_rect": false,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  -705.793,
+                  1022.562
+                ],
+                [
+                  -717.593,
+                  873.027
+                ],
+                [
+                  -706.627,
+                  872.162
+                ],
+                [
+                  -694.827,
+                  1021.697
+                ]
+              ],
+              "segment_id": "INITIAL_B2_ST_0050",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            "dependent_parcel_ids": [
+              "B2_R05_001",
+              "B2_R05_004",
+              "B2_R05_008",
+              "B2_R05_012",
+              "B2_R05_016",
+              "B2_R05_020",
+              "B2_R05_024",
+              "B2_R05_035"
+            ],
+            "end": [
+              -712.11,
+              872.594
+            ],
+            "existing": false,
+            "external_connection": "J:H02->AVE_-240@END",
+            "external_connection_outside_region": false,
+            "junction_run_m": 8.824,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B2",
+            "rejection_reasons": [],
+            "scenario_id": "INITIAL",
+            "score_new_centers": 81,
+            "source_road_id": "H02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              -700.31,
+              1022.129
+            ],
+            "street_id": "INITIAL_B2_ST_0050",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          },
+          {
+            "corridor_geometry": {
+              "bounds": [
+                -817.279,
+                880.032,
+                -794.517,
+                1030.433
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "INITIAL_B2_ST_0010",
+              "is_rect": false,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  -805.483,
+                  1030.433
+                ],
+                [
+                  -817.279,
+                  880.897
+                ],
+                [
+                  -806.313,
+                  880.032
+                ],
+                [
+                  -794.517,
+                  1029.567
+                ]
+              ],
+              "segment_id": "INITIAL_B2_ST_0010",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            "dependent_parcel_ids": [
+              "B2_R05_003",
+              "B2_R05_006",
+              "B2_R05_007",
+              "B2_R05_010",
+              "B2_R05_011",
+              "B2_R05_014",
+              "B2_R05_015",
+              "B2_R05_018",
+              "B2_R05_019",
+              "B2_R05_022",
+              "B2_R05_023",
+              "B2_R05_026",
+              "B2_R05_034",
+              "B2_R05_037",
+              "B2_R05_038"
+            ],
+            "end": [
+              -811.796,
+              880.465
+            ],
+            "existing": false,
+            "external_connection": "J:H02->AVE_-240@END",
+            "external_connection_outside_region": false,
+            "junction_run_m": 6.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B2",
+            "rejection_reasons": [],
+            "scenario_id": "INITIAL",
+            "score_new_centers": 80,
+            "source_road_id": "H02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              -800.0,
+              1030.0
+            ],
+            "street_id": "INITIAL_B2_ST_0010",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          },
+          {
+            "corridor_geometry": {
+              "bounds": [
+                -767.434,
+                876.097,
+                -744.672,
+                1026.497
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "INITIAL_B2_ST_0030",
+              "is_rect": false,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  -755.638,
+                  1026.497
+                ],
+                [
+                  -767.434,
+                  876.962
+                ],
+                [
+                  -756.468,
+                  876.097
+                ],
+                [
+                  -744.672,
+                  1025.632
+                ]
+              ],
+              "segment_id": "INITIAL_B2_ST_0030",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            "dependent_parcel_ids": [
+              "B2_R05_002",
+              "B2_R05_005",
+              "B2_R05_009",
+              "B2_R05_013",
+              "B2_R05_017",
+              "B2_R05_021",
+              "B2_R05_025",
+              "B2_R05_036"
+            ],
+            "end": [
+              -761.951,
+              876.529
+            ],
+            "existing": false,
+            "external_connection": "J:H02->AVE_-240@END",
+            "external_connection_outside_region": false,
+            "junction_run_m": 6.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B2",
+            "rejection_reasons": [],
+            "scenario_id": "INITIAL",
+            "score_new_centers": 76,
+            "source_road_id": "H02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              -750.155,
+              1026.065
+            ],
+            "street_id": "INITIAL_B2_ST_0030",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          }
+        ],
+        "tier1_passed_count": 71,
+        "tier1_rejected_count": 59,
+        "tier1_rejection_counts": {
+          "STREET_OUTSIDE_REGION": 57,
+          "TIER1_BLOCKED_OR_UNKNOWN": 2
+        },
+        "tier2_rejected_count": 0,
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 3,
+        "unserved_lattice_centers_initial": 8006,
+        "zero_gain_count": 0
+      },
+      "B3": {
+        "candidate_count": 280,
+        "checked_count": 280,
+        "excluded_sources": {},
+        "rejection_summary": {
+          "DIRECT_PARCEL_CONFLICT": 41,
+          "STREET_OUTSIDE_REGION": 82,
+          "STREET_OVERLAPS_OTHER_ROAD": 54,
+          "TIER1_BLOCKED_OR_UNKNOWN": 88
+        },
+        "score_lattice_step": 3,
+        "search_budget_exhausted": false,
+        "selected_count": 0,
+        "selected_streets": [],
+        "tier1_passed_count": 15,
+        "tier1_rejected_count": 265,
+        "tier1_rejection_counts": {
+          "DIRECT_PARCEL_CONFLICT": 41,
+          "STREET_OUTSIDE_REGION": 82,
+          "STREET_OVERLAPS_OTHER_ROAD": 54,
+          "TIER1_BLOCKED_OR_UNKNOWN": 88
+        },
+        "tier2_rejected_count": 0,
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 0,
+        "unserved_lattice_centers_initial": 0,
+        "zero_gain_count": 15
+      }
+    },
+    "REVISED": {
+      "B1": {
+        "candidate_count": 270,
+        "checked_count": 270,
+        "excluded_sources": {
+          "C01": {
+            "conflicting_parcel_ids": [
+              "B1_R02_005"
+            ],
+            "reason": "DIRECT_PARCEL_CONFLICT"
+          }
+        },
+        "rejection_summary": {
+          "BEACH_ENCROACHMENT_NOT_APPROVED": 21,
+          "DIRECT_PARCEL_CONFLICT": 116,
+          "STREET_OUTSIDE_REGION": 81,
+          "STREET_OVERLAPS_OTHER_ROAD": 7
+        },
+        "score_lattice_step": 3,
+        "search_budget_exhausted": false,
+        "selected_count": 3,
+        "selected_streets": [
+          {
+            "corridor_geometry": {
+              "bounds": [
+                104.5,
+                960.0,
+                115.5,
+                1110.0
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "REVISED_B1_ST_0045",
+              "is_rect": true,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  115.5,
+                  960.0
+                ],
+                [
+                  115.5,
+                  1110.0
+                ],
+                [
+                  104.5,
+                  1110.0
+                ],
+                [
+                  104.5,
+                  960.0
+                ]
+              ],
+              "segment_id": "REVISED_B1_ST_0045",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            "dependent_parcel_ids": [
+              "B1_R01_008",
+              "B1_R02_011",
+              "B1_R01_016",
+              "B1_R02_017"
+            ],
+            "end": [
+              110.0,
+              1110.0
+            ],
+            "existing": false,
+            "external_connection": "J:X01->AVE_-240@START",
+            "external_connection_outside_region": false,
+            "junction_run_m": 6.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B1",
+            "rejection_reasons": [],
+            "scenario_id": "REVISED",
+            "score_new_centers": 317,
+            "source_road_id": "C02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              110.0,
+              960.0
+            ],
+            "street_id": "REVISED_B1_ST_0045",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          },
+          {
+            "corridor_geometry": {
+              "bounds": [
+                41.592,
+                960.0,
+                52.592,
+                1110.0
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "REVISED_B1_ST_0245",
+              "is_rect": true,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  52.592,
+                  960.0
+                ],
+                [
+                  52.592,
+                  1110.0
+                ],
+                [
+                  41.592,
+                  1110.0
+                ],
+                [
+                  41.592,
+                  960.0
+                ]
+              ],
+              "segment_id": "REVISED_B1_ST_0245",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            "dependent_parcel_ids": [
+              "B1_R02_007",
+              "B1_R02_009",
+              "B1_R01_012",
+              "B1_R02_013",
+              "B1_R02_015",
+              "B1_R02_019",
+              "B1_R01_020"
+            ],
+            "end": [
+              47.092,
+              1110.0
+            ],
+            "existing": false,
+            "external_connection": "J:X01->AVE_-240@START",
+            "external_connection_outside_region": false,
+            "junction_run_m": 5.882,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B1",
+            "rejection_reasons": [],
+            "scenario_id": "REVISED",
+            "score_new_centers": 317,
+            "source_road_id": "X01",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              47.092,
+              960.0
+            ],
+            "street_id": "REVISED_B1_ST_0245",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          },
+          {
+            "corridor_geometry": {
+              "bounds": [
+                179.5,
+                960.0,
+                190.5,
+                1110.0
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "REVISED_B1_ST_0075",
+              "is_rect": true,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  190.5,
+                  960.0
+                ],
+                [
+                  190.5,
+                  1110.0
+                ],
+                [
+                  179.5,
+                  1110.0
+                ],
+                [
+                  179.5,
+                  960.0
+                ]
+              ],
+              "segment_id": "REVISED_B1_ST_0075",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            "dependent_parcel_ids": [
+              "B1_R01_010",
+              "B1_R01_014",
+              "B1_R01_018",
+              "B1_R02_021"
+            ],
+            "end": [
+              185.0,
+              1110.0
+            ],
+            "existing": false,
+            "external_connection": "J:X01->AVE_-240@START",
+            "external_connection_outside_region": false,
+            "junction_run_m": 6.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B1",
+            "rejection_reasons": [],
+            "scenario_id": "REVISED",
+            "score_new_centers": 184,
+            "source_road_id": "C02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              185.0,
+              960.0
+            ],
+            "street_id": "REVISED_B1_ST_0075",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          }
+        ],
+        "tier1_passed_count": 45,
+        "tier1_rejected_count": 225,
+        "tier1_rejection_counts": {
+          "BEACH_ENCROACHMENT_NOT_APPROVED": 21,
+          "DIRECT_PARCEL_CONFLICT": 116,
+          "STREET_OUTSIDE_REGION": 81,
+          "STREET_OVERLAPS_OTHER_ROAD": 7
+        },
+        "tier2_rejected_count": 0,
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 3,
+        "unserved_lattice_centers_initial": 10794,
+        "zero_gain_count": 0
+      },
+      "B2": {
+        "candidate_count": 150,
+        "checked_count": 150,
+        "excluded_sources": {
+          "C01": {
+            "conflicting_parcel_ids": [
+              "B1_R02_005"
+            ],
+            "reason": "DIRECT_PARCEL_CONFLICT"
+          }
+        },
+        "rejection_summary": {
+          "STREET_OUTSIDE_REGION": 39,
+          "TIER1_BLOCKED_OR_UNKNOWN": 2
+        },
+        "score_lattice_step": 3,
+        "search_budget_exhausted": false,
+        "selected_count": 3,
+        "selected_streets": [
+          {
+            "corridor_geometry": {
+              "bounds": [
+                -817.279,
+                880.032,
+                -794.517,
+                1030.433
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "REVISED_B2_ST_0010",
+              "is_rect": false,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  -805.483,
+                  1030.433
+                ],
+                [
+                  -817.279,
+                  880.897
+                ],
+                [
+                  -806.313,
+                  880.032
+                ],
+                [
+                  -794.517,
+                  1029.567
+                ]
+              ],
+              "segment_id": "REVISED_B2_ST_0010",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            "dependent_parcel_ids": [
+              "B2_R05_005",
+              "B2_R05_008",
+              "B2_R05_010",
+              "B2_R05_013",
+              "B2_R05_015",
+              "B2_R05_018",
+              "B2_R05_020",
+              "B2_R05_023",
+              "B2_R05_025",
+              "B2_R05_028",
+              "B2_R05_030",
+              "B2_R05_034",
+              "B2_R05_040",
+              "B2_R05_044",
+              "B2_R05_045"
+            ],
+            "end": [
+              -811.796,
+              880.465
+            ],
+            "existing": false,
+            "external_connection": "J:H02->AVE_-240@END",
+            "external_connection_outside_region": false,
+            "junction_run_m": 6.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B2",
+            "rejection_reasons": [],
+            "scenario_id": "REVISED",
+            "score_new_centers": 81,
+            "source_road_id": "H02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              -800.0,
+              1030.0
+            ],
+            "street_id": "REVISED_B2_ST_0010",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          },
+          {
+            "corridor_geometry": {
+              "bounds": [
+                -767.434,
+                876.097,
+                -744.672,
+                1026.497
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "REVISED_B2_ST_0030",
+              "is_rect": false,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  -755.638,
+                  1026.497
+                ],
+                [
+                  -767.434,
+                  876.962
+                ],
+                [
+                  -756.468,
+                  876.097
+                ],
+                [
+                  -744.672,
+                  1025.632
+                ]
+              ],
+              "segment_id": "REVISED_B2_ST_0030",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            "dependent_parcel_ids": [
+              "B2_R05_003",
+              "B2_R05_006",
+              "B2_R05_011",
+              "B2_R05_016",
+              "B2_R05_021",
+              "B2_R05_026",
+              "B2_R05_031",
+              "B2_R05_043"
+            ],
+            "end": [
+              -761.951,
+              876.529
+            ],
+            "existing": false,
+            "external_connection": "J:H02->AVE_-240@END",
+            "external_connection_outside_region": false,
+            "junction_run_m": 6.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B2",
+            "rejection_reasons": [],
+            "scenario_id": "REVISED",
+            "score_new_centers": 80,
+            "source_road_id": "H02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              -750.155,
+              1026.065
+            ],
+            "street_id": "REVISED_B2_ST_0030",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          },
+          {
+            "corridor_geometry": {
+              "bounds": [
+                -518.21,
+                856.421,
+                -495.448,
+                1006.822
+              ],
+              "category": "ROAD",
+              "connectivity": "VERIFIED",
+              "existing": false,
+              "id": "REVISED_B2_ST_0130",
+              "is_rect": false,
+              "is_roundabout": false,
+              "polygon": [
+                [
+                  -506.414,
+                  1006.822
+                ],
+                [
+                  -518.21,
+                  857.286
+                ],
+                [
+                  -507.244,
+                  856.421
+                ],
+                [
+                  -495.448,
+                  1005.957
+                ]
+              ],
+              "segment_id": "REVISED_B2_ST_0130",
+              "source_group": "INTERNAL_STREETS"
+            },
+            "corridor_width_m": 11.0,
+            "dependency_chain": [
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            "dependent_parcel_ids": [
+              "B2_R05_001",
+              "B2_R05_002",
+              "B2_R05_004",
+              "B2_R05_007",
+              "B2_R05_009",
+              "B2_R05_012",
+              "B2_R05_014",
+              "B2_R05_017",
+              "B2_R05_019",
+              "B2_R05_022",
+              "B2_R05_024",
+              "B2_R05_027",
+              "B2_R05_029",
+              "B2_R05_033"
+            ],
+            "end": [
+              -512.727,
+              856.854
+            ],
+            "existing": false,
+            "external_connection": "J:H02->AVE_-240@END",
+            "external_connection_outside_region": false,
+            "junction_run_m": 9.0,
+            "length_m": 150,
+            "max_grade_pct": 0.0,
+            "obstacle_intersections": {
+              "advisory_street_furniture": [],
+              "blocking": [],
+              "conservative": [],
+              "junction_overlaps": []
+            },
+            "region_id": "B2",
+            "rejection_reasons": [],
+            "scenario_id": "REVISED",
+            "score_new_centers": 78,
+            "source_road_id": "H02",
+            "source_type": "CONDITIONAL_ROAD",
+            "start": [
+              -500.931,
+              1006.389
+            ],
+            "street_id": "REVISED_B2_ST_0130",
+            "verification_status": "CONDITIONAL_VERIFIED"
+          }
+        ],
+        "tier1_passed_count": 109,
+        "tier1_rejected_count": 41,
+        "tier1_rejection_counts": {
+          "STREET_OUTSIDE_REGION": 39,
+          "TIER1_BLOCKED_OR_UNKNOWN": 2
+        },
+        "tier2_rejected_count": 0,
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 3,
+        "unserved_lattice_centers_initial": 13744,
+        "zero_gain_count": 0
+      },
+      "B3": {
+        "candidate_count": 340,
+        "checked_count": 340,
+        "excluded_sources": {
+          "C01": {
+            "conflicting_parcel_ids": [
+              "B1_R02_005"
+            ],
+            "reason": "DIRECT_PARCEL_CONFLICT"
+          }
+        },
+        "rejection_summary": {
+          "DIRECT_PARCEL_CONFLICT": 121,
+          "STREET_OUTSIDE_REGION": 124,
+          "STREET_OVERLAPS_OTHER_ROAD": 41,
+          "TIER1_BLOCKED_OR_UNKNOWN": 40
+        },
+        "score_lattice_step": 3,
+        "search_budget_exhausted": false,
+        "selected_count": 0,
+        "selected_streets": [],
+        "tier1_passed_count": 14,
+        "tier1_rejected_count": 326,
+        "tier1_rejection_counts": {
+          "DIRECT_PARCEL_CONFLICT": 121,
+          "STREET_OUTSIDE_REGION": 124,
+          "STREET_OVERLAPS_OTHER_ROAD": 41,
+          "TIER1_BLOCKED_OR_UNKNOWN": 40
+        },
+        "tier2_rejected_count": 0,
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 0,
+        "unserved_lattice_centers_initial": 311,
+        "zero_gain_count": 14
+      }
+    }
+  },
+  "schema_version": 1,
+  "sources": {
+    "capacity_inventory_sha256": "0efa1a1763b64b91ac3ab671b0d8d7360c939c32c26190d4b16e8a2a5246bc1a",
+    "parcel_candidates_sha256": "e27f457a95cbe04d529563f3bc002425e8e818efc7c5571f1b741b0f3722a586",
+    "road_survey_sha256": "4afd52d2b51273f1e890aeda3c3ade22927124926c12a1e3aa3cefe30f3eeb27",
+    "t016b_analyzer_version": "we01b-1.0",
+    "t016c_analyzer_version": "we01c-1.0"
+  },
+  "summary": {
+    "ENVELOPE": {
+      "B1": {
+        "candidate_count": 330,
+        "rejection_summary": {
+          "BEACH_ENCROACHMENT_NOT_APPROVED": 35,
+          "DIRECT_PARCEL_CONFLICT": 116,
+          "STREET_OUTSIDE_REGION": 79,
+          "STREET_OVERLAPS_OTHER_ROAD": 46
+        },
+        "selected_count": 3,
+        "tier1_passed_count": 54,
+        "tier1_rejection_counts": {
+          "BEACH_ENCROACHMENT_NOT_APPROVED": 35,
+          "DIRECT_PARCEL_CONFLICT": 116,
+          "STREET_OUTSIDE_REGION": 79,
+          "STREET_OVERLAPS_OTHER_ROAD": 46
+        },
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 3,
+        "zero_gain_count": 9
+      },
+      "B2": {
+        "candidate_count": 170,
+        "rejection_summary": {
+          "STREET_OUTSIDE_REGION": 11,
+          "TIER1_BLOCKED_OR_UNKNOWN": 3
+        },
+        "selected_count": 3,
+        "tier1_passed_count": 156,
+        "tier1_rejection_counts": {
+          "STREET_OUTSIDE_REGION": 11,
+          "TIER1_BLOCKED_OR_UNKNOWN": 3
+        },
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 3,
+        "zero_gain_count": 5
+      },
+      "B3": {
+        "candidate_count": 1010,
+        "rejection_summary": {
+          "CORRIDOR_BLOCKED": 6,
+          "CORRIDOR_BLOCKED_ROAD": 3,
+          "COR_MARGIN": 1,
+          "DIRECT_PARCEL_CONFLICT": 234,
+          "STREET_OUTSIDE_REGION": 220,
+          "STREET_OVERLAPS_OTHER_ROAD": 252,
+          "TIER1_BLOCKED_OR_UNKNOWN": 268
+        },
+        "selected_count": 0,
+        "tier1_passed_count": 36,
+        "tier1_rejection_counts": {
+          "DIRECT_PARCEL_CONFLICT": 234,
+          "STREET_OUTSIDE_REGION": 220,
+          "STREET_OVERLAPS_OTHER_ROAD": 252,
+          "TIER1_BLOCKED_OR_UNKNOWN": 268
+        },
+        "tier2_rejection_counts": {
+          "CORRIDOR_BLOCKED": 6,
+          "CORRIDOR_BLOCKED_ROAD": 3,
+          "COR_MARGIN": 1
+        },
+        "tier2_verified_count": 6,
+        "zero_gain_count": 30
+      }
+    },
+    "INITIAL": {
+      "B1": {
+        "candidate_count": 200,
+        "rejection_summary": {
+          "BEACH_ENCROACHMENT_NOT_APPROVED": 55,
+          "STREET_OUTSIDE_REGION": 40,
+          "STREET_OVERLAPS_OTHER_ROAD": 19,
+          "TIER1_BLOCKED_OR_UNKNOWN": 6
+        },
+        "selected_count": 3,
+        "tier1_passed_count": 80,
+        "tier1_rejection_counts": {
+          "BEACH_ENCROACHMENT_NOT_APPROVED": 55,
+          "STREET_OUTSIDE_REGION": 40,
+          "STREET_OVERLAPS_OTHER_ROAD": 19,
+          "TIER1_BLOCKED_OR_UNKNOWN": 6
+        },
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 3,
+        "zero_gain_count": 5
+      },
+      "B2": {
+        "candidate_count": 130,
+        "rejection_summary": {
+          "STREET_OUTSIDE_REGION": 57,
+          "TIER1_BLOCKED_OR_UNKNOWN": 2
+        },
+        "selected_count": 3,
+        "tier1_passed_count": 71,
+        "tier1_rejection_counts": {
+          "STREET_OUTSIDE_REGION": 57,
+          "TIER1_BLOCKED_OR_UNKNOWN": 2
+        },
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 3,
+        "zero_gain_count": 0
+      },
+      "B3": {
+        "candidate_count": 280,
+        "rejection_summary": {
+          "DIRECT_PARCEL_CONFLICT": 41,
+          "STREET_OUTSIDE_REGION": 82,
+          "STREET_OVERLAPS_OTHER_ROAD": 54,
+          "TIER1_BLOCKED_OR_UNKNOWN": 88
+        },
+        "selected_count": 0,
+        "tier1_passed_count": 15,
+        "tier1_rejection_counts": {
+          "DIRECT_PARCEL_CONFLICT": 41,
+          "STREET_OUTSIDE_REGION": 82,
+          "STREET_OVERLAPS_OTHER_ROAD": 54,
+          "TIER1_BLOCKED_OR_UNKNOWN": 88
+        },
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 0,
+        "zero_gain_count": 15
+      }
+    },
+    "REVISED": {
+      "B1": {
+        "candidate_count": 270,
+        "rejection_summary": {
+          "BEACH_ENCROACHMENT_NOT_APPROVED": 21,
+          "DIRECT_PARCEL_CONFLICT": 116,
+          "STREET_OUTSIDE_REGION": 81,
+          "STREET_OVERLAPS_OTHER_ROAD": 7
+        },
+        "selected_count": 3,
+        "tier1_passed_count": 45,
+        "tier1_rejection_counts": {
+          "BEACH_ENCROACHMENT_NOT_APPROVED": 21,
+          "DIRECT_PARCEL_CONFLICT": 116,
+          "STREET_OUTSIDE_REGION": 81,
+          "STREET_OVERLAPS_OTHER_ROAD": 7
+        },
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 3,
+        "zero_gain_count": 0
+      },
+      "B2": {
+        "candidate_count": 150,
+        "rejection_summary": {
+          "STREET_OUTSIDE_REGION": 39,
+          "TIER1_BLOCKED_OR_UNKNOWN": 2
+        },
+        "selected_count": 3,
+        "tier1_passed_count": 109,
+        "tier1_rejection_counts": {
+          "STREET_OUTSIDE_REGION": 39,
+          "TIER1_BLOCKED_OR_UNKNOWN": 2
+        },
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 3,
+        "zero_gain_count": 0
+      },
+      "B3": {
+        "candidate_count": 340,
+        "rejection_summary": {
+          "DIRECT_PARCEL_CONFLICT": 121,
+          "STREET_OUTSIDE_REGION": 124,
+          "STREET_OVERLAPS_OTHER_ROAD": 41,
+          "TIER1_BLOCKED_OR_UNKNOWN": 40
+        },
+        "selected_count": 0,
+        "tier1_passed_count": 14,
+        "tier1_rejection_counts": {
+          "DIRECT_PARCEL_CONFLICT": 121,
+          "STREET_OUTSIDE_REGION": 124,
+          "STREET_OVERLAPS_OTHER_ROAD": 41,
+          "TIER1_BLOCKED_OR_UNKNOWN": 40
+        },
+        "tier2_rejection_counts": {},
+        "tier2_verified_count": 0,
+        "zero_gain_count": 14
+      }
+    }
+  }
+}
