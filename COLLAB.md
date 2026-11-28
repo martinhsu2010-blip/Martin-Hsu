@@ -131,11 +131,13 @@ Repo root 是唯一正式位置；忽略舊 `records/` 路徑。
 
 ### 5.1 任務路由規則（v3.6 新增；Gemini 已達階段 3 為前提）
 
-每份 spec 與 `TASKS.md` 條目都必須標明 `Implementer`、**Risk（high／low）**、**Volume（large／small）**與一行選擇理由，由 ChatGPT 提出、Claude 審查、Martin 批准。預設規則： **（D-071 新增）新實作任務在 ChatGPT 定案 `Implementer` 前，須先向 Martin 列出 Codex／Gemini 可選方案、取捨與建議，由 Martin 選定；不追溯改變已登記任務（例如 T-018A2 = Codex）。**
+每份 spec 與 `TASKS.md` 條目都必須標明 `Implementer`、**Risk（high／low）**、**Volume（large／small）**與一行選擇理由，由 ChatGPT 提出、Claude 審查、Martin 批准。預設規則：
 
 1. **量大、低風險、規格明確、可自動測試 → Gemini。** 例：大量內容／資料表、批次 i18n、有測試覆蓋的機械式重構、測試撰寫、整個 UI／HUD 系統。
 2. **量小、高風險、靠判斷力 → Codex（預設）。** 例：物理手感、碰撞、交通／警察 AI 調校、存檔格式變更。Gemini 僅在已達階段 3 **且**滿足 §4.3 全部前置條件與 Claude 獨立量測時才可承擔，且須在 spec 的選擇理由中說明為何不給 Codex。
 3. **量大且高風險 → 不整包派發。** 由 ChatGPT 依 §5.2 拆成分階段小任務，每個小任務各自套用規則 1 或 2。
+
+**（D-071 新增）** 新實作任務在 ChatGPT 定案 `Implementer` 前，須先向 Martin 列出 Codex／Gemini 可選方案、取捨與建議，由 Martin 選定；不追溯改變已登記任務（例如 T-018A2 = Codex）。
 4. **風險優先於量。** 任務只要觸及任一高風險系統（物理、碰撞、車輛、世界生成／地形／道路、交通／警察 AI、renderer／draw calls／效能關鍵路徑、存檔／`vh_save` schema），即屬高風險，適用規則 2／3 與 §4.3；不得把高風險部分藏在大型低風險任務內，或拆成同時進行的 PR 迴避。
 5. **預設不是永久排他。** Martin 可逐項改派；改派不放寬閘門。分類爭議由 Claude 在 spec review 提出，Martin 裁決。
 
