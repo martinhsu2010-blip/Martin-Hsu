@@ -25,34 +25,34 @@
   ],
   "physics_control": {
    "DESKTOP_HIGH": {
-    "median_ms_overall": 27.8,
+    "median_ms_overall": 29.65,
     "pairs": 5,
-    "ratio_max": 0.99012,
-    "ratio_min": 0.9702,
-    "status": "STABLE",
-    "within_band": true
+    "ratio_max": 1.0473,
+    "ratio_min": 0.86522,
+    "status": "INCONCLUSIVE",
+    "within_band": false
    },
    "PHONE_LOW": {
-    "median_ms_overall": 9.3,
+    "median_ms_overall": 9.7,
     "pairs": 5,
-    "ratio_max": 1.05376,
-    "ratio_min": 0.89474,
+    "ratio_max": 1.12371,
+    "ratio_min": 0.88679,
     "status": "INCONCLUSIVE",
     "within_band": false
    },
    "PHONE_MED": {
-    "median_ms_overall": 10.8,
+    "median_ms_overall": 11.0,
     "pairs": 5,
-    "ratio_max": 1.09434,
-    "ratio_min": 0.96087,
-    "status": "STABLE",
-    "within_band": true
+    "ratio_max": 1.16667,
+    "ratio_min": 1.01357,
+    "status": "INCONCLUSIVE",
+    "within_band": false
    },
    "TABLET_MED": {
-    "median_ms_overall": 11.4,
+    "median_ms_overall": 14.3,
     "pairs": 5,
-    "ratio_max": 1.35088,
-    "ratio_min": 0.93651,
+    "ratio_max": 1.09091,
+    "ratio_min": 0.86897,
     "status": "INCONCLUSIVE",
     "within_band": false
    }
@@ -456,14 +456,26 @@
   },
   "source_class": "MEASURED_HEADLESS"
  },
- "baseline_metrics_sha256": "6ef849304bd04f4d97dd6f658f5013df5ae2d7c4b025c5824c89fb09cff324bf",
+ "baseline_metrics_sha256": "023151fd2e7278c72d9bbafcdb2dda2cf47a5b94d636bbf7ee39cf1fa39141e6",
  "benefit": {
-  "finding": "Four shared prototypes: resident geometry and the shared atlas do not depend on the number of buildings, so geometry/texture savings from streaming are structurally ~0 under Control A with the same LOD strategy; collision bodies are the only large saving (1 body per building assumed).",
+  "assumptions": {
+   "bodies_per_building": 1,
+   "peak_grid_m": 40,
+   "radii_m": [
+    140,
+    180,
+    217,
+    260,
+    350
+   ],
+   "replay_p95": "pooled 2 Hz samples of the six replay scenarios (96 deg is irrelevant: bodies are omnidirectional)"
+  },
+  "finding": "Four shared prototypes: resident geometry and the shared atlas do not depend on the number of buildings, so geometry/texture savings from streaming are structurally ~0 under Control A with the same LOD strategy; collision bodies are the only large saving, and it is conditional on 1 body per building and on the active radius (see by_radius: peak-grid maximum and replay P95 differ, and the saving falls as the radius grows).",
   "recommended_gate_revision": {
    "replace": "geometry+texture resident peak >= 20 % lower",
    "source_class": "PROPOSED_LIMIT",
    "with": [
-    "active collision bodies P95 >= 20 % lower than all-resident (analytic expectation ~56 % for 57 buildings)",
+    "active collision bodies P95 >= 20 % lower than all-resident at the radius chosen by A2 (see by_radius; the 56 % figure is the peak-grid saving at 217 m for 57 buildings, not a replay P95)",
     "visual object instances alive P95 reported (no ratio gate)",
     "draw calls P95 +<=5 %",
     "frame-time ratio only with a valid control; otherwise INCONCLUSIVE",
@@ -472,77 +484,128 @@
   },
   "sets": {
    "40": {
-    "DESKTOP_HIGH": {
-     "body_saving_vs_all_resident_r217": 0.55,
-     "max_active_bodies_r180": 14,
-     "max_active_bodies_r217": 18
-    },
-    "PHONE_LOW": {
-     "body_saving_vs_all_resident_r217": 0.55,
-     "max_active_bodies_r180": 14,
-     "max_active_bodies_r217": 18
-    },
-    "PHONE_MED": {
-     "body_saving_vs_all_resident_r217": 0.55,
-     "max_active_bodies_r180": 14,
-     "max_active_bodies_r217": 18
-    },
-    "TABLET_MED": {
-     "body_saving_vs_all_resident_r217": 0.55,
-     "max_active_bodies_r180": 14,
-     "max_active_bodies_r217": 18
-    },
     "buildings": 40,
+    "by_radius": {
+     "140": {
+      "max_active_bodies_peak_grid": 12,
+      "replay_active_max": 11,
+      "replay_active_p95": 9,
+      "saving_peak": 0.7,
+      "saving_replay_p95": 0.775
+     },
+     "180": {
+      "max_active_bodies_peak_grid": 14,
+      "replay_active_max": 12,
+      "replay_active_p95": 11,
+      "saving_peak": 0.65,
+      "saving_replay_p95": 0.725
+     },
+     "217": {
+      "max_active_bodies_peak_grid": 18,
+      "replay_active_max": 14,
+      "replay_active_p95": 13,
+      "saving_peak": 0.55,
+      "saving_replay_p95": 0.675
+     },
+     "260": {
+      "max_active_bodies_peak_grid": 18,
+      "replay_active_max": 18,
+      "replay_active_p95": 18,
+      "saving_peak": 0.55,
+      "saving_replay_p95": 0.55
+     },
+     "350": {
+      "max_active_bodies_peak_grid": 18,
+      "replay_active_max": 18,
+      "replay_active_p95": 18,
+      "saving_peak": 0.55,
+      "saving_replay_p95": 0.55
+     }
+    },
     "shared_prototype_model_resident_triangles": 57490,
     "unique_asset_model_all_resident_triangles": 446360
    },
    "57": {
-    "DESKTOP_HIGH": {
-     "body_saving_vs_all_resident_r217": 0.561,
-     "max_active_bodies_r180": 19,
-     "max_active_bodies_r217": 25
-    },
-    "PHONE_LOW": {
-     "body_saving_vs_all_resident_r217": 0.561,
-     "max_active_bodies_r180": 19,
-     "max_active_bodies_r217": 25
-    },
-    "PHONE_MED": {
-     "body_saving_vs_all_resident_r217": 0.561,
-     "max_active_bodies_r180": 19,
-     "max_active_bodies_r217": 25
-    },
-    "TABLET_MED": {
-     "body_saving_vs_all_resident_r217": 0.561,
-     "max_active_bodies_r180": 19,
-     "max_active_bodies_r217": 25
-    },
     "buildings": 57,
+    "by_radius": {
+     "140": {
+      "max_active_bodies_peak_grid": 18,
+      "replay_active_max": 17,
+      "replay_active_p95": 13,
+      "saving_peak": 0.684,
+      "saving_replay_p95": 0.772
+     },
+     "180": {
+      "max_active_bodies_peak_grid": 19,
+      "replay_active_max": 18,
+      "replay_active_p95": 16,
+      "saving_peak": 0.667,
+      "saving_replay_p95": 0.719
+     },
+     "217": {
+      "max_active_bodies_peak_grid": 25,
+      "replay_active_max": 20,
+      "replay_active_p95": 19,
+      "saving_peak": 0.561,
+      "saving_replay_p95": 0.667
+     },
+     "260": {
+      "max_active_bodies_peak_grid": 25,
+      "replay_active_max": 25,
+      "replay_active_p95": 25,
+      "saving_peak": 0.561,
+      "saving_replay_p95": 0.561
+     },
+     "350": {
+      "max_active_bodies_peak_grid": 25,
+      "replay_active_max": 25,
+      "replay_active_p95": 25,
+      "saving_peak": 0.561,
+      "saving_replay_p95": 0.561
+     }
+    },
     "shared_prototype_model_resident_triangles": 57490,
     "unique_asset_model_all_resident_triangles": 623550
    },
    "60": {
-    "DESKTOP_HIGH": {
-     "body_saving_vs_all_resident_r217": 0.567,
-     "max_active_bodies_r180": 20,
-     "max_active_bodies_r217": 26
-    },
-    "PHONE_LOW": {
-     "body_saving_vs_all_resident_r217": 0.567,
-     "max_active_bodies_r180": 20,
-     "max_active_bodies_r217": 26
-    },
-    "PHONE_MED": {
-     "body_saving_vs_all_resident_r217": 0.567,
-     "max_active_bodies_r180": 20,
-     "max_active_bodies_r217": 26
-    },
-    "TABLET_MED": {
-     "body_saving_vs_all_resident_r217": 0.567,
-     "max_active_bodies_r180": 20,
-     "max_active_bodies_r217": 26
-    },
     "buildings": 60,
+    "by_radius": {
+     "140": {
+      "max_active_bodies_peak_grid": 18,
+      "replay_active_max": 17,
+      "replay_active_p95": 14,
+      "saving_peak": 0.7,
+      "saving_replay_p95": 0.767
+     },
+     "180": {
+      "max_active_bodies_peak_grid": 20,
+      "replay_active_max": 18,
+      "replay_active_p95": 16,
+      "saving_peak": 0.667,
+      "saving_replay_p95": 0.733
+     },
+     "217": {
+      "max_active_bodies_peak_grid": 26,
+      "replay_active_max": 22,
+      "replay_active_p95": 21,
+      "saving_peak": 0.567,
+      "saving_replay_p95": 0.65
+     },
+     "260": {
+      "max_active_bodies_peak_grid": 27,
+      "replay_active_max": 27,
+      "replay_active_p95": 27,
+      "saving_peak": 0.55,
+      "saving_replay_p95": 0.55
+     },
+     "350": {
+      "max_active_bodies_peak_grid": 27,
+      "replay_active_max": 27,
+      "replay_active_p95": 27,
+      "saving_peak": 0.55,
+      "saving_replay_p95": 0.55
+     }
+    },
     "shared_prototype_model_resident_triangles": 57490,
     "unique_asset_model_all_resident_triangles": 655440
    }
@@ -1521,6 +1584,23 @@
    "SHOWCASE_SITE_A_bypass": [
     10388
    ],
+   "all_body_position_set_lines": [
+    2747,
+    3581,
+    7871,
+    8396,
+    8688,
+    9090,
+    9101,
+    9159,
+    9168,
+    9388,
+    9393
+   ],
+   "creation_or_other_sites": [
+    2747,
+    3581
+   ],
    "direct_position_set_lines": [
     7871,
     8396,
@@ -1778,10 +1858,17 @@
    "aspect_20x9_h_fov": 104.1,
    "vertical_fov_deg": 60
   },
+  "limitations": [
+   "no fog or occlusion: LOD2 meshes at the far edge are largely faded by fog (see fog_transmittance_at_lod2_edge), so counts are upper bounds",
+   "2-D distances, ground-level camera: height and terrain relief not modelled",
+   "worst case is a single viewpoint, not a P95; replay P95 uses six scripted paths only",
+   "no budget is validated by this block"
+  ],
   "method": "57 WE-02 parcels at bounds centres, 20 m viewpoint grid x[-1100,600) z[-1000,1400), 15 deg headings, draft triangle caps, no fog/occlusion/height",
-  "metric_definition": "triangle count of resident (omni) or view-cone building meshes at their LOD; shadow-pass triangles reported separately; renderer.info.render.triangles in MEASURED tables includes every pass",
+  "metric_definition": "view-cone and omni columns count building meshes at their LOD in ONE pass (no shadow); all_pass_estimate and p95_incl_shadow add the shadow-pass extra and are the only analytic values comparable to renderer.info.render.triangles (all passes) in MEASURED tables",
   "presets": {
    "DESKTOP_HIGH": {
+    "all_pass_estimate_at_cone96_worst": 250000,
     "contribution_at_cone96_worst_viewpoint": {
      "R01/LOD0": 60000,
      "R01/LOD1": 6000,
@@ -1789,6 +1876,7 @@
      "R05/LOD1": 4800,
      "R05/LOD2": 2100
     },
+    "fog_transmittance_at_lod2_edge": 0.237,
     "omni_resident_upper_bound": [
      230900,
      0,
@@ -1798,38 +1886,50 @@
     "replay_path": {
      "S1_B1_border_sweep": {
       "max": 179700,
+      "max_incl_shadow": 270700,
       "p50": 58700,
       "p95": 150700,
+      "p95_incl_shadow": 246700,
       "samples": 168
      },
      "S2_B2_reversal": {
       "max": 65900,
+      "max_incl_shadow": 111300,
       "p50": 24750,
       "p95": 59700,
+      "p95_incl_shadow": 100000,
       "samples": 160
      },
      "S3_B3_diagonal": {
       "max": 91400,
+      "max_incl_shadow": 137000,
       "p50": 0,
       "p95": 86000,
+      "p95_incl_shadow": 123200,
       "samples": 160
      },
      "S4_far_view_avenue": {
       "max": 13750,
+      "max_incl_shadow": 13750,
       "p50": 4500,
       "p95": 11900,
+      "p95_incl_shadow": 11900,
       "samples": 200
      },
      "S5_destination_switch": {
       "max": 62300,
+      "max_incl_shadow": 82300,
       "p50": 53600,
       "p95": 62300,
+      "p95_incl_shadow": 82300,
       "samples": 120
      },
      "S6_high_speed_pass": {
       "max": 124000,
+      "max_incl_shadow": 156000,
       "p50": 4560,
       "p95": 90000,
+      "p95_incl_shadow": 90000,
       "samples": 156
      }
     },
@@ -1857,6 +1957,7 @@
     }
    },
    "PHONE_LOW": {
+    "all_pass_estimate_at_cone96_worst": 138000,
     "contribution_at_cone96_worst_viewpoint": {
      "R01/LOD0": 24000,
      "R01/LOD1": 15000,
@@ -1864,6 +1965,7 @@
      "R02/LOD1": 15000,
      "R05/LOD2": 2550
     },
+    "fog_transmittance_at_lod2_edge": 0.218,
     "omni_resident_upper_bound": [
      192650,
      60,
@@ -1873,38 +1975,50 @@
     "replay_path": {
      "S1_B1_border_sweep": {
       "max": 81450,
+      "max_incl_shadow": 145000,
       "p50": 20000,
       "p95": 76600,
+      "p95_incl_shadow": 133000,
       "samples": 168
      },
      "S2_B2_reversal": {
       "max": 25000,
+      "max_incl_shadow": 37000,
       "p50": 6300,
       "p95": 21100,
+      "p95_incl_shadow": 30800,
       "samples": 160
      },
      "S3_B3_diagonal": {
       "max": 38730,
+      "max_incl_shadow": 67330,
       "p50": 0,
       "p95": 36130,
+      "p95_incl_shadow": 57130,
       "samples": 160
      },
      "S4_far_view_avenue": {
       "max": 2880,
+      "max_incl_shadow": 2880,
       "p50": 1080,
       "p95": 2730,
+      "p95_incl_shadow": 2730,
       "samples": 200
      },
      "S5_destination_switch": {
       "max": 22450,
+      "max_incl_shadow": 22450,
       "p50": 19300,
       "p95": 22450,
+      "p95_incl_shadow": 22450,
       "samples": 120
      },
      "S6_high_speed_pass": {
       "max": 64300,
+      "max_incl_shadow": 72000,
       "p50": 0,
       "p95": 27000,
+      "p95_incl_shadow": 27000,
       "samples": 156
      }
     },
@@ -1932,6 +2046,7 @@
     }
    },
    "PHONE_MED": {
+    "all_pass_estimate_at_cone96_worst": 175000,
     "contribution_at_cone96_worst_viewpoint": {
      "R01/LOD0": 36000,
      "R01/LOD1": 12000,
@@ -1939,6 +2054,7 @@
      "R02/LOD1": 20000,
      "R05/LOD2": 2700
     },
+    "fog_transmittance_at_lod2_edge": 0.332,
     "omni_resident_upper_bound": [
      217250,
      100,
@@ -1948,38 +2064,50 @@
     "replay_path": {
      "S1_B1_border_sweep": {
       "max": 101650,
+      "max_incl_shadow": 206550,
       "p50": 22700,
       "p95": 86650,
+      "p95_incl_shadow": 189000,
       "samples": 168
      },
      "S2_B2_reversal": {
       "max": 34400,
+      "max_incl_shadow": 57200,
       "p50": 10000,
       "p95": 29600,
+      "p95_incl_shadow": 52200,
       "samples": 160
      },
      "S3_B3_diagonal": {
       "max": 53830,
+      "max_incl_shadow": 89830,
       "p50": 0,
       "p95": 47480,
+      "p95_incl_shadow": 81630,
       "samples": 160
      },
      "S4_far_view_avenue": {
       "max": 3420,
+      "max_incl_shadow": 3420,
       "p50": 1830,
       "p95": 3270,
+      "p95_incl_shadow": 3270,
       "samples": 200
      },
      "S5_destination_switch": {
       "max": 31500,
+      "max_incl_shadow": 41500,
       "p50": 25800,
       "p95": 31500,
+      "p95_incl_shadow": 41500,
       "samples": 120
      },
      "S6_high_speed_pass": {
       "max": 72000,
+      "max_incl_shadow": 99000,
       "p50": 0,
       "p95": 39100,
+      "p95_incl_shadow": 39100,
       "samples": 156
      }
     },
@@ -2007,6 +2135,7 @@
     }
    },
    "TABLET_MED": {
+    "all_pass_estimate_at_cone96_worst": 167000,
     "contribution_at_cone96_worst_viewpoint": {
      "R01/LOD0": 36000,
      "R01/LOD1": 12000,
@@ -2014,6 +2143,7 @@
      "R02/LOD1": 15000,
      "R05/LOD2": 2700
     },
+    "fog_transmittance_at_lod2_edge": 0.353,
     "omni_resident_upper_bound": [
      226700,
      80,
@@ -2023,38 +2153,50 @@
     "replay_path": {
      "S1_B1_border_sweep": {
       "max": 123700,
+      "max_incl_shadow": 206700,
       "p50": 27600,
       "p95": 107250,
+      "p95_incl_shadow": 193000,
       "samples": 168
      },
      "S2_B2_reversal": {
       "max": 48600,
+      "max_incl_shadow": 64800,
       "p50": 11300,
       "p95": 38600,
+      "p95_incl_shadow": 59800,
       "samples": 160
      },
      "S3_B3_diagonal": {
       "max": 71840,
+      "max_incl_shadow": 107840,
       "p50": 0,
       "p95": 61840,
+      "p95_incl_shadow": 90230,
       "samples": 160
      },
      "S4_far_view_avenue": {
       "max": 3570,
+      "max_incl_shadow": 3570,
       "p50": 2730,
       "p95": 3570,
+      "p95_incl_shadow": 3570,
       "samples": 200
      },
      "S5_destination_switch": {
       "max": 42700,
+      "max_incl_shadow": 52700,
       "p50": 34800,
       "p95": 42700,
+      "p95_incl_shadow": 52700,
       "samples": 120
      },
      "S6_high_speed_pass": {
       "max": 76000,
+      "max_incl_shadow": 108000,
       "p50": 0,
       "p95": 50600,
+      "p95_incl_shadow": 50600,
       "samples": 156
      }
     },

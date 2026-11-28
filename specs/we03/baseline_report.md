@@ -2,7 +2,7 @@
 
 All values are MEASURED_HEADLESS: CPU submission time of `animate()` in software GL (SwiftShader, 2 vCPU shared host). They are not device FPS and not VRAM. Texture bytes are an RGBA8 + mip estimate, not VRAM.
 
-- 153.0.8010.12 / playwright 1.63.0 / commit 8e07db622991 / CACHE vh-2026-11-27-02; combinations 48/48, repeat sessions 16/16
+- 153.0.8010.12 / playwright 1.63.0 / commit c1c57c186a0a / CACHE vh-2026-11-27-02; combinations 48/48, repeat sessions 16/16
 - method: fresh Chrome per session, 20 warm-up + 120 recorded frames, dt 1/60, dayCycle off, fpsCap 0, 800x450; frame time = CPU time of one `animate()` call
 
 | preset/location/time | draw calls | triangles (all passes) | shadow tri | frame ms P50/P95/P99/max | bodies | shapes |
@@ -60,10 +60,10 @@ All values are MEASURED_HEADLESS: CPU submission time of `animate()` in software
 
 | preset | ratio min | ratio max | status |
 |---|---|---|---|
-| PHONE_LOW | 0.89474 | 1.05376 | INCONCLUSIVE |
-| PHONE_MED | 0.96087 | 1.09434 | STABLE |
-| TABLET_MED | 0.93651 | 1.35088 | INCONCLUSIVE |
-| DESKTOP_HIGH | 0.9702 | 0.99012 | STABLE |
+| PHONE_MED | 1.01357 | 1.16667 | INCONCLUSIVE |
+| PHONE_LOW | 0.88679 | 1.12371 | INCONCLUSIVE |
+| TABLET_MED | 0.86897 | 1.09091 | INCONCLUSIVE |
+| DESKTOP_HIGH | 0.86522 | 1.0473 | INCONCLUSIVE |
 
 ## Repeat sessions (B3 and CBD, day/night, 4 presets)
 

@@ -1,4 +1,10 @@
 {
+ "b3_density_test": {
+  "reason": "A1-C9 asks for 3 extra buildings in B3; only 2 fit on free WE-01 land in B3, the rest fell back to B1/B2 and are GLOBAL_STRESS_ONLY",
+  "scope_exception": "PENDING_MARTIN_APPROVAL",
+  "status": "INCONCLUSIVE",
+  "we01_land_constraints_relaxed": false
+ },
  "beach_regions": [
   [
    [
@@ -1548,6 +1554,7 @@
     -308,
     -786
    ],
+   "classification": "B3_DENSITY",
    "coverage_chunks_128": [
     [
      -3,
@@ -1572,6 +1579,7 @@
     -621,
     -578
    ],
+   "classification": "B3_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -1600,6 +1608,7 @@
     108,
     1164
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      0,
@@ -1628,6 +1637,7 @@
     352,
     1229
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      2,
@@ -1652,6 +1662,7 @@
     -908,
     924
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -8,
@@ -1680,6 +1691,7 @@
     377,
     1164
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      2,
@@ -1708,6 +1720,7 @@
     57,
     1269
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      0,
@@ -1732,6 +1745,7 @@
     -663,
     1104
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -1756,6 +1770,7 @@
     197,
     1119
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      1,
@@ -1780,6 +1795,7 @@
     337,
     1319
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      2,
@@ -1804,6 +1820,7 @@
     -853,
     919
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -7,
@@ -1832,6 +1849,7 @@
     272,
     1229
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      1,
@@ -1860,6 +1878,7 @@
     377,
     1274
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      2,
@@ -1884,6 +1903,7 @@
     -453,
     1094
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -4,
@@ -1908,6 +1928,7 @@
     292,
     1174
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      1,
@@ -1944,6 +1965,7 @@
     32,
     1214
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -1,
@@ -1972,6 +1994,7 @@
     263,
     1322
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      1,
@@ -2000,6 +2023,7 @@
     -717,
     952
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -2024,6 +2048,7 @@
     203,
     1312
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      1,
@@ -2052,6 +2077,7 @@
     153,
     1212
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      0,
@@ -2080,6 +2106,7 @@
     -677,
     897
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -2108,6 +2135,7 @@
     223,
     1217
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      1,
@@ -2132,6 +2160,7 @@
     213,
     1262
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      1,
@@ -2156,6 +2185,7 @@
     209,
     1037
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      1,
@@ -2184,6 +2214,7 @@
     -546,
     1152
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -5,
@@ -2208,6 +2239,7 @@
     -621,
     -518
    ],
+   "classification": "B3_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -2236,6 +2268,7 @@
     374,
     1317
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      2,
@@ -2260,6 +2293,7 @@
     -716,
     1062
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -2284,6 +2318,7 @@
     -621,
     -553
    ],
+   "classification": "B3_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -2312,6 +2347,7 @@
     289,
     1327
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      2,
@@ -2336,6 +2372,7 @@
     -696,
     1152
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -2360,6 +2397,7 @@
     -621,
     -623
    ],
+   "classification": "B3_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -2396,6 +2434,7 @@
     214,
     1147
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      1,
@@ -2420,6 +2459,7 @@
     -596,
     917
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -5,
@@ -2448,6 +2488,7 @@
     -621,
     -658
    ],
+   "classification": "B3_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -2476,6 +2517,7 @@
     204,
     857
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      1,
@@ -2500,6 +2542,7 @@
     -906,
     1047
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -8,
@@ -2524,6 +2567,7 @@
     239,
     1267
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      1,
@@ -2548,6 +2592,7 @@
     214,
     1007
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      1,
@@ -2572,6 +2617,7 @@
     -666,
     952
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -2596,6 +2642,7 @@
     119,
     1257
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      0,
@@ -2620,6 +2667,7 @@
     199,
     1072
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      1,
@@ -2644,6 +2692,7 @@
     -956,
     1107
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -8,
@@ -2668,6 +2717,7 @@
     64,
     1297
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      0,
@@ -2696,6 +2746,7 @@
     199,
     1172
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      1,
@@ -2724,6 +2775,7 @@
     -961,
     1157
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -8,
@@ -2752,6 +2804,7 @@
     64,
     1187
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      0,
@@ -2776,6 +2829,7 @@
     99,
     1282
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      0,
@@ -2804,6 +2858,7 @@
     -671,
     922
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -2828,6 +2883,7 @@
     304,
     1252
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      2,
@@ -2852,6 +2908,7 @@
     154,
     857
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      1,
@@ -2876,6 +2933,7 @@
     -756,
     1137
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -7,
@@ -2904,6 +2962,7 @@
     274,
     1272
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      1,
@@ -2932,6 +2991,7 @@
     284,
     1127
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      2,
@@ -2956,6 +3016,7 @@
     -716,
     1007
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -6,
@@ -2980,6 +3041,7 @@
     244,
     1122
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      1,
@@ -3004,6 +3066,7 @@
     14,
     1132
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -1,
@@ -3032,6 +3095,7 @@
     133,
     1314
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      0,
@@ -3060,6 +3124,7 @@
     -887,
     854
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -8,
@@ -3088,6 +3153,7 @@
     318,
     1279
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      2,
@@ -3112,6 +3178,7 @@
     73,
     1229
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      0,
@@ -3136,6 +3203,7 @@
     -472,
     974
    ],
+   "classification": "REGION_DENSITY",
    "coverage_chunks_128": [
     [
      -4,
@@ -3160,6 +3228,7 @@
     43,
     1159
    ],
+   "classification": "GLOBAL_STRESS_ONLY",
    "coverage_chunks_128": [
     [
      0,
