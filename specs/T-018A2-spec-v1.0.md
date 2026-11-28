@@ -1,5 +1,7 @@
 # T-018A2 - Device Frame-Time Diagnostics (spec v1.0)
 
+**Superseded by `specs/T-018A2-spec-v1.1.md` (D-070).** Kept as history.
+
 Entry-point spec. ChatGPT draft: `specs/T-018A2-draft-v1.0-chatgpt.md` (verbatim, 1059 lines). Claude G0 review: `specs/T-018A2-g0-review-v1.0.md`. Series: `specs/WE-03-series-spec-v1.0.md`. Governance: `specs/WE-03-budget-governance-v1.0.md`. **Where this file or the review differs from the draft, this file and the review win.** The review's full text of A2-C1..C13 is binding.
 
 ## 1. Decisions and scope

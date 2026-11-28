@@ -14,7 +14,7 @@ This is a governance decision only. It approves **no numeric budget** and author
 ## 2. Initial classification
 | Class | Items |
 |---|---|
-| HARD_GATE | A2 structural gates (bodies, shapes, scene draw calls, triangles, meshes, materials, textures, dependencies, new `localStorage` keys, per-frame allocation, 250-line ceiling); offline and save compatibility; collision safety and no blank substitution (series N5, D-065); B4 device average FPS >= 0.97 x fpsCap (D-065). |
+| HARD_GATE | A2 structural gates (bodies, shapes, scene draw calls, triangles, meshes, materials, textures, dependencies, new `localStorage` keys, per-frame allocation, 250-line ceiling); offline and save compatibility; collision safety and no blank substitution (series N5, D-065); B4 device average FPS >= 0.97 x fpsCap (D-065; scope per D-070: measured and reported in T-018A2 but it does not block T-018A2 acceptance; it blocks the streaming implementation subtasks and F2 acceptance). |
 | SOFT_TARGET | Diagnostic sampling cost; P95 <= 40 ms, P99 <= 66.7 ms, minimum 1 s FPS, share of frames > 100 ms (initial values from the draft section 25, unconfirmed until A2 device evidence); added-triangle P95 budget (PHONE_MED interpolated). |
 | PENDING_EVIDENCE | Draw-call budget, resource capacity, streaming CPU, LOD distances, physics-time share, active collision radius, Geometry/Texture residency. |
 

@@ -17,9 +17,9 @@ Implementer: Codex
 Reviewer: Claude (diff review and independent verification); ChatGPT (read-only review); Martin accepts after device evidence
 Priority: P1
 Base commit: full `origin/main` SHA confirmed when Codex starts (registration confirmed main `9538c297fb7cb7dc702a6e5d7d1f21e502bbb251` before this PR); Engineering BASE `e8d5250fce0ea5f07f68840481cb95d2eca803fb`; CACHE `vh-2026-11-27-02` (Claude bumps it at release)
-Spec: `specs/T-018A2-spec-v1.0.md` (entry point, Claude conditions A2-C1..C13 win) + ChatGPT draft `specs/T-018A2-draft-v1.0-chatgpt.md` + `specs/T-018A2-g0-review-v1.0.md`; governance `specs/WE-03-budget-governance-v1.0.md`
+Spec: `specs/T-018A2-spec-v1.1.md` (entry point, supersedes v1.0 per D-070; Claude conditions A2-C1..C17 win) + ChatGPT draft `specs/T-018A2-draft-v1.1-chatgpt.md` + `specs/T-018A2-g0-review-v1.0.md` + `specs/T-018A2-g0-followup-v1.1.md`; governance `specs/WE-03-budget-governance-v1.0.md`
 Scope: `index.html` diagnostics block only (<= 250 added+changed lines, WE03A2-DIAG banners, active only with `?fps=1`), `tools/test/we03_a2_diagnostics_check.mjs`, `tools/test/we03_a2_browser_check.py` (<= 700 lines combined). No `sw.js`, manifest, save, pacing, quality, physics or rendering change; no streaming.
-Gates: A2-G01..G18 plus negative controls (A2-C11); CI green; Claude and ChatGPT review; device matrix 3x3 per A2-C12 (B4 >= 0.97 x fpsCap); Martin acceptance.
+Gates: A2-G01..G18 plus negative controls NC01..NC14; CI green; Claude and ChatGPT review; device matrix 3x3 per A2-C12/C15 (B4 >= 0.97 x fpsCap is reported, not an A2 gate, D-070); Martin acceptance.
 Status: Registered; Codex may start (single active code PR lock free). T-018B and later, budget values, streaming and WE-04..WE-09 not authorized. ChatGPT concurrence with A2-C1..C13 requested, not yet recorded; Claude owes Martin a device operation sheet before device acceptance.
 
 ### T-018 WE-03 C+ Hybrid World Streaming Architecture (series umbrella, not a code task; HIGH-risk series, decomposed into small sequential tasks) (Registered 2026-11-28, D-065; approved by Martin 2026-11-28 21:20)
