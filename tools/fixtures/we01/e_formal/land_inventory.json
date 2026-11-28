@@ -1,0 +1,1016 @@
+{
+  "analyzer_version": "we01a-1.0",
+  "base_sha": "84319439243b51aa8d119e33eb62a0637feea887",
+  "conservation_tolerance_m2": 1.0,
+  "data_gaps": [
+    "[DESKTOP_HIGH] completeness.traffic_routes=UNKNOWN",
+    "[DESKTOP_HIGH] completeness.world_bounds=PARTIAL",
+    "[DESKTOP_HIGH] issue.ISS_PLAYABLE(INFO): playable_bounds and map_ui_bounds were not extracted (null); all candidate regions lie inside the 3200 m ground mesh and the 4800 m physical ground.",
+    "[DESKTOP_HIGH] issue.ISS_SCENE(INFO): SCENE_BOX3 footprints are conservative world AABBs of visible meshes and instances (<=40 m); tree crowns inflate obstacles. Boxes whose centre lies within 2 m of a building footprint are category BUILDING with parent_id (facade parts), the rest are OTHER.",
+    "[DESKTOP_HIGH] issue.ISS_SIDEWALK(INFO): Avenue and cross-street sidewalks are conservative 6 m strips outside the carriageway (CONSERVATIVE_AABB); other roads carry no sidewalk footprint.",
+    "[DESKTOP_HIGH] issue.ISS_TRAFFIC(INFO): Static traffic routes (ROAD_NET.routes) are not mapped to road segments in this extraction; empty traffic_route_ids does not mean no traffic.",
+    "[PHONE_LOW] completeness.traffic_routes=UNKNOWN",
+    "[PHONE_LOW] completeness.world_bounds=PARTIAL",
+    "[PHONE_LOW] issue.ISS_PLAYABLE(INFO): playable_bounds and map_ui_bounds were not extracted (null); all candidate regions lie inside the 3200 m ground mesh and the 4800 m physical ground.",
+    "[PHONE_LOW] issue.ISS_SCENE(INFO): SCENE_BOX3 footprints are conservative world AABBs of visible meshes and instances (<=40 m); tree crowns inflate obstacles. Boxes whose centre lies within 2 m of a building footprint are category BUILDING with parent_id (facade parts), the rest are OTHER.",
+    "[PHONE_LOW] issue.ISS_SIDEWALK(INFO): Avenue and cross-street sidewalks are conservative 6 m strips outside the carriageway (CONSERVATIVE_AABB); other roads carry no sidewalk footprint.",
+    "[PHONE_LOW] issue.ISS_TRAFFIC(INFO): Static traffic routes (ROAD_NET.routes) are not mapped to road segments in this extraction; empty traffic_route_ids does not mean no traffic."
+  ],
+  "footprint_summary": {
+    "DESKTOP_HIGH": {
+      "by_category": {
+        "BUILDING": 4114,
+        "COLLIDER": 462,
+        "OTHER": 529,
+        "ROAD": 524,
+        "SIDEWALK": 20,
+        "SITE_A": 3,
+        "TREE": 133
+      },
+      "by_precision": {
+        "CONSERVATIVE_AABB": 4716,
+        "EXACT_OUTLINE": 1069
+      },
+      "by_source_group": {
+        "PHYSICS_STATIC": 462,
+        "ROAD_NET.avenueSidewalks": 12,
+        "ROAD_NET.avenues": 6,
+        "ROAD_NET.crossSidewalks": 8,
+        "ROAD_NET.crossStreets": 4,
+        "ROAD_NET.hillRoad": 80,
+        "ROAD_NET.ribbons": 68,
+        "ROAD_NET.ring": 114,
+        "ROAD_NET.spurs": 140,
+        "ROAD_NET.suburbRoads": 16,
+        "ROAD_NET.terrainRoads": 96,
+        "SCENE_BOX3": 4460,
+        "SITE_A_PROTECTION": 1,
+        "TREE_COLLIDERS": 133,
+        "WORLD.buildings": 101,
+        "WORLD.cityInfill": 78,
+        "WORLD.showcaseSiteA": 2,
+        "WORLD.suburbHouses": 4
+      },
+      "total": 5785
+    },
+    "PHONE_LOW": {
+      "by_category": {
+        "BUILDING": 1967,
+        "COLLIDER": 444,
+        "OTHER": 334,
+        "ROAD": 524,
+        "SIDEWALK": 20,
+        "SITE_A": 3,
+        "TREE": 68
+      },
+      "by_precision": {
+        "CONSERVATIVE_AABB": 2281,
+        "EXACT_OUTLINE": 1079
+      },
+      "by_source_group": {
+        "PHYSICS_STATIC": 444,
+        "ROAD_NET.avenueSidewalks": 12,
+        "ROAD_NET.avenues": 6,
+        "ROAD_NET.crossSidewalks": 8,
+        "ROAD_NET.crossStreets": 4,
+        "ROAD_NET.hillRoad": 80,
+        "ROAD_NET.ribbons": 68,
+        "ROAD_NET.ring": 114,
+        "ROAD_NET.spurs": 140,
+        "ROAD_NET.suburbRoads": 16,
+        "ROAD_NET.terrainRoads": 96,
+        "SCENE_BOX3": 2074,
+        "SITE_A_PROTECTION": 1,
+        "TREE_COLLIDERS": 68,
+        "WORLD.buildings": 117,
+        "WORLD.cityInfill": 109,
+        "WORLD.showcaseSiteA": 2,
+        "WORLD.suburbHouses": 1
+      },
+      "total": 3360
+    }
+  },
+  "grid_step_m": 5.0,
+  "mode": "CROSS_PRESET_COMMON",
+  "partial_cell_policy": "CONSERVATIVE_WHOLE_CELL_EXCLUSION",
+  "presets": [
+    {
+      "completeness": {
+        "physical_ground": "COMPLETE",
+        "physical_occupancy": "COMPLETE",
+        "protected_areas": "COMPLETE",
+        "roads": "COMPLETE",
+        "terrain_heights": "COMPLETE",
+        "terrain_regions": "COMPLETE",
+        "traffic_routes": "UNKNOWN",
+        "trees": "COMPLETE",
+        "visual_occupancy": "COMPLETE",
+        "water_and_beach": "COMPLETE",
+        "world_bounds": "PARTIAL"
+      },
+      "extraction_version": "we01-extract-1",
+      "file_sha256": "7b802de45417b51e28ec04fa8c782507149006ca7a2212d834c0e73659765578",
+      "game_release": "vh-2026-11-27-02",
+      "preset": "DESKTOP_HIGH",
+      "source_counts": {
+        "PHYSICS_STATIC_SHAPES_IN_WINDOW": 462,
+        "TREES": 1216,
+        "TREE_COLLIDERS": 1216,
+        "WORLD.buildings": 704,
+        "WORLD.cityInfill": 554,
+        "WORLD.suburbHouses": 390
+      },
+      "static_fingerprint": "52653bc578411a9eda9b314581bb16f45f3cb4eb1be623f9d39dc21ade365482"
+    },
+    {
+      "completeness": {
+        "physical_ground": "COMPLETE",
+        "physical_occupancy": "COMPLETE",
+        "protected_areas": "COMPLETE",
+        "roads": "COMPLETE",
+        "terrain_heights": "COMPLETE",
+        "terrain_regions": "COMPLETE",
+        "traffic_routes": "UNKNOWN",
+        "trees": "COMPLETE",
+        "visual_occupancy": "COMPLETE",
+        "water_and_beach": "COMPLETE",
+        "world_bounds": "PARTIAL"
+      },
+      "extraction_version": "we01-extract-1",
+      "file_sha256": "01919444a89a7d0d695ab8b0afccc1b35c4101ae288ff03629201f93284c3d24",
+      "game_release": "vh-2026-11-27-02",
+      "preset": "PHONE_LOW",
+      "source_counts": {
+        "PHYSICS_STATIC_SHAPES_IN_WINDOW": 444,
+        "TREES": 693,
+        "TREE_COLLIDERS": 693,
+        "WORLD.buildings": 840,
+        "WORLD.cityInfill": 776,
+        "WORLD.suburbHouses": 210
+      },
+      "static_fingerprint": "e473d222db998487e5fcfb187349e5006e6f619c1d15cca6bae1a2ee380352aa"
+    }
+  ],
+  "regions": [
+    {
+      "buffer_m": 100,
+      "common_conservation_error_m2": {
+        "initial": 0.0,
+        "survey": 0.0
+      },
+      "common_initial_class_areas_m2": {
+        "L0": 60650.0,
+        "L1": 0.0,
+        "L2": 0.0,
+        "L3": 26350.0,
+        "L4": 0.0,
+        "L5": 3000.0,
+        "LX": 0.0
+      },
+      "common_survey_class_areas_m2": {
+        "L0": 141200.0,
+        "L1": 0.0,
+        "L2": 0.0,
+        "L3": 41550.0,
+        "L4": 0.0,
+        "L5": 67250.0,
+        "LX": 0.0
+      },
+      "id": "B1",
+      "initial_polygon": [
+        [
+          90,
+          930
+        ],
+        [
+          390,
+          930
+        ],
+        [
+          390,
+          1230
+        ],
+        [
+          90,
+          1230
+        ]
+      ],
+      "initial_polygon_area_m2": 90000.0,
+      "name": "Oceanfront Heights",
+      "per_preset": {
+        "DESKTOP_HIGH": {
+          "buffer_m": 100,
+          "conservation_error_m2": {
+            "initial": 0.0,
+            "survey": 0.0
+          },
+          "id": "B1",
+          "initial_class_areas_m2": {
+            "L0": 60650.0,
+            "L1": 0.0,
+            "L2": 0.0,
+            "L3": 26350.0,
+            "L4": 0.0,
+            "L5": 3000.0,
+            "LX": 0.0
+          },
+          "initial_polygon": [
+            [
+              90,
+              930
+            ],
+            [
+              390,
+              930
+            ],
+            [
+              390,
+              1230
+            ],
+            [
+              90,
+              1230
+            ]
+          ],
+          "initial_polygon_area_m2": 90000.0,
+          "name": "Oceanfront Heights",
+          "partial_cells_conservatively_excluded": 324,
+          "precision_affected_areas_m2": {
+            "CONSERVATIVE_AABB": 6300.0,
+            "EXACT_OUTLINE": 11075.0
+          },
+          "slope_class_areas_m2": {
+            "S0": 250000.0,
+            "S1": 0.0,
+            "S2": 0.0,
+            "S3": 0.0,
+            "S4": 0.0,
+            "UNKNOWN": 0.0
+          },
+          "survey_class_areas_m2": {
+            "L0": 141200.0,
+            "L1": 0.0,
+            "L2": 0.0,
+            "L3": 41550.0,
+            "L4": 0.0,
+            "L5": 67250.0,
+            "LX": 0.0
+          },
+          "survey_polygon": [
+            [
+              -10,
+              830
+            ],
+            [
+              490,
+              830
+            ],
+            [
+              490,
+              1330
+            ],
+            [
+              -10,
+              1330
+            ]
+          ],
+          "survey_polygon_area_m2": 250000.0,
+          "terrain_zone_areas_m2": {
+            "FLAT_PHYSICAL_GROUND": 250000.0,
+            "OUTSIDE_PHYSICAL_GROUND": 0.0,
+            "TERRAIN_CORE": 0.0,
+            "TERRAIN_MARGIN": 0.0
+          }
+        },
+        "PHONE_LOW": {
+          "buffer_m": 100,
+          "conservation_error_m2": {
+            "initial": 0.0,
+            "survey": 0.0
+          },
+          "id": "B1",
+          "initial_class_areas_m2": {
+            "L0": 60650.0,
+            "L1": 0.0,
+            "L2": 0.0,
+            "L3": 26350.0,
+            "L4": 0.0,
+            "L5": 3000.0,
+            "LX": 0.0
+          },
+          "initial_polygon": [
+            [
+              90,
+              930
+            ],
+            [
+              390,
+              930
+            ],
+            [
+              390,
+              1230
+            ],
+            [
+              90,
+              1230
+            ]
+          ],
+          "initial_polygon_area_m2": 90000.0,
+          "name": "Oceanfront Heights",
+          "partial_cells_conservatively_excluded": 324,
+          "precision_affected_areas_m2": {
+            "CONSERVATIVE_AABB": 6300.0,
+            "EXACT_OUTLINE": 11075.0
+          },
+          "slope_class_areas_m2": {
+            "S0": 250000.0,
+            "S1": 0.0,
+            "S2": 0.0,
+            "S3": 0.0,
+            "S4": 0.0,
+            "UNKNOWN": 0.0
+          },
+          "survey_class_areas_m2": {
+            "L0": 141200.0,
+            "L1": 0.0,
+            "L2": 0.0,
+            "L3": 41550.0,
+            "L4": 0.0,
+            "L5": 67250.0,
+            "LX": 0.0
+          },
+          "survey_polygon": [
+            [
+              -10,
+              830
+            ],
+            [
+              490,
+              830
+            ],
+            [
+              490,
+              1330
+            ],
+            [
+              -10,
+              1330
+            ]
+          ],
+          "survey_polygon_area_m2": 250000.0,
+          "terrain_zone_areas_m2": {
+            "FLAT_PHYSICAL_GROUND": 250000.0,
+            "OUTSIDE_PHYSICAL_GROUND": 0.0,
+            "TERRAIN_CORE": 0.0,
+            "TERRAIN_MARGIN": 0.0
+          }
+        }
+      },
+      "precision_affected_areas_m2": {
+        "CONSERVATIVE_AABB": 6300.0,
+        "EXACT_OUTLINE": 11075.0
+      },
+      "revised_search_bounds": [
+        -10.0,
+        830.0,
+        380.0,
+        1330.0
+      ],
+      "slope_class_areas_m2": {
+        "S0": 250000.0,
+        "S1": 0.0,
+        "S2": 0.0,
+        "S3": 0.0,
+        "S4": 0.0,
+        "UNKNOWN": 0.0
+      },
+      "survey_polygon": [
+        [
+          -10,
+          830
+        ],
+        [
+          490,
+          830
+        ],
+        [
+          490,
+          1330
+        ],
+        [
+          -10,
+          1330
+        ]
+      ],
+      "survey_polygon_area_m2": 250000.0,
+      "terrain_zone_areas_m2": {
+        "FLAT_PHYSICAL_GROUND": 250000.0,
+        "OUTSIDE_PHYSICAL_GROUND": 0.0,
+        "TERRAIN_CORE": 0.0,
+        "TERRAIN_MARGIN": 0.0
+      }
+    },
+    {
+      "buffer_m": 100,
+      "common_conservation_error_m2": {
+        "initial": 0.0,
+        "survey": 0.0
+      },
+      "common_initial_class_areas_m2": {
+        "L0": 99000.0,
+        "L1": 0.0,
+        "L2": 0.0,
+        "L3": 0.0,
+        "L4": 0.0,
+        "L5": 1000.0,
+        "LX": 0.0
+      },
+      "common_survey_class_areas_m2": {
+        "L0": 221900.0,
+        "L1": 0.0,
+        "L2": 0.0,
+        "L3": 0.0,
+        "L4": 0.0,
+        "L5": 48100.0,
+        "LX": 0.0
+      },
+      "id": "B2",
+      "initial_polygon": [
+        [
+          -900,
+          820
+        ],
+        [
+          -500,
+          820
+        ],
+        [
+          -500,
+          1070
+        ],
+        [
+          -900,
+          1070
+        ]
+      ],
+      "initial_polygon_area_m2": 100000.0,
+      "name": "Vista Hills",
+      "per_preset": {
+        "DESKTOP_HIGH": {
+          "buffer_m": 100,
+          "conservation_error_m2": {
+            "initial": 0.0,
+            "survey": 0.0
+          },
+          "id": "B2",
+          "initial_class_areas_m2": {
+            "L0": 99000.0,
+            "L1": 0.0,
+            "L2": 0.0,
+            "L3": 0.0,
+            "L4": 0.0,
+            "L5": 1000.0,
+            "LX": 0.0
+          },
+          "initial_polygon": [
+            [
+              -900,
+              820
+            ],
+            [
+              -500,
+              820
+            ],
+            [
+              -500,
+              1070
+            ],
+            [
+              -900,
+              1070
+            ]
+          ],
+          "initial_polygon_area_m2": 100000.0,
+          "name": "Vista Hills",
+          "partial_cells_conservatively_excluded": 559,
+          "precision_affected_areas_m2": {
+            "CONSERVATIVE_AABB": 45900.0,
+            "EXACT_OUTLINE": 2200.0
+          },
+          "slope_class_areas_m2": {
+            "S0": 246350.0,
+            "S1": 1500.0,
+            "S2": 3450.0,
+            "S3": 3900.0,
+            "S4": 14800.0,
+            "UNKNOWN": 0.0
+          },
+          "survey_class_areas_m2": {
+            "L0": 221900.0,
+            "L1": 0.0,
+            "L2": 0.0,
+            "L3": 0.0,
+            "L4": 0.0,
+            "L5": 48100.0,
+            "LX": 0.0
+          },
+          "survey_polygon": [
+            [
+              -1000,
+              720
+            ],
+            [
+              -400,
+              720
+            ],
+            [
+              -400,
+              1170
+            ],
+            [
+              -1000,
+              1170
+            ]
+          ],
+          "survey_polygon_area_m2": 270000.0,
+          "terrain_zone_areas_m2": {
+            "FLAT_PHYSICAL_GROUND": 211775.0,
+            "OUTSIDE_PHYSICAL_GROUND": 0.0,
+            "TERRAIN_CORE": 45900.0,
+            "TERRAIN_MARGIN": 12325.0
+          }
+        },
+        "PHONE_LOW": {
+          "buffer_m": 100,
+          "conservation_error_m2": {
+            "initial": 0.0,
+            "survey": 0.0
+          },
+          "id": "B2",
+          "initial_class_areas_m2": {
+            "L0": 99000.0,
+            "L1": 0.0,
+            "L2": 0.0,
+            "L3": 0.0,
+            "L4": 0.0,
+            "L5": 1000.0,
+            "LX": 0.0
+          },
+          "initial_polygon": [
+            [
+              -900,
+              820
+            ],
+            [
+              -500,
+              820
+            ],
+            [
+              -500,
+              1070
+            ],
+            [
+              -900,
+              1070
+            ]
+          ],
+          "initial_polygon_area_m2": 100000.0,
+          "name": "Vista Hills",
+          "partial_cells_conservatively_excluded": 440,
+          "precision_affected_areas_m2": {
+            "CONSERVATIVE_AABB": 45900.0,
+            "EXACT_OUTLINE": 2200.0
+          },
+          "slope_class_areas_m2": {
+            "S0": 246350.0,
+            "S1": 1500.0,
+            "S2": 3450.0,
+            "S3": 3900.0,
+            "S4": 14800.0,
+            "UNKNOWN": 0.0
+          },
+          "survey_class_areas_m2": {
+            "L0": 221900.0,
+            "L1": 0.0,
+            "L2": 0.0,
+            "L3": 0.0,
+            "L4": 0.0,
+            "L5": 48100.0,
+            "LX": 0.0
+          },
+          "survey_polygon": [
+            [
+              -1000,
+              720
+            ],
+            [
+              -400,
+              720
+            ],
+            [
+              -400,
+              1170
+            ],
+            [
+              -1000,
+              1170
+            ]
+          ],
+          "survey_polygon_area_m2": 270000.0,
+          "terrain_zone_areas_m2": {
+            "FLAT_PHYSICAL_GROUND": 211775.0,
+            "OUTSIDE_PHYSICAL_GROUND": 0.0,
+            "TERRAIN_CORE": 45900.0,
+            "TERRAIN_MARGIN": 12325.0
+          }
+        }
+      },
+      "precision_affected_areas_m2": {
+        "CONSERVATIVE_AABB": 45900.0,
+        "EXACT_OUTLINE": 2200.0
+      },
+      "revised_search_bounds": [
+        -1000.0,
+        720.0,
+        -400.0,
+        1170.0
+      ],
+      "slope_class_areas_m2": {
+        "S0": 246350.0,
+        "S1": 1500.0,
+        "S2": 3450.0,
+        "S3": 3900.0,
+        "S4": 14800.0,
+        "UNKNOWN": 0.0
+      },
+      "survey_polygon": [
+        [
+          -1000,
+          720
+        ],
+        [
+          -400,
+          720
+        ],
+        [
+          -400,
+          1170
+        ],
+        [
+          -1000,
+          1170
+        ]
+      ],
+      "survey_polygon_area_m2": 270000.0,
+      "terrain_zone_areas_m2": {
+        "FLAT_PHYSICAL_GROUND": 211775.0,
+        "OUTSIDE_PHYSICAL_GROUND": 0.0,
+        "TERRAIN_CORE": 45900.0,
+        "TERRAIN_MARGIN": 12325.0
+      }
+    },
+    {
+      "buffer_m": 100,
+      "common_conservation_error_m2": {
+        "initial": 0.0,
+        "survey": 0.0
+      },
+      "common_initial_class_areas_m2": {
+        "L0": 10925.0,
+        "L1": 0.0,
+        "L2": 5575.0,
+        "L3": 0.0,
+        "L4": 7500.0,
+        "L5": 36000.0,
+        "LX": 0.0
+      },
+      "common_survey_class_areas_m2": {
+        "L0": 37900.0,
+        "L1": 0.0,
+        "L2": 13875.0,
+        "L3": 0.0,
+        "L4": 10625.0,
+        "L5": 137600.0,
+        "LX": 0.0
+      },
+      "id": "B3",
+      "initial_polygon": [
+        [
+          -640,
+          -810
+        ],
+        [
+          -340,
+          -810
+        ],
+        [
+          -340,
+          -610
+        ],
+        [
+          -640,
+          -610
+        ]
+      ],
+      "initial_polygon_area_m2": 60000.0,
+      "name": "Palmwood Quarter",
+      "per_preset": {
+        "DESKTOP_HIGH": {
+          "buffer_m": 100,
+          "conservation_error_m2": {
+            "initial": 0.0,
+            "survey": 0.0
+          },
+          "id": "B3",
+          "initial_class_areas_m2": {
+            "L0": 12025.0,
+            "L1": 0.0,
+            "L2": 4475.0,
+            "L3": 0.0,
+            "L4": 7500.0,
+            "L5": 36000.0,
+            "LX": 0.0
+          },
+          "initial_polygon": [
+            [
+              -640,
+              -810
+            ],
+            [
+              -340,
+              -810
+            ],
+            [
+              -340,
+              -610
+            ],
+            [
+              -640,
+              -610
+            ]
+          ],
+          "initial_polygon_area_m2": 60000.0,
+          "name": "Palmwood Quarter",
+          "partial_cells_conservatively_excluded": 3161,
+          "precision_affected_areas_m2": {
+            "CONSERVATIVE_AABB": 117650.0,
+            "EXACT_OUTLINE": 113575.0
+          },
+          "slope_class_areas_m2": {
+            "S0": 194975.0,
+            "S1": 5025.0,
+            "S2": 0.0,
+            "S3": 0.0,
+            "S4": 0.0,
+            "UNKNOWN": 0.0
+          },
+          "survey_class_areas_m2": {
+            "L0": 40400.0,
+            "L1": 0.0,
+            "L2": 11475.0,
+            "L3": 0.0,
+            "L4": 10625.0,
+            "L5": 137500.0,
+            "LX": 0.0
+          },
+          "survey_polygon": [
+            [
+              -740,
+              -910
+            ],
+            [
+              -240,
+              -910
+            ],
+            [
+              -240,
+              -510
+            ],
+            [
+              -740,
+              -510
+            ]
+          ],
+          "survey_polygon_area_m2": 200000.0,
+          "terrain_zone_areas_m2": {
+            "FLAT_PHYSICAL_GROUND": 156000.0,
+            "OUTSIDE_PHYSICAL_GROUND": 0.0,
+            "TERRAIN_CORE": 36000.0,
+            "TERRAIN_MARGIN": 8000.0
+          }
+        },
+        "PHONE_LOW": {
+          "buffer_m": 100,
+          "conservation_error_m2": {
+            "initial": 0.0,
+            "survey": 0.0
+          },
+          "id": "B3",
+          "initial_class_areas_m2": {
+            "L0": 12300.0,
+            "L1": 0.0,
+            "L2": 8200.0,
+            "L3": 0.0,
+            "L4": 7500.0,
+            "L5": 32000.0,
+            "LX": 0.0
+          },
+          "initial_polygon": [
+            [
+              -640,
+              -810
+            ],
+            [
+              -340,
+              -810
+            ],
+            [
+              -340,
+              -610
+            ],
+            [
+              -640,
+              -610
+            ]
+          ],
+          "initial_polygon_area_m2": 60000.0,
+          "name": "Palmwood Quarter",
+          "partial_cells_conservatively_excluded": 3124,
+          "precision_affected_areas_m2": {
+            "CONSERVATIVE_AABB": 115025.0,
+            "EXACT_OUTLINE": 111600.0
+          },
+          "slope_class_areas_m2": {
+            "S0": 194975.0,
+            "S1": 5025.0,
+            "S2": 0.0,
+            "S3": 0.0,
+            "S4": 0.0,
+            "UNKNOWN": 0.0
+          },
+          "survey_class_areas_m2": {
+            "L0": 42700.0,
+            "L1": 0.0,
+            "L2": 19925.0,
+            "L3": 0.0,
+            "L4": 10625.0,
+            "L5": 126750.0,
+            "LX": 0.0
+          },
+          "survey_polygon": [
+            [
+              -740,
+              -910
+            ],
+            [
+              -240,
+              -910
+            ],
+            [
+              -240,
+              -510
+            ],
+            [
+              -740,
+              -510
+            ]
+          ],
+          "survey_polygon_area_m2": 200000.0,
+          "terrain_zone_areas_m2": {
+            "FLAT_PHYSICAL_GROUND": 156000.0,
+            "OUTSIDE_PHYSICAL_GROUND": 0.0,
+            "TERRAIN_CORE": 36000.0,
+            "TERRAIN_MARGIN": 8000.0
+          }
+        }
+      },
+      "precision_affected_areas_m2": {
+        "CONSERVATIVE_AABB": 117650.0,
+        "EXACT_OUTLINE": 113575.0
+      },
+      "revised_search_bounds": [
+        -645.0,
+        -910.0,
+        -240.0,
+        -510.0
+      ],
+      "slope_class_areas_m2": {
+        "S0": 194975.0,
+        "S1": 5025.0,
+        "S2": 0.0,
+        "S3": 0.0,
+        "S4": 0.0,
+        "UNKNOWN": 0.0
+      },
+      "survey_polygon": [
+        [
+          -740,
+          -910
+        ],
+        [
+          -240,
+          -910
+        ],
+        [
+          -240,
+          -510
+        ],
+        [
+          -740,
+          -510
+        ]
+      ],
+      "survey_polygon_area_m2": 200000.0,
+      "terrain_zone_areas_m2": {
+        "FLAT_PHYSICAL_GROUND": 156000.0,
+        "OUTSIDE_PHYSICAL_GROUND": 0.0,
+        "TERRAIN_CORE": 36000.0,
+        "TERRAIN_MARGIN": 8000.0
+      }
+    }
+  ],
+  "schema_version": 1,
+  "union_summary": {
+    "common": {
+      "conservation_error_m2": {
+        "initial": 0.0,
+        "survey": 0.0
+      },
+      "initial_class_areas_m2": {
+        "L0": 170575.0,
+        "L1": 0.0,
+        "L2": 5575.0,
+        "L3": 26350.0,
+        "L4": 7500.0,
+        "L5": 40000.0,
+        "LX": 0.0
+      },
+      "initial_union_area_m2": 250000.0,
+      "survey_class_areas_m2": {
+        "L0": 401000.0,
+        "L1": 0.0,
+        "L2": 13875.0,
+        "L3": 41550.0,
+        "L4": 10625.0,
+        "L5": 252950.0,
+        "LX": 0.0
+      },
+      "survey_union_area_m2": 720000.0
+    },
+    "per_preset": {
+      "DESKTOP_HIGH": {
+        "conservation_error_m2": {
+          "initial": 0.0,
+          "survey": 0.0
+        },
+        "initial_class_areas_m2": {
+          "L0": 171675.0,
+          "L1": 0.0,
+          "L2": 4475.0,
+          "L3": 26350.0,
+          "L4": 7500.0,
+          "L5": 40000.0,
+          "LX": 0.0
+        },
+        "initial_union_area_m2": 250000.0,
+        "survey_class_areas_m2": {
+          "L0": 403500.0,
+          "L1": 0.0,
+          "L2": 11475.0,
+          "L3": 41550.0,
+          "L4": 10625.0,
+          "L5": 252850.0,
+          "LX": 0.0
+        },
+        "survey_union_area_m2": 720000.0
+      },
+      "PHONE_LOW": {
+        "conservation_error_m2": {
+          "initial": 0.0,
+          "survey": 0.0
+        },
+        "initial_class_areas_m2": {
+          "L0": 171950.0,
+          "L1": 0.0,
+          "L2": 8200.0,
+          "L3": 26350.0,
+          "L4": 7500.0,
+          "L5": 36000.0,
+          "LX": 0.0
+        },
+        "initial_union_area_m2": 250000.0,
+        "survey_class_areas_m2": {
+          "L0": 405800.0,
+          "L1": 0.0,
+          "L2": 19925.0,
+          "L3": 41550.0,
+          "L4": 10625.0,
+          "L5": 242100.0,
+          "LX": 0.0
+        },
+        "survey_union_area_m2": 720000.0
+      }
+    }
+  }
+}

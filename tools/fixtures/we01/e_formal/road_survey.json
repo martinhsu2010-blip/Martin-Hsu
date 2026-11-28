@@ -1,0 +1,6598 @@
+{
+  "C_conditional": "PENDING_T016D",
+  "analyzer_version": "we01c-1.0",
+  "base_sha": "84319439243b51aa8d119e33eb62a0637feea887",
+  "candidate_corridors": [
+    {
+      "bounds": [
+        208.936,
+        886.726,
+        251.191,
+        960.058
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_C01_0",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          233.064,
+          886.726
+        ],
+        [
+          251.191,
+          953.509
+        ],
+        [
+          227.064,
+          960.058
+        ],
+        [
+          208.936,
+          893.274
+        ]
+      ],
+      "segment_id": "C01",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        226.931,
+        954.045,
+        251.807,
+        961.677
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_C01_1",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          251.323,
+          954.045
+        ],
+        [
+          251.807,
+          956.2
+        ],
+        [
+          227.414,
+          961.677
+        ],
+        [
+          226.931,
+          959.522
+        ]
+      ],
+      "segment_id": "C01",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        227.22,
+        957.286,
+        252.293,
+        962.778
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_C01_2",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          252.001,
+          957.286
+        ],
+        [
+          252.293,
+          959.475
+        ],
+        [
+          227.512,
+          962.778
+        ],
+        [
+          227.22,
+          960.59
+        ]
+      ],
+      "segment_id": "C01",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        227.415,
+        960.575,
+        252.488,
+        963.885
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_C01_3",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          252.39,
+          960.575
+        ],
+        [
+          252.488,
+          962.781
+        ],
+        [
+          227.512,
+          963.885
+        ],
+        [
+          227.415,
+          961.679
+        ]
+      ],
+      "segment_id": "C01",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        227.5,
+        963.333,
+        252.5,
+        1200.0
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_C01_4",
+      "is_rect": true,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          252.5,
+          963.333
+        ],
+        [
+          252.5,
+          1200.0
+        ],
+        [
+          227.5,
+          1200.0
+        ],
+        [
+          227.5,
+          963.333
+        ]
+      ],
+      "segment_id": "C01",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        110.0,
+        954.5,
+        240.0,
+        965.5
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_C02_0",
+      "is_rect": true,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          110.0,
+          954.5
+        ],
+        [
+          240.0,
+          954.5
+        ],
+        [
+          240.0,
+          965.5
+        ],
+        [
+          110.0,
+          965.5
+        ]
+      ],
+      "segment_id": "C02",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        -800.472,
+        994.387,
+        -424.198,
+        1035.981
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_H02_0",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          -800.472,
+          1024.019
+        ],
+        [
+          -425.142,
+          994.387
+        ],
+        [
+          -424.198,
+          1006.35
+        ],
+        [
+          -799.528,
+          1035.981
+        ]
+      ],
+      "segment_id": "H02",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        -425.522,
+        994.104,
+        -421.552,
+        1006.308
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_H02_1",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          -425.522,
+          994.429
+        ],
+        [
+          -423.255,
+          994.104
+        ],
+        [
+          -421.552,
+          1005.983
+        ],
+        [
+          -423.818,
+          1006.308
+        ]
+      ],
+      "segment_id": "H02",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        -424.002,
+        993.65,
+        -418.597,
+        1005.827
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_H02_2",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          -424.002,
+          994.261
+        ],
+        [
+          -421.795,
+          993.65
+        ],
+        [
+          -418.597,
+          1005.216
+        ],
+        [
+          -420.804,
+          1005.827
+        ]
+      ],
+      "segment_id": "H02",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        -422.516,
+        993.015,
+        -415.764,
+        1004.967
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_H02_3",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          -422.516,
+          993.9
+        ],
+        [
+          -420.405,
+          993.015
+        ],
+        [
+          -415.764,
+          1004.081
+        ],
+        [
+          -417.876,
+          1004.967
+        ]
+      ],
+      "segment_id": "H02",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        -421.088,
+        992.208,
+        -413.098,
+        1003.742
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_H02_4",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          -421.088,
+          993.354
+        ],
+        [
+          -419.106,
+          992.208
+        ],
+        [
+          -413.098,
+          1002.595
+        ],
+        [
+          -415.081,
+          1003.742
+        ]
+      ],
+      "segment_id": "H02",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        -419.43,
+        875.008,
+        -236.672,
+        1002.394
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_H02_5",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          -419.43,
+          992.409
+        ],
+        [
+          -243.328,
+          875.008
+        ],
+        [
+          -236.672,
+          884.992
+        ],
+        [
+          -412.774,
+          1002.394
+        ]
+      ],
+      "segment_id": "H02",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        -241.739,
+        874.782,
+        -2.109,
+        963.935
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_X01_0",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          -238.261,
+          874.782
+        ],
+        [
+          -2.109,
+          953.499
+        ],
+        [
+          -5.588,
+          963.935
+        ],
+        [
+          -241.739,
+          885.218
+        ]
+      ],
+      "segment_id": "X01",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        -5.306,
+        953.414,
+        0.193,
+        964.731
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_X01_1",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          -2.392,
+          953.414
+        ],
+        [
+          0.193,
+          954.124
+        ],
+        [
+          -2.722,
+          964.731
+        ],
+        [
+          -5.306,
+          964.021
+        ]
+      ],
+      "segment_id": "X01",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        -2.146,
+        953.998,
+        2.262,
+        965.285
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_X01_2",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          -0.384,
+          953.998
+        ],
+        [
+          2.262,
+          954.427
+        ],
+        [
+          0.5,
+          965.285
+        ],
+        [
+          -2.146,
+          964.856
+        ]
+      ],
+      "segment_id": "X01",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        1.086,
+        954.364,
+        4.352,
+        965.492
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_X01_3",
+      "is_rect": false,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          1.676,
+          954.364
+        ],
+        [
+          4.352,
+          954.508
+        ],
+        [
+          3.762,
+          965.492
+        ],
+        [
+          1.086,
+          965.348
+        ]
+      ],
+      "segment_id": "X01",
+      "source_group": "CANDIDATE_ROADS"
+    },
+    {
+      "bounds": [
+        4.057,
+        954.5,
+        110.0,
+        965.5
+      ],
+      "category": "ROAD",
+      "connectivity": "VERIFIED",
+      "existing": false,
+      "id": "CAND_X01_4",
+      "is_rect": true,
+      "is_roundabout": false,
+      "polygon": [
+        [
+          4.057,
+          954.5
+        ],
+        [
+          110.0,
+          954.5
+        ],
+        [
+          110.0,
+          965.5
+        ],
+        [
+          4.057,
+          965.5
+        ]
+      ],
+      "segment_id": "X01",
+      "source_group": "CANDIDATE_ROADS"
+    }
+  ],
+  "candidate_road_graph": {
+    "candidate_edges": [
+      [
+        "C01",
+        "C02",
+        "J:C01<->C02"
+      ],
+      [
+        "C02",
+        "X01",
+        "J:C02<->X01"
+      ],
+      [
+        "H01",
+        "H02",
+        "J:H01<->H02"
+      ],
+      [
+        "H02",
+        "X01",
+        "J:H02<->X01"
+      ]
+    ],
+    "candidate_junctions": [
+      {
+        "distance_m": 0.246,
+        "height_a_m": 0.0,
+        "height_b_m": 0.0,
+        "height_diff_m": 0.0,
+        "id": "J:C01<->C02",
+        "kind": "CANDIDATE_TO_CANDIDATE",
+        "nearest_on_target": [
+          240.0,
+          960.0
+        ],
+        "point": [
+          240.0,
+          960.0
+        ],
+        "reason": null,
+        "road_a": "C01",
+        "road_b": "C02",
+        "status": "VERIFIED",
+        "threshold_m": 9.5
+      },
+      {
+        "distance_m": 0.0,
+        "height_a_m": 0.0,
+        "height_b_m": 0.0,
+        "height_diff_m": 0.0,
+        "id": "J:C02<->X01",
+        "kind": "CANDIDATE_TO_CANDIDATE",
+        "nearest_on_target": [
+          110.0,
+          960.0
+        ],
+        "point": [
+          110.0,
+          960.0
+        ],
+        "reason": null,
+        "road_a": "C02",
+        "road_b": "X01",
+        "status": "VERIFIED",
+        "threshold_m": 4.5
+      },
+      {
+        "distance_m": 0.0,
+        "height_a_m": 0.0,
+        "height_b_m": 0.0,
+        "height_diff_m": 0.0,
+        "id": "J:H01<->H02",
+        "kind": "CANDIDATE_TO_CANDIDATE",
+        "nearest_on_target": [
+          -800.0,
+          1030.0
+        ],
+        "point": [
+          -800.0,
+          1030.0
+        ],
+        "reason": null,
+        "road_a": "H01",
+        "road_b": "H02",
+        "status": "VERIFIED",
+        "threshold_m": 5.0
+      },
+      {
+        "distance_m": 0.0,
+        "height_a_m": 0.0,
+        "height_b_m": 0.0,
+        "height_diff_m": 0.0,
+        "id": "J:H02<->X01",
+        "kind": "CANDIDATE_TO_CANDIDATE",
+        "nearest_on_target": [
+          -240.0,
+          880.0
+        ],
+        "point": [
+          -240.0,
+          880.0
+        ],
+        "reason": null,
+        "road_a": "H02",
+        "road_b": "X01",
+        "status": "VERIFIED",
+        "threshold_m": 4.5
+      }
+    ],
+    "candidate_overlaps": [
+      {
+        "junction_id": "J:C01<->C02",
+        "kind": "JUNCTION_OVERLAP_CANDIDATE",
+        "road_a": "C01",
+        "road_b": "C02",
+        "run_a_m": 36.02,
+        "run_b_m": 17.5
+      },
+      {
+        "junction_id": "J:C02<->X01",
+        "kind": "JUNCTION_OVERLAP_CANDIDATE",
+        "road_a": "C02",
+        "road_b": "X01",
+        "run_a_m": 12.0,
+        "run_b_m": 8.829
+      },
+      {
+        "junction_id": "J:H02<->X01",
+        "kind": "JUNCTION_OVERLAP_CANDIDATE",
+        "road_a": "H02",
+        "road_b": "X01",
+        "run_a_m": 8.943,
+        "run_b_m": 11.996
+      }
+    ],
+    "existing_connections": {
+      "C01": [
+        "J:C01->CRS_880@START",
+        "J:C01->RIB_0@START"
+      ],
+      "C02": [],
+      "H01": [],
+      "H02": [
+        "J:H02->AVE_-240@END",
+        "J:H02->CRS_880@END"
+      ],
+      "X01": [
+        "J:X01->AVE_-240@START",
+        "J:X01->CRS_880@START"
+      ]
+    },
+    "nodes": {
+      "C01": "CONDITIONAL_VERIFIED",
+      "C02": "CONDITIONAL_VERIFIED",
+      "H01": "NOT_FEASIBLE",
+      "H02": "CONDITIONAL_VERIFIED",
+      "X01": "CONDITIONAL_VERIFIED"
+    },
+    "separate_from_existing_graph": true
+  },
+  "compatibility_key": {
+    "base_sha": "84319439243b51aa8d119e33eb62a0637feea887",
+    "desktop_high_static_fingerprint": "52653bc578411a9eda9b314581bb16f45f3cb4eb1be623f9d39dc21ade365482",
+    "phone_low_static_fingerprint": "e473d222db998487e5fcfb187349e5006e6f619c1d15cca6bae1a2ee380352aa",
+    "polygon_revision": 2,
+    "road_schema_version": 1,
+    "schema_version": 1,
+    "t016b_analyzer_version": "we01b-1.0",
+    "we01a_analyzer_version": "we01a-1.0"
+  },
+  "excluded_roads": {
+    "H01": {
+      "reasons": [
+        "CORRIDOR_BLOCKED_ROAD",
+        "CORRIDOR_CONSERVATIVE_OBSTACLE",
+        "GRADE_LIMIT_EXCEEDED"
+      ],
+      "state": "NOT_FEASIBLE"
+    }
+  },
+  "existing_road_graph": {
+    "alias_map": {
+      "AVE_-120": "AVE_-120",
+      "AVE_-240": "AVE_-240",
+      "AVE_-420": "AVE_-420",
+      "AVE_-600": "AVE_-600",
+      "AVE_0": "AVE_0",
+      "AVE_110": "AVE_110",
+      "CRS_-600": "CRS_-600",
+      "CRS_-720": "CRS_-720",
+      "CRS_-880": "CRS_-880",
+      "CRS_880": "CRS_880",
+      "HILL_ROAD": "HILL_ROAD",
+      "RIB_0": "RIB_0",
+      "RIB_1": "RIB_1",
+      "RING": "RING",
+      "SPUR_11": "SPUR_11",
+      "SPUR_8": "SPUR_8",
+      "SUBR_1": "SUBR_1",
+      "TRD_0": "HILL_ROAD",
+      "TRD_2": "SUBR_1"
+    },
+    "connectivity": {
+      "AVE_-120": "VERIFIED",
+      "AVE_-240": "VERIFIED",
+      "AVE_-420": "VERIFIED",
+      "AVE_-600": "VERIFIED",
+      "AVE_0": "VERIFIED",
+      "AVE_110": "VERIFIED",
+      "CRS_-600": "VERIFIED",
+      "CRS_-720": "VERIFIED",
+      "CRS_-880": "VERIFIED",
+      "CRS_880": "VERIFIED",
+      "HILL_ROAD": "UNVERIFIED",
+      "RIB_0": "VERIFIED",
+      "RIB_1": "VERIFIED",
+      "RING": "UNVERIFIED",
+      "SPUR_11": "UNVERIFIED",
+      "SPUR_8": "UNVERIFIED",
+      "SUBR_1": "UNVERIFIED"
+    },
+    "dedup_ground_count": 14,
+    "dedup_main_component_count": 12,
+    "dedup_node_count": 17,
+    "duplicates": {
+      "HILL_ROAD": [
+        "HILL_ROAD",
+        "TRD_0"
+      ],
+      "SUBR_1": [
+        "SUBR_1",
+        "TRD_2"
+      ]
+    },
+    "edges": [
+      [
+        "AVE_-120",
+        "CRS_-600"
+      ],
+      [
+        "AVE_-120",
+        "CRS_-720"
+      ],
+      [
+        "AVE_-120",
+        "CRS_-880"
+      ],
+      [
+        "AVE_-120",
+        "CRS_880"
+      ],
+      [
+        "AVE_-120",
+        "RIB_1"
+      ],
+      [
+        "AVE_-240",
+        "CRS_-600"
+      ],
+      [
+        "AVE_-240",
+        "CRS_-720"
+      ],
+      [
+        "AVE_-240",
+        "CRS_-880"
+      ],
+      [
+        "AVE_-240",
+        "CRS_880"
+      ],
+      [
+        "AVE_-240",
+        "RIB_1"
+      ],
+      [
+        "AVE_-420",
+        "CRS_-600"
+      ],
+      [
+        "AVE_-420",
+        "CRS_-720"
+      ],
+      [
+        "AVE_-420",
+        "CRS_-880"
+      ],
+      [
+        "AVE_-420",
+        "RIB_1"
+      ],
+      [
+        "AVE_-600",
+        "CRS_-600"
+      ],
+      [
+        "AVE_-600",
+        "CRS_-720"
+      ],
+      [
+        "AVE_-600",
+        "CRS_-880"
+      ],
+      [
+        "AVE_0",
+        "CRS_-600"
+      ],
+      [
+        "AVE_0",
+        "CRS_-720"
+      ],
+      [
+        "AVE_0",
+        "CRS_-880"
+      ],
+      [
+        "AVE_0",
+        "CRS_880"
+      ],
+      [
+        "AVE_0",
+        "RIB_1"
+      ],
+      [
+        "AVE_110",
+        "CRS_-600"
+      ],
+      [
+        "AVE_110",
+        "CRS_-720"
+      ],
+      [
+        "AVE_110",
+        "CRS_-880"
+      ],
+      [
+        "AVE_110",
+        "CRS_880"
+      ],
+      [
+        "AVE_110",
+        "RIB_1"
+      ],
+      [
+        "CRS_-600",
+        "RIB_1"
+      ],
+      [
+        "CRS_-720",
+        "RIB_0"
+      ],
+      [
+        "CRS_-880",
+        "RIB_0"
+      ],
+      [
+        "CRS_880",
+        "RIB_0"
+      ]
+    ],
+    "main_component": [
+      "AVE_-120",
+      "AVE_-240",
+      "AVE_-420",
+      "AVE_-600",
+      "AVE_0",
+      "AVE_110",
+      "CRS_-600",
+      "CRS_-720",
+      "CRS_-880",
+      "CRS_880",
+      "RIB_0",
+      "RIB_1"
+    ],
+    "raw_connectivity": {
+      "AVE_-120": "VERIFIED",
+      "AVE_-240": "VERIFIED",
+      "AVE_-420": "VERIFIED",
+      "AVE_-600": "VERIFIED",
+      "AVE_0": "VERIFIED",
+      "AVE_110": "VERIFIED",
+      "CRS_-600": "VERIFIED",
+      "CRS_-720": "VERIFIED",
+      "CRS_-880": "VERIFIED",
+      "CRS_880": "VERIFIED",
+      "HILL_ROAD": "UNVERIFIED",
+      "RIB_0": "VERIFIED",
+      "RIB_1": "VERIFIED",
+      "RING": "UNVERIFIED",
+      "SPUR_11": "UNVERIFIED",
+      "SPUR_8": "UNVERIFIED",
+      "SUBR_1": "UNVERIFIED",
+      "TRD_0": "UNVERIFIED",
+      "TRD_2": "UNVERIFIED"
+    },
+    "raw_ground_count": 16,
+    "raw_main_component_count": 12,
+    "raw_segment_count": 19
+  },
+  "existing_road_graph_desktop_high_main_count": 12,
+  "limitations": [
+    "External road access survey only; internal streets, conditional capacity (C_conditional=PENDING_T016D), and final residential feasibility verdicts are deferred to T-016D.",
+    "AVE110_EXTENSION_REQUIRED optional link is never generated or verified here."
+  ],
+  "polygon_revision": 2,
+  "presets": {
+    "DESKTOP_HIGH": {
+      "file_sha256": "7b802de45417b51e28ec04fa8c782507149006ca7a2212d834c0e73659765578",
+      "static_fingerprint": "52653bc578411a9eda9b314581bb16f45f3cb4eb1be623f9d39dc21ade365482"
+    },
+    "PHONE_LOW": {
+      "file_sha256": "01919444a89a7d0d695ab8b0afccc1b35c4101ae288ff03629201f93284c3d24",
+      "static_fingerprint": "e473d222db998487e5fcfb187349e5006e6f619c1d15cca6bae1a2ee380352aa"
+    }
+  },
+  "regional_access": {
+    "ENVELOPE": {
+      "B1": {
+        "C_conditional": "PENDING_T016D",
+        "bounds_internal": [
+          -10,
+          830,
+          490,
+          1330
+        ],
+        "bounds_spec": [
+          -10,
+          490,
+          830,
+          1330
+        ],
+        "conditional_access_roads": [
+          "C01",
+          "C02",
+          "X01"
+        ],
+        "dependency_chains": {
+          "C01": [
+            [
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            [
+              "C01",
+              "J:C01->RIB_0@START"
+            ],
+            [
+              "C01",
+              "J:C01<->C02",
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            [
+              "C01",
+              "J:C01<->C02",
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->CRS_880@START"
+            ],
+            [
+              "C01",
+              "J:C01<->C02",
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            [
+              "C01",
+              "J:C01<->C02",
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->CRS_880@END"
+            ]
+          ],
+          "C02": [
+            [
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            [
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->RIB_0@START"
+            ],
+            [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->CRS_880@START"
+            ],
+            [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->CRS_880@END"
+            ]
+          ],
+          "X01": [
+            [
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            [
+              "X01",
+              "J:X01->CRS_880@START"
+            ],
+            [
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            [
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->CRS_880@END"
+            ],
+            [
+              "X01",
+              "J:C02<->X01",
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            [
+              "X01",
+              "J:C02<->X01",
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->RIB_0@START"
+            ]
+          ]
+        },
+        "existing_access_sources": [
+          "AVE_0",
+          "AVE_110",
+          "CRS_880",
+          "RIB_0"
+        ],
+        "not_feasible_roads": [],
+        "reasons": [
+          "EXISTING_MAIN_COMPONENT_ACCESS"
+        ],
+        "unverified_roads": [],
+        "verdict": "FEASIBLE"
+      },
+      "B2": {
+        "C_conditional": "PENDING_T016D",
+        "bounds_internal": [
+          -1000,
+          720,
+          -400,
+          1170
+        ],
+        "bounds_spec": [
+          -1000,
+          -400,
+          720,
+          1170
+        ],
+        "conditional_access_roads": [
+          "H02"
+        ],
+        "dependency_chains": {
+          "H02": [
+            [
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            [
+              "H02",
+              "J:H02->CRS_880@END"
+            ],
+            [
+              "H02",
+              "J:H02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            [
+              "H02",
+              "J:H02<->X01",
+              "X01",
+              "J:X01->CRS_880@START"
+            ],
+            [
+              "H02",
+              "J:H02<->X01",
+              "X01",
+              "J:C02<->X01",
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            [
+              "H02",
+              "J:H02<->X01",
+              "X01",
+              "J:C02<->X01",
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->RIB_0@START"
+            ]
+          ]
+        },
+        "existing_access_sources": [],
+        "not_feasible_roads": [
+          "H01"
+        ],
+        "reasons": [
+          "CONDITIONAL_CANDIDATE_ACCESS"
+        ],
+        "unverified_roads": [],
+        "verdict": "CONDITIONAL"
+      },
+      "B3": {
+        "C_conditional": "PENDING_T016D",
+        "bounds_internal": [
+          -740,
+          -910,
+          -240,
+          -510
+        ],
+        "bounds_spec": [
+          -740,
+          -240,
+          -910,
+          -510
+        ],
+        "conditional_access_roads": [],
+        "dependency_chains": {},
+        "existing_access_sources": [
+          "AVE_-240",
+          "AVE_-420",
+          "AVE_-600",
+          "CRS_-600",
+          "CRS_-720",
+          "CRS_-880",
+          "RIB_1",
+          "U01"
+        ],
+        "not_feasible_roads": [],
+        "reasons": [
+          "EXISTING_MAIN_COMPONENT_ACCESS"
+        ],
+        "unverified_roads": [],
+        "verdict": "FEASIBLE"
+      }
+    },
+    "INITIAL": {
+      "B1": {
+        "C_conditional": "PENDING_T016D",
+        "bounds_internal": [
+          90,
+          930,
+          390,
+          1230
+        ],
+        "bounds_spec": [
+          90,
+          390,
+          930,
+          1230
+        ],
+        "conditional_access_roads": [
+          "C01",
+          "C02",
+          "X01"
+        ],
+        "dependency_chains": {
+          "C01": [
+            [
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            [
+              "C01",
+              "J:C01->RIB_0@START"
+            ],
+            [
+              "C01",
+              "J:C01<->C02",
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            [
+              "C01",
+              "J:C01<->C02",
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->CRS_880@START"
+            ],
+            [
+              "C01",
+              "J:C01<->C02",
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            [
+              "C01",
+              "J:C01<->C02",
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->CRS_880@END"
+            ]
+          ],
+          "C02": [
+            [
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            [
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->RIB_0@START"
+            ],
+            [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->CRS_880@START"
+            ],
+            [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->CRS_880@END"
+            ]
+          ],
+          "X01": [
+            [
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            [
+              "X01",
+              "J:X01->CRS_880@START"
+            ],
+            [
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            [
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->CRS_880@END"
+            ],
+            [
+              "X01",
+              "J:C02<->X01",
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            [
+              "X01",
+              "J:C02<->X01",
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->RIB_0@START"
+            ]
+          ]
+        },
+        "existing_access_sources": [],
+        "not_feasible_roads": [],
+        "reasons": [
+          "CONDITIONAL_CANDIDATE_ACCESS"
+        ],
+        "unverified_roads": [],
+        "verdict": "CONDITIONAL"
+      },
+      "B2": {
+        "C_conditional": "PENDING_T016D",
+        "bounds_internal": [
+          -900,
+          820,
+          -500,
+          1070
+        ],
+        "bounds_spec": [
+          -900,
+          -500,
+          820,
+          1070
+        ],
+        "conditional_access_roads": [
+          "H02"
+        ],
+        "dependency_chains": {
+          "H02": [
+            [
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            [
+              "H02",
+              "J:H02->CRS_880@END"
+            ],
+            [
+              "H02",
+              "J:H02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            [
+              "H02",
+              "J:H02<->X01",
+              "X01",
+              "J:X01->CRS_880@START"
+            ],
+            [
+              "H02",
+              "J:H02<->X01",
+              "X01",
+              "J:C02<->X01",
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            [
+              "H02",
+              "J:H02<->X01",
+              "X01",
+              "J:C02<->X01",
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->RIB_0@START"
+            ]
+          ]
+        },
+        "existing_access_sources": [],
+        "not_feasible_roads": [
+          "H01"
+        ],
+        "reasons": [
+          "CONDITIONAL_CANDIDATE_ACCESS"
+        ],
+        "unverified_roads": [],
+        "verdict": "CONDITIONAL"
+      },
+      "B3": {
+        "C_conditional": "PENDING_T016D",
+        "bounds_internal": [
+          -640,
+          -810,
+          -340,
+          -610
+        ],
+        "bounds_spec": [
+          -640,
+          -340,
+          -810,
+          -610
+        ],
+        "conditional_access_roads": [],
+        "dependency_chains": {},
+        "existing_access_sources": [
+          "AVE_-420",
+          "AVE_-600",
+          "CRS_-600",
+          "CRS_-720",
+          "U01"
+        ],
+        "not_feasible_roads": [],
+        "reasons": [
+          "EXISTING_MAIN_COMPONENT_ACCESS"
+        ],
+        "unverified_roads": [],
+        "verdict": "FEASIBLE"
+      }
+    },
+    "REVISED": {
+      "B1": {
+        "C_conditional": "PENDING_T016D",
+        "bounds_internal": [
+          -10,
+          880,
+          390,
+          1330
+        ],
+        "bounds_spec": [
+          -10,
+          390,
+          880,
+          1330
+        ],
+        "conditional_access_roads": [
+          "C01",
+          "C02",
+          "X01"
+        ],
+        "dependency_chains": {
+          "C01": [
+            [
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            [
+              "C01",
+              "J:C01->RIB_0@START"
+            ],
+            [
+              "C01",
+              "J:C01<->C02",
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            [
+              "C01",
+              "J:C01<->C02",
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->CRS_880@START"
+            ],
+            [
+              "C01",
+              "J:C01<->C02",
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            [
+              "C01",
+              "J:C01<->C02",
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->CRS_880@END"
+            ]
+          ],
+          "C02": [
+            [
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            [
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->RIB_0@START"
+            ],
+            [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:X01->CRS_880@START"
+            ],
+            [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            [
+              "C02",
+              "J:C02<->X01",
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->CRS_880@END"
+            ]
+          ],
+          "X01": [
+            [
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            [
+              "X01",
+              "J:X01->CRS_880@START"
+            ],
+            [
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            [
+              "X01",
+              "J:H02<->X01",
+              "H02",
+              "J:H02->CRS_880@END"
+            ],
+            [
+              "X01",
+              "J:C02<->X01",
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            [
+              "X01",
+              "J:C02<->X01",
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->RIB_0@START"
+            ]
+          ]
+        },
+        "existing_access_sources": [
+          "AVE_0",
+          "AVE_110",
+          "CRS_880",
+          "RIB_0"
+        ],
+        "not_feasible_roads": [],
+        "reasons": [
+          "EXISTING_MAIN_COMPONENT_ACCESS"
+        ],
+        "unverified_roads": [],
+        "verdict": "FEASIBLE"
+      },
+      "B2": {
+        "C_conditional": "PENDING_T016D",
+        "bounds_internal": [
+          -950,
+          770,
+          -450,
+          1120
+        ],
+        "bounds_spec": [
+          -950,
+          -450,
+          770,
+          1120
+        ],
+        "conditional_access_roads": [
+          "H02"
+        ],
+        "dependency_chains": {
+          "H02": [
+            [
+              "H02",
+              "J:H02->AVE_-240@END"
+            ],
+            [
+              "H02",
+              "J:H02->CRS_880@END"
+            ],
+            [
+              "H02",
+              "J:H02<->X01",
+              "X01",
+              "J:X01->AVE_-240@START"
+            ],
+            [
+              "H02",
+              "J:H02<->X01",
+              "X01",
+              "J:X01->CRS_880@START"
+            ],
+            [
+              "H02",
+              "J:H02<->X01",
+              "X01",
+              "J:C02<->X01",
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->CRS_880@START"
+            ],
+            [
+              "H02",
+              "J:H02<->X01",
+              "X01",
+              "J:C02<->X01",
+              "C02",
+              "J:C01<->C02",
+              "C01",
+              "J:C01->RIB_0@START"
+            ]
+          ]
+        },
+        "existing_access_sources": [],
+        "not_feasible_roads": [
+          "H01"
+        ],
+        "reasons": [
+          "CONDITIONAL_CANDIDATE_ACCESS"
+        ],
+        "unverified_roads": [],
+        "verdict": "CONDITIONAL"
+      },
+      "B3": {
+        "C_conditional": "PENDING_T016D",
+        "bounds_internal": [
+          -640,
+          -860,
+          -240,
+          -710
+        ],
+        "bounds_spec": [
+          -640,
+          -240,
+          -860,
+          -710
+        ],
+        "conditional_access_roads": [],
+        "dependency_chains": {},
+        "existing_access_sources": [
+          "AVE_-240",
+          "AVE_-420",
+          "AVE_-600",
+          "CRS_-720",
+          "U01"
+        ],
+        "not_feasible_roads": [],
+        "reasons": [
+          "EXISTING_MAIN_COMPONENT_ACCESS"
+        ],
+        "unverified_roads": [],
+        "verdict": "FEASIBLE"
+      }
+    }
+  },
+  "road_schema_version": 1,
+  "roads": {
+    "C01": {
+      "beach_encroachment_m2": 4994.0,
+      "carriageway_width_m": 17.0,
+      "centerline_info": {
+        "centerline": [
+          [
+            221.0,
+            890.0
+          ],
+          [
+            221.755,
+            892.783
+          ],
+          [
+            222.511,
+            895.565
+          ],
+          [
+            223.266,
+            898.348
+          ],
+          [
+            224.021,
+            901.131
+          ],
+          [
+            224.776,
+            903.913
+          ],
+          [
+            225.532,
+            906.696
+          ],
+          [
+            226.287,
+            909.479
+          ],
+          [
+            227.042,
+            912.261
+          ],
+          [
+            227.798,
+            915.044
+          ],
+          [
+            228.553,
+            917.827
+          ],
+          [
+            229.308,
+            920.609
+          ],
+          [
+            230.064,
+            923.392
+          ],
+          [
+            230.819,
+            926.175
+          ],
+          [
+            231.574,
+            928.957
+          ],
+          [
+            232.329,
+            931.74
+          ],
+          [
+            233.085,
+            934.523
+          ],
+          [
+            233.84,
+            937.305
+          ],
+          [
+            234.595,
+            940.088
+          ],
+          [
+            235.351,
+            942.871
+          ],
+          [
+            236.106,
+            945.653
+          ],
+          [
+            236.861,
+            948.436
+          ],
+          [
+            237.616,
+            951.218
+          ],
+          [
+            238.372,
+            954.001
+          ],
+          [
+            239.127,
+            956.784
+          ],
+          [
+            239.611,
+            958.938
+          ],
+          [
+            239.902,
+            961.127
+          ],
+          [
+            240.0,
+            963.333
+          ],
+          [
+            240.0,
+            966.328
+          ],
+          [
+            240.0,
+            969.324
+          ],
+          [
+            240.0,
+            972.32
+          ],
+          [
+            240.0,
+            975.316
+          ],
+          [
+            240.0,
+            978.312
+          ],
+          [
+            240.0,
+            981.307
+          ],
+          [
+            240.0,
+            984.303
+          ],
+          [
+            240.0,
+            987.299
+          ],
+          [
+            240.0,
+            990.295
+          ],
+          [
+            240.0,
+            993.29
+          ],
+          [
+            240.0,
+            996.286
+          ],
+          [
+            240.0,
+            999.282
+          ],
+          [
+            240.0,
+            1002.278
+          ],
+          [
+            240.0,
+            1005.274
+          ],
+          [
+            240.0,
+            1008.269
+          ],
+          [
+            240.0,
+            1011.265
+          ],
+          [
+            240.0,
+            1014.261
+          ],
+          [
+            240.0,
+            1017.257
+          ],
+          [
+            240.0,
+            1020.253
+          ],
+          [
+            240.0,
+            1023.248
+          ],
+          [
+            240.0,
+            1026.244
+          ],
+          [
+            240.0,
+            1029.24
+          ],
+          [
+            240.0,
+            1032.236
+          ],
+          [
+            240.0,
+            1035.232
+          ],
+          [
+            240.0,
+            1038.227
+          ],
+          [
+            240.0,
+            1041.223
+          ],
+          [
+            240.0,
+            1044.219
+          ],
+          [
+            240.0,
+            1047.215
+          ],
+          [
+            240.0,
+            1050.21
+          ],
+          [
+            240.0,
+            1053.206
+          ],
+          [
+            240.0,
+            1056.202
+          ],
+          [
+            240.0,
+            1059.198
+          ],
+          [
+            240.0,
+            1062.194
+          ],
+          [
+            240.0,
+            1065.189
+          ],
+          [
+            240.0,
+            1068.185
+          ],
+          [
+            240.0,
+            1071.181
+          ],
+          [
+            240.0,
+            1074.177
+          ],
+          [
+            240.0,
+            1077.173
+          ],
+          [
+            240.0,
+            1080.168
+          ],
+          [
+            240.0,
+            1083.164
+          ],
+          [
+            240.0,
+            1086.16
+          ],
+          [
+            240.0,
+            1089.156
+          ],
+          [
+            240.0,
+            1092.152
+          ],
+          [
+            240.0,
+            1095.147
+          ],
+          [
+            240.0,
+            1098.143
+          ],
+          [
+            240.0,
+            1101.139
+          ],
+          [
+            240.0,
+            1104.135
+          ],
+          [
+            240.0,
+            1107.131
+          ],
+          [
+            240.0,
+            1110.126
+          ],
+          [
+            240.0,
+            1113.122
+          ],
+          [
+            240.0,
+            1116.118
+          ],
+          [
+            240.0,
+            1119.114
+          ],
+          [
+            240.0,
+            1122.109
+          ],
+          [
+            240.0,
+            1125.105
+          ],
+          [
+            240.0,
+            1128.101
+          ],
+          [
+            240.0,
+            1131.097
+          ],
+          [
+            240.0,
+            1134.093
+          ],
+          [
+            240.0,
+            1137.088
+          ],
+          [
+            240.0,
+            1140.084
+          ],
+          [
+            240.0,
+            1143.08
+          ],
+          [
+            240.0,
+            1146.076
+          ],
+          [
+            240.0,
+            1149.072
+          ],
+          [
+            240.0,
+            1152.067
+          ],
+          [
+            240.0,
+            1155.063
+          ],
+          [
+            240.0,
+            1158.059
+          ],
+          [
+            240.0,
+            1161.055
+          ],
+          [
+            240.0,
+            1164.051
+          ],
+          [
+            240.0,
+            1167.046
+          ],
+          [
+            240.0,
+            1170.042
+          ],
+          [
+            240.0,
+            1173.038
+          ],
+          [
+            240.0,
+            1176.034
+          ],
+          [
+            240.0,
+            1179.029
+          ],
+          [
+            240.0,
+            1182.025
+          ],
+          [
+            240.0,
+            1185.021
+          ],
+          [
+            240.0,
+            1188.017
+          ],
+          [
+            240.0,
+            1191.013
+          ],
+          [
+            240.0,
+            1194.008
+          ],
+          [
+            240.0,
+            1197.004
+          ],
+          [
+            240.0,
+            1200.0
+          ]
+        ],
+        "control_points": [
+          [
+            221.0,
+            890.0
+          ],
+          [
+            240.0,
+            960.0
+          ],
+          [
+            240.0,
+            1200.0
+          ]
+        ],
+        "fillets": [
+          {
+            "arc_length_m": 6.626,
+            "collinear": false,
+            "deflection_rad": 0.265,
+            "fits": true,
+            "radius_m": 25.0,
+            "tangent_length_m": 3.333,
+            "vertex_index": 1
+          }
+        ],
+        "geometry_ok": true,
+        "max_sample_spacing_m": 2.996,
+        "min_radius_m": 25.0,
+        "reasons": [],
+        "total_length_m": 312.492
+      },
+      "cor_grid_ids": [
+        "COR_C01_1M"
+      ],
+      "cor_margin_m": 47.5,
+      "cor_margin_ok": true,
+      "corridor_bounds": [
+        208.5,
+        877.5,
+        252.5,
+        1212.5
+      ],
+      "corridor_half_width_m": 12.5,
+      "dependency_chains": [
+        [
+          "C01",
+          "J:C01->CRS_880@START"
+        ],
+        [
+          "C01",
+          "J:C01->RIB_0@START"
+        ],
+        [
+          "C01",
+          "J:C01<->C02",
+          "C02",
+          "J:C02<->X01",
+          "X01",
+          "J:X01->AVE_-240@START"
+        ],
+        [
+          "C01",
+          "J:C01<->C02",
+          "C02",
+          "J:C02<->X01",
+          "X01",
+          "J:X01->CRS_880@START"
+        ],
+        [
+          "C01",
+          "J:C01<->C02",
+          "C02",
+          "J:C02<->X01",
+          "X01",
+          "J:H02<->X01",
+          "H02",
+          "J:H02->AVE_-240@END"
+        ],
+        [
+          "C01",
+          "J:C01<->C02",
+          "C02",
+          "J:C02<->X01",
+          "X01",
+          "J:H02<->X01",
+          "H02",
+          "J:H02->CRS_880@END"
+        ]
+      ],
+      "existing": false,
+      "geom_corridor_state": "LEGAL",
+      "grade_info": {
+        "grade_limit_pct": 6.0,
+        "grade_ok": true,
+        "height_ok": true,
+        "height_provenances": [
+          "DIRECT_RUNTIME_1M",
+          "INTERPOLATED_1M"
+        ],
+        "heights_m": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_step_grade_pct": 0.0,
+        "missing_height_count": 0,
+        "net_average_grade_pct": 0.0,
+        "reasons": []
+      },
+      "id": "C01",
+      "is_existing_reuse": false,
+      "junctions": [
+        {
+          "distance_m": 10.0,
+          "endpoint": "START",
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:C01->CRS_880@START",
+          "kind": "CANDIDATE_TO_EXISTING",
+          "nearest_on_target": [
+            221.0,
+            880.0
+          ],
+          "point": [
+            221.0,
+            890.0
+          ],
+          "reason": null,
+          "road_a": "C01",
+          "road_b": "CRS_880",
+          "status": "VERIFIED",
+          "target_connectivity": "VERIFIED",
+          "target_elevation_type": "GROUND",
+          "threshold_m": 12.0
+        },
+        {
+          "distance_m": 0.0,
+          "endpoint": "START",
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:C01->RIB_0@START",
+          "kind": "CANDIDATE_TO_EXISTING",
+          "nearest_on_target": [
+            221.0,
+            890.0
+          ],
+          "point": [
+            221.0,
+            890.0
+          ],
+          "reason": null,
+          "road_a": "C01",
+          "road_b": "RIB_0",
+          "status": "VERIFIED",
+          "target_connectivity": "VERIFIED",
+          "target_elevation_type": "GROUND",
+          "threshold_m": 9.5
+        },
+        {
+          "distance_m": 0.246,
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:C01<->C02",
+          "kind": "CANDIDATE_TO_CANDIDATE",
+          "nearest_on_target": [
+            240.0,
+            960.0
+          ],
+          "point": [
+            240.0,
+            960.0
+          ],
+          "reason": null,
+          "road_a": "C01",
+          "road_b": "C02",
+          "status": "VERIFIED",
+          "threshold_m": 9.5
+        }
+      ],
+      "kind": "NORMAL",
+      "matched_existing_segment_id": null,
+      "max_grade_limit_pct": 6.0,
+      "min_radius_m": 25.0,
+      "new_corridor_area_m2": 7812.3,
+      "new_length_m": 312.492,
+      "obstacles": {
+        "advisory_street_furniture": [],
+        "blocking": [],
+        "conservative": [],
+        "junction_overlaps": [
+          {
+            "endpoint": "START",
+            "footprints": [
+              {
+                "category": "ROAD",
+                "id": "ROAD_CRS_880_0",
+                "segment_id": "CRS_880"
+              },
+              {
+                "category": "SIDEWALK",
+                "id": "SWK_CRS_880_0",
+                "segment_id": "CRS_880"
+              },
+              {
+                "category": "ROAD",
+                "id": "ROAD_RIB_0_592",
+                "segment_id": "RIB_0"
+              },
+              {
+                "category": "ROAD",
+                "id": "ROAD_RIB_0_593",
+                "segment_id": "RIB_0"
+              },
+              {
+                "category": "ROAD",
+                "id": "ROAD_RIB_0_594",
+                "segment_id": "RIB_0"
+              },
+              {
+                "category": "ROAD",
+                "id": "ROAD_RIB_0_595",
+                "segment_id": "RIB_0"
+              },
+              {
+                "category": "ROAD",
+                "id": "ROAD_RIB_0_596",
+                "segment_id": "RIB_0"
+              }
+            ],
+            "kind": "JUNCTION_OVERLAP",
+            "run_length_m": 20.183
+          }
+        ]
+      },
+      "optional_extension_links": [],
+      "physical_ground_ok": true,
+      "reasons": [],
+      "state": "CONDITIONAL_VERIFIED"
+    },
+    "C02": {
+      "beach_encroachment_m2": 224.0,
+      "carriageway_width_m": 7.0,
+      "centerline_info": {
+        "centerline": [
+          [
+            110.0,
+            960.0
+          ],
+          [
+            113.0,
+            960.0
+          ],
+          [
+            116.0,
+            960.0
+          ],
+          [
+            119.0,
+            960.0
+          ],
+          [
+            122.0,
+            960.0
+          ],
+          [
+            125.0,
+            960.0
+          ],
+          [
+            128.0,
+            960.0
+          ],
+          [
+            131.0,
+            960.0
+          ],
+          [
+            134.0,
+            960.0
+          ],
+          [
+            137.0,
+            960.0
+          ],
+          [
+            140.0,
+            960.0
+          ],
+          [
+            143.0,
+            960.0
+          ],
+          [
+            146.0,
+            960.0
+          ],
+          [
+            149.0,
+            960.0
+          ],
+          [
+            152.0,
+            960.0
+          ],
+          [
+            155.0,
+            960.0
+          ],
+          [
+            158.0,
+            960.0
+          ],
+          [
+            161.0,
+            960.0
+          ],
+          [
+            164.0,
+            960.0
+          ],
+          [
+            167.0,
+            960.0
+          ],
+          [
+            170.0,
+            960.0
+          ],
+          [
+            172.917,
+            960.0
+          ],
+          [
+            175.833,
+            960.0
+          ],
+          [
+            178.75,
+            960.0
+          ],
+          [
+            181.667,
+            960.0
+          ],
+          [
+            184.583,
+            960.0
+          ],
+          [
+            187.5,
+            960.0
+          ],
+          [
+            190.417,
+            960.0
+          ],
+          [
+            193.333,
+            960.0
+          ],
+          [
+            196.25,
+            960.0
+          ],
+          [
+            199.167,
+            960.0
+          ],
+          [
+            202.083,
+            960.0
+          ],
+          [
+            205.0,
+            960.0
+          ],
+          [
+            207.917,
+            960.0
+          ],
+          [
+            210.833,
+            960.0
+          ],
+          [
+            213.75,
+            960.0
+          ],
+          [
+            216.667,
+            960.0
+          ],
+          [
+            219.583,
+            960.0
+          ],
+          [
+            222.5,
+            960.0
+          ],
+          [
+            225.417,
+            960.0
+          ],
+          [
+            228.333,
+            960.0
+          ],
+          [
+            231.25,
+            960.0
+          ],
+          [
+            234.167,
+            960.0
+          ],
+          [
+            237.083,
+            960.0
+          ],
+          [
+            240.0,
+            960.0
+          ]
+        ],
+        "control_points": [
+          [
+            110.0,
+            960.0
+          ],
+          [
+            170.0,
+            960.0
+          ],
+          [
+            240.0,
+            960.0
+          ]
+        ],
+        "fillets": [
+          {
+            "arc_length_m": 0.0,
+            "collinear": true,
+            "deflection_rad": 0.0,
+            "fits": true,
+            "radius_m": null,
+            "tangent_length_m": 0.0,
+            "vertex_index": 1
+          }
+        ],
+        "geometry_ok": true,
+        "max_sample_spacing_m": 3.0,
+        "min_radius_m": null,
+        "reasons": [],
+        "total_length_m": 130.0
+      },
+      "cor_grid_ids": [
+        "COR_C02_1M"
+      ],
+      "cor_margin_m": 54.5,
+      "cor_margin_ok": true,
+      "corridor_bounds": [
+        104.5,
+        954.5,
+        245.5,
+        965.5
+      ],
+      "corridor_half_width_m": 5.5,
+      "dependency_chains": [
+        [
+          "C02",
+          "J:C01<->C02",
+          "C01",
+          "J:C01->CRS_880@START"
+        ],
+        [
+          "C02",
+          "J:C01<->C02",
+          "C01",
+          "J:C01->RIB_0@START"
+        ],
+        [
+          "C02",
+          "J:C02<->X01",
+          "X01",
+          "J:X01->AVE_-240@START"
+        ],
+        [
+          "C02",
+          "J:C02<->X01",
+          "X01",
+          "J:X01->CRS_880@START"
+        ],
+        [
+          "C02",
+          "J:C02<->X01",
+          "X01",
+          "J:H02<->X01",
+          "H02",
+          "J:H02->AVE_-240@END"
+        ],
+        [
+          "C02",
+          "J:C02<->X01",
+          "X01",
+          "J:H02<->X01",
+          "H02",
+          "J:H02->CRS_880@END"
+        ]
+      ],
+      "existing": false,
+      "geom_corridor_state": "LEGAL",
+      "grade_info": {
+        "grade_limit_pct": 6.0,
+        "grade_ok": true,
+        "height_ok": true,
+        "height_provenances": [
+          "DIRECT_RUNTIME_1M",
+          "INTERPOLATED_1M"
+        ],
+        "heights_m": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_step_grade_pct": 0.0,
+        "missing_height_count": 0,
+        "net_average_grade_pct": 0.0,
+        "reasons": []
+      },
+      "id": "C02",
+      "is_existing_reuse": false,
+      "junctions": [
+        {
+          "distance_m": 0.246,
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:C01<->C02",
+          "kind": "CANDIDATE_TO_CANDIDATE",
+          "nearest_on_target": [
+            240.0,
+            960.0
+          ],
+          "point": [
+            240.0,
+            960.0
+          ],
+          "reason": null,
+          "road_a": "C01",
+          "road_b": "C02",
+          "status": "VERIFIED",
+          "threshold_m": 9.5
+        },
+        {
+          "distance_m": 0.0,
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:C02<->X01",
+          "kind": "CANDIDATE_TO_CANDIDATE",
+          "nearest_on_target": [
+            110.0,
+            960.0
+          ],
+          "point": [
+            110.0,
+            960.0
+          ],
+          "reason": null,
+          "road_a": "C02",
+          "road_b": "X01",
+          "status": "VERIFIED",
+          "threshold_m": 4.5
+        }
+      ],
+      "kind": "NORMAL",
+      "matched_existing_segment_id": null,
+      "max_grade_limit_pct": 6.0,
+      "min_radius_m": 25.0,
+      "new_corridor_area_m2": 1430.0,
+      "new_length_m": 130.0,
+      "obstacles": {
+        "advisory_street_furniture": [],
+        "blocking": [],
+        "conservative": [],
+        "junction_overlaps": []
+      },
+      "optional_extension_links": [
+        {
+          "endpoint": [
+            110.0,
+            960.0
+          ],
+          "endpoint_label": "START",
+          "gap_m": 68.0,
+          "reason": "AVE110_EXTENSION_REQUIRED",
+          "status": "UNVERIFIED",
+          "target_segment_id": "AVE_110"
+        }
+      ],
+      "physical_ground_ok": true,
+      "reasons": [],
+      "state": "CONDITIONAL_VERIFIED"
+    },
+    "H01": {
+      "beach_encroachment_m2": 0.0,
+      "carriageway_width_m": 8.0,
+      "centerline_info": {
+        "centerline": [
+          [
+            -635.0,
+            682.0
+          ],
+          [
+            -637.423,
+            683.733
+          ],
+          [
+            -639.845,
+            685.465
+          ],
+          [
+            -642.268,
+            687.198
+          ],
+          [
+            -644.691,
+            688.93
+          ],
+          [
+            -647.113,
+            690.663
+          ],
+          [
+            -649.536,
+            692.395
+          ],
+          [
+            -651.958,
+            694.128
+          ],
+          [
+            -654.381,
+            695.86
+          ],
+          [
+            -656.804,
+            697.593
+          ],
+          [
+            -659.226,
+            699.325
+          ],
+          [
+            -661.649,
+            701.058
+          ],
+          [
+            -664.072,
+            702.791
+          ],
+          [
+            -666.494,
+            704.523
+          ],
+          [
+            -668.917,
+            706.256
+          ],
+          [
+            -671.339,
+            707.988
+          ],
+          [
+            -673.762,
+            709.721
+          ],
+          [
+            -676.185,
+            711.453
+          ],
+          [
+            -678.607,
+            713.186
+          ],
+          [
+            -681.03,
+            714.918
+          ],
+          [
+            -683.453,
+            716.651
+          ],
+          [
+            -685.875,
+            718.383
+          ],
+          [
+            -688.298,
+            720.116
+          ],
+          [
+            -690.72,
+            721.849
+          ],
+          [
+            -693.143,
+            723.581
+          ],
+          [
+            -695.566,
+            725.314
+          ],
+          [
+            -697.988,
+            727.046
+          ],
+          [
+            -700.411,
+            728.779
+          ],
+          [
+            -702.834,
+            730.511
+          ],
+          [
+            -705.256,
+            732.244
+          ],
+          [
+            -707.679,
+            733.976
+          ],
+          [
+            -710.101,
+            735.709
+          ],
+          [
+            -712.524,
+            737.441
+          ],
+          [
+            -714.947,
+            739.174
+          ],
+          [
+            -717.369,
+            740.907
+          ],
+          [
+            -719.792,
+            742.639
+          ],
+          [
+            -722.215,
+            744.372
+          ],
+          [
+            -724.637,
+            746.104
+          ],
+          [
+            -727.06,
+            747.837
+          ],
+          [
+            -729.482,
+            749.569
+          ],
+          [
+            -731.905,
+            751.302
+          ],
+          [
+            -734.328,
+            753.034
+          ],
+          [
+            -736.75,
+            754.767
+          ],
+          [
+            -739.173,
+            756.499
+          ],
+          [
+            -741.596,
+            758.232
+          ],
+          [
+            -744.018,
+            759.965
+          ],
+          [
+            -746.441,
+            761.697
+          ],
+          [
+            -748.863,
+            763.43
+          ],
+          [
+            -751.286,
+            765.162
+          ],
+          [
+            -753.709,
+            766.895
+          ],
+          [
+            -756.131,
+            768.627
+          ],
+          [
+            -758.554,
+            770.36
+          ],
+          [
+            -760.977,
+            772.092
+          ],
+          [
+            -763.399,
+            773.825
+          ],
+          [
+            -765.822,
+            775.557
+          ],
+          [
+            -768.244,
+            777.29
+          ],
+          [
+            -770.667,
+            779.022
+          ],
+          [
+            -773.09,
+            780.755
+          ],
+          [
+            -775.512,
+            782.488
+          ],
+          [
+            -777.935,
+            784.22
+          ],
+          [
+            -780.358,
+            785.953
+          ],
+          [
+            -782.78,
+            787.685
+          ],
+          [
+            -785.203,
+            789.418
+          ],
+          [
+            -787.625,
+            791.15
+          ],
+          [
+            -790.048,
+            792.883
+          ],
+          [
+            -792.471,
+            794.615
+          ],
+          [
+            -794.648,
+            796.449
+          ],
+          [
+            -796.509,
+            798.604
+          ],
+          [
+            -798.007,
+            801.025
+          ],
+          [
+            -799.105,
+            803.652
+          ],
+          [
+            -799.775,
+            806.419
+          ],
+          [
+            -800.0,
+            809.257
+          ],
+          [
+            -800.0,
+            812.24
+          ],
+          [
+            -800.0,
+            815.223
+          ],
+          [
+            -800.0,
+            818.206
+          ],
+          [
+            -800.0,
+            821.189
+          ],
+          [
+            -800.0,
+            824.172
+          ],
+          [
+            -800.0,
+            827.155
+          ],
+          [
+            -800.0,
+            830.138
+          ],
+          [
+            -800.0,
+            833.121
+          ],
+          [
+            -800.0,
+            836.104
+          ],
+          [
+            -800.0,
+            839.087
+          ],
+          [
+            -800.0,
+            842.07
+          ],
+          [
+            -800.0,
+            845.053
+          ],
+          [
+            -800.0,
+            848.036
+          ],
+          [
+            -800.0,
+            851.019
+          ],
+          [
+            -800.0,
+            854.002
+          ],
+          [
+            -800.0,
+            856.985
+          ],
+          [
+            -800.0,
+            859.968
+          ],
+          [
+            -800.0,
+            862.951
+          ],
+          [
+            -800.0,
+            865.934
+          ],
+          [
+            -800.0,
+            868.917
+          ],
+          [
+            -800.0,
+            871.9
+          ],
+          [
+            -800.0,
+            874.883
+          ],
+          [
+            -800.0,
+            877.866
+          ],
+          [
+            -800.0,
+            880.849
+          ],
+          [
+            -800.0,
+            883.832
+          ],
+          [
+            -800.0,
+            886.815
+          ],
+          [
+            -800.0,
+            889.798
+          ],
+          [
+            -800.0,
+            892.781
+          ],
+          [
+            -800.0,
+            895.764
+          ],
+          [
+            -800.0,
+            898.747
+          ],
+          [
+            -800.0,
+            901.73
+          ],
+          [
+            -800.0,
+            904.713
+          ],
+          [
+            -800.0,
+            907.696
+          ],
+          [
+            -800.0,
+            910.679
+          ],
+          [
+            -800.0,
+            913.662
+          ],
+          [
+            -800.0,
+            916.645
+          ],
+          [
+            -800.0,
+            919.628
+          ],
+          [
+            -800.0,
+            922.611
+          ],
+          [
+            -800.0,
+            925.594
+          ],
+          [
+            -800.0,
+            928.577
+          ],
+          [
+            -800.0,
+            931.56
+          ],
+          [
+            -800.0,
+            934.543
+          ],
+          [
+            -800.0,
+            937.526
+          ],
+          [
+            -800.0,
+            940.509
+          ],
+          [
+            -800.0,
+            943.492
+          ],
+          [
+            -800.0,
+            946.475
+          ],
+          [
+            -800.0,
+            949.458
+          ],
+          [
+            -800.0,
+            952.442
+          ],
+          [
+            -800.0,
+            955.425
+          ],
+          [
+            -800.0,
+            958.408
+          ],
+          [
+            -800.0,
+            961.391
+          ],
+          [
+            -800.0,
+            964.374
+          ],
+          [
+            -800.0,
+            967.357
+          ],
+          [
+            -800.0,
+            970.34
+          ],
+          [
+            -800.0,
+            973.323
+          ],
+          [
+            -800.0,
+            976.306
+          ],
+          [
+            -800.0,
+            979.289
+          ],
+          [
+            -800.0,
+            982.272
+          ],
+          [
+            -800.0,
+            985.255
+          ],
+          [
+            -800.0,
+            988.238
+          ],
+          [
+            -800.0,
+            991.221
+          ],
+          [
+            -800.0,
+            994.204
+          ],
+          [
+            -800.0,
+            997.187
+          ],
+          [
+            -800.0,
+            1000.17
+          ],
+          [
+            -800.0,
+            1003.153
+          ],
+          [
+            -800.0,
+            1006.136
+          ],
+          [
+            -800.0,
+            1009.119
+          ],
+          [
+            -800.0,
+            1012.102
+          ],
+          [
+            -800.0,
+            1015.085
+          ],
+          [
+            -800.0,
+            1018.068
+          ],
+          [
+            -800.0,
+            1021.051
+          ],
+          [
+            -800.0,
+            1024.034
+          ],
+          [
+            -800.0,
+            1027.017
+          ],
+          [
+            -800.0,
+            1030.0
+          ]
+        ],
+        "control_points": [
+          [
+            -635.0,
+            682.0
+          ],
+          [
+            -800.0,
+            800.0
+          ],
+          [
+            -800.0,
+            1030.0
+          ]
+        ],
+        "fillets": [
+          {
+            "arc_length_m": 17.1,
+            "collinear": false,
+            "deflection_rad": 0.95,
+            "fits": true,
+            "radius_m": 18.0,
+            "tangent_length_m": 9.257,
+            "vertex_index": 1
+          }
+        ],
+        "geometry_ok": true,
+        "max_sample_spacing_m": 2.983,
+        "min_radius_m": 18.0,
+        "reasons": [],
+        "total_length_m": 431.421
+      },
+      "cor_grid_ids": [
+        "COR_H01_1M"
+      ],
+      "cor_margin_m": 54.0,
+      "cor_margin_ok": true,
+      "corridor_bounds": [
+        -806.0,
+        676.0,
+        -629.0,
+        1036.0
+      ],
+      "corridor_half_width_m": 6.0,
+      "dependency_chains": [],
+      "existing": false,
+      "geom_corridor_state": "NOT_FEASIBLE",
+      "grade_info": {
+        "grade_limit_pct": 9.0,
+        "grade_ok": false,
+        "height_ok": true,
+        "height_provenances": [
+          "DIRECT_RUNTIME_1M",
+          "INTERPOLATED_1M"
+        ],
+        "heights_m": [
+          62.312,
+          61.92,
+          61.527,
+          61.135,
+          60.745,
+          60.354,
+          59.846,
+          58.947,
+          57.493,
+          55.473,
+          53.012,
+          48.973,
+          47.383,
+          45.754,
+          44.09,
+          42.393,
+          40.668,
+          38.92,
+          37.152,
+          35.373,
+          33.588,
+          31.804,
+          30.028,
+          28.266,
+          26.525,
+          24.811,
+          23.131,
+          21.49,
+          19.893,
+          18.343,
+          16.846,
+          15.405,
+          14.02,
+          12.695,
+          11.431,
+          10.228,
+          9.088,
+          8.009,
+          6.993,
+          6.04,
+          5.149,
+          4.321,
+          3.556,
+          2.855,
+          2.221,
+          1.653,
+          1.159,
+          0.74,
+          0.403,
+          0.156,
+          0.018,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_step_grade_pct": 135.633,
+        "missing_height_count": 0,
+        "net_average_grade_pct": 14.443,
+        "reasons": [
+          "GRADE_LIMIT_EXCEEDED"
+        ]
+      },
+      "id": "H01",
+      "is_existing_reuse": false,
+      "junctions": [
+        {
+          "distance_m": 0.0,
+          "endpoint": "START",
+          "height_a_m": 62.312,
+          "height_b_m": 62.312,
+          "height_diff_m": 0.0,
+          "id": "J:H01->HILL_ROAD@START",
+          "kind": "CANDIDATE_TO_EXISTING",
+          "nearest_on_target": [
+            -635.0,
+            682.0
+          ],
+          "point": [
+            -635.0,
+            682.0
+          ],
+          "reason": "EXISTING_SEGMENT_UNVERIFIED",
+          "road_a": "H01",
+          "road_b": "HILL_ROAD",
+          "status": "UNVERIFIED",
+          "target_connectivity": "UNVERIFIED",
+          "target_elevation_type": "GROUND",
+          "threshold_m": 8.5
+        },
+        {
+          "distance_m": 0.0,
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:H01<->H02",
+          "kind": "CANDIDATE_TO_CANDIDATE",
+          "nearest_on_target": [
+            -800.0,
+            1030.0
+          ],
+          "point": [
+            -800.0,
+            1030.0
+          ],
+          "reason": null,
+          "road_a": "H01",
+          "road_b": "H02",
+          "status": "VERIFIED",
+          "threshold_m": 5.0
+        }
+      ],
+      "kind": "HILLSIDE",
+      "matched_existing_segment_id": null,
+      "max_grade_limit_pct": 9.0,
+      "min_radius_m": 18.0,
+      "new_corridor_area_m2": 5177.052,
+      "new_length_m": 431.421,
+      "obstacles": {
+        "advisory_street_furniture": [
+          {
+            "id": "SCN_70",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_88",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_90",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_104",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_109",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_100",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_117",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_122",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_147",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_149",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_173",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_176",
+            "source_group": "SCENE_BOX3"
+          }
+        ],
+        "blocking": [
+          {
+            "category": "ROAD",
+            "id": "ROAD_HILL_ROAD_357",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_HILL_ROAD_358",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_HILL_ROAD_359",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_HILL_ROAD_360",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_HILL_ROAD_361",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_HILL_ROAD_362",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_HILL_ROAD_363",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_HILL_ROAD_364",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_HILL_ROAD_365",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_HILL_ROAD_366",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_TRD_0_357",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_TRD_0_358",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_TRD_0_359",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_TRD_0_360",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_TRD_0_361",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_TRD_0_362",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_TRD_0_363",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_TRD_0_364",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_TRD_0_365",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          },
+          {
+            "category": "ROAD",
+            "id": "ROAD_TRD_0_366",
+            "precision": "EXACT_OUTLINE",
+            "segment_id": null
+          }
+        ],
+        "conservative": [
+          {
+            "category": "TREE",
+            "id": "TRE_191",
+            "precision": "CONSERVATIVE_AABB",
+            "source_group": "TREE_COLLIDERS"
+          },
+          {
+            "category": "COLLIDER",
+            "id": "PHY_1",
+            "precision": "CONSERVATIVE_AABB",
+            "source_group": "PHYSICS_STATIC"
+          },
+          {
+            "category": "TREE",
+            "id": "TRE_236",
+            "precision": "CONSERVATIVE_AABB",
+            "source_group": "TREE_COLLIDERS"
+          },
+          {
+            "category": "TREE",
+            "id": "TRE_240",
+            "precision": "CONSERVATIVE_AABB",
+            "source_group": "TREE_COLLIDERS"
+          },
+          {
+            "category": "TREE",
+            "id": "TRE_242",
+            "precision": "CONSERVATIVE_AABB",
+            "source_group": "TREE_COLLIDERS"
+          }
+        ],
+        "junction_overlaps": []
+      },
+      "optional_extension_links": [],
+      "physical_ground_ok": true,
+      "reasons": [
+        "CORRIDOR_BLOCKED_ROAD",
+        "CORRIDOR_CONSERVATIVE_OBSTACLE",
+        "GRADE_LIMIT_EXCEEDED"
+      ],
+      "state": "NOT_FEASIBLE"
+    },
+    "H02": {
+      "beach_encroachment_m2": 0.0,
+      "carriageway_width_m": 8.0,
+      "centerline_info": {
+        "centerline": [
+          [
+            -800.0,
+            1030.0
+          ],
+          [
+            -797.021,
+            1029.765
+          ],
+          [
+            -794.042,
+            1029.53
+          ],
+          [
+            -791.064,
+            1029.294
+          ],
+          [
+            -788.085,
+            1029.059
+          ],
+          [
+            -785.106,
+            1028.824
+          ],
+          [
+            -782.127,
+            1028.589
+          ],
+          [
+            -779.148,
+            1028.354
+          ],
+          [
+            -776.17,
+            1028.119
+          ],
+          [
+            -773.191,
+            1027.883
+          ],
+          [
+            -770.212,
+            1027.648
+          ],
+          [
+            -767.233,
+            1027.413
+          ],
+          [
+            -764.254,
+            1027.178
+          ],
+          [
+            -761.275,
+            1026.943
+          ],
+          [
+            -758.297,
+            1026.708
+          ],
+          [
+            -755.318,
+            1026.472
+          ],
+          [
+            -752.339,
+            1026.237
+          ],
+          [
+            -749.36,
+            1026.002
+          ],
+          [
+            -746.381,
+            1025.767
+          ],
+          [
+            -743.403,
+            1025.532
+          ],
+          [
+            -740.424,
+            1025.297
+          ],
+          [
+            -737.445,
+            1025.061
+          ],
+          [
+            -734.466,
+            1024.826
+          ],
+          [
+            -731.487,
+            1024.591
+          ],
+          [
+            -728.509,
+            1024.356
+          ],
+          [
+            -725.53,
+            1024.121
+          ],
+          [
+            -722.551,
+            1023.886
+          ],
+          [
+            -719.572,
+            1023.65
+          ],
+          [
+            -716.593,
+            1023.415
+          ],
+          [
+            -713.615,
+            1023.18
+          ],
+          [
+            -710.636,
+            1022.945
+          ],
+          [
+            -707.657,
+            1022.71
+          ],
+          [
+            -704.678,
+            1022.475
+          ],
+          [
+            -701.699,
+            1022.239
+          ],
+          [
+            -698.721,
+            1022.004
+          ],
+          [
+            -695.742,
+            1021.769
+          ],
+          [
+            -692.763,
+            1021.534
+          ],
+          [
+            -689.784,
+            1021.299
+          ],
+          [
+            -686.805,
+            1021.064
+          ],
+          [
+            -683.826,
+            1020.828
+          ],
+          [
+            -680.848,
+            1020.593
+          ],
+          [
+            -677.869,
+            1020.358
+          ],
+          [
+            -674.89,
+            1020.123
+          ],
+          [
+            -671.911,
+            1019.888
+          ],
+          [
+            -668.932,
+            1019.653
+          ],
+          [
+            -665.954,
+            1019.417
+          ],
+          [
+            -662.975,
+            1019.182
+          ],
+          [
+            -659.996,
+            1018.947
+          ],
+          [
+            -657.017,
+            1018.712
+          ],
+          [
+            -654.038,
+            1018.477
+          ],
+          [
+            -651.06,
+            1018.242
+          ],
+          [
+            -648.081,
+            1018.006
+          ],
+          [
+            -645.102,
+            1017.771
+          ],
+          [
+            -642.123,
+            1017.536
+          ],
+          [
+            -639.144,
+            1017.301
+          ],
+          [
+            -636.166,
+            1017.066
+          ],
+          [
+            -633.187,
+            1016.831
+          ],
+          [
+            -630.208,
+            1016.595
+          ],
+          [
+            -627.229,
+            1016.36
+          ],
+          [
+            -624.25,
+            1016.125
+          ],
+          [
+            -621.271,
+            1015.89
+          ],
+          [
+            -618.293,
+            1015.655
+          ],
+          [
+            -615.314,
+            1015.42
+          ],
+          [
+            -612.335,
+            1015.184
+          ],
+          [
+            -609.356,
+            1014.949
+          ],
+          [
+            -606.377,
+            1014.714
+          ],
+          [
+            -603.399,
+            1014.479
+          ],
+          [
+            -600.42,
+            1014.244
+          ],
+          [
+            -597.441,
+            1014.009
+          ],
+          [
+            -594.462,
+            1013.773
+          ],
+          [
+            -591.483,
+            1013.538
+          ],
+          [
+            -588.505,
+            1013.303
+          ],
+          [
+            -585.526,
+            1013.068
+          ],
+          [
+            -582.547,
+            1012.833
+          ],
+          [
+            -579.568,
+            1012.597
+          ],
+          [
+            -576.589,
+            1012.362
+          ],
+          [
+            -573.611,
+            1012.127
+          ],
+          [
+            -570.632,
+            1011.892
+          ],
+          [
+            -567.653,
+            1011.657
+          ],
+          [
+            -564.674,
+            1011.422
+          ],
+          [
+            -561.695,
+            1011.186
+          ],
+          [
+            -558.716,
+            1010.951
+          ],
+          [
+            -555.738,
+            1010.716
+          ],
+          [
+            -552.759,
+            1010.481
+          ],
+          [
+            -549.78,
+            1010.246
+          ],
+          [
+            -546.801,
+            1010.011
+          ],
+          [
+            -543.822,
+            1009.775
+          ],
+          [
+            -540.844,
+            1009.54
+          ],
+          [
+            -537.865,
+            1009.305
+          ],
+          [
+            -534.886,
+            1009.07
+          ],
+          [
+            -531.907,
+            1008.835
+          ],
+          [
+            -528.928,
+            1008.6
+          ],
+          [
+            -525.95,
+            1008.364
+          ],
+          [
+            -522.971,
+            1008.129
+          ],
+          [
+            -519.992,
+            1007.894
+          ],
+          [
+            -517.013,
+            1007.659
+          ],
+          [
+            -514.034,
+            1007.424
+          ],
+          [
+            -511.056,
+            1007.189
+          ],
+          [
+            -508.077,
+            1006.953
+          ],
+          [
+            -505.098,
+            1006.718
+          ],
+          [
+            -502.119,
+            1006.483
+          ],
+          [
+            -499.14,
+            1006.248
+          ],
+          [
+            -496.162,
+            1006.013
+          ],
+          [
+            -493.183,
+            1005.778
+          ],
+          [
+            -490.204,
+            1005.542
+          ],
+          [
+            -487.225,
+            1005.307
+          ],
+          [
+            -484.246,
+            1005.072
+          ],
+          [
+            -481.267,
+            1004.837
+          ],
+          [
+            -478.289,
+            1004.602
+          ],
+          [
+            -475.31,
+            1004.367
+          ],
+          [
+            -472.331,
+            1004.131
+          ],
+          [
+            -469.352,
+            1003.896
+          ],
+          [
+            -466.373,
+            1003.661
+          ],
+          [
+            -463.395,
+            1003.426
+          ],
+          [
+            -460.416,
+            1003.191
+          ],
+          [
+            -457.437,
+            1002.956
+          ],
+          [
+            -454.458,
+            1002.72
+          ],
+          [
+            -451.479,
+            1002.485
+          ],
+          [
+            -448.501,
+            1002.25
+          ],
+          [
+            -445.522,
+            1002.015
+          ],
+          [
+            -442.543,
+            1001.78
+          ],
+          [
+            -439.564,
+            1001.545
+          ],
+          [
+            -436.585,
+            1001.309
+          ],
+          [
+            -433.607,
+            1001.074
+          ],
+          [
+            -430.628,
+            1000.839
+          ],
+          [
+            -427.649,
+            1000.604
+          ],
+          [
+            -424.67,
+            1000.369
+          ],
+          [
+            -422.403,
+            1000.044
+          ],
+          [
+            -420.196,
+            999.433
+          ],
+          [
+            -418.084,
+            998.548
+          ],
+          [
+            -416.102,
+            997.401
+          ],
+          [
+            -413.622,
+            995.748
+          ],
+          [
+            -411.142,
+            994.094
+          ],
+          [
+            -408.661,
+            992.441
+          ],
+          [
+            -406.181,
+            990.787
+          ],
+          [
+            -403.701,
+            989.134
+          ],
+          [
+            -401.22,
+            987.48
+          ],
+          [
+            -398.74,
+            985.827
+          ],
+          [
+            -396.26,
+            984.173
+          ],
+          [
+            -393.779,
+            982.52
+          ],
+          [
+            -391.299,
+            980.866
+          ],
+          [
+            -388.819,
+            979.212
+          ],
+          [
+            -386.338,
+            977.559
+          ],
+          [
+            -383.858,
+            975.905
+          ],
+          [
+            -381.378,
+            974.252
+          ],
+          [
+            -378.897,
+            972.598
+          ],
+          [
+            -376.417,
+            970.945
+          ],
+          [
+            -373.937,
+            969.291
+          ],
+          [
+            -371.457,
+            967.638
+          ],
+          [
+            -368.976,
+            965.984
+          ],
+          [
+            -366.496,
+            964.331
+          ],
+          [
+            -364.016,
+            962.677
+          ],
+          [
+            -361.535,
+            961.024
+          ],
+          [
+            -359.055,
+            959.37
+          ],
+          [
+            -356.575,
+            957.716
+          ],
+          [
+            -354.094,
+            956.063
+          ],
+          [
+            -351.614,
+            954.409
+          ],
+          [
+            -349.134,
+            952.756
+          ],
+          [
+            -346.653,
+            951.102
+          ],
+          [
+            -344.173,
+            949.449
+          ],
+          [
+            -341.693,
+            947.795
+          ],
+          [
+            -339.212,
+            946.142
+          ],
+          [
+            -336.732,
+            944.488
+          ],
+          [
+            -334.252,
+            942.835
+          ],
+          [
+            -331.772,
+            941.181
+          ],
+          [
+            -329.291,
+            939.527
+          ],
+          [
+            -326.811,
+            937.874
+          ],
+          [
+            -324.331,
+            936.22
+          ],
+          [
+            -321.85,
+            934.567
+          ],
+          [
+            -319.37,
+            932.913
+          ],
+          [
+            -316.89,
+            931.26
+          ],
+          [
+            -314.409,
+            929.606
+          ],
+          [
+            -311.929,
+            927.953
+          ],
+          [
+            -309.449,
+            926.299
+          ],
+          [
+            -306.968,
+            924.646
+          ],
+          [
+            -304.488,
+            922.992
+          ],
+          [
+            -302.008,
+            921.339
+          ],
+          [
+            -299.527,
+            919.685
+          ],
+          [
+            -297.047,
+            918.031
+          ],
+          [
+            -294.567,
+            916.378
+          ],
+          [
+            -292.087,
+            914.724
+          ],
+          [
+            -289.606,
+            913.071
+          ],
+          [
+            -287.126,
+            911.417
+          ],
+          [
+            -284.646,
+            909.764
+          ],
+          [
+            -282.165,
+            908.11
+          ],
+          [
+            -279.685,
+            906.457
+          ],
+          [
+            -277.205,
+            904.803
+          ],
+          [
+            -274.724,
+            903.15
+          ],
+          [
+            -272.244,
+            901.496
+          ],
+          [
+            -269.764,
+            899.842
+          ],
+          [
+            -267.283,
+            898.189
+          ],
+          [
+            -264.803,
+            896.535
+          ],
+          [
+            -262.323,
+            894.882
+          ],
+          [
+            -259.842,
+            893.228
+          ],
+          [
+            -257.362,
+            891.575
+          ],
+          [
+            -254.882,
+            889.921
+          ],
+          [
+            -252.402,
+            888.268
+          ],
+          [
+            -249.921,
+            886.614
+          ],
+          [
+            -247.441,
+            884.961
+          ],
+          [
+            -244.961,
+            883.307
+          ],
+          [
+            -242.48,
+            881.654
+          ],
+          [
+            -240.0,
+            880.0
+          ]
+        ],
+        "control_points": [
+          [
+            -800.0,
+            1030.0
+          ],
+          [
+            -420.0,
+            1000.0
+          ],
+          [
+            -240.0,
+            880.0
+          ]
+        ],
+        "fillets": [
+          {
+            "arc_length_m": 9.166,
+            "collinear": false,
+            "deflection_rad": 0.509,
+            "fits": true,
+            "radius_m": 18.0,
+            "tangent_length_m": 4.685,
+            "vertex_index": 1
+          }
+        ],
+        "geometry_ok": true,
+        "max_sample_spacing_m": 2.988,
+        "min_radius_m": 18.0,
+        "reasons": [],
+        "total_length_m": 597.306
+      },
+      "cor_grid_ids": [
+        "COR_H02_1M"
+      ],
+      "cor_margin_m": 54.0,
+      "cor_margin_ok": true,
+      "corridor_bounds": [
+        -806.0,
+        874.0,
+        -234.0,
+        1036.0
+      ],
+      "corridor_half_width_m": 6.0,
+      "dependency_chains": [
+        [
+          "H02",
+          "J:H02->AVE_-240@END"
+        ],
+        [
+          "H02",
+          "J:H02->CRS_880@END"
+        ],
+        [
+          "H02",
+          "J:H02<->X01",
+          "X01",
+          "J:X01->AVE_-240@START"
+        ],
+        [
+          "H02",
+          "J:H02<->X01",
+          "X01",
+          "J:X01->CRS_880@START"
+        ],
+        [
+          "H02",
+          "J:H02<->X01",
+          "X01",
+          "J:C02<->X01",
+          "C02",
+          "J:C01<->C02",
+          "C01",
+          "J:C01->CRS_880@START"
+        ],
+        [
+          "H02",
+          "J:H02<->X01",
+          "X01",
+          "J:C02<->X01",
+          "C02",
+          "J:C01<->C02",
+          "C01",
+          "J:C01->RIB_0@START"
+        ]
+      ],
+      "existing": false,
+      "geom_corridor_state": "LEGAL",
+      "grade_info": {
+        "grade_limit_pct": 9.0,
+        "grade_ok": true,
+        "height_ok": true,
+        "height_provenances": [
+          "DIRECT_RUNTIME_1M",
+          "INTERPOLATED_1M"
+        ],
+        "heights_m": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_step_grade_pct": 0.0,
+        "missing_height_count": 0,
+        "net_average_grade_pct": 0.0,
+        "reasons": []
+      },
+      "id": "H02",
+      "is_existing_reuse": false,
+      "junctions": [
+        {
+          "distance_m": 0.0,
+          "endpoint": "END",
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:H02->AVE_-240@END",
+          "kind": "CANDIDATE_TO_EXISTING",
+          "nearest_on_target": [
+            -240.0,
+            880.0
+          ],
+          "point": [
+            -240.0,
+            880.0
+          ],
+          "reason": null,
+          "road_a": "H02",
+          "road_b": "AVE_-240",
+          "status": "VERIFIED",
+          "target_connectivity": "VERIFIED",
+          "target_elevation_type": "GROUND",
+          "threshold_m": 13.0
+        },
+        {
+          "distance_m": 0.0,
+          "endpoint": "END",
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:H02->CRS_880@END",
+          "kind": "CANDIDATE_TO_EXISTING",
+          "nearest_on_target": [
+            -240.0,
+            880.0
+          ],
+          "point": [
+            -240.0,
+            880.0
+          ],
+          "reason": null,
+          "road_a": "H02",
+          "road_b": "CRS_880",
+          "status": "VERIFIED",
+          "target_connectivity": "VERIFIED",
+          "target_elevation_type": "GROUND",
+          "threshold_m": 12.0
+        },
+        {
+          "distance_m": 0.0,
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:H01<->H02",
+          "kind": "CANDIDATE_TO_CANDIDATE",
+          "nearest_on_target": [
+            -800.0,
+            1030.0
+          ],
+          "point": [
+            -800.0,
+            1030.0
+          ],
+          "reason": null,
+          "road_a": "H01",
+          "road_b": "H02",
+          "status": "VERIFIED",
+          "threshold_m": 5.0
+        },
+        {
+          "distance_m": 0.0,
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:H02<->X01",
+          "kind": "CANDIDATE_TO_CANDIDATE",
+          "nearest_on_target": [
+            -240.0,
+            880.0
+          ],
+          "point": [
+            -240.0,
+            880.0
+          ],
+          "reason": null,
+          "road_a": "H02",
+          "road_b": "X01",
+          "status": "VERIFIED",
+          "threshold_m": 4.5
+        }
+      ],
+      "kind": "HILLSIDE",
+      "matched_existing_segment_id": null,
+      "max_grade_limit_pct": 9.0,
+      "min_radius_m": 18.0,
+      "new_corridor_area_m2": 7167.672,
+      "new_length_m": 597.306,
+      "obstacles": {
+        "advisory_street_furniture": [
+          {
+            "id": "SCN_2019",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_2023",
+            "source_group": "SCENE_BOX3"
+          },
+          {
+            "id": "SCN_2027",
+            "source_group": "SCENE_BOX3"
+          }
+        ],
+        "blocking": [],
+        "conservative": [],
+        "junction_overlaps": [
+          {
+            "endpoint": "END",
+            "footprints": [
+              {
+                "category": "ROAD",
+                "id": "ROAD_AVE_-240_0",
+                "segment_id": "AVE_-240"
+              },
+              {
+                "category": "ROAD",
+                "id": "ROAD_CRS_880_0",
+                "segment_id": "CRS_880"
+              },
+              {
+                "category": "SIDEWALK",
+                "id": "SWK_AVE_-240_1",
+                "segment_id": "AVE_-240"
+              },
+              {
+                "category": "SIDEWALK",
+                "id": "SWK_CRS_880_0",
+                "segment_id": "CRS_880"
+              }
+            ],
+            "kind": "JUNCTION_OVERLAP",
+            "run_length_m": 41.733
+          }
+        ]
+      },
+      "optional_extension_links": [],
+      "physical_ground_ok": true,
+      "reasons": [],
+      "state": "CONDITIONAL_VERIFIED"
+    },
+    "U01": {
+      "beach_encroachment_m2": 0.0,
+      "carriageway_width_m": 22.0,
+      "centerline_info": {
+        "centerline": [
+          [
+            -600.0,
+            -720.0
+          ],
+          [
+            -597.0,
+            -720.0
+          ],
+          [
+            -594.0,
+            -720.0
+          ],
+          [
+            -591.0,
+            -720.0
+          ],
+          [
+            -588.0,
+            -720.0
+          ],
+          [
+            -585.0,
+            -720.0
+          ],
+          [
+            -582.0,
+            -720.0
+          ],
+          [
+            -579.0,
+            -720.0
+          ],
+          [
+            -576.0,
+            -720.0
+          ],
+          [
+            -573.0,
+            -720.0
+          ],
+          [
+            -570.0,
+            -720.0
+          ],
+          [
+            -567.0,
+            -720.0
+          ],
+          [
+            -564.0,
+            -720.0
+          ],
+          [
+            -561.0,
+            -720.0
+          ],
+          [
+            -558.0,
+            -720.0
+          ],
+          [
+            -555.0,
+            -720.0
+          ],
+          [
+            -552.0,
+            -720.0
+          ],
+          [
+            -549.0,
+            -720.0
+          ],
+          [
+            -546.0,
+            -720.0
+          ],
+          [
+            -543.0,
+            -720.0
+          ],
+          [
+            -540.0,
+            -720.0
+          ],
+          [
+            -537.0,
+            -720.0
+          ],
+          [
+            -534.0,
+            -720.0
+          ],
+          [
+            -531.0,
+            -720.0
+          ],
+          [
+            -528.0,
+            -720.0
+          ],
+          [
+            -525.0,
+            -720.0
+          ],
+          [
+            -522.0,
+            -720.0
+          ],
+          [
+            -519.0,
+            -720.0
+          ],
+          [
+            -516.0,
+            -720.0
+          ],
+          [
+            -513.0,
+            -720.0
+          ],
+          [
+            -510.0,
+            -720.0
+          ],
+          [
+            -507.0,
+            -720.0
+          ],
+          [
+            -504.0,
+            -720.0
+          ],
+          [
+            -501.0,
+            -720.0
+          ],
+          [
+            -498.0,
+            -720.0
+          ],
+          [
+            -495.0,
+            -720.0
+          ],
+          [
+            -492.0,
+            -720.0
+          ],
+          [
+            -489.0,
+            -720.0
+          ],
+          [
+            -486.0,
+            -720.0
+          ],
+          [
+            -483.0,
+            -720.0
+          ],
+          [
+            -480.0,
+            -720.0
+          ],
+          [
+            -477.0,
+            -720.0
+          ],
+          [
+            -474.0,
+            -720.0
+          ],
+          [
+            -471.0,
+            -720.0
+          ],
+          [
+            -468.0,
+            -720.0
+          ],
+          [
+            -465.0,
+            -720.0
+          ],
+          [
+            -462.0,
+            -720.0
+          ],
+          [
+            -459.0,
+            -720.0
+          ],
+          [
+            -456.0,
+            -720.0
+          ],
+          [
+            -453.0,
+            -720.0
+          ],
+          [
+            -450.0,
+            -720.0
+          ],
+          [
+            -447.0,
+            -720.0
+          ],
+          [
+            -444.0,
+            -720.0
+          ],
+          [
+            -441.0,
+            -720.0
+          ],
+          [
+            -438.0,
+            -720.0
+          ],
+          [
+            -435.0,
+            -720.0
+          ],
+          [
+            -432.0,
+            -720.0
+          ],
+          [
+            -429.0,
+            -720.0
+          ],
+          [
+            -426.0,
+            -720.0
+          ],
+          [
+            -423.0,
+            -720.0
+          ],
+          [
+            -420.0,
+            -720.0
+          ]
+        ],
+        "control_points": [
+          [
+            -600.0,
+            -720.0
+          ],
+          [
+            -510.0,
+            -720.0
+          ],
+          [
+            -420.0,
+            -720.0
+          ]
+        ],
+        "fillets": [],
+        "geometry_ok": true,
+        "max_sample_spacing_m": 3.0,
+        "min_radius_m": null,
+        "reasons": [],
+        "total_length_m": 180.0
+      },
+      "cor_grid_ids": [
+        "COR_U01_1M"
+      ],
+      "cor_margin_m": 49.0,
+      "cor_margin_ok": true,
+      "corridor_bounds": [
+        -611.0,
+        -731.0,
+        -409.0,
+        -709.0
+      ],
+      "corridor_half_width_m": 11.0,
+      "dependency_chains": [],
+      "existing": true,
+      "geom_corridor_state": "EXISTING_VERIFIED",
+      "grade_info": {
+        "grade_limit_pct": null,
+        "grade_ok": true,
+        "height_ok": true,
+        "height_provenances": [
+          "DIRECT_RUNTIME_1M"
+        ],
+        "heights_m": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_step_grade_pct": 0.0,
+        "missing_height_count": 0,
+        "net_average_grade_pct": 0.0,
+        "reasons": []
+      },
+      "id": "U01",
+      "is_existing_reuse": true,
+      "junctions": [],
+      "kind": "EXISTING_REUSE",
+      "matched_existing_segment_id": "CRS_-720",
+      "max_grade_limit_pct": null,
+      "min_radius_m": null,
+      "new_corridor_area_m2": 0.0,
+      "new_length_m": 0.0,
+      "obstacles": {
+        "advisory_street_furniture": [],
+        "blocking": [],
+        "conservative": [],
+        "junction_overlaps": []
+      },
+      "optional_extension_links": [],
+      "physical_ground_ok": true,
+      "reasons": [],
+      "state": "EXISTING_VERIFIED"
+    },
+    "X01": {
+      "beach_encroachment_m2": 0.0,
+      "carriageway_width_m": 7.0,
+      "centerline_info": {
+        "centerline": [
+          [
+            -240.0,
+            880.0
+          ],
+          [
+            -237.155,
+            880.948
+          ],
+          [
+            -234.31,
+            881.897
+          ],
+          [
+            -231.464,
+            882.845
+          ],
+          [
+            -228.619,
+            883.794
+          ],
+          [
+            -225.774,
+            884.742
+          ],
+          [
+            -222.929,
+            885.69
+          ],
+          [
+            -220.084,
+            886.639
+          ],
+          [
+            -217.238,
+            887.587
+          ],
+          [
+            -214.393,
+            888.536
+          ],
+          [
+            -211.548,
+            889.484
+          ],
+          [
+            -208.703,
+            890.432
+          ],
+          [
+            -205.858,
+            891.381
+          ],
+          [
+            -203.012,
+            892.329
+          ],
+          [
+            -200.167,
+            893.278
+          ],
+          [
+            -197.322,
+            894.226
+          ],
+          [
+            -194.477,
+            895.174
+          ],
+          [
+            -191.632,
+            896.123
+          ],
+          [
+            -188.786,
+            897.071
+          ],
+          [
+            -185.941,
+            898.02
+          ],
+          [
+            -183.096,
+            898.968
+          ],
+          [
+            -180.251,
+            899.916
+          ],
+          [
+            -177.406,
+            900.865
+          ],
+          [
+            -174.56,
+            901.813
+          ],
+          [
+            -171.715,
+            902.762
+          ],
+          [
+            -168.87,
+            903.71
+          ],
+          [
+            -166.025,
+            904.658
+          ],
+          [
+            -163.18,
+            905.607
+          ],
+          [
+            -160.335,
+            906.555
+          ],
+          [
+            -157.489,
+            907.504
+          ],
+          [
+            -154.644,
+            908.452
+          ],
+          [
+            -151.799,
+            909.4
+          ],
+          [
+            -148.954,
+            910.349
+          ],
+          [
+            -146.109,
+            911.297
+          ],
+          [
+            -143.263,
+            912.246
+          ],
+          [
+            -140.418,
+            913.194
+          ],
+          [
+            -137.573,
+            914.142
+          ],
+          [
+            -134.728,
+            915.091
+          ],
+          [
+            -131.883,
+            916.039
+          ],
+          [
+            -129.037,
+            916.988
+          ],
+          [
+            -126.192,
+            917.936
+          ],
+          [
+            -123.347,
+            918.884
+          ],
+          [
+            -120.502,
+            919.833
+          ],
+          [
+            -117.657,
+            920.781
+          ],
+          [
+            -114.811,
+            921.73
+          ],
+          [
+            -111.966,
+            922.678
+          ],
+          [
+            -109.121,
+            923.626
+          ],
+          [
+            -106.276,
+            924.575
+          ],
+          [
+            -103.431,
+            925.523
+          ],
+          [
+            -100.585,
+            926.472
+          ],
+          [
+            -97.74,
+            927.42
+          ],
+          [
+            -94.895,
+            928.368
+          ],
+          [
+            -92.05,
+            929.317
+          ],
+          [
+            -89.205,
+            930.265
+          ],
+          [
+            -86.359,
+            931.214
+          ],
+          [
+            -83.514,
+            932.162
+          ],
+          [
+            -80.669,
+            933.11
+          ],
+          [
+            -77.824,
+            934.059
+          ],
+          [
+            -74.979,
+            935.007
+          ],
+          [
+            -72.133,
+            935.956
+          ],
+          [
+            -69.288,
+            936.904
+          ],
+          [
+            -66.443,
+            937.852
+          ],
+          [
+            -63.598,
+            938.801
+          ],
+          [
+            -60.753,
+            939.749
+          ],
+          [
+            -57.907,
+            940.698
+          ],
+          [
+            -55.062,
+            941.646
+          ],
+          [
+            -52.217,
+            942.594
+          ],
+          [
+            -49.372,
+            943.543
+          ],
+          [
+            -46.527,
+            944.491
+          ],
+          [
+            -43.681,
+            945.44
+          ],
+          [
+            -40.836,
+            946.388
+          ],
+          [
+            -37.991,
+            947.336
+          ],
+          [
+            -35.146,
+            948.285
+          ],
+          [
+            -32.301,
+            949.233
+          ],
+          [
+            -29.456,
+            950.181
+          ],
+          [
+            -26.61,
+            951.13
+          ],
+          [
+            -23.765,
+            952.078
+          ],
+          [
+            -20.92,
+            953.027
+          ],
+          [
+            -18.075,
+            953.975
+          ],
+          [
+            -15.23,
+            954.923
+          ],
+          [
+            -12.384,
+            955.872
+          ],
+          [
+            -9.539,
+            956.82
+          ],
+          [
+            -6.694,
+            957.769
+          ],
+          [
+            -3.849,
+            958.717
+          ],
+          [
+            -1.265,
+            959.427
+          ],
+          [
+            1.381,
+            959.856
+          ],
+          [
+            4.057,
+            960.0
+          ],
+          [
+            7.0,
+            960.0
+          ],
+          [
+            9.943,
+            960.0
+          ],
+          [
+            12.886,
+            960.0
+          ],
+          [
+            15.828,
+            960.0
+          ],
+          [
+            18.771,
+            960.0
+          ],
+          [
+            21.714,
+            960.0
+          ],
+          [
+            24.657,
+            960.0
+          ],
+          [
+            27.6,
+            960.0
+          ],
+          [
+            30.543,
+            960.0
+          ],
+          [
+            33.486,
+            960.0
+          ],
+          [
+            36.428,
+            960.0
+          ],
+          [
+            39.371,
+            960.0
+          ],
+          [
+            42.314,
+            960.0
+          ],
+          [
+            45.257,
+            960.0
+          ],
+          [
+            48.2,
+            960.0
+          ],
+          [
+            51.143,
+            960.0
+          ],
+          [
+            54.086,
+            960.0
+          ],
+          [
+            57.028,
+            960.0
+          ],
+          [
+            59.971,
+            960.0
+          ],
+          [
+            62.914,
+            960.0
+          ],
+          [
+            65.857,
+            960.0
+          ],
+          [
+            68.8,
+            960.0
+          ],
+          [
+            71.743,
+            960.0
+          ],
+          [
+            74.686,
+            960.0
+          ],
+          [
+            77.629,
+            960.0
+          ],
+          [
+            80.571,
+            960.0
+          ],
+          [
+            83.514,
+            960.0
+          ],
+          [
+            86.457,
+            960.0
+          ],
+          [
+            89.4,
+            960.0
+          ],
+          [
+            92.343,
+            960.0
+          ],
+          [
+            95.286,
+            960.0
+          ],
+          [
+            98.229,
+            960.0
+          ],
+          [
+            101.171,
+            960.0
+          ],
+          [
+            104.114,
+            960.0
+          ],
+          [
+            107.057,
+            960.0
+          ],
+          [
+            110.0,
+            960.0
+          ]
+        ],
+        "control_points": [
+          [
+            -240.0,
+            880.0
+          ],
+          [
+            0.0,
+            960.0
+          ],
+          [
+            110.0,
+            960.0
+          ]
+        ],
+        "fillets": [
+          {
+            "arc_length_m": 8.044,
+            "collinear": false,
+            "deflection_rad": 0.322,
+            "fits": true,
+            "radius_m": 25.0,
+            "tangent_length_m": 4.057,
+            "vertex_index": 1
+          }
+        ],
+        "geometry_ok": true,
+        "max_sample_spacing_m": 2.999,
+        "min_radius_m": 25.0,
+        "reasons": [],
+        "total_length_m": 362.908
+      },
+      "cor_grid_ids": [
+        "COR_X01_1M"
+      ],
+      "cor_margin_m": 54.5,
+      "cor_margin_ok": true,
+      "corridor_bounds": [
+        -245.5,
+        874.5,
+        115.5,
+        965.5
+      ],
+      "corridor_half_width_m": 5.5,
+      "dependency_chains": [
+        [
+          "X01",
+          "J:X01->AVE_-240@START"
+        ],
+        [
+          "X01",
+          "J:X01->CRS_880@START"
+        ],
+        [
+          "X01",
+          "J:H02<->X01",
+          "H02",
+          "J:H02->AVE_-240@END"
+        ],
+        [
+          "X01",
+          "J:H02<->X01",
+          "H02",
+          "J:H02->CRS_880@END"
+        ],
+        [
+          "X01",
+          "J:C02<->X01",
+          "C02",
+          "J:C01<->C02",
+          "C01",
+          "J:C01->CRS_880@START"
+        ],
+        [
+          "X01",
+          "J:C02<->X01",
+          "C02",
+          "J:C01<->C02",
+          "C01",
+          "J:C01->RIB_0@START"
+        ]
+      ],
+      "existing": false,
+      "geom_corridor_state": "LEGAL",
+      "grade_info": {
+        "grade_limit_pct": 6.0,
+        "grade_ok": true,
+        "height_ok": true,
+        "height_provenances": [
+          "DIRECT_RUNTIME_1M",
+          "INTERPOLATED_1M"
+        ],
+        "heights_m": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_step_grade_pct": 0.0,
+        "missing_height_count": 0,
+        "net_average_grade_pct": 0.0,
+        "reasons": []
+      },
+      "id": "X01",
+      "is_existing_reuse": false,
+      "junctions": [
+        {
+          "distance_m": 0.0,
+          "endpoint": "START",
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:X01->AVE_-240@START",
+          "kind": "CANDIDATE_TO_EXISTING",
+          "nearest_on_target": [
+            -240.0,
+            880.0
+          ],
+          "point": [
+            -240.0,
+            880.0
+          ],
+          "reason": null,
+          "road_a": "X01",
+          "road_b": "AVE_-240",
+          "status": "VERIFIED",
+          "target_connectivity": "VERIFIED",
+          "target_elevation_type": "GROUND",
+          "threshold_m": 13.0
+        },
+        {
+          "distance_m": 0.0,
+          "endpoint": "START",
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:X01->CRS_880@START",
+          "kind": "CANDIDATE_TO_EXISTING",
+          "nearest_on_target": [
+            -240.0,
+            880.0
+          ],
+          "point": [
+            -240.0,
+            880.0
+          ],
+          "reason": null,
+          "road_a": "X01",
+          "road_b": "CRS_880",
+          "status": "VERIFIED",
+          "target_connectivity": "VERIFIED",
+          "target_elevation_type": "GROUND",
+          "threshold_m": 12.0
+        },
+        {
+          "distance_m": 0.0,
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:C02<->X01",
+          "kind": "CANDIDATE_TO_CANDIDATE",
+          "nearest_on_target": [
+            110.0,
+            960.0
+          ],
+          "point": [
+            110.0,
+            960.0
+          ],
+          "reason": null,
+          "road_a": "C02",
+          "road_b": "X01",
+          "status": "VERIFIED",
+          "threshold_m": 4.5
+        },
+        {
+          "distance_m": 0.0,
+          "height_a_m": 0.0,
+          "height_b_m": 0.0,
+          "height_diff_m": 0.0,
+          "id": "J:H02<->X01",
+          "kind": "CANDIDATE_TO_CANDIDATE",
+          "nearest_on_target": [
+            -240.0,
+            880.0
+          ],
+          "point": [
+            -240.0,
+            880.0
+          ],
+          "reason": null,
+          "road_a": "H02",
+          "road_b": "X01",
+          "status": "VERIFIED",
+          "threshold_m": 4.5
+        }
+      ],
+      "kind": "NORMAL",
+      "matched_existing_segment_id": null,
+      "max_grade_limit_pct": 6.0,
+      "min_radius_m": 25.0,
+      "new_corridor_area_m2": 3991.988,
+      "new_length_m": 362.908,
+      "obstacles": {
+        "advisory_street_furniture": [],
+        "blocking": [],
+        "conservative": [],
+        "junction_overlaps": [
+          {
+            "endpoint": "START",
+            "footprints": [
+              {
+                "category": "ROAD",
+                "id": "ROAD_AVE_-240_0",
+                "segment_id": "AVE_-240"
+              },
+              {
+                "category": "ROAD",
+                "id": "ROAD_CRS_880_0",
+                "segment_id": "CRS_880"
+              },
+              {
+                "category": "SIDEWALK",
+                "id": "SWK_AVE_-240_0",
+                "segment_id": "AVE_-240"
+              },
+              {
+                "category": "SIDEWALK",
+                "id": "SWK_CRS_880_0",
+                "segment_id": "CRS_880"
+              }
+            ],
+            "kind": "JUNCTION_OVERLAP",
+            "run_length_m": 71.978
+          }
+        ]
+      },
+      "optional_extension_links": [
+        {
+          "endpoint": [
+            110.0,
+            960.0
+          ],
+          "endpoint_label": "END",
+          "gap_m": 68.0,
+          "reason": "AVE110_EXTENSION_REQUIRED",
+          "status": "UNVERIFIED",
+          "target_segment_id": "AVE_110"
+        }
+      ],
+      "physical_ground_ok": true,
+      "reasons": [],
+      "state": "CONDITIONAL_VERIFIED"
+    }
+  },
+  "schema_version": 1,
+  "summary": {
+    "road_ids": [
+      "C01",
+      "C02",
+      "H01",
+      "H02",
+      "U01",
+      "X01"
+    ],
+    "states": {
+      "C01": "CONDITIONAL_VERIFIED",
+      "C02": "CONDITIONAL_VERIFIED",
+      "H01": "NOT_FEASIBLE",
+      "H02": "CONDITIONAL_VERIFIED",
+      "U01": "EXISTING_VERIFIED",
+      "X01": "CONDITIONAL_VERIFIED"
+    },
+    "total_beach_encroachment_m2": 5218.0,
+    "total_new_corridor_area_m2": 25579.012,
+    "total_new_road_length_m": 1834.127
+  },
+  "t016b_analyzer_version": "we01b-1.0",
+  "t016b_source": {
+    "path": "/tmp/b_new/capacity_inventory.json",
+    "sha256": "0efa1a1763b64b91ac3ab671b0d8d7360c939c32c26190d4b16e8a2a5246bc1a"
+  }
+}
