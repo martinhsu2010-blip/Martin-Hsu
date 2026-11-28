@@ -30,7 +30,7 @@ Base commit: `e8d5250fce0ea5f07f68840481cb95d2eca803fb`
 Spec: `specs/T-018A1-spec-v1.0.md` (entry point, Claude conditions A1-C1..C15 win) + ChatGPT draft `specs/T-018A1-draft-v1.0-chatgpt.md` + `specs/T-018A1-g0-review-v1.0.md`
 Scope: `tools/we03/` (baseline <= 600, calibration <= 500, independent check <= 400 lines; stdlib plus the existing Playwright for the browser harness only) and `specs/we03/` (baseline_report.md, baseline_metrics.json, calibration_report.md, proposed_budgets.json, fixture_plan.json). 48 headless combinations (4 presets x 6 locations x 12:00/23:00, 120 frames each), 16 repeat sessions, 20 physics self-control pairs, speed and readiness calibration, chunk and fixture plan, analytic triangle and benefit analysis, device protocol.
 Gates: A1-G01..G18 plus negative controls; independent check wired into CI by Claude; ChatGPT read-only review; Martin acceptance.
-Status: Registered, not started. No game file, sw.js, CACHE, save format, WE-01/WE-02 artifact or A2 and later subtask is touched or authorized.
+Status: Built and submitted for review (2026-11-28): tools, reports, `specs/we03/a1_findings.md` and CI check done (48/48 combinations, 16/16 repeats, 15/15 negative controls red). Waiting for ChatGPT read-only review, then Martin acceptance. A1 approves no budget; A2 and later subtasks, device FPS/VRAM claims and WE-04..WE-09 are not authorized. No game file, sw.js, CACHE, save format or WE-01/WE-02 artifact is touched.
 
 ### T-017 WE-02 World Expansion Masterplan (documentation and offline artifact tooling; LOW risk) (Registered 2026-11-28, D-061; approved by Martin 2026-11-28 19:20; pre-start gates PASS)
 Owner: Claude
