@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-28 | (docs/CI only, no game release) | Claude (impl. Gemini) | PR #124 eb1176f | T-016E WE-01E final survey map and report builder merged (D-059); check wired into CI; B8, B10, B11 pending
 - 2026-11-28 | (docs only, no game release) | Claude | base 858637e | T-016E (WE-01E final survey map and report builder) registered (D-058): spec, ChatGPT draft, e_formal fixtures and geometry extractor added; Gemini start waits for Martin
 - 2026-11-27 | (docs/CI only, no game release) | Claude (impl. Gemini) | PR #121 e0afd90 | T-016D WE-01D internal streets, conditional capacity and verdicts merged (D-057); check wired into CI; T-016E not registered
 - 2026-11-27 | (docs only, no game release) | Claude | base de90f1c | T-016D (WE-01D streets, conditional capacity, verdicts) registered after Martin's approval 20:17 (D-056): `specs/T-016D-spec-v1.0.md` + verbatim draft, ceiling 2,250 (1,500 / 750), budget 1,280, one bounded B seed edit; T-016E (SVG/report) not registered
