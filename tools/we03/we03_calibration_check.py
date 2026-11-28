@@ -227,7 +227,7 @@ def v_fixture(fp, plan, cors, cells, terrain, beach=(), idx_fn=idx):
         if o["classification"] != want: f.append(f"{o['id']}: fallback classification {o['classification']} != {want}")
         if any(ov(o["b"], [min(q[0] for q in poly), min(q[1] for q in poly), max(q[0] for q in poly), max(q[1] for q in poly)]) for poly in beach): f.append(f"{o['id']} overlaps a beach region")
     if sorted(fp["placed_outside_intended_region"]) != sorted(o["id"] for o in syn if o["region"] != o["intended_region"]): f.append("fallback list differs from the objects")
-    if len(ex) != 3 or (b3["status"] == "INCONCLUSIVE") != any(o["region"] != "B3" for o in ex) or (b3["status"] == "INCONCLUSIVE" and b3["scope_exception"] != "PENDING_MARTIN_APPROVAL") or b3["we01_land_constraints_relaxed"]: f.append("b3_density_test inconsistent with the three 60-set synthetic buildings")
+    if len(ex) != 3 or (b3["status"] == "INCONCLUSIVE") != any(o["region"] != "B3" for o in ex) or (b3["status"] == "INCONCLUSIVE" and b3["scope_exception"] != "APPROVED_D-066") or b3["we01_land_constraints_relaxed"]: f.append("b3_density_test inconsistent with the three 60-set synthetic buildings")
     for o in objs:
         if o["owner_chunk_128"] != [idx_fn((o["b"][0] + o["b"][2]) / 2, 128), idx_fn((o["b"][1] + o["b"][3]) / 2, 128)]: f.append(f"{o['id']} owner chunk")
     sc = fp["replay_scenarios"]

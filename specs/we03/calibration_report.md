@@ -24,7 +24,7 @@ Single-pass columns exclude the shadow pass; `cone96 peak + shadow` is the shado
 ## Fixtures (A07)
 
 Composition: {"40": {"R01": 9, "R02": 5, "R05": 22, "R08": 4}, "57": {"R01": 12, "R02": 7, "R05": 33, "R08": 5}, "60": {"R01": 13, "R02": 7, "R05": 34, "R08": 6}, "120": {"R01": 26, "R02": 14, "R05": 68, "R08": 12}}
-B3 density test: INCONCLUSIVE (A1-C9 asks for 3 extra buildings in B3; only 2 fit on free WE-01 land in B3, the rest fell back to B1/B2 and are GLOBAL_STRESS_ONLY; scope exception PENDING_MARTIN_APPROVAL); fallback objects are GLOBAL_STRESS_ONLY.
+B3 density test: INCONCLUSIVE (A1-C9 asks for 3 extra buildings in B3; only 2 fit on free WE-01 land in B3, the rest fell back to B1/B2 and are GLOBAL_STRESS_ONLY; scope exception APPROVED_D-066); fallback objects are GLOBAL_STRESS_ONLY.
 
 ## Streaming benefit (A09)
 

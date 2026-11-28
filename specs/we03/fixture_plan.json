@@ -1,7 +1,7 @@
 {
  "b3_density_test": {
   "reason": "A1-C9 asks for 3 extra buildings in B3; only 2 fit on free WE-01 land in B3, the rest fell back to B1/B2 and are GLOBAL_STRESS_ONLY",
-  "scope_exception": "PENDING_MARTIN_APPROVAL",
+  "scope_exception": "APPROVED_D-066",
   "status": "INCONCLUSIVE",
   "we01_land_constraints_relaxed": false
  },
