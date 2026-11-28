@@ -11,6 +11,17 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
+### T-017 WE-02 World Expansion Masterplan (documentation and offline artifact tooling; LOW risk) (Registered 2026-11-28, D-061; approved by Martin 2026-11-28 19:20; pre-start gates PASS)
+Owner: Claude
+Implementer: Claude (artifact tooling `tools/we02/` and `specs/we02/`; no Codex/Gemini assignment)
+Reviewer: ChatGPT (read-only consistency review of the final artifacts); Martin accepts (MP17)
+Priority: P1
+Base commit: main after the registration PR (confirm full SHA at start); Audit Game BASE `84319439243b51aa8d119e33eb62a0637feea887`
+Spec: `specs/T-017-spec-v1.0.md` (entry point, Claude conditions G0-W1..W7 win) + ChatGPT draft `specs/T-017-draft-v1.1-chatgpt.md` (v1.0 draft and both G0 reviews stored beside it) + WE-01 final bundle `specs/we01-final/`
+Scope: `tools/we02/` (generator <= 900, separate verifier <= 600, check <= 500 lines; stdlib) and `specs/we02/` (masterplan.md, district_plan.json, masterplan.svg, dependency_matrix.md, we02_validation.md). Planning direction: Option B (ENVELOPE, 720,000 m2). Phase 1 = 40 buildings (B1 10 / B2 12 / B3 18; roads X01, H02, ENVELOPE_B1_ST_0305 = 1,110.214 m); Phase 2 cumulative 60 (B1 14 and B2 18 CONDITIONAL, B3 28 UNVERIFIED, short 1 each of R01/R05/R08).
+Gates: MP01..MP18 (draft section 16 + conditions); independent verifier with negative controls wired into CI by Claude; ChatGPT read-only review; Martin MP17.
+Status: Registered, not started. No game file, sw.js, CACHE, save format, WE-01 verdict or WE-03..WE-09 is touched or authorized.
+
 ### T-016E WE-01E Final survey map and report builder (read-only artifact tooling; LOW risk, SMALL volume) (Registered 2026-11-28, D-058; approved by Martin 2026-11-28 14:09; gates PASS; PR #124 merged eb1176f, Done (D-059); B8, B10 PASS and B11 accepted by Martin 2026-11-28 18:08, WE-01 closed (D-060))
 Owner: Gemini
 Implementer: Gemini (Stage 3; per-task exception, D-058)

@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-28 | (docs only, no game release) | Claude | base 5e1f72a | T-017 (WE-02 World Expansion Masterplan, Option B ENVELOPE) registered (D-061): spec v1.0 + ChatGPT draft v1.1 + G0 reviews; Claude-owned `tools/we02/` and `specs/we02/` pending; no game change, no CACHE bump; WE-03..WE-09 not authorized
 - 2026-11-28 | (docs only, no game release) | Claude | base 378ac4b | WE-01 closed (D-060): Gate B8 baseline measured, B10 final report checked, B11 accepted by Martin; final bundle stored in `specs/we01-final/`; no game change, no CACHE bump; WE-02..WE-09 not authorized
 - 2026-11-28 | (docs/CI only, no game release) | Claude (impl. Gemini) | PR #124 eb1176f | T-016E WE-01E final survey map and report builder merged (D-059); check wired into CI; B8, B10, B11 pending
 - 2026-11-28 | (docs only, no game release) | Claude | base 858637e | T-016E (WE-01E final survey map and report builder) registered (D-058): spec, ChatGPT draft, e_formal fixtures and geometry extractor added; Gemini start waits for Martin
