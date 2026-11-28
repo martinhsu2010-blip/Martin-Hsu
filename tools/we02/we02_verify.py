@@ -55,6 +55,60 @@ def paint_cells(item_polys, win, beach, D):
     return cells - gone, len(gone)
 
 
+def exact_zslab(polys, win=None, minus=()):
+    """Independent exact area of union(polys) minus union(minus), optionally limited to win=(xmin,zmin,xmax,zmax):
+    horizontal slabs between all vertex z and all edge crossings (the generator uses vertical slabs instead);
+    the covered x-length is linear inside a slab; the window clips the x-intervals and the slab range."""
+    P = [[tuple(q) for q in pl] for pl in polys]
+    Mn = [[tuple(q) for q in pl] for pl in minus]
+    E = [(a, b) for pl in P + Mn for a, b in zip(pl, pl[1:] + pl[:1])]
+    zs = {q[1] for pl in P + Mn for q in pl} | ({win[1], win[3]} if win else set())
+    for i in range(len(E)):
+        (ax, az), (bx, bz) = E[i]
+        for j in range(i + 1, len(E)):
+            (cx, cz), (dx, dz) = E[j]
+            if max(min(az, bz), min(cz, dz)) > min(max(az, bz), max(cz, dz)):
+                continue
+            r, s = (bx - ax, bz - az), (dx - cx, dz - cz)
+            den = r[0] * s[1] - r[1] * s[0]
+            if den == 0:
+                continue
+            u = ((cx - ax) * s[1] - (cz - az) * s[0]) / den
+            v = ((cx - ax) * r[1] - (cz - az) * r[0]) / den
+            if 0 <= u <= 1 and 0 <= v <= 1:
+                zs.add(az + u * r[1])
+    if win:  # clipping the x-intervals bends the covered length where an edge crosses a window side
+        for (ax, az), (bx, bz) in E:
+            for wx in (win[0], win[2]):
+                if ax != bx and min(ax, bx) <= wx <= max(ax, bx):
+                    zs.add(az + (wx - ax) * (bz - az) / (bx - ax))
+    zs = sorted(z for z in zs if not win or win[1] <= z <= win[3])
+
+    def cover(group, z):
+        iv = []
+        for pl in group:
+            xs = sorted(a[0] + (z - a[1]) * (b[0] - a[0]) / (b[1] - a[1]) for a, b in zip(pl, pl[1:] + pl[:1]) if a[1] != b[1] and min(a[1], b[1]) <= z < max(a[1], b[1]))
+            iv += [[xs[k], xs[k + 1]] for k in range(0, len(xs) - 1, 2)]
+        if win:
+            iv = [[max(lo, win[0]), min(hi, win[2])] for lo, hi in iv if min(hi, win[2]) > max(lo, win[0])]
+        iv.sort()
+        out = []
+        for lo, hi in iv:
+            if out and lo <= out[-1][1]:
+                out[-1][1] = max(out[-1][1], hi)
+            else:
+                out.append([lo, hi])
+        return out
+
+    tot = 0.0
+    for z0, z1 in zip(zs, zs[1:]):
+        if z1 - z0 > 1e-9:
+            zm = (z0 + z1) / 2
+            A, B = cover(P, zm), cover(Mn, zm)
+            tot += (sum(h - l for l, h in A) - sum(max(0, min(h, h2) - max(l, l2)) for l, h in A for l2, h2 in B)) * (z1 - z0)
+    return tot
+
+
 def verify(indir, plandir, repo):
     R = Res()
     plan = J(os.path.join(plandir, "district_plan.json"))
@@ -133,6 +187,7 @@ def verify(indir, plandir, repo):
     R.chk("MP09", not unknown, f"engineering ids are audited candidates only (unknown: {sorted(unknown)})")
     if unknown:
         return R, plan, "aborted"
+    md = open(os.path.join(plandir, "masterplan.md"), encoding="utf-8").read()
     # MP12 raster with the WE-01D painter
     sys.path.insert(0, os.path.join(repo, "tools", "test"))
     import we01d_feasibility_analyzer as D
@@ -161,6 +216,12 @@ def verify(indir, plandir, repo):
             R.chk("MP12", not (pc & cells), f"Phase {ph} {r} no selected parcel cell is a road cell")
             tot = la["A_protected"] + la["A_unknown"] + la["A_unavailable"] + la["A_new_road_raster"] + la["selected_parcel_cells"] + la["A_other_eligible"]
             R.chk("MP12", abs(tot - la["A_gross"]) <= 1 and la["A_other_eligible"] >= 0 and la["selected_parcel_cells"] == len(pc), f"Phase {ph} {r} mutually exclusive classes conserve area")
+            # G0-W1: exact-polygon values beside the raster values (independent z-slab implementation)
+            rp = [x for e in eng_by_phase[ph] if reg_of(e) == r for x in polys(e)]
+            ex_land, ex_all = exact_zslab(rp, win[r], beach), exact_zslab(rp, win[r])
+            R.chk("MP12", abs(la["A_new_road_exact_m2"] - ex_land) < 0.01 and abs(la["beach_exact_m2"] - (ex_all - ex_land)) < 0.01 and abs(la["corridor_union_unclipped_m2"] - exact_zslab(rp)) < 0.01, f"Phase {ph} {r} exact polygon areas recomputed")
+            R.chk("MP12", abs(la["raster_minus_exact_m2"] - (len(cells) - ex_land)) < 0.01 and len(cells) >= ex_land - 1e-6 and la["selected_parcel_exact_m2"] == sum((p["bounds_internal"][2] - p["bounds_internal"][0]) * (p["bounds_internal"][3] - p["bounds_internal"][1]) for p in plan["parcels"] if p["region"] == r and p["phase"] <= int(ph)), f"Phase {ph} {r} raster minus exact explained and parcel area exact")
+            R.chk("MP13", f"{la['A_new_road_exact_m2']:,.1f}" in md and f"{la['corridor_union_unclipped_m2']:,.1f}" in md, f"masterplan.md reports Phase {ph} {r} exact areas")
             R.chk("MP07", not any(sx in cells for sx in {(x, z) for x in range(-561, -441) for z in range(-831, -753)}), f"Phase {ph} {r} roads outside Site A")
     # G0-W2: independent recomputation of the Phase 2 street choice
     base_c, _ = paint_cells([x for e in P1_ENG | {"C02"} if reg_of(e) == "B1" for x in polys(e)], win["B1"], beach, D)
@@ -172,6 +233,19 @@ def verify(indir, plandir, repo):
         if have["R01"] >= 7 and have["R02"] >= 7:
             cands.append((len(cc - base_c), s_id))
     R.chk("MP18", bool(cands) and plan["street_choice_phase2"]["chosen"] == min(cands)[1] and "ENVELOPE_B1_ST_0085" == min(cands)[1], "Phase 2 street = fewer added cells, then street_id")
+    # G0-W6: B1 Phase 1 zero margin recomputed from the raw parcel chains
+    zmg = plan["b1_phase1_zero_margin"]
+    chain = lambda q: {e for e in q["dependency_chain"] if not e.startswith("J:")}
+    av = lambda allow, proto: sum(1 for q in env["B1"].values() if q["prototype_id"] == proto and chain(q) <= allow)
+    st85, st115 = "ENVELOPE_B1_ST_0085", "ENVELOPE_B1_ST_0115"
+    want = [(set(), 5), ({"C02"}, 5), ({st85}, 5), ({st115}, 5), ({"C02", st85}, 7), ({"C02", st115}, 8)]
+    R.chk("MP18", [(set(a["added_engineering"]), a["r01_available"]) for a in zmg["alternatives"]] == want and all(av(P1_ENG | a, "R01") == n for a, n in want), "zero margin: R01 availability by engineering set recomputed (5/5/5/5/7/8)")
+    R.chk("MP18", [a["r01_after_one_failure"] for a in zmg["alternatives"]] == [n - 1 for a, n in want], "zero margin: R01 left after one failed parcel recomputed")
+    R.chk("MP18", [a["meets_phase1_after_one_failure"] for a in zmg["alternatives"]] == [n - 1 >= 5 for a, n in want] == [False, False, False, False, True, True], "zero margin: only C02 plus a street survives one failed R01 parcel")
+    req = sorted(i for i, q in env["B1"].items() if i in {p["parcel_id"] for p in plan["parcels"] if p["region"] == "B1" and p["phase"] == 1} and q["prototype_id"] == "R01")
+    R.chk("MP18", sorted(zmg["phase1_r01_selected"]) == req and len(req) == 5 and all(chain(env["B1"][i]) <= P1_ENG for i in req), "zero margin: the five selected Phase 1 R01 parcels need only X01 + ST_0305")
+    R.chk("MP18", abs(zmg["additional_length_m"] - (rs["roads"]["C02"]["new_length_m"] + streets[st85]["length_m"])) < 1e-6 and abs(zmg["additional_length_m"] - 280.0) < 1e-6 and zmg["beach_encroachment_m2"] == rs["roads"]["C02"]["beach_encroachment_m2"] == 224, "zero margin: consequence 280 m and 224 m2 from the audited lengths")
+    R.chk("MP13", all(s in md for s in ("零餘裕", "C02", "ENVELOPE_B1_ST_0085", "280.000 m", "224 m²")), "masterplan.md states the zero-margin engineering consequence")
     sa = [f for f in geo["site_a"] if f["id"] == "SITEA_PROTECT"][0]["polygon"]
     sab = [min(q[0] for q in sa), min(q[1] for q in sa), max(q[0] for q in sa), max(q[1] for q in sa)]
     R.chk("MP07", plan["site_a_protection"]["bounds_internal"] == sab == [-561, -831, -441, -753] and plan["site_a_protection"]["area_m2"] == 9360 == (sab[2] - sab[0]) * (sab[3] - sab[1]), "Site A protection bounds and 9,360 m2 equal map_geometry")
@@ -189,7 +263,6 @@ def verify(indir, plandir, repo):
     exp = {(e["id"], "1") for e in plan["phases"]["1"]["engineering"]["items"]} | {(e["id"], "2") for e in plan["phases"]["2"]["added_engineering"]}
     exp = {x for x in exp if x[0] in ("X01", "C02", "H02") or x[0].startswith("ENVELOPE_")}
     R.chk("MP13", sr == exp, "SVG roads equal JSON phase engineering")
-    md = open(os.path.join(plandir, "masterplan.md"), encoding="utf-8").read()
     dm = open(os.path.join(plandir, "dependency_matrix.md"), encoding="utf-8").read()
     for s in ("1110.214", "1390.214", "720,000", plan["street_choice_phase2"]["chosen"], "每棟" if False else "R08 一棟四戶", "9,360"):
         R.chk("MP13", s in md, f"masterplan.md contains {s}")
@@ -231,6 +304,8 @@ def report(R, plan, plandir, indir):
     L += ["| MP16 | 流程閘門 | Claude G0 已完成（T-017 登記前）；Martin 批准記於 D-061 |", "| MP17 | 流程閘門 | 待 Martin 最終規劃驗收 |", "",
           "## 關鍵數字", "", f"- 第一期 {plan['phases']['1']['buildings_total']} 棟（{plan['phases']['1']['units_total']} 戶）；第二期累計 {plan['phases']['2']['buildings_total']} 棟（{plan['phases']['2']['units_total']} 戶），B3 缺 R01、R05、R08 各 1 棟。",
           f"- 第一期道路 {plan['phases']['1']['engineering']['length_m']:.3f} m（柵格 {plan['phases']['1']['new_road_raster_total']} 格）；第二期累計 {plan['phases']['2']['engineering']['length_m']:.3f} m（柵格 {plan['phases']['2']['new_road_raster_total']} 格），海灘侵占 {plan['phases']['2']['engineering']['beach_encroachment_m2']:.0f} m²。",
+          "- 精確多邊形面積（獨立 z 方向切片重算，已裁切至區域外框、扣除海灘）：" + "；".join(f"第{ph}期 {r} {plan['phases'][ph]['land_accounting'][r]['A_new_road_exact_m2']:,.1f} m²（柵格 {plan['phases'][ph]['land_accounting'][r]['A_new_road_raster']:,}）" for ph in ("1", "2") for r in ("B1", "B2")) + "；驗收仍以柵格值為準。",
+          f"- B1 第一期 R01 零餘裕：X01 + ENVELOPE_B1_ST_0305 恰好 {plan['b1_phase1_zero_margin']['alternatives'][0]['r01_available']} 棟；任一塊失敗須加 C02 與一條街道（+{plan['b1_phase1_zero_margin']['additional_length_m']:.3f} m、海灘 {plan['b1_phase1_zero_margin']['beach_encroachment_m2']:.0f} m²），已由原始依賴鏈獨立重算。",
           f"- 第二期街道選擇：{plan['street_choice_phase2']['chosen']}（兩條對稱，規則為格數較少、其次字典序）。", "",
           "## 限制與未解問題", ""] + [f"- {x}" for x in plan["limitations"]] + [
           "- 面積為 1 m 柵格（與 WE-01 相同規則）；新增道路在海灘格不計入，與 WE-01 完整 ENVELOPE 數字（B1 8,013、B2 10,555）逐格重現。",

@@ -1,4 +1,71 @@
 {
+ "b1_phase1_zero_margin": {
+  "additional_engineering_if_failed": [
+   "C02",
+   "one of ENVELOPE_B1_ST_0085 / ENVELOPE_B1_ST_0115"
+  ],
+  "additional_length_m": 280.0,
+  "alternatives": [
+   {
+    "added_engineering": [],
+    "meets_phase1_after_one_failure": false,
+    "r01_after_one_failure": 4,
+    "r01_available": 5
+   },
+   {
+    "added_engineering": [
+     "C02"
+    ],
+    "meets_phase1_after_one_failure": false,
+    "r01_after_one_failure": 4,
+    "r01_available": 5
+   },
+   {
+    "added_engineering": [
+     "ENVELOPE_B1_ST_0085"
+    ],
+    "meets_phase1_after_one_failure": false,
+    "r01_after_one_failure": 4,
+    "r01_available": 5
+   },
+   {
+    "added_engineering": [
+     "ENVELOPE_B1_ST_0115"
+    ],
+    "meets_phase1_after_one_failure": false,
+    "r01_after_one_failure": 4,
+    "r01_available": 5
+   },
+   {
+    "added_engineering": [
+     "C02",
+     "ENVELOPE_B1_ST_0085"
+    ],
+    "meets_phase1_after_one_failure": true,
+    "r01_after_one_failure": 6,
+    "r01_available": 7
+   },
+   {
+    "added_engineering": [
+     "C02",
+     "ENVELOPE_B1_ST_0115"
+    ],
+    "meets_phase1_after_one_failure": true,
+    "r01_after_one_failure": 7,
+    "r01_available": 8
+   }
+  ],
+  "beach_encroachment_m2": 224.0,
+  "consequence": "If any required B1 Phase 1 R01 parcel fails engineering verification, the Phase 1 R01 target needs C02 plus one additional internal street (ENVELOPE_B1_ST_0085 or ENVELOPE_B1_ST_0115); neither alone adds any R01 parcel.",
+  "phase1_r01_selected": [
+   "B1_R01_002",
+   "B1_R01_004",
+   "B1_R01_006",
+   "B1_R01_012",
+   "B1_R01_020"
+  ],
+  "phase1_r01_target": 5
+ },
  "base_sha": "84319439243b51aa8d119e33eb62a0637feea887",
  "coordinate_formats": {
   "bounds_internal": "[xmin,zmin,xmax,zmax]",
@@ -2605,44 +2672,59 @@
     "B1": {
      "A_eligible": 142570.0,
      "A_gross": 250000.0,
+     "A_new_road_exact_m2": 2909.774,
      "A_new_road_raster": 3177,
      "A_other_eligible": 122173.0,
      "A_protected": 0.0,
      "A_unavailable": 107430.0,
      "A_unknown": 0.0,
      "beach_cells_excluded": 0,
+     "beach_exact_m2": 0.0,
      "conservation_error_m2": 0.0,
+     "corridor_union_unclipped_m2": 5576.738,
      "envelope_full_A_new_road": 8013.0,
      "parcel_road_cell_overlap": 0,
-     "selected_parcel_cells": 17220
+     "raster_minus_exact_m2": 267.226,
+     "selected_parcel_cells": 17220,
+     "selected_parcel_exact_m2": 17220.0
     },
     "B2": {
      "A_eligible": 224080.0,
      "A_gross": 270000.0,
+     "A_new_road_exact_m2": 4850.827,
      "A_new_road_raster": 5304,
      "A_other_eligible": 212440.0,
      "A_protected": 0.0,
      "A_unavailable": 45920.0,
      "A_unknown": 0.0,
      "beach_cells_excluded": 0,
+     "beach_exact_m2": 0.0,
      "conservation_error_m2": 0.0,
+     "corridor_union_unclipped_m2": 7158.314,
      "envelope_full_A_new_road": 10555.0,
      "parcel_road_cell_overlap": 0,
-     "selected_parcel_cells": 6336
+     "raster_minus_exact_m2": 453.173,
+     "selected_parcel_cells": 6336,
+     "selected_parcel_exact_m2": 6336.0
     },
     "B3": {
      "A_eligible": 53187.0,
      "A_gross": 200000.0,
+     "A_new_road_exact_m2": 0.0,
      "A_new_road_raster": 0,
      "A_other_eligible": 38547.0,
      "A_protected": 9360.0,
      "A_unavailable": 137453.0,
      "A_unknown": 0.0,
      "beach_cells_excluded": 0,
+     "beach_exact_m2": 0.0,
      "conservation_error_m2": 0.0,
+     "corridor_union_unclipped_m2": 0.0,
      "envelope_full_A_new_road": 0.0,
      "parcel_road_cell_overlap": 0,
-     "selected_parcel_cells": 14640
+     "raster_minus_exact_m2": 0.0,
+     "selected_parcel_cells": 14640,
+     "selected_parcel_exact_m2": 14640.0
     }
    },
    "new_road_raster_total": 8481,
@@ -2769,44 +2851,59 @@
     "B1": {
      "A_eligible": 142570.0,
      "A_gross": 250000.0,
+     "A_new_road_exact_m2": 5764.274,
      "A_new_road_raster": 6285,
      "A_other_eligible": 112177.0,
      "A_protected": 0.0,
      "A_unavailable": 107430.0,
      "A_unknown": 0.0,
      "beach_cells_excluded": 180,
+     "beach_exact_m2": 165.0,
      "conservation_error_m2": 0.0,
+     "corridor_union_unclipped_m2": 8596.238,
      "envelope_full_A_new_road": 8013.0,
      "parcel_road_cell_overlap": 0,
-     "selected_parcel_cells": 24108
+     "raster_minus_exact_m2": 520.726,
+     "selected_parcel_cells": 24108,
+     "selected_parcel_exact_m2": 24108.0
     },
     "B2": {
      "A_eligible": 224080.0,
      "A_gross": 270000.0,
+     "A_new_road_exact_m2": 4850.827,
      "A_new_road_raster": 5304,
      "A_other_eligible": 209272.0,
      "A_protected": 0.0,
      "A_unavailable": 45920.0,
      "A_unknown": 0.0,
      "beach_cells_excluded": 0,
+     "beach_exact_m2": 0.0,
      "conservation_error_m2": 0.0,
+     "corridor_union_unclipped_m2": 7158.314,
      "envelope_full_A_new_road": 10555.0,
      "parcel_road_cell_overlap": 0,
-     "selected_parcel_cells": 9504
+     "raster_minus_exact_m2": 453.173,
+     "selected_parcel_cells": 9504,
+     "selected_parcel_exact_m2": 9504.0
     },
     "B3": {
      "A_eligible": 53187.0,
      "A_gross": 200000.0,
+     "A_new_road_exact_m2": 0.0,
      "A_new_road_raster": 0,
      "A_other_eligible": 33567.0,
      "A_protected": 9360.0,
      "A_unavailable": 137453.0,
      "A_unknown": 0.0,
      "beach_cells_excluded": 0,
+     "beach_exact_m2": 0.0,
      "conservation_error_m2": 0.0,
+     "corridor_union_unclipped_m2": 0.0,
      "envelope_full_A_new_road": 0.0,
      "parcel_road_cell_overlap": 0,
-     "selected_parcel_cells": 19620
+     "raster_minus_exact_m2": 0.0,
+     "selected_parcel_cells": 19620,
+     "selected_parcel_exact_m2": 19620.0
     }
    },
    "new_road_raster_total": 11589,

@@ -37,12 +37,12 @@ def load(indir):
 
 
 # ---------- geometry (own stdlib rasterizer: 1 m cells, overlap area > 1e-6) ----------
-def clip_area(poly, x0, z0, x1, z1):
-    """Area of polygon clipped to an axis-aligned rectangle (Sutherland-Hodgman)."""
+def clip_poly(poly, x0, z0, x1, z1):
+    """Polygon clipped to an axis-aligned rectangle (Sutherland-Hodgman)."""
     pts = [tuple(p) for p in poly]
     for axis, lim, keep_low in ((0, x1, True), (0, x0, False), (1, z1, True), (1, z0, False)):
         if not pts:
-            return 0.0
+            return []
         out, prev = [], pts[-1]
         for cur in pts:
             pin = (prev[axis] <= lim) if keep_low else (prev[axis] >= lim)
@@ -54,6 +54,11 @@ def clip_area(poly, x0, z0, x1, z1):
                 out.append(cur)
             prev = cur
         pts = out
+    return pts
+
+
+def clip_area(poly, x0, z0, x1, z1):
+    pts = clip_poly(poly, x0, z0, x1, z1)
     a = 0.0
     for i, p in enumerate(pts):
         q = pts[(i + 1) % len(pts)]
@@ -73,6 +78,55 @@ def paint(polys, win, beach):
                     cells.add((x, z))
     gone = {c for c in cells if any(clip_area(b, c[0], c[1], c[0] + 1, c[1] + 1) > 1e-6 for b in beach)}
     return cells - gone, gone
+
+
+def _ivl(polys, x):
+    """Union of the z-intervals that the polygons cover on the vertical line x (half-open on x)."""
+    iv = []
+    for pl in polys:
+        zs = sorted(a[1] + (x - a[0]) * (b[1] - a[1]) / (b[0] - a[0]) for a, b in zip(pl, pl[1:] + pl[:1])
+                    if a[0] != b[0] and min(a[0], b[0]) <= x < max(a[0], b[0]))
+        iv += [(zs[i], zs[i + 1]) for i in range(0, len(zs) - 1, 2)]
+    out = []
+    for lo, hi in sorted(iv):
+        if out and lo <= out[-1][1]:
+            out[-1][1] = max(out[-1][1], hi)
+        else:
+            out.append([lo, hi])
+    return out
+
+
+def exact_area(polys, minus=()):
+    """Exact area of union(polys) minus union(minus): vertical slabs between every vertex x and every
+    edge-edge crossing x; inside a slab the covered length is linear, so the midpoint gives it exactly."""
+    polys = [[tuple(q) for q in pl] for pl in polys if len(pl) > 2]
+    minus = [[tuple(q) for q in pl] for pl in minus]
+    segs = [(a, b) for pl in polys + minus for a, b in zip(pl, pl[1:] + pl[:1])]
+    xs = {q[0] for pl in polys + minus for q in pl}
+    for i, (a, b) in enumerate(segs):
+        for c, d in segs[i + 1:]:
+            if max(min(a[0], b[0]), min(c[0], d[0])) > min(max(a[0], b[0]), max(c[0], d[0])):
+                continue
+            den = (b[0] - a[0]) * (d[1] - c[1]) - (b[1] - a[1]) * (d[0] - c[0])
+            if abs(den) < 1e-12:
+                continue
+            u = ((c[0] - a[0]) * (d[1] - c[1]) - (c[1] - a[1]) * (d[0] - c[0])) / den
+            v = ((c[0] - a[0]) * (b[1] - a[1]) - (c[1] - a[1]) * (b[0] - a[0])) / den
+            if 0 <= u <= 1 and 0 <= v <= 1:
+                xs.add(a[0] + u * (b[0] - a[0]))
+    xs = sorted(xs)
+    total = 0.0
+    for x0, x1 in zip(xs, xs[1:]):
+        if x1 - x0 < 1e-9:
+            continue
+        xm = (x0 + x1) / 2
+        r, m, ln = _ivl(polys, xm), _ivl(minus, xm), 0.0
+        for lo, hi in r:
+            ln += hi - lo
+            for l2, h2 in m:
+                ln -= max(0.0, min(hi, h2) - max(lo, l2))
+        total += ln * (x1 - x0)
+    return total
 
 
 def rect_poly(b):
@@ -202,7 +256,14 @@ def build(data, hashes):
             b = byid[r][i]["bounds"]
             pcells |= {(x, z) for x in range(b[0], b[2]) for z in range(b[1], b[3])}
         ov = len(pcells & cells)
-        out = {"A_gross": a["A_gross"], "A_protected": a["A_protected"], "A_unknown": a["A_unknown"], "A_unavailable": a["A_unavailable"],
+        rp = [p for e in sorted(eng) if region_of(e) == r for p in road_polys(e)]
+        w = win[r]
+        clipped = [q for q in (clip_poly(p, *w) for p in rp) if len(q) > 2]
+        ex_all, ex_land = exact_area(clipped), exact_area(clipped, beach)
+        out = {"A_new_road_exact_m2": round(ex_land, 3), "beach_exact_m2": round(ex_all - ex_land, 3),
+               "corridor_union_unclipped_m2": round(exact_area(rp), 3), "raster_minus_exact_m2": round(len(cells) - ex_land, 3),
+               "selected_parcel_exact_m2": float(sum((byid[r][i]["bounds"][2] - byid[r][i]["bounds"][0]) * (byid[r][i]["bounds"][3] - byid[r][i]["bounds"][1]) for i in sel_ids[r])),
+               "A_gross": a["A_gross"], "A_protected": a["A_protected"], "A_unknown": a["A_unknown"], "A_unavailable": a["A_unavailable"],
                "A_eligible": a["A_eligible"], "A_new_road_raster": len(cells), "beach_cells_excluded": len(beach_cells),
                "selected_parcel_cells": len(pcells) - ov, "parcel_road_cell_overlap": ov}
         out["A_other_eligible"] = a["A_eligible"] - out["A_new_road_raster"] - out["selected_parcel_cells"]
@@ -251,6 +312,17 @@ def build(data, hashes):
     plan["phases"]["2"]["new_road_raster_total"] = sum(plan["phases"]["2"]["land_accounting"][r]["A_new_road_raster"] for r in REGIONS)
     plan["phases"]["2"]["added_engineering"] = [e for e in plan["phases"]["2"]["engineering"]["items"] if e["id"] not in PHASE1_ENG]
     plan["phases"]["2"]["added_length_m"] = round(sum(e["length_m"] for e in plan["phases"]["2"]["added_engineering"]), 3)
+    # G0-W6: B1 Phase 1 zero margin and its engineering consequence (recomputed from the parcel dependency chains)
+    need = TARGETS[1]["B1"]["R01"]
+    avail = lambda eng, proto: sum(1 for q in env_parcels["B1"] if q["prototype_id"] == proto and eng_of(q) <= eng)
+    alts = [set(), {"C02"}, {"ENVELOPE_B1_ST_0085"}, {"ENVELOPE_B1_ST_0115"}, {"C02", "ENVELOPE_B1_ST_0085"}, {"C02", "ENVELOPE_B1_ST_0115"}]
+    rows = [{"added_engineering": sorted(a), "r01_available": avail(PHASE1_ENG | a, "R01"), "r01_after_one_failure": avail(PHASE1_ENG | a, "R01") - 1,
+             "meets_phase1_after_one_failure": avail(PHASE1_ENG | a, "R01") - 1 >= need} for a in alts]
+    plan["b1_phase1_zero_margin"] = {
+        "phase1_r01_target": need, "phase1_r01_selected": [i for i in sel1["B1"] if byid["B1"][i]["prototype_id"] == "R01"], "alternatives": rows,
+        "consequence": "If any required B1 Phase 1 R01 parcel fails engineering verification, the Phase 1 R01 target needs C02 plus one additional internal street (ENVELOPE_B1_ST_0085 or ENVELOPE_B1_ST_0115); neither alone adds any R01 parcel.",
+        "additional_engineering_if_failed": ["C02", "one of ENVELOPE_B1_ST_0085 / ENVELOPE_B1_ST_0115"],
+        "additional_length_m": round(length_of("C02") + length_of("ENVELOPE_B1_ST_0085"), 3), "beach_encroachment_m2": roads["C02"]["beach_encroachment_m2"]}
     # WE-01 reproduction control: the full ENVELOPE corridor set must give the WE-01 A_new_road integers
     full = {r: len(cells_for({e for e in list(streets) + ["X01", "C02", "H02"] if region_of(e) == r}, r)[0]) for r in REGIONS}
     plan["we01_reproduction_control"] = {r: {"raster": full[r], "we01_A_new_road": fe["scenarios"]["ENVELOPE"]["land_accounting"]["regions"][r]["A_new_road"]} for r in REGIONS}
@@ -350,12 +422,21 @@ def md_docs(plan):
         for r in REGIONS:
             a = blk["land_accounting"][r]
             L.append(f"| {ph} | {r} | {f(a['A_new_road_raster'])} | {f(a['selected_parcel_cells'])} | {f(a['A_other_eligible'])} | {f(a['A_protected'])}／{f(a['A_unknown'])}／{f(a['A_unavailable'])} | {a['conservation_error_m2']:.0f} |")
-    L += ["", "公園與公共設施只是對剩餘土地的規劃保留標籤，不是 WE-01 的審計土地分類，也沒有面積數字；25／25／30／20 為概念參考，不是門檻。",
+    L += ["", "### 柵格與精確多邊形面積對照（G0-W1，僅供說明；驗收仍以柵格值為準）", "",
+          "| 期別 | 區域 | 柵格新增道路 | 精確聯集（已裁切至區域外框、已扣海灘） | 柵格減精確 | 未裁切廊道聯集 | 海灘（精確） |", "|---|---|---|---|---|---|---|"]
+    for ph, blk in (("第一期", P1), ("第二期", P2)):
+        for r in REGIONS:
+            a = blk["land_accounting"][r]
+            L.append(f"| {ph} | {r} | {f(a['A_new_road_raster'])} | {a['A_new_road_exact_m2']:,.1f} | {a['raster_minus_exact_m2']:,.1f} | {a['corridor_union_unclipped_m2']:,.1f} | {a['beach_exact_m2']:,.1f} |")
+    L += ["", "三種數字的範圍不同：①柵格值＝與廊道多邊形相交面積大於 1e-6 m² 的 1 m 格數（含只碰到邊緣的整格），再扣掉碰到海灘的格，是 WE-01 的計法，也是本規劃唯一的驗收數字，故必大於或等於精確值，差額來自沿廊道邊界的整格計入；②精確聯集＝廊道多邊形先裁切到該區域外框、扣掉海灘多邊形後的真實面積（重疊廊道只算一次）；③未裁切廊道聯集＝整條道路的聯集面積，包含延伸到區域外框以外的部分（延伸到外框以外的路段），因此可大於前兩者，並非該區域的土地消耗。", "",
+          f"海灘數字同樣範圍不同：224 m² 為 WE-01 道路勘測對 C02 的海灘侵占值（規劃沿用此保守值）；柵格計法排除 {P2['land_accounting']['B1']['beach_cells_excluded']} 格；精確裁切後第二期 B1 廊道聯集落在海灘內 {P2['land_accounting']['B1']['beach_exact_m2']:,.1f} m²。", ""]
+    L += ["公園與公共設施只是對剩餘土地的規劃保留標籤，不是 WE-01 的審計土地分類，也沒有面積數字；25／25／30／20 為概念參考，不是門檻。",
           "WE-01 對照：完整 ENVELOPE 道路集合以本工具重算的柵格格數 " + "、".join(f"{r} {plan['we01_reproduction_control'][r]['raster']}（WE-01 {plan['we01_reproduction_control'][r]['we01_A_new_road']:.0f}）" for r in REGIONS) + "。", "",
           "## 5. 保護與景觀", "", "- Site A 保護範圍 X [-561,-441]、Z [-831,-753]，9,360 m²；選定地塊與道路的侵占面積均為 0。",
           "- B1 保留海濱步道與海灘景觀；C02 的 224 m² 海灘侵占只在第二期，須先有景觀保護方案。", "- B2 保留山體輪廓；B3 保留既有城市格網。", "- 既有建築拆除、海岸填地與地形改造均須獨立授權。", "",
           "## 6. 未解決工程依賴", ""] + [f"- {x}" for x in plan["limitations"]] + [
-          "- X01、H02、C02 與街道皆為 CONDITIONAL_VERIFIED，尚未驗證路面、地形、碰撞、車輛通行、交通 AI 與導航。", "- B2 對外只靠 H02（H01 不可行）。", "- B1 第二期必須使用 C02。", "",
+          "- X01、H02、C02 與街道皆為 CONDITIONAL_VERIFIED，尚未驗證路面、地形、碰撞、車輛通行、交通 AI 與導航。", "- B2 對外只靠 H02（H01 不可行）。", "- B1 第二期必須使用 C02。"]
+    L += ["- B1 第一期 R01 零餘裕：X01 + ENVELOPE_B1_ST_0305 恰好提供 " + str(plan["b1_phase1_zero_margin"]["alternatives"][0]["r01_available"]) + " 棟 R01，目標 " + str(plan["b1_phase1_zero_margin"]["phase1_r01_target"]) + " 棟（" + "、".join(plan["b1_phase1_zero_margin"]["phase1_r01_selected"]) + "）。若其中任何一塊在後續工程驗證失敗，第一期 R01 目標須同時加上 C02 與另一條街道（ENVELOPE_B1_ST_0085 或 ENVELOPE_B1_ST_0115），缺一不可（單獨加 C02 或單獨加街道都不增加 R01）；依目前規劃替代方案，這會多出 " + f"{plan['b1_phase1_zero_margin']['additional_length_m']:.3f} m 道路與 {plan['b1_phase1_zero_margin']['beach_encroachment_m2']:.0f} m² 海灘侵占（C02 的海灘侵占只在此情況下提前至第一期）。", "",
           "## 7. 後續任務（僅建議，尚未授權）", "", "WE-03 串流與效能架構；WE-04 外部道路；WE-05 地形、地基與內部街道；WE-06 住宅原型庫；WE-07/08/09 各區建設與整合驗收。每項須另行規格與批准。"]
     dm = ["# WE-02 依賴矩陣（確定性產生）", "", "## 1. 區域與道路依賴", "", "| 區域 | 期別 | 必要工程 | 依賴鏈終點 | 狀態 |", "|---|---|---|---|---|"]
     for ph, blk in (("1", P1), ("2", P2)):

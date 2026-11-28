@@ -2,7 +2,7 @@
 
 由 `tools/we02/we02_verify.py` 產生，不引用產生器，柵格重算使用 WE-01D 的繪製函式；結果由 Claude 負責。
 
-- BASE：`84319439243b51aa8d119e33eb62a0637feea887`；檢查項目數 430；失敗 0。
+- BASE：`84319439243b51aa8d119e33eb62a0637feea887`；檢查項目數 454；失敗 0。
 
 ## 來源與產物雜湊（SHA-256）
 
@@ -11,9 +11,9 @@
 - `internal_streets.json` adfd26957555bffbb7e5a3d9e216a4a1ecd47c871be35bb63fc8a57611c2274e
 - `map_geometry.json` c17cc1ce8080627e4744394e5ffefdec7e7b6d516f7eb8fd25c5f2f605e1460e
 - `road_survey.json` 4afd52d2b51273f1e890aeda3c3ade22927124926c12a1e3aa3cefe30f3eeb27
-- `district_plan.json` 8883f70305566b290faee7bf1098776e58f619cedc3081a721e33b42119e4d3c
+- `district_plan.json` e4b74807f1cdb9b8d52539a226bf251ef1c873ef74371b8abbf8615592e81f0f
 - `masterplan.svg` 1bb35a4314a24e58e949e523724e6e8e3b7762e232c2dd3290f0fb850389d96c
-- `masterplan.md` d9724d8fd8204d23b11b23c1de7adbbc57945e87dda79b17e6df1b50e80e82fd
+- `masterplan.md` 67c1d77901559d893139efb01b5f880d90a8b9f0c1d9608e8dcdac2bf933fa99
 - `dependency_matrix.md` cedc7f549467aef5b38140d313f488d184c67c132979775c3cff0aae8f8e2830
 
 ## 各閘門結果
@@ -31,11 +31,11 @@
 | MP09 | 2 | 0 |
 | MP10 | 58 | 0 |
 | MP11 | 2 | 0 |
-| MP12 | 21 | 0 |
-| MP13 | 11 | 0 |
+| MP12 | 33 | 0 |
+| MP13 | 18 | 0 |
 | MP14 | 1 | 0 |
 | MP15 | 1 | 0 |
-| MP18 | 60 | 0 |
+| MP18 | 65 | 0 |
 | MP16 | 流程閘門 | Claude G0 已完成（T-017 登記前）；Martin 批准記於 D-061 |
 | MP17 | 流程閘門 | 待 Martin 最終規劃驗收 |
 
@@ -43,6 +43,8 @@
 
 - 第一期 40 棟（52 戶）；第二期累計 57 棟（72 戶），B3 缺 R01、R05、R08 各 1 棟。
 - 第一期道路 1110.214 m（柵格 8481 格）；第二期累計 1390.214 m（柵格 11589 格），海灘侵占 224 m²。
+- 精確多邊形面積（獨立 z 方向切片重算，已裁切至區域外框、扣除海灘）：第1期 B1 2,909.8 m²（柵格 3,177）；第1期 B2 4,850.8 m²（柵格 5,304）；第2期 B1 5,764.3 m²（柵格 6,285）；第2期 B2 4,850.8 m²（柵格 5,304）；驗收仍以柵格值為準。
+- B1 第一期 R01 零餘裕：X01 + ENVELOPE_B1_ST_0305 恰好 5 棟；任一塊失敗須加 C02 與一條街道（+280.000 m、海灘 224 m²），已由原始依賴鏈獨立重算。
 - 第二期街道選擇：ENVELOPE_B1_ST_0085（兩條對稱，規則為格數較少、其次字典序）。
 
 ## 限制與未解問題

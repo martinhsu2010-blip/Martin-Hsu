@@ -126,6 +126,12 @@ def main():
         "N19 polygon not equal to footprint": edit_plan(lambda p: parcel(p, "B1", 1).update(polygon=[[0, 0], [1, 0], [1, 1], [0, 1]])),
         "N20 dependency chain endpoint broken": edit_plan(lambda p: parcel(p, "B1", 1, status="CANDIDATE_ROAD_REQUIRED").update(dependency_chain=["X01"])),
         "N21 BASE changed": edit_plan(lambda p: p.update(base_sha="0" * 40)),
+        "N23 exact area tampered": edit_plan(lambda p: p["phases"]["1"]["land_accounting"]["B1"].update(A_new_road_exact_m2=3200.0)),
+        "N24 unclipped union tampered": edit_plan(lambda p: p["phases"]["2"]["land_accounting"]["B1"].update(corridor_union_unclipped_m2=5000.0)),
+        "N25 zero-margin table tampered": edit_plan(lambda p: p["b1_phase1_zero_margin"]["alternatives"][1].update(r01_available=6)),
+        "N26 zero-margin consequence tampered": edit_plan(lambda p: p["b1_phase1_zero_margin"].update(additional_length_m=150.0)),
+        "N27 zero-margin text removed": edit_text("masterplan.md", "零餘裕", "餘裕"),
+        "N28 exact table removed from markdown": edit_text("masterplan.md", "5,576.7", "0.0"),
         "N22 SVG gains a script": edit_text("masterplan.svg", '<rect id="region-B1"', '<script>1</script><rect id="region-B1"'),
     }
     for name, mut in cases.items():
@@ -143,6 +149,9 @@ def main():
         "M04 beach cells not excluded": ("return cells - gone, gone", "return cells, gone"),
         "M05 parcel pool ignores dependency closure": ("eng_of(p) <= allowed)", "True)"),
         "M06 B3 Phase 2 promoted": ('"B3": "VERIFIED_DIRECT" if ph == 1 else "UNVERIFIED"', '"B3": "VERIFIED_DIRECT" if ph == 1 else "CONDITIONAL"'),
+        "M08 exact area keeps beach": ("exact_area(clipped), exact_area(clipped, beach)", "exact_area(clipped), exact_area(clipped)"),
+        "M09 exact area not clipped to window": ("clipped = [q for q in (clip_poly(p, *w) for p in rp) if len(q) > 2]", "clipped = [q for q in rp if len(q) > 2]"),
+        "M10 zero margin ignores one failure": ('"r01_after_one_failure": avail(PHASE1_ENG | a, "R01") - 1,', '"r01_after_one_failure": avail(PHASE1_ENG | a, "R01"),'),
         "M07 Site A shifted": ("SITE_A = (-561, -831, -441, -753)", "SITE_A = (-561, -831, -441, -700)"),
     }
     for name, (a, b) in mutants.items():
@@ -168,7 +177,7 @@ def main():
     txt = open(vf, encoding="utf-8").read()
     ok(rc == 0 and all(f"MP{k:02d}" in txt for k in range(1, 19)) and "失敗 0" in txt, "R01 validation report covers MP01..MP18")
     shutil.rmtree(tmp, ignore_errors=True)
-    print(("RESULT: PASS" if not fails else "RESULT: FAIL") + f" (WE-02 E01-E02, U01-U06, N00-N22 artifact tampering, M01-M07 generator mutants, {n} checks in {time.time() - t0:.1f}s)")
+    print(("RESULT: PASS" if not fails else "RESULT: FAIL") + f" (WE-02 E01-E02, U01-U06, N00-N28 artifact tampering, M01-M10 generator mutants, {n} checks in {time.time() - t0:.1f}s)")
     for f in fails:
         print("  FAIL", f)
     return 1 if fails else 0
