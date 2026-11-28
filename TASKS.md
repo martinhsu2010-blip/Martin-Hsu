@@ -11,7 +11,7 @@ Rollback / blockers: none. Every Stage 3 task still needs its own Martin-approve
 (none)
 
 ## Ready for Implementer
-### T-016E WE-01E Final survey map and report builder (read-only artifact tooling; LOW risk, SMALL volume) (Registered 2026-11-28, D-058; approved by Martin 2026-11-28 14:09; gates PASS; PR #124 merged eb1176f, Done (D-059); B8, B10, B11 pending)
+### T-016E WE-01E Final survey map and report builder (read-only artifact tooling; LOW risk, SMALL volume) (Registered 2026-11-28, D-058; approved by Martin 2026-11-28 14:09; gates PASS; PR #124 merged eb1176f, Done (D-059); B8, B10 PASS and B11 accepted by Martin 2026-11-28 18:08, WE-01 closed (D-060))
 Owner: Gemini
 Implementer: Gemini (Stage 3; per-task exception, D-058)
 Reviewer: Claude
@@ -21,7 +21,7 @@ Branch/PR: `gemini/T-016E-we01e-report-builder`
 Spec: `specs/T-016E-spec-v1.0.md` (entry point, Claude conditions G0-E1..E14 win) + ChatGPT draft `specs/T-016E-draft-v1.0-chatgpt.md` + A/B/C/D specs and the WE-01 v1.2/v1.3/v1.4 documents
 Scope: new `tools/test/we01e_report_builder.py` + `tools/test/we01e_report_builder_check.py` only. Python stdlib; line ceiling 1,300 combined (builder <= 800, check <= 500); reports at about 600 lines and before finishing. Inputs (Claude fixtures in `tools/fixtures/we01/e_formal/`, extractor `tools/we01/we01e_geometry.py`): the eight formal JSON files plus `inputs_manifest.json`; the builder never reads dumps. Outputs `world_survey.svg`, `survey_report.md` (Traditional Chinese), `report_meta.json` (timing only). No re-analysis, no verdict computation.
 Gates (v1.2): B10 (Claude, report vs JSON) after merge and B8; B8 (Claude, after merge); B11 (Martin) after B8 and B10. A passing T-016E is tool acceptance only.
-Status: Done (tool acceptance only). PR #124 (Gemini, head b16087d; builder 779 + check 414 = 1,193 lines) merged eb1176f on Martin's "合併" 2026-11-28 15:33; Claude independent verification PASS (D-059); check wired into CI. Gates: B8 (Claude measures, pending), B10 (Claude, pending), B11 (Martin, pending). Not a feasibility result and not WE-01 acceptance.
+Status: Done (tool acceptance only). PR #124 (Gemini, head b16087d; builder 779 + check 414 = 1,193 lines) merged eb1176f on Martin's "合併" 2026-11-28 15:33; Claude independent verification PASS (D-059); check wired into CI. Gates: B8 PASS (Claude measured, `specs/we01-final/WE-01_B8_runtime_baseline_appendix.md`), B10 PASS (Claude, `specs/we01-final/WE-01_B10_check_record.md`), B11 accepted by Martin ("我接受we01", 2026-11-28 18:08); WE-01 closed (D-060). WE-02..WE-09 are not registered or authorized.
 
 ### T-016D WE-01D Internal streets, conditional capacity and feasibility verdicts (read-only audit tooling; LOW risk, LARGE volume) (Registered 2026-11-27, D-056; approved by Martin 2026-11-27 20:17; gates PASS; PR #121 merged e0afd90, Done (D-057); T-016E NOT registered)
 Owner: Gemini

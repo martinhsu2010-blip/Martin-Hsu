@@ -1,0 +1,1634 @@
+{
+  "analyzer_version": "we01d-1.0",
+  "base_sha": "84319439243b51aa8d119e33eb62a0637feea887",
+  "compatibility_key": {
+    "base_sha": "84319439243b51aa8d119e33eb62a0637feea887",
+    "desktop_high_static_fingerprint": "52653bc578411a9eda9b314581bb16f45f3cb4eb1be623f9d39dc21ade365482",
+    "phone_low_static_fingerprint": "e473d222db998487e5fcfb187349e5006e6f619c1d15cca6bae1a2ee380352aa",
+    "polygon_revision": 2,
+    "schema_version": 1,
+    "t016b_analyzer_version": "we01b-1.0",
+    "t016c_analyzer_version": "we01c-1.0",
+    "t016d_analyzer_version": "we01d-1.0",
+    "we01a_analyzer_version": "we01a-1.0"
+  },
+  "deterministic_sha256": "0a449f55415c928cee3c6927461739fb24acb8b0b6cfcc0337fe615ef871543a",
+  "polygon_revision": 2,
+  "presets": {
+    "DESKTOP_HIGH": {
+      "file_sha256": "7b802de45417b51e28ec04fa8c782507149006ca7a2212d834c0e73659765578",
+      "static_fingerprint": "52653bc578411a9eda9b314581bb16f45f3cb4eb1be623f9d39dc21ade365482"
+    },
+    "PHONE_LOW": {
+      "file_sha256": "01919444a89a7d0d695ab8b0afccc1b35c4101ae288ff03629201f93284c3d24",
+      "static_fingerprint": "e473d222db998487e5fcfb187349e5006e6f619c1d15cca6bae1a2ee380352aa"
+    }
+  },
+  "runtime_meta": {
+    "elapsed_s": 13.713
+  },
+  "scenarios": {
+    "ENVELOPE": {
+      "capacities": {
+        "B1": {
+          "C_additional": 16,
+          "C_common": 21,
+          "C_conditional": 21,
+          "C_desktop_high": 21,
+          "C_direct": 5,
+          "C_phone_low": 21,
+          "C_upper": 108,
+          "foundation_unverified_cells_m2": 0,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "prototype_counts": {
+            "R01": 10,
+            "R02": 11
+          },
+          "prototype_mix_ok": true,
+          "proxy_used": false,
+          "units_conditional": 21
+        },
+        "B2": {
+          "C_additional": 67,
+          "C_common": 67,
+          "C_conditional": 67,
+          "C_desktop_high": 67,
+          "C_direct": 0,
+          "C_phone_low": 67,
+          "C_upper": 483,
+          "foundation_unverified_cells_m2": 0,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "prototype_counts": {
+            "R05": 67
+          },
+          "prototype_mix_ok": true,
+          "proxy_used": true,
+          "units_conditional": 67
+        },
+        "B3": {
+          "C_additional": 0,
+          "C_common": 25,
+          "C_conditional": 25,
+          "C_desktop_high": 25,
+          "C_direct": 25,
+          "C_phone_low": 25,
+          "C_upper": 135,
+          "foundation_unverified_cells_m2": 0,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "prototype_counts": {
+            "R01": 5,
+            "R05": 15,
+            "R08": 5
+          },
+          "prototype_mix_ok": true,
+          "proxy_used": false,
+          "units_conditional": 40
+        }
+      },
+      "excluded_sources": {
+        "C01": {
+          "conflicting_parcel_ids": [
+            "B1_R02_005"
+          ],
+          "reason": "DIRECT_PARCEL_CONFLICT"
+        }
+      },
+      "land_accounting": {
+        "regions": {
+          "B1": {
+            "A_conditional": 0.0,
+            "A_direct": 134557.0,
+            "A_eligible": 142570.0,
+            "A_eligible_final": 134557.0,
+            "A_gross": 250000.0,
+            "A_new_road": 8013.0,
+            "A_possible": 186960.0,
+            "A_protected": 0.0,
+            "A_unavailable": 107430.0,
+            "A_unknown": 0.0,
+            "beach_encroachment_m2": 224.0,
+            "conservation_error_m2": 0.0,
+            "land_use_reference": {
+              "hard_gate": false,
+              "informational_only": true,
+              "new_road_share_pct": 3.205,
+              "reference_bands_pct": {
+                "residential": [
+                  15,
+                  30
+                ],
+                "roads": [
+                  20,
+                  30
+                ]
+              },
+              "residential_parcel_area_m2": 36456.0,
+              "residential_share_pct": 14.582
+            }
+          },
+          "B2": {
+            "A_conditional": 0.0,
+            "A_direct": 213525.0,
+            "A_eligible": 224080.0,
+            "A_eligible_final": 213525.0,
+            "A_gross": 270000.0,
+            "A_new_road": 10555.0,
+            "A_possible": 255513.0,
+            "A_protected": 0.0,
+            "A_unavailable": 45920.0,
+            "A_unknown": 0.0,
+            "beach_encroachment_m2": 0.0,
+            "conservation_error_m2": 0.0,
+            "land_use_reference": {
+              "hard_gate": false,
+              "informational_only": true,
+              "new_road_share_pct": 3.909,
+              "reference_bands_pct": {
+                "residential": [
+                  15,
+                  30
+                ],
+                "roads": [
+                  20,
+                  30
+                ]
+              },
+              "residential_parcel_area_m2": 35376.0,
+              "residential_share_pct": 13.102
+            }
+          },
+          "B3": {
+            "A_conditional": 0.0,
+            "A_direct": 53187.0,
+            "A_eligible": 53187.0,
+            "A_eligible_final": 53187.0,
+            "A_gross": 200000.0,
+            "A_new_road": 0.0,
+            "A_possible": 106742.0,
+            "A_protected": 9360.0,
+            "A_unavailable": 137453.0,
+            "A_unknown": 0.0,
+            "beach_encroachment_m2": 0.0,
+            "conservation_error_m2": 0.0,
+            "land_use_reference": {
+              "hard_gate": false,
+              "informational_only": true,
+              "new_road_share_pct": 0.0,
+              "reference_bands_pct": {
+                "residential": [
+                  15,
+                  30
+                ],
+                "roads": [
+                  20,
+                  30
+                ]
+              },
+              "residential_parcel_area_m2": 19620.0,
+              "residential_share_pct": 9.81
+            }
+          }
+        },
+        "totals": {
+          "A_conditional": 0.0,
+          "A_direct": 401269.0,
+          "A_eligible": 419837.0,
+          "A_eligible_final": 401269.0,
+          "A_gross": 720000.0,
+          "A_new_road": 18568.0,
+          "A_possible": 549215.0,
+          "A_protected": 9360.0,
+          "A_unavailable": 290803.0,
+          "A_unknown": 0.0,
+          "beach_encroachment_m2": 224.0
+        }
+      },
+      "required_engineering": [
+        "EXTERNAL_CANDIDATE_ROAD",
+        "INTERNAL_STREET"
+      ],
+      "unverified_items": [],
+      "verdict_evidence": {
+        "road_access": {
+          "B1": {
+            "C_conditional": "PENDING_T016D",
+            "bounds_internal": [
+              -10,
+              830,
+              490,
+              1330
+            ],
+            "bounds_spec": [
+              -10,
+              490,
+              830,
+              1330
+            ],
+            "conditional_access_roads": [
+              "C01",
+              "C02",
+              "X01"
+            ],
+            "dependency_chains": {
+              "C01": [
+                [
+                  "C01",
+                  "J:C01->CRS_880@START"
+                ],
+                [
+                  "C01",
+                  "J:C01->RIB_0@START"
+                ],
+                [
+                  "C01",
+                  "J:C01<->C02",
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:X01->AVE_-240@START"
+                ],
+                [
+                  "C01",
+                  "J:C01<->C02",
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:X01->CRS_880@START"
+                ],
+                [
+                  "C01",
+                  "J:C01<->C02",
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->AVE_-240@END"
+                ],
+                [
+                  "C01",
+                  "J:C01<->C02",
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->CRS_880@END"
+                ]
+              ],
+              "C02": [
+                [
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->CRS_880@START"
+                ],
+                [
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->RIB_0@START"
+                ],
+                [
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:X01->AVE_-240@START"
+                ],
+                [
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:X01->CRS_880@START"
+                ],
+                [
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->AVE_-240@END"
+                ],
+                [
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->CRS_880@END"
+                ]
+              ],
+              "X01": [
+                [
+                  "X01",
+                  "J:X01->AVE_-240@START"
+                ],
+                [
+                  "X01",
+                  "J:X01->CRS_880@START"
+                ],
+                [
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->AVE_-240@END"
+                ],
+                [
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->CRS_880@END"
+                ],
+                [
+                  "X01",
+                  "J:C02<->X01",
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->CRS_880@START"
+                ],
+                [
+                  "X01",
+                  "J:C02<->X01",
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->RIB_0@START"
+                ]
+              ]
+            },
+            "existing_access_sources": [
+              "AVE_0",
+              "AVE_110",
+              "CRS_880",
+              "RIB_0"
+            ],
+            "not_feasible_roads": [],
+            "reasons": [
+              "EXISTING_MAIN_COMPONENT_ACCESS"
+            ],
+            "unverified_roads": [],
+            "verdict": "FEASIBLE"
+          },
+          "B2": {
+            "C_conditional": "PENDING_T016D",
+            "bounds_internal": [
+              -1000,
+              720,
+              -400,
+              1170
+            ],
+            "bounds_spec": [
+              -1000,
+              -400,
+              720,
+              1170
+            ],
+            "conditional_access_roads": [
+              "H02"
+            ],
+            "dependency_chains": {
+              "H02": [
+                [
+                  "H02",
+                  "J:H02->AVE_-240@END"
+                ],
+                [
+                  "H02",
+                  "J:H02->CRS_880@END"
+                ],
+                [
+                  "H02",
+                  "J:H02<->X01",
+                  "X01",
+                  "J:X01->AVE_-240@START"
+                ],
+                [
+                  "H02",
+                  "J:H02<->X01",
+                  "X01",
+                  "J:X01->CRS_880@START"
+                ],
+                [
+                  "H02",
+                  "J:H02<->X01",
+                  "X01",
+                  "J:C02<->X01",
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->CRS_880@START"
+                ],
+                [
+                  "H02",
+                  "J:H02<->X01",
+                  "X01",
+                  "J:C02<->X01",
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->RIB_0@START"
+                ]
+              ]
+            },
+            "existing_access_sources": [],
+            "not_feasible_roads": [
+              "H01"
+            ],
+            "reasons": [
+              "CONDITIONAL_CANDIDATE_ACCESS"
+            ],
+            "unverified_roads": [],
+            "verdict": "CONDITIONAL"
+          },
+          "B3": {
+            "C_conditional": "PENDING_T016D",
+            "bounds_internal": [
+              -740,
+              -910,
+              -240,
+              -510
+            ],
+            "bounds_spec": [
+              -740,
+              -240,
+              -910,
+              -510
+            ],
+            "conditional_access_roads": [],
+            "dependency_chains": {},
+            "existing_access_sources": [
+              "AVE_-240",
+              "AVE_-420",
+              "AVE_-600",
+              "CRS_-600",
+              "CRS_-720",
+              "CRS_-880",
+              "RIB_1",
+              "U01"
+            ],
+            "not_feasible_roads": [],
+            "reasons": [
+              "EXISTING_MAIN_COMPONENT_ACCESS"
+            ],
+            "unverified_roads": [],
+            "verdict": "FEASIBLE"
+          }
+        },
+        "selected_streets_count": {
+          "B1": 3,
+          "B2": 3,
+          "B3": 0
+        }
+      },
+      "verdicts": {
+        "D3": {
+          "inputs": {
+            "buildings_40": "CONDITIONAL",
+            "land_25ha": "CONDITIONAL",
+            "road_connectivity": "CONDITIONAL"
+          },
+          "verdict": "CONDITIONAL"
+        },
+        "buildings_40": {
+          "C_conditional_total": 113,
+          "C_direct_total": 30,
+          "reason": "ALL_REGIONS_CONDITIONAL_MET",
+          "targets": {
+            "B1": 10,
+            "B2": 12,
+            "B3": 18
+          },
+          "verdict": "CONDITIONAL"
+        },
+        "buildings_60": {
+          "gates_d3": false,
+          "reason": "SEARCH_INSUFFICIENT_UNPROVEN",
+          "regions_budget_exhausted": [],
+          "regions_short": [
+            "B3"
+          ],
+          "targets": {
+            "B1": 14,
+            "B2": 18,
+            "B3": 28
+          },
+          "verdict": "UNVERIFIED"
+        },
+        "land_25ha": {
+          "A_conditional_total": 0.0,
+          "A_direct_total": 401269.0,
+          "A_gross_total": 720000.0,
+          "A_possible_total": 549215.0,
+          "reasons": [
+            "CONDITIONAL_LAND_AND_LAYOUTS_MET"
+          ],
+          "verdict": "CONDITIONAL"
+        },
+        "road_connectivity": {
+          "per_region_external": {
+            "B1": "FEASIBLE",
+            "B2": "CONDITIONAL",
+            "B3": "FEASIBLE"
+          },
+          "uses_conditional_roads_or_streets": true,
+          "verdict": "CONDITIONAL"
+        }
+      }
+    },
+    "INITIAL": {
+      "capacities": {
+        "B1": {
+          "C_additional": 14,
+          "C_common": 14,
+          "C_conditional": 14,
+          "C_desktop_high": 14,
+          "C_direct": 0,
+          "C_phone_low": 14,
+          "C_upper": 50,
+          "foundation_unverified_cells_m2": 0,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "prototype_counts": {
+            "R01": 7,
+            "R02": 7
+          },
+          "prototype_mix_ok": true,
+          "proxy_used": false,
+          "units_conditional": 14
+        },
+        "B2": {
+          "C_additional": 50,
+          "C_common": 50,
+          "C_conditional": 50,
+          "C_desktop_high": 50,
+          "C_direct": 0,
+          "C_phone_low": 50,
+          "C_upper": 188,
+          "foundation_unverified_cells_m2": 0,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "prototype_counts": {
+            "R05": 50
+          },
+          "prototype_mix_ok": true,
+          "proxy_used": true,
+          "units_conditional": 50
+        },
+        "B3": {
+          "C_additional": 0,
+          "C_common": 5,
+          "C_conditional": 5,
+          "C_desktop_high": 5,
+          "C_direct": 5,
+          "C_phone_low": 5,
+          "C_upper": 27,
+          "foundation_unverified_cells_m2": 0,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "prototype_counts": {
+            "R01": 1,
+            "R05": 3,
+            "R08": 1
+          },
+          "prototype_mix_ok": true,
+          "proxy_used": false,
+          "units_conditional": 8
+        }
+      },
+      "excluded_sources": {},
+      "land_accounting": {
+        "regions": {
+          "B1": {
+            "A_conditional": 0.0,
+            "A_direct": 51966.0,
+            "A_eligible": 60650.0,
+            "A_eligible_final": 51966.0,
+            "A_gross": 90000.0,
+            "A_new_road": 8684.0,
+            "A_possible": 87000.0,
+            "A_protected": 0.0,
+            "A_unavailable": 29350.0,
+            "A_unknown": 0.0,
+            "beach_encroachment_m2": 5218.0,
+            "conservation_error_m2": 0.0,
+            "land_use_reference": {
+              "hard_gate": false,
+              "informational_only": true,
+              "new_road_share_pct": 9.649,
+              "reference_bands_pct": {
+                "residential": [
+                  15,
+                  30
+                ],
+                "roads": [
+                  20,
+                  30
+                ]
+              },
+              "residential_parcel_area_m2": 24108.0,
+              "residential_share_pct": 26.787
+            }
+          },
+          "B2": {
+            "A_conditional": 0.0,
+            "A_direct": 90333.0,
+            "A_eligible": 99520.0,
+            "A_eligible_final": 90333.0,
+            "A_gross": 100000.0,
+            "A_new_road": 9187.0,
+            "A_possible": 99520.0,
+            "A_protected": 0.0,
+            "A_unavailable": 480.0,
+            "A_unknown": 0.0,
+            "beach_encroachment_m2": 0.0,
+            "conservation_error_m2": 0.0,
+            "land_use_reference": {
+              "hard_gate": false,
+              "informational_only": true,
+              "new_road_share_pct": 9.187,
+              "reference_bands_pct": {
+                "residential": [
+                  15,
+                  30
+                ],
+                "roads": [
+                  20,
+                  30
+                ]
+              },
+              "residential_parcel_area_m2": 26400.0,
+              "residential_share_pct": 26.4
+            }
+          },
+          "B3": {
+            "A_conditional": 0.0,
+            "A_direct": 16281.0,
+            "A_eligible": 16281.0,
+            "A_eligible_final": 16281.0,
+            "A_gross": 60000.0,
+            "A_new_road": 0.0,
+            "A_possible": 22156.0,
+            "A_protected": 6840.0,
+            "A_unavailable": 36879.0,
+            "A_unknown": 0.0,
+            "beach_encroachment_m2": 0.0,
+            "conservation_error_m2": 0.0,
+            "land_use_reference": {
+              "hard_gate": false,
+              "informational_only": true,
+              "new_road_share_pct": 0.0,
+              "reference_bands_pct": {
+                "residential": [
+                  15,
+                  30
+                ],
+                "roads": [
+                  20,
+                  30
+                ]
+              },
+              "residential_parcel_area_m2": 3924.0,
+              "residential_share_pct": 6.54
+            }
+          }
+        },
+        "totals": {
+          "A_conditional": 0.0,
+          "A_direct": 158580.0,
+          "A_eligible": 176451.0,
+          "A_eligible_final": 158580.0,
+          "A_gross": 250000.0,
+          "A_new_road": 17871.0,
+          "A_possible": 208676.0,
+          "A_protected": 6840.0,
+          "A_unavailable": 66709.0,
+          "A_unknown": 0.0,
+          "beach_encroachment_m2": 5218.0
+        }
+      },
+      "required_engineering": [
+        "EXTERNAL_CANDIDATE_ROAD",
+        "INTERNAL_STREET"
+      ],
+      "unverified_items": [],
+      "verdict_evidence": {
+        "road_access": {
+          "B1": {
+            "C_conditional": "PENDING_T016D",
+            "bounds_internal": [
+              90,
+              930,
+              390,
+              1230
+            ],
+            "bounds_spec": [
+              90,
+              390,
+              930,
+              1230
+            ],
+            "conditional_access_roads": [
+              "C01",
+              "C02",
+              "X01"
+            ],
+            "dependency_chains": {
+              "C01": [
+                [
+                  "C01",
+                  "J:C01->CRS_880@START"
+                ],
+                [
+                  "C01",
+                  "J:C01->RIB_0@START"
+                ],
+                [
+                  "C01",
+                  "J:C01<->C02",
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:X01->AVE_-240@START"
+                ],
+                [
+                  "C01",
+                  "J:C01<->C02",
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:X01->CRS_880@START"
+                ],
+                [
+                  "C01",
+                  "J:C01<->C02",
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->AVE_-240@END"
+                ],
+                [
+                  "C01",
+                  "J:C01<->C02",
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->CRS_880@END"
+                ]
+              ],
+              "C02": [
+                [
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->CRS_880@START"
+                ],
+                [
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->RIB_0@START"
+                ],
+                [
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:X01->AVE_-240@START"
+                ],
+                [
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:X01->CRS_880@START"
+                ],
+                [
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->AVE_-240@END"
+                ],
+                [
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->CRS_880@END"
+                ]
+              ],
+              "X01": [
+                [
+                  "X01",
+                  "J:X01->AVE_-240@START"
+                ],
+                [
+                  "X01",
+                  "J:X01->CRS_880@START"
+                ],
+                [
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->AVE_-240@END"
+                ],
+                [
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->CRS_880@END"
+                ],
+                [
+                  "X01",
+                  "J:C02<->X01",
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->CRS_880@START"
+                ],
+                [
+                  "X01",
+                  "J:C02<->X01",
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->RIB_0@START"
+                ]
+              ]
+            },
+            "existing_access_sources": [],
+            "not_feasible_roads": [],
+            "reasons": [
+              "CONDITIONAL_CANDIDATE_ACCESS"
+            ],
+            "unverified_roads": [],
+            "verdict": "CONDITIONAL"
+          },
+          "B2": {
+            "C_conditional": "PENDING_T016D",
+            "bounds_internal": [
+              -900,
+              820,
+              -500,
+              1070
+            ],
+            "bounds_spec": [
+              -900,
+              -500,
+              820,
+              1070
+            ],
+            "conditional_access_roads": [
+              "H02"
+            ],
+            "dependency_chains": {
+              "H02": [
+                [
+                  "H02",
+                  "J:H02->AVE_-240@END"
+                ],
+                [
+                  "H02",
+                  "J:H02->CRS_880@END"
+                ],
+                [
+                  "H02",
+                  "J:H02<->X01",
+                  "X01",
+                  "J:X01->AVE_-240@START"
+                ],
+                [
+                  "H02",
+                  "J:H02<->X01",
+                  "X01",
+                  "J:X01->CRS_880@START"
+                ],
+                [
+                  "H02",
+                  "J:H02<->X01",
+                  "X01",
+                  "J:C02<->X01",
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->CRS_880@START"
+                ],
+                [
+                  "H02",
+                  "J:H02<->X01",
+                  "X01",
+                  "J:C02<->X01",
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->RIB_0@START"
+                ]
+              ]
+            },
+            "existing_access_sources": [],
+            "not_feasible_roads": [
+              "H01"
+            ],
+            "reasons": [
+              "CONDITIONAL_CANDIDATE_ACCESS"
+            ],
+            "unverified_roads": [],
+            "verdict": "CONDITIONAL"
+          },
+          "B3": {
+            "C_conditional": "PENDING_T016D",
+            "bounds_internal": [
+              -640,
+              -810,
+              -340,
+              -610
+            ],
+            "bounds_spec": [
+              -640,
+              -340,
+              -810,
+              -610
+            ],
+            "conditional_access_roads": [],
+            "dependency_chains": {},
+            "existing_access_sources": [
+              "AVE_-420",
+              "AVE_-600",
+              "CRS_-600",
+              "CRS_-720",
+              "U01"
+            ],
+            "not_feasible_roads": [],
+            "reasons": [
+              "EXISTING_MAIN_COMPONENT_ACCESS"
+            ],
+            "unverified_roads": [],
+            "verdict": "FEASIBLE"
+          }
+        },
+        "selected_streets_count": {
+          "B1": 3,
+          "B2": 3,
+          "B3": 0
+        }
+      },
+      "verdicts": {
+        "D3": {
+          "inputs": {
+            "buildings_40": "UNVERIFIED",
+            "land_25ha": "NOT FEASIBLE WITHIN AUDITED BOUNDARIES",
+            "road_connectivity": "CONDITIONAL"
+          },
+          "verdict": "NOT FEASIBLE WITHIN AUDITED BOUNDARIES"
+        },
+        "buildings_40": {
+          "C_conditional_total": 69,
+          "C_direct_total": 5,
+          "reason": "SEARCH_INSUFFICIENT_UNPROVEN",
+          "regions_budget_exhausted": [],
+          "regions_short": [
+            "B3"
+          ],
+          "targets": {
+            "B1": 10,
+            "B2": 12,
+            "B3": 18
+          },
+          "verdict": "UNVERIFIED"
+        },
+        "buildings_60": {
+          "gates_d3": false,
+          "reason": "C_UPPER_BELOW_TARGET",
+          "regions_below_c_upper": [
+            "B3"
+          ],
+          "targets": {
+            "B1": 14,
+            "B2": 18,
+            "B3": 28
+          },
+          "verdict": "NOT FEASIBLE WITHIN AUDITED BOUNDARIES"
+        },
+        "land_25ha": {
+          "A_conditional_total": 0.0,
+          "A_direct_total": 158580.0,
+          "A_gross_total": 250000.0,
+          "A_possible_total": 208676.0,
+          "reasons": [
+            "PROVEN_AREA_BELOW_25HA"
+          ],
+          "verdict": "NOT FEASIBLE WITHIN AUDITED BOUNDARIES"
+        },
+        "road_connectivity": {
+          "per_region_external": {
+            "B1": "CONDITIONAL",
+            "B2": "CONDITIONAL",
+            "B3": "FEASIBLE"
+          },
+          "uses_conditional_roads_or_streets": true,
+          "verdict": "CONDITIONAL"
+        }
+      }
+    },
+    "REVISED": {
+      "capacities": {
+        "B1": {
+          "C_additional": 16,
+          "C_common": 21,
+          "C_conditional": 21,
+          "C_desktop_high": 21,
+          "C_direct": 5,
+          "C_phone_low": 21,
+          "C_upper": 100,
+          "foundation_unverified_cells_m2": 0,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "prototype_counts": {
+            "R01": 10,
+            "R02": 11
+          },
+          "prototype_mix_ok": true,
+          "proxy_used": false,
+          "units_conditional": 21
+        },
+        "B2": {
+          "C_additional": 59,
+          "C_common": 59,
+          "C_conditional": 59,
+          "C_desktop_high": 59,
+          "C_direct": 0,
+          "C_phone_low": 59,
+          "C_upper": 329,
+          "foundation_unverified_cells_m2": 0,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "prototype_counts": {
+            "R05": 59
+          },
+          "prototype_mix_ok": true,
+          "proxy_used": true,
+          "units_conditional": 59
+        },
+        "B3": {
+          "C_additional": 0,
+          "C_common": 17,
+          "C_conditional": 17,
+          "C_desktop_high": 17,
+          "C_direct": 17,
+          "C_phone_low": 17,
+          "C_upper": 40,
+          "foundation_unverified_cells_m2": 0,
+          "preset_validation": {
+            "DESKTOP_HIGH": {
+              "errors": [],
+              "ok": true
+            },
+            "PHONE_LOW": {
+              "errors": [],
+              "ok": true
+            }
+          },
+          "prototype_counts": {
+            "R01": 4,
+            "R05": 9,
+            "R08": 4
+          },
+          "prototype_mix_ok": true,
+          "proxy_used": false,
+          "units_conditional": 29
+        }
+      },
+      "excluded_sources": {
+        "C01": {
+          "conflicting_parcel_ids": [
+            "B1_R02_005"
+          ],
+          "reason": "DIRECT_PARCEL_CONFLICT"
+        }
+      },
+      "land_accounting": {
+        "regions": {
+          "B1": {
+            "A_conditional": 0.0,
+            "A_direct": 129392.0,
+            "A_eligible": 137405.0,
+            "A_eligible_final": 129392.0,
+            "A_gross": 180000.0,
+            "A_new_road": 8013.0,
+            "A_possible": 172845.0,
+            "A_protected": 0.0,
+            "A_unavailable": 42595.0,
+            "A_unknown": 0.0,
+            "beach_encroachment_m2": 224.0,
+            "conservation_error_m2": 0.0,
+            "land_use_reference": {
+              "hard_gate": false,
+              "informational_only": true,
+              "new_road_share_pct": 4.452,
+              "reference_bands_pct": {
+                "residential": [
+                  15,
+                  30
+                ],
+                "roads": [
+                  20,
+                  30
+                ]
+              },
+              "residential_parcel_area_m2": 36456.0,
+              "residential_share_pct": 20.253
+            }
+          },
+          "B2": {
+            "A_conditional": 0.0,
+            "A_direct": 147156.0,
+            "A_eligible": 157000.0,
+            "A_eligible_final": 147156.0,
+            "A_gross": 175000.0,
+            "A_new_road": 9844.0,
+            "A_possible": 173749.0,
+            "A_protected": 0.0,
+            "A_unavailable": 18000.0,
+            "A_unknown": 0.0,
+            "beach_encroachment_m2": 0.0,
+            "conservation_error_m2": 0.0,
+            "land_use_reference": {
+              "hard_gate": false,
+              "informational_only": true,
+              "new_road_share_pct": 5.625,
+              "reference_bands_pct": {
+                "residential": [
+                  15,
+                  30
+                ],
+                "roads": [
+                  20,
+                  30
+                ]
+              },
+              "residential_parcel_area_m2": 31152.0,
+              "residential_share_pct": 17.801
+            }
+          },
+          "B3": {
+            "A_conditional": 0.0,
+            "A_direct": 29310.0,
+            "A_eligible": 29310.0,
+            "A_eligible_final": 29310.0,
+            "A_gross": 60000.0,
+            "A_new_road": 0.0,
+            "A_possible": 31720.0,
+            "A_protected": 9360.0,
+            "A_unavailable": 21330.0,
+            "A_unknown": 0.0,
+            "beach_encroachment_m2": 0.0,
+            "conservation_error_m2": 0.0,
+            "land_use_reference": {
+              "hard_gate": false,
+              "informational_only": true,
+              "new_road_share_pct": 0.0,
+              "reference_bands_pct": {
+                "residential": [
+                  15,
+                  30
+                ],
+                "roads": [
+                  20,
+                  30
+                ]
+              },
+              "residential_parcel_area_m2": 14112.0,
+              "residential_share_pct": 23.52
+            }
+          }
+        },
+        "totals": {
+          "A_conditional": 0.0,
+          "A_direct": 305858.0,
+          "A_eligible": 323715.0,
+          "A_eligible_final": 305858.0,
+          "A_gross": 415000.0,
+          "A_new_road": 17857.0,
+          "A_possible": 378314.0,
+          "A_protected": 9360.0,
+          "A_unavailable": 81925.0,
+          "A_unknown": 0.0,
+          "beach_encroachment_m2": 224.0
+        }
+      },
+      "required_engineering": [
+        "EXTERNAL_CANDIDATE_ROAD",
+        "INTERNAL_STREET"
+      ],
+      "unverified_items": [],
+      "verdict_evidence": {
+        "road_access": {
+          "B1": {
+            "C_conditional": "PENDING_T016D",
+            "bounds_internal": [
+              -10,
+              880,
+              390,
+              1330
+            ],
+            "bounds_spec": [
+              -10,
+              390,
+              880,
+              1330
+            ],
+            "conditional_access_roads": [
+              "C01",
+              "C02",
+              "X01"
+            ],
+            "dependency_chains": {
+              "C01": [
+                [
+                  "C01",
+                  "J:C01->CRS_880@START"
+                ],
+                [
+                  "C01",
+                  "J:C01->RIB_0@START"
+                ],
+                [
+                  "C01",
+                  "J:C01<->C02",
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:X01->AVE_-240@START"
+                ],
+                [
+                  "C01",
+                  "J:C01<->C02",
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:X01->CRS_880@START"
+                ],
+                [
+                  "C01",
+                  "J:C01<->C02",
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->AVE_-240@END"
+                ],
+                [
+                  "C01",
+                  "J:C01<->C02",
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->CRS_880@END"
+                ]
+              ],
+              "C02": [
+                [
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->CRS_880@START"
+                ],
+                [
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->RIB_0@START"
+                ],
+                [
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:X01->AVE_-240@START"
+                ],
+                [
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:X01->CRS_880@START"
+                ],
+                [
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->AVE_-240@END"
+                ],
+                [
+                  "C02",
+                  "J:C02<->X01",
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->CRS_880@END"
+                ]
+              ],
+              "X01": [
+                [
+                  "X01",
+                  "J:X01->AVE_-240@START"
+                ],
+                [
+                  "X01",
+                  "J:X01->CRS_880@START"
+                ],
+                [
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->AVE_-240@END"
+                ],
+                [
+                  "X01",
+                  "J:H02<->X01",
+                  "H02",
+                  "J:H02->CRS_880@END"
+                ],
+                [
+                  "X01",
+                  "J:C02<->X01",
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->CRS_880@START"
+                ],
+                [
+                  "X01",
+                  "J:C02<->X01",
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->RIB_0@START"
+                ]
+              ]
+            },
+            "existing_access_sources": [
+              "AVE_0",
+              "AVE_110",
+              "CRS_880",
+              "RIB_0"
+            ],
+            "not_feasible_roads": [],
+            "reasons": [
+              "EXISTING_MAIN_COMPONENT_ACCESS"
+            ],
+            "unverified_roads": [],
+            "verdict": "FEASIBLE"
+          },
+          "B2": {
+            "C_conditional": "PENDING_T016D",
+            "bounds_internal": [
+              -950,
+              770,
+              -450,
+              1120
+            ],
+            "bounds_spec": [
+              -950,
+              -450,
+              770,
+              1120
+            ],
+            "conditional_access_roads": [
+              "H02"
+            ],
+            "dependency_chains": {
+              "H02": [
+                [
+                  "H02",
+                  "J:H02->AVE_-240@END"
+                ],
+                [
+                  "H02",
+                  "J:H02->CRS_880@END"
+                ],
+                [
+                  "H02",
+                  "J:H02<->X01",
+                  "X01",
+                  "J:X01->AVE_-240@START"
+                ],
+                [
+                  "H02",
+                  "J:H02<->X01",
+                  "X01",
+                  "J:X01->CRS_880@START"
+                ],
+                [
+                  "H02",
+                  "J:H02<->X01",
+                  "X01",
+                  "J:C02<->X01",
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->CRS_880@START"
+                ],
+                [
+                  "H02",
+                  "J:H02<->X01",
+                  "X01",
+                  "J:C02<->X01",
+                  "C02",
+                  "J:C01<->C02",
+                  "C01",
+                  "J:C01->RIB_0@START"
+                ]
+              ]
+            },
+            "existing_access_sources": [],
+            "not_feasible_roads": [
+              "H01"
+            ],
+            "reasons": [
+              "CONDITIONAL_CANDIDATE_ACCESS"
+            ],
+            "unverified_roads": [],
+            "verdict": "CONDITIONAL"
+          },
+          "B3": {
+            "C_conditional": "PENDING_T016D",
+            "bounds_internal": [
+              -640,
+              -860,
+              -240,
+              -710
+            ],
+            "bounds_spec": [
+              -640,
+              -240,
+              -860,
+              -710
+            ],
+            "conditional_access_roads": [],
+            "dependency_chains": {},
+            "existing_access_sources": [
+              "AVE_-240",
+              "AVE_-420",
+              "AVE_-600",
+              "CRS_-720",
+              "U01"
+            ],
+            "not_feasible_roads": [],
+            "reasons": [
+              "EXISTING_MAIN_COMPONENT_ACCESS"
+            ],
+            "unverified_roads": [],
+            "verdict": "FEASIBLE"
+          }
+        },
+        "selected_streets_count": {
+          "B1": 3,
+          "B2": 3,
+          "B3": 0
+        }
+      },
+      "verdicts": {
+        "D3": {
+          "inputs": {
+            "buildings_40": "UNVERIFIED",
+            "land_25ha": "CONDITIONAL",
+            "road_connectivity": "CONDITIONAL"
+          },
+          "verdict": "UNVERIFIED"
+        },
+        "buildings_40": {
+          "C_conditional_total": 97,
+          "C_direct_total": 22,
+          "reason": "SEARCH_INSUFFICIENT_UNPROVEN",
+          "regions_budget_exhausted": [],
+          "regions_short": [
+            "B3"
+          ],
+          "targets": {
+            "B1": 10,
+            "B2": 12,
+            "B3": 18
+          },
+          "verdict": "UNVERIFIED"
+        },
+        "buildings_60": {
+          "gates_d3": false,
+          "reason": "SEARCH_INSUFFICIENT_UNPROVEN",
+          "regions_budget_exhausted": [],
+          "regions_short": [
+            "B3"
+          ],
+          "targets": {
+            "B1": 14,
+            "B2": 18,
+            "B3": 28
+          },
+          "verdict": "UNVERIFIED"
+        },
+        "land_25ha": {
+          "A_conditional_total": 0.0,
+          "A_direct_total": 305858.0,
+          "A_gross_total": 415000.0,
+          "A_possible_total": 378314.0,
+          "reasons": [
+            "CONDITIONAL_LAND_AND_LAYOUTS_MET"
+          ],
+          "verdict": "CONDITIONAL"
+        },
+        "road_connectivity": {
+          "per_region_external": {
+            "B1": "FEASIBLE",
+            "B2": "CONDITIONAL",
+            "B3": "FEASIBLE"
+          },
+          "uses_conditional_roads_or_streets": true,
+          "verdict": "CONDITIONAL"
+        }
+      }
+    }
+  },
+  "schema_version": 1,
+  "sources": {
+    "capacity_inventory_sha256": "0efa1a1763b64b91ac3ab671b0d8d7360c939c32c26190d4b16e8a2a5246bc1a",
+    "parcel_candidates_sha256": "e27f457a95cbe04d529563f3bc002425e8e818efc7c5571f1b741b0f3722a586",
+    "road_survey_sha256": "4afd52d2b51273f1e890aeda3c3ade22927124926c12a1e3aa3cefe30f3eeb27",
+    "t016b_analyzer_version": "we01b-1.0",
+    "t016c_analyzer_version": "we01c-1.0"
+  }
+}
