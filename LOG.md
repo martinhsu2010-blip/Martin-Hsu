@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-28 | (docs/tooling only, no game release) | Claude | base c7c9240 | T-017 WE-02 deliverables built (D-062): `tools/we02/` generator, independent verifier (430 checks, 0 fails) and check with negative controls wired into CI; `specs/we02/` masterplan.md, district_plan.json, masterplan.svg, dependency_matrix.md, we02_validation.md; Phase 1 40 buildings / 52 units, Phase 2 cumulative 57 (B3 short R01/R05/R08 1 each, UNVERIFIED); ChatGPT read-only review and Martin MP17 pending; no game change, no CACHE bump
 - 2026-11-28 | (docs only, no game release) | Claude | base 5e1f72a | T-017 (WE-02 World Expansion Masterplan, Option B ENVELOPE) registered (D-061): spec v1.0 + ChatGPT draft v1.1 + G0 reviews; Claude-owned `tools/we02/` and `specs/we02/` pending; no game change, no CACHE bump; WE-03..WE-09 not authorized
 - 2026-11-28 | (docs only, no game release) | Claude | base 378ac4b | WE-01 closed (D-060): Gate B8 baseline measured, B10 final report checked, B11 accepted by Martin; final bundle stored in `specs/we01-final/`; no game change, no CACHE bump; WE-02..WE-09 not authorized
 - 2026-11-28 | (docs/CI only, no game release) | Claude (impl. Gemini) | PR #124 eb1176f | T-016E WE-01E final survey map and report builder merged (D-059); check wired into CI; B8, B10, B11 pending

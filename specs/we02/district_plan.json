@@ -1,0 +1,2952 @@
+{
+ "base_sha": "84319439243b51aa8d119e33eb62a0637feea887",
+ "coordinate_formats": {
+  "bounds_internal": "[xmin,zmin,xmax,zmax]",
+  "bounds_spec": "[xmin,xmax,zmin,zmax]",
+  "polygon": "[[x,z],...] (rectangle of bounds_internal; orientation is 0 or 90 in the formal data)"
+ },
+ "excluded_never_planned": {
+  "AVE_110": "optional extension, UNVERIFIED",
+  "C01": "excluded in ENVELOPE (conflict B1_R02_005)",
+  "H01": "NOT_FEASIBLE (grade 135.633 %)",
+  "U01": "existing road, not counted as new"
+ },
+ "inputs": {
+  "conditional_parcels.json": "51d8eb8e6ac60b7f36bf0ba86895aa069befe331f37d5d54e04ad1de2ded0124",
+  "feasibility.json": "6131fb4a11ab2e43ed9799307158b18b61c2e469e97f85ed78e202dbd69832b4",
+  "internal_streets.json": "adfd26957555bffbb7e5a3d9e216a4a1ecd47c871be35bb63fc8a57611c2274e",
+  "map_geometry.json": "c17cc1ce8080627e4744394e5ffefdec7e7b6d516f7eb8fd25c5f2f605e1460e",
+  "road_survey.json": "4afd52d2b51273f1e890aeda3c3ade22927124926c12a1e3aa3cefe30f3eeb27"
+ },
+ "kind": "we02_district_plan",
+ "limitations": [
+  "B2 plan is the R05 flat proxy; R06 has no engineering verdict",
+  "all roads and streets are CONDITIONAL_VERIFIED, not built",
+  "Phase 2 B3 target 28 is UNVERIFIED: verified direct parcels 25, short R01 1, R05 1, R08 1",
+  "B1 Phase 1 R01 has zero margin (exactly 5 available with X01 + ENVELOPE_B1_ST_0305)",
+  "headless numbers are not device FPS; 30 FPS on phone and tablet is unverified"
+ ],
+ "parcels": [
+  {
+   "area_m2": 1428,
+   "bounds_internal": [
+    38,
+    897,
+    80,
+    931
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B1_R01_002",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     38,
+     897
+    ],
+    [
+     80,
+     897
+    ],
+    [
+     80,
+     931
+    ],
+    [
+     38,
+     931
+    ]
+   ],
+   "prototype_id": "R01",
+   "region": "B1",
+   "source_road_id": "CRS_880",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 1428,
+   "bounds_internal": [
+    128,
+    897,
+    170,
+    931
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B1_R01_004",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     128,
+     897
+    ],
+    [
+     170,
+     897
+    ],
+    [
+     170,
+     931
+    ],
+    [
+     128,
+     931
+    ]
+   ],
+   "prototype_id": "R01",
+   "region": "B1",
+   "source_road_id": "CRS_880",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 1428,
+   "bounds_internal": [
+    -10,
+    966,
+    32,
+    1000
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "X01",
+    "J:X01->AVE_-240@START"
+   ],
+   "engineering_required": [
+    "X01"
+   ],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B1_R01_006",
+   "phase": 1,
+   "plan_status": "CONDITIONAL",
+   "polygon": [
+    [
+     -10,
+     966
+    ],
+    [
+     32,
+     966
+    ],
+    [
+     32,
+     1000
+    ],
+    [
+     -10,
+     1000
+    ]
+   ],
+   "prototype_id": "R01",
+   "region": "B1",
+   "source_road_id": "X01",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 1428,
+   "bounds_internal": [
+    116,
+    966,
+    158,
+    1000
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "ENVELOPE_B1_ST_0085",
+    "C02",
+    "J:C02<->X01",
+    "X01",
+    "J:X01->AVE_-240@START"
+   ],
+   "engineering_required": [
+    "C02",
+    "ENVELOPE_B1_ST_0085",
+    "X01"
+   ],
+   "internal_street_id": "ENVELOPE_B1_ST_0085",
+   "orientation": 0,
+   "parcel_id": "B1_R01_008",
+   "phase": 2,
+   "plan_status": "CONDITIONAL",
+   "polygon": [
+    [
+     116,
+     966
+    ],
+    [
+     158,
+     966
+    ],
+    [
+     158,
+     1000
+    ],
+    [
+     116,
+     1000
+    ]
+   ],
+   "prototype_id": "R01",
+   "region": "B1",
+   "source_road_id": "C02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "INTERNAL_STREET_REQUIRED"
+  },
+  {
+   "area_m2": 1428,
+   "bounds_internal": [
+    53,
+    1008,
+    95,
+    1042
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "ENVELOPE_B1_ST_0305",
+    "X01",
+    "J:X01->AVE_-240@START"
+   ],
+   "engineering_required": [
+    "ENVELOPE_B1_ST_0305",
+    "X01"
+   ],
+   "internal_street_id": "ENVELOPE_B1_ST_0305",
+   "orientation": 0,
+   "parcel_id": "B1_R01_012",
+   "phase": 1,
+   "plan_status": "CONDITIONAL",
+   "polygon": [
+    [
+     53,
+     1008
+    ],
+    [
+     95,
+     1008
+    ],
+    [
+     95,
+     1042
+    ],
+    [
+     53,
+     1042
+    ]
+   ],
+   "prototype_id": "R01",
+   "region": "B1",
+   "source_road_id": "X01",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "INTERNAL_STREET_REQUIRED"
+  },
+  {
+   "area_m2": 1428,
+   "bounds_internal": [
+    116,
+    1042,
+    158,
+    1076
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "ENVELOPE_B1_ST_0085",
+    "C02",
+    "J:C02<->X01",
+    "X01",
+    "J:X01->AVE_-240@START"
+   ],
+   "engineering_required": [
+    "C02",
+    "ENVELOPE_B1_ST_0085",
+    "X01"
+   ],
+   "internal_street_id": "ENVELOPE_B1_ST_0085",
+   "orientation": 0,
+   "parcel_id": "B1_R01_016",
+   "phase": 2,
+   "plan_status": "CONDITIONAL",
+   "polygon": [
+    [
+     116,
+     1042
+    ],
+    [
+     158,
+     1042
+    ],
+    [
+     158,
+     1076
+    ],
+    [
+     116,
+     1076
+    ]
+   ],
+   "prototype_id": "R01",
+   "region": "B1",
+   "source_road_id": "C02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "INTERNAL_STREET_REQUIRED"
+  },
+  {
+   "area_m2": 1428,
+   "bounds_internal": [
+    53,
+    1084,
+    95,
+    1118
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "ENVELOPE_B1_ST_0305",
+    "X01",
+    "J:X01->AVE_-240@START"
+   ],
+   "engineering_required": [
+    "ENVELOPE_B1_ST_0305",
+    "X01"
+   ],
+   "internal_street_id": "ENVELOPE_B1_ST_0305",
+   "orientation": 0,
+   "parcel_id": "B1_R01_020",
+   "phase": 1,
+   "plan_status": "CONDITIONAL",
+   "polygon": [
+    [
+     53,
+     1084
+    ],
+    [
+     95,
+     1084
+    ],
+    [
+     95,
+     1118
+    ],
+    [
+     53,
+     1118
+    ]
+   ],
+   "prototype_id": "R01",
+   "region": "B1",
+   "source_road_id": "X01",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "INTERNAL_STREET_REQUIRED"
+  },
+  {
+   "area_m2": 2016,
+   "bounds_internal": [
+    -10,
+    897,
+    38,
+    939
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B1_R02_001",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -10,
+     897
+    ],
+    [
+     38,
+     897
+    ],
+    [
+     38,
+     939
+    ],
+    [
+     -10,
+     939
+    ]
+   ],
+   "prototype_id": "R02",
+   "region": "B1",
+   "source_road_id": "CRS_880",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 2016,
+   "bounds_internal": [
+    80,
+    897,
+    128,
+    939
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B1_R02_003",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     80,
+     897
+    ],
+    [
+     128,
+     897
+    ],
+    [
+     128,
+     939
+    ],
+    [
+     80,
+     939
+    ]
+   ],
+   "prototype_id": "R02",
+   "region": "B1",
+   "source_road_id": "CRS_880",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 2016,
+   "bounds_internal": [
+    170,
+    897,
+    218,
+    939
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B1_R02_005",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     170,
+     897
+    ],
+    [
+     218,
+     897
+    ],
+    [
+     218,
+     939
+    ],
+    [
+     170,
+     939
+    ]
+   ],
+   "prototype_id": "R02",
+   "region": "B1",
+   "source_road_id": "CRS_880",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 2016,
+   "bounds_internal": [
+    53,
+    966,
+    101,
+    1008
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "ENVELOPE_B1_ST_0305",
+    "X01",
+    "J:X01->AVE_-240@START"
+   ],
+   "engineering_required": [
+    "ENVELOPE_B1_ST_0305",
+    "X01"
+   ],
+   "internal_street_id": "ENVELOPE_B1_ST_0305",
+   "orientation": 0,
+   "parcel_id": "B1_R02_007",
+   "phase": 1,
+   "plan_status": "CONDITIONAL",
+   "polygon": [
+    [
+     53,
+     966
+    ],
+    [
+     101,
+     966
+    ],
+    [
+     101,
+     1008
+    ],
+    [
+     53,
+     1008
+    ]
+   ],
+   "prototype_id": "R02",
+   "region": "B1",
+   "source_road_id": "X01",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "INTERNAL_STREET_REQUIRED"
+  },
+  {
+   "area_m2": 2016,
+   "bounds_internal": [
+    -8,
+    1000,
+    40,
+    1042
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "ENVELOPE_B1_ST_0305",
+    "X01",
+    "J:X01->AVE_-240@START"
+   ],
+   "engineering_required": [
+    "ENVELOPE_B1_ST_0305",
+    "X01"
+   ],
+   "internal_street_id": "ENVELOPE_B1_ST_0305",
+   "orientation": 0,
+   "parcel_id": "B1_R02_009",
+   "phase": 1,
+   "plan_status": "CONDITIONAL",
+   "polygon": [
+    [
+     -8,
+     1000
+    ],
+    [
+     40,
+     1000
+    ],
+    [
+     40,
+     1042
+    ],
+    [
+     -8,
+     1042
+    ]
+   ],
+   "prototype_id": "R02",
+   "region": "B1",
+   "source_road_id": "X01",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "INTERNAL_STREET_REQUIRED"
+  },
+  {
+   "area_m2": 2016,
+   "bounds_internal": [
+    116,
+    1000,
+    164,
+    1042
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "ENVELOPE_B1_ST_0085",
+    "C02",
+    "J:C02<->X01",
+    "X01",
+    "J:X01->AVE_-240@START"
+   ],
+   "engineering_required": [
+    "C02",
+    "ENVELOPE_B1_ST_0085",
+    "X01"
+   ],
+   "internal_street_id": "ENVELOPE_B1_ST_0085",
+   "orientation": 0,
+   "parcel_id": "B1_R02_011",
+   "phase": 2,
+   "plan_status": "CONDITIONAL",
+   "polygon": [
+    [
+     116,
+     1000
+    ],
+    [
+     164,
+     1000
+    ],
+    [
+     164,
+     1042
+    ],
+    [
+     116,
+     1042
+    ]
+   ],
+   "prototype_id": "R02",
+   "region": "B1",
+   "source_road_id": "C02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "INTERNAL_STREET_REQUIRED"
+  },
+  {
+   "area_m2": 2016,
+   "bounds_internal": [
+    -8,
+    1042,
+    40,
+    1084
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "ENVELOPE_B1_ST_0305",
+    "X01",
+    "J:X01->AVE_-240@START"
+   ],
+   "engineering_required": [
+    "ENVELOPE_B1_ST_0305",
+    "X01"
+   ],
+   "internal_street_id": "ENVELOPE_B1_ST_0305",
+   "orientation": 0,
+   "parcel_id": "B1_R02_013",
+   "phase": 2,
+   "plan_status": "CONDITIONAL",
+   "polygon": [
+    [
+     -8,
+     1042
+    ],
+    [
+     40,
+     1042
+    ],
+    [
+     40,
+     1084
+    ],
+    [
+     -8,
+     1084
+    ]
+   ],
+   "prototype_id": "R02",
+   "region": "B1",
+   "source_road_id": "X01",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "INTERNAL_STREET_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -446,
+    969,
+    -424,
+    993
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B2_R05_037",
+   "phase": 1,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -446,
+     969
+    ],
+    [
+     -424,
+     969
+    ],
+    [
+     -424,
+     993
+    ],
+    [
+     -446,
+     993
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -535,
+    976,
+    -513,
+    1000
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B2_R05_040",
+   "phase": 1,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -535,
+     976
+    ],
+    [
+     -513,
+     976
+    ],
+    [
+     -513,
+     1000
+    ],
+    [
+     -535,
+     1000
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -560,
+    978,
+    -538,
+    1002
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B2_R05_041",
+   "phase": 1,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -560,
+     978
+    ],
+    [
+     -538,
+     978
+    ],
+    [
+     -538,
+     1002
+    ],
+    [
+     -560,
+     1002
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -586,
+    980,
+    -564,
+    1004
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B2_R05_042",
+   "phase": 1,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -586,
+     980
+    ],
+    [
+     -564,
+     980
+    ],
+    [
+     -564,
+     1004
+    ],
+    [
+     -586,
+     1004
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -611,
+    982,
+    -589,
+    1006
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B2_R05_044",
+   "phase": 1,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -611,
+     982
+    ],
+    [
+     -589,
+     982
+    ],
+    [
+     -589,
+     1006
+    ],
+    [
+     -611,
+     1006
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -636,
+    984,
+    -614,
+    1008
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B2_R05_045",
+   "phase": 1,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -636,
+     984
+    ],
+    [
+     -614,
+     984
+    ],
+    [
+     -614,
+     1008
+    ],
+    [
+     -636,
+     1008
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -662,
+    986,
+    -640,
+    1010
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B2_R05_046",
+   "phase": 1,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -662,
+     986
+    ],
+    [
+     -640,
+     986
+    ],
+    [
+     -640,
+     1010
+    ],
+    [
+     -662,
+     1010
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -687,
+    988,
+    -665,
+    1012
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B2_R05_048",
+   "phase": 1,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -687,
+     988
+    ],
+    [
+     -665,
+     988
+    ],
+    [
+     -665,
+     1012
+    ],
+    [
+     -687,
+     1012
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -432,
+    1007,
+    -408,
+    1029
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B2_R05_051",
+   "phase": 1,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -432,
+     1007
+    ],
+    [
+     -408,
+     1007
+    ],
+    [
+     -408,
+     1029
+    ],
+    [
+     -432,
+     1029
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -457,
+    1009,
+    -433,
+    1031
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B2_R05_052",
+   "phase": 1,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -457,
+     1009
+    ],
+    [
+     -433,
+     1009
+    ],
+    [
+     -433,
+     1031
+    ],
+    [
+     -457,
+     1031
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -483,
+    1011,
+    -459,
+    1033
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B2_R05_054",
+   "phase": 1,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -483,
+     1011
+    ],
+    [
+     -459,
+     1011
+    ],
+    [
+     -459,
+     1033
+    ],
+    [
+     -483,
+     1033
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -508,
+    1013,
+    -484,
+    1035
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B2_R05_055",
+   "phase": 1,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -508,
+     1013
+    ],
+    [
+     -484,
+     1013
+    ],
+    [
+     -484,
+     1035
+    ],
+    [
+     -508,
+     1035
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -533,
+    1015,
+    -509,
+    1037
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B2_R05_056",
+   "phase": 2,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -533,
+     1015
+    ],
+    [
+     -509,
+     1015
+    ],
+    [
+     -509,
+     1037
+    ],
+    [
+     -533,
+     1037
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -559,
+    1017,
+    -535,
+    1039
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B2_R05_057",
+   "phase": 2,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -559,
+     1017
+    ],
+    [
+     -535,
+     1017
+    ],
+    [
+     -535,
+     1039
+    ],
+    [
+     -559,
+     1039
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -584,
+    1019,
+    -560,
+    1041
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B2_R05_058",
+   "phase": 2,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -584,
+     1019
+    ],
+    [
+     -560,
+     1019
+    ],
+    [
+     -560,
+     1041
+    ],
+    [
+     -584,
+     1041
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -609,
+    1021,
+    -585,
+    1043
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B2_R05_059",
+   "phase": 2,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -609,
+     1021
+    ],
+    [
+     -585,
+     1021
+    ],
+    [
+     -585,
+     1043
+    ],
+    [
+     -609,
+     1043
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -635,
+    1023,
+    -611,
+    1045
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B2_R05_060",
+   "phase": 2,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -635,
+     1023
+    ],
+    [
+     -611,
+     1023
+    ],
+    [
+     -611,
+     1045
+    ],
+    [
+     -635,
+     1045
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -660,
+    1025,
+    -636,
+    1047
+   ],
+   "buildings": 1,
+   "dependency_chain": [
+    "H02",
+    "J:H02->AVE_-240@END"
+   ],
+   "engineering_required": [
+    "H02"
+   ],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B2_R05_061",
+   "phase": 2,
+   "plan_status": "CONDITIONAL_PROXY_R05",
+   "polygon": [
+    [
+     -660,
+     1025
+    ],
+    [
+     -636,
+     1025
+    ],
+    [
+     -636,
+     1047
+    ],
+    [
+     -660,
+     1047
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B2",
+   "source_road_id": "H02",
+   "units": 1,
+   "verification_status": "CONDITIONAL_VERIFIED",
+   "we01_status": "CANDIDATE_ROAD_REQUIRED"
+  },
+  {
+   "area_m2": 1428,
+   "bounds_internal": [
+    -402,
+    -863,
+    -360,
+    -829
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R01_001",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -402,
+     -863
+    ],
+    [
+     -360,
+     -863
+    ],
+    [
+     -360,
+     -829
+    ],
+    [
+     -402,
+     -829
+    ]
+   ],
+   "prototype_id": "R01",
+   "region": "B3",
+   "source_road_id": "AVE_-420",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 1428,
+   "bounds_internal": [
+    -360,
+    -863,
+    -318,
+    -829
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R01_006",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -360,
+     -863
+    ],
+    [
+     -318,
+     -863
+    ],
+    [
+     -318,
+     -829
+    ],
+    [
+     -360,
+     -829
+    ]
+   ],
+   "prototype_id": "R01",
+   "region": "B3",
+   "source_road_id": "CRS_-880",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 1428,
+   "bounds_internal": [
+    -294,
+    -863,
+    -260,
+    -821
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B3_R01_011",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -294,
+     -863
+    ],
+    [
+     -260,
+     -863
+    ],
+    [
+     -260,
+     -821
+    ],
+    [
+     -294,
+     -821
+    ]
+   ],
+   "prototype_id": "R01",
+   "region": "B3",
+   "source_road_id": "AVE_-240",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 1428,
+   "bounds_internal": [
+    -402,
+    -807,
+    -360,
+    -773
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R01_016",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -402,
+     -807
+    ],
+    [
+     -360,
+     -807
+    ],
+    [
+     -360,
+     -773
+    ],
+    [
+     -402,
+     -773
+    ]
+   ],
+   "prototype_id": "R01",
+   "region": "B3",
+   "source_road_id": "AVE_-420",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 1428,
+   "bounds_internal": [
+    -360,
+    -781,
+    -326,
+    -739
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B3_R01_021",
+   "phase": 2,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -360,
+     -781
+    ],
+    [
+     -326,
+     -781
+    ],
+    [
+     -326,
+     -739
+    ],
+    [
+     -360,
+     -739
+    ]
+   ],
+   "prototype_id": "R01",
+   "region": "B3",
+   "source_road_id": "CRS_-720",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -646,
+    -872,
+    -622,
+    -850
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_003",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -646,
+     -872
+    ],
+    [
+     -622,
+     -872
+    ],
+    [
+     -622,
+     -850
+    ],
+    [
+     -646,
+     -850
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "CRS_-880",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -582,
+    -863,
+    -558,
+    -841
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_004",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -582,
+     -863
+    ],
+    [
+     -558,
+     -863
+    ],
+    [
+     -558,
+     -841
+    ],
+    [
+     -582,
+     -841
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "AVE_-600",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -558,
+    -863,
+    -534,
+    -841
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_005",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -558,
+     -863
+    ],
+    [
+     -534,
+     -863
+    ],
+    [
+     -534,
+     -841
+    ],
+    [
+     -558,
+     -841
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "CRS_-880",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -496,
+    -863,
+    -472,
+    -841
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_008",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -496,
+     -863
+    ],
+    [
+     -472,
+     -863
+    ],
+    [
+     -472,
+     -841
+    ],
+    [
+     -496,
+     -841
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "CRS_-880",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -472,
+    -863,
+    -448,
+    -841
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_009",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -472,
+     -863
+    ],
+    [
+     -448,
+     -863
+    ],
+    [
+     -448,
+     -841
+    ],
+    [
+     -472,
+     -841
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "CRS_-880",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -318,
+    -863,
+    -294,
+    -841
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_010",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -318,
+     -863
+    ],
+    [
+     -294,
+     -863
+    ],
+    [
+     -294,
+     -841
+    ],
+    [
+     -318,
+     -841
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "CRS_-880",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -402,
+    -829,
+    -378,
+    -807
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_013",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -402,
+     -829
+    ],
+    [
+     -378,
+     -829
+    ],
+    [
+     -378,
+     -807
+    ],
+    [
+     -402,
+     -807
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "AVE_-420",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -284,
+    -821,
+    -260,
+    -799
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_014",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -284,
+     -821
+    ],
+    [
+     -260,
+     -821
+    ],
+    [
+     -260,
+     -799
+    ],
+    [
+     -284,
+     -799
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "AVE_-240",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -644,
+    -812,
+    -620,
+    -790
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_015",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -644,
+     -812
+    ],
+    [
+     -620,
+     -812
+    ],
+    [
+     -620,
+     -790
+    ],
+    [
+     -644,
+     -790
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "AVE_-600",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -644,
+    -790,
+    -620,
+    -768
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_018",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -644,
+     -790
+    ],
+    [
+     -620,
+     -790
+    ],
+    [
+     -620,
+     -768
+    ],
+    [
+     -644,
+     -768
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "AVE_-600",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -284,
+    -775,
+    -260,
+    -753
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_019",
+   "phase": 2,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -284,
+     -775
+    ],
+    [
+     -260,
+     -775
+    ],
+    [
+     -260,
+     -753
+    ],
+    [
+     -284,
+     -753
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "AVE_-240",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -402,
+    -773,
+    -378,
+    -751
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_020",
+   "phase": 2,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -402,
+     -773
+    ],
+    [
+     -378,
+     -773
+    ],
+    [
+     -378,
+     -751
+    ],
+    [
+     -402,
+     -751
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "AVE_-420",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -644,
+    -768,
+    -620,
+    -746
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_023",
+   "phase": 2,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -644,
+     -768
+    ],
+    [
+     -620,
+     -768
+    ],
+    [
+     -620,
+     -746
+    ],
+    [
+     -644,
+     -746
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "AVE_-600",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -646,
+    -746,
+    -622,
+    -724
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_024",
+   "phase": 2,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -646,
+     -746
+    ],
+    [
+     -622,
+     -746
+    ],
+    [
+     -622,
+     -724
+    ],
+    [
+     -646,
+     -724
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "CRS_-720",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 528,
+   "bounds_internal": [
+    -646,
+    -724,
+    -622,
+    -702
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R05_025",
+   "phase": 2,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -646,
+     -724
+    ],
+    [
+     -622,
+     -724
+    ],
+    [
+     -622,
+     -702
+    ],
+    [
+     -646,
+     -702
+    ]
+   ],
+   "prototype_id": "R05",
+   "region": "B3",
+   "source_road_id": "CRS_-720",
+   "units": 1,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 912,
+   "bounds_internal": [
+    -646,
+    -910,
+    -622,
+    -872
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B3_R08_002",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -646,
+     -910
+    ],
+    [
+     -622,
+     -910
+    ],
+    [
+     -622,
+     -872
+    ],
+    [
+     -646,
+     -872
+    ]
+   ],
+   "prototype_id": "R08",
+   "region": "B3",
+   "source_road_id": "CRS_-880",
+   "units": 4,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 912,
+   "bounds_internal": [
+    -534,
+    -863,
+    -496,
+    -839
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R08_007",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -534,
+     -863
+    ],
+    [
+     -496,
+     -863
+    ],
+    [
+     -496,
+     -839
+    ],
+    [
+     -534,
+     -839
+    ]
+   ],
+   "prototype_id": "R08",
+   "region": "B3",
+   "source_road_id": "CRS_-880",
+   "units": 4,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 912,
+   "bounds_internal": [
+    -644,
+    -850,
+    -620,
+    -812
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B3_R08_012",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -644,
+     -850
+    ],
+    [
+     -620,
+     -850
+    ],
+    [
+     -620,
+     -812
+    ],
+    [
+     -644,
+     -812
+    ]
+   ],
+   "prototype_id": "R08",
+   "region": "B3",
+   "source_road_id": "AVE_-600",
+   "units": 4,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 912,
+   "bounds_internal": [
+    -298,
+    -799,
+    -260,
+    -775
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 0,
+   "parcel_id": "B3_R08_017",
+   "phase": 1,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -298,
+     -799
+    ],
+    [
+     -260,
+     -799
+    ],
+    [
+     -260,
+     -775
+    ],
+    [
+     -298,
+     -775
+    ]
+   ],
+   "prototype_id": "R08",
+   "region": "B3",
+   "source_road_id": "AVE_-240",
+   "units": 4,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  },
+  {
+   "area_m2": 912,
+   "bounds_internal": [
+    -326,
+    -777,
+    -302,
+    -739
+   ],
+   "buildings": 1,
+   "dependency_chain": [],
+   "engineering_required": [],
+   "internal_street_id": null,
+   "orientation": 90,
+   "parcel_id": "B3_R08_022",
+   "phase": 2,
+   "plan_status": "VERIFIED_DIRECT",
+   "polygon": [
+    [
+     -326,
+     -777
+    ],
+    [
+     -302,
+     -777
+    ],
+    [
+     -302,
+     -739
+    ],
+    [
+     -326,
+     -739
+    ]
+   ],
+   "prototype_id": "R08",
+   "region": "B3",
+   "source_road_id": "CRS_-720",
+   "units": 4,
+   "verification_status": "VERIFIED",
+   "we01_status": "DIRECT"
+  }
+ ],
+ "phase_targets": {
+  "1": {
+   "B1": {
+    "R01": 5,
+    "R02": 5
+   },
+   "B2": {
+    "R05": 12
+   },
+   "B3": {
+    "R01": 4,
+    "R05": 10,
+    "R08": 4
+   }
+  },
+  "2": {
+   "B1": {
+    "R01": 7,
+    "R02": 7
+   },
+   "B2": {
+    "R05": 18
+   },
+   "B3": {
+    "R01": 6,
+    "R05": 16,
+    "R08": 6
+   }
+  }
+ },
+ "phases": {
+  "1": {
+   "buildings": {
+    "B1": 10,
+    "B2": 12,
+    "B3": 18
+   },
+   "buildings_total": 40,
+   "deficit_by_prototype": {
+    "B1": {},
+    "B2": {},
+    "B3": {}
+   },
+   "engineering": {
+    "beach_encroachment_m2": 0.0,
+    "items": [
+     {
+      "beach_encroachment_m2": 0.0,
+      "built": false,
+      "id": "ENVELOPE_B1_ST_0305",
+      "kind": "INTERNAL_STREET",
+      "length_m": 150,
+      "region": "B1",
+      "status": "CONDITIONAL_VERIFIED"
+     },
+     {
+      "beach_encroachment_m2": 0.0,
+      "built": false,
+      "id": "H02",
+      "kind": "EXTERNAL_CANDIDATE_ROAD",
+      "length_m": 597.306,
+      "region": "B2",
+      "status": "CONDITIONAL_VERIFIED"
+     },
+     {
+      "beach_encroachment_m2": 0.0,
+      "built": false,
+      "id": "X01",
+      "kind": "EXTERNAL_CANDIDATE_ROAD",
+      "length_m": 362.908,
+      "region": "B1",
+      "status": "CONDITIONAL_VERIFIED"
+     }
+    ],
+    "length_m": 1110.214
+   },
+   "land_accounting": {
+    "B1": {
+     "A_eligible": 142570.0,
+     "A_gross": 250000.0,
+     "A_new_road_raster": 3177,
+     "A_other_eligible": 122173.0,
+     "A_protected": 0.0,
+     "A_unavailable": 107430.0,
+     "A_unknown": 0.0,
+     "beach_cells_excluded": 0,
+     "conservation_error_m2": 0.0,
+     "envelope_full_A_new_road": 8013.0,
+     "parcel_road_cell_overlap": 0,
+     "selected_parcel_cells": 17220
+    },
+    "B2": {
+     "A_eligible": 224080.0,
+     "A_gross": 270000.0,
+     "A_new_road_raster": 5304,
+     "A_other_eligible": 212440.0,
+     "A_protected": 0.0,
+     "A_unavailable": 45920.0,
+     "A_unknown": 0.0,
+     "beach_cells_excluded": 0,
+     "conservation_error_m2": 0.0,
+     "envelope_full_A_new_road": 10555.0,
+     "parcel_road_cell_overlap": 0,
+     "selected_parcel_cells": 6336
+    },
+    "B3": {
+     "A_eligible": 53187.0,
+     "A_gross": 200000.0,
+     "A_new_road_raster": 0,
+     "A_other_eligible": 38547.0,
+     "A_protected": 9360.0,
+     "A_unavailable": 137453.0,
+     "A_unknown": 0.0,
+     "beach_cells_excluded": 0,
+     "conservation_error_m2": 0.0,
+     "envelope_full_A_new_road": 0.0,
+     "parcel_road_cell_overlap": 0,
+     "selected_parcel_cells": 14640
+    }
+   },
+   "new_road_raster_total": 8481,
+   "prototype_counts": {
+    "B1": {
+     "R01": 5,
+     "R02": 5
+    },
+    "B2": {
+     "R05": 12
+    },
+    "B3": {
+     "R01": 4,
+     "R05": 10,
+     "R08": 4
+    }
+   },
+   "status": {
+    "B1": "CONDITIONAL",
+    "B2": "CONDITIONAL_PROXY",
+    "B3": "VERIFIED_DIRECT"
+   },
+   "target_buildings": {
+    "B1": 10,
+    "B2": 12,
+    "B3": 18
+   },
+   "units": {
+    "B1": 10,
+    "B2": 12,
+    "B3": 30
+   },
+   "units_total": 52
+  },
+  "2": {
+   "added_engineering": [
+    {
+     "beach_encroachment_m2": 224.0,
+     "built": false,
+     "id": "C02",
+     "kind": "EXTERNAL_CANDIDATE_ROAD",
+     "length_m": 130.0,
+     "region": "B1",
+     "status": "CONDITIONAL_VERIFIED"
+    },
+    {
+     "beach_encroachment_m2": 0.0,
+     "built": false,
+     "id": "ENVELOPE_B1_ST_0085",
+     "kind": "INTERNAL_STREET",
+     "length_m": 150,
+     "region": "B1",
+     "status": "CONDITIONAL_VERIFIED"
+    }
+   ],
+   "added_length_m": 280.0,
+   "buildings": {
+    "B1": 14,
+    "B2": 18,
+    "B3": 25
+   },
+   "buildings_total": 57,
+   "deficit_by_prototype": {
+    "B1": {},
+    "B2": {},
+    "B3": {
+     "R01": 1,
+     "R05": 1,
+     "R08": 1
+    }
+   },
+   "engineering": {
+    "beach_encroachment_m2": 224.0,
+    "items": [
+     {
+      "beach_encroachment_m2": 224.0,
+      "built": false,
+      "id": "C02",
+      "kind": "EXTERNAL_CANDIDATE_ROAD",
+      "length_m": 130.0,
+      "region": "B1",
+      "status": "CONDITIONAL_VERIFIED"
+     },
+     {
+      "beach_encroachment_m2": 0.0,
+      "built": false,
+      "id": "ENVELOPE_B1_ST_0085",
+      "kind": "INTERNAL_STREET",
+      "length_m": 150,
+      "region": "B1",
+      "status": "CONDITIONAL_VERIFIED"
+     },
+     {
+      "beach_encroachment_m2": 0.0,
+      "built": false,
+      "id": "ENVELOPE_B1_ST_0305",
+      "kind": "INTERNAL_STREET",
+      "length_m": 150,
+      "region": "B1",
+      "status": "CONDITIONAL_VERIFIED"
+     },
+     {
+      "beach_encroachment_m2": 0.0,
+      "built": false,
+      "id": "H02",
+      "kind": "EXTERNAL_CANDIDATE_ROAD",
+      "length_m": 597.306,
+      "region": "B2",
+      "status": "CONDITIONAL_VERIFIED"
+     },
+     {
+      "beach_encroachment_m2": 0.0,
+      "built": false,
+      "id": "X01",
+      "kind": "EXTERNAL_CANDIDATE_ROAD",
+      "length_m": 362.908,
+      "region": "B1",
+      "status": "CONDITIONAL_VERIFIED"
+     }
+    ],
+    "length_m": 1390.214
+   },
+   "land_accounting": {
+    "B1": {
+     "A_eligible": 142570.0,
+     "A_gross": 250000.0,
+     "A_new_road_raster": 6285,
+     "A_other_eligible": 112177.0,
+     "A_protected": 0.0,
+     "A_unavailable": 107430.0,
+     "A_unknown": 0.0,
+     "beach_cells_excluded": 180,
+     "conservation_error_m2": 0.0,
+     "envelope_full_A_new_road": 8013.0,
+     "parcel_road_cell_overlap": 0,
+     "selected_parcel_cells": 24108
+    },
+    "B2": {
+     "A_eligible": 224080.0,
+     "A_gross": 270000.0,
+     "A_new_road_raster": 5304,
+     "A_other_eligible": 209272.0,
+     "A_protected": 0.0,
+     "A_unavailable": 45920.0,
+     "A_unknown": 0.0,
+     "beach_cells_excluded": 0,
+     "conservation_error_m2": 0.0,
+     "envelope_full_A_new_road": 10555.0,
+     "parcel_road_cell_overlap": 0,
+     "selected_parcel_cells": 9504
+    },
+    "B3": {
+     "A_eligible": 53187.0,
+     "A_gross": 200000.0,
+     "A_new_road_raster": 0,
+     "A_other_eligible": 33567.0,
+     "A_protected": 9360.0,
+     "A_unavailable": 137453.0,
+     "A_unknown": 0.0,
+     "beach_cells_excluded": 0,
+     "conservation_error_m2": 0.0,
+     "envelope_full_A_new_road": 0.0,
+     "parcel_road_cell_overlap": 0,
+     "selected_parcel_cells": 19620
+    }
+   },
+   "new_road_raster_total": 11589,
+   "prototype_counts": {
+    "B1": {
+     "R01": 7,
+     "R02": 7
+    },
+    "B2": {
+     "R05": 18
+    },
+    "B3": {
+     "R01": 5,
+     "R05": 15,
+     "R08": 5
+    }
+   },
+   "status": {
+    "B1": "CONDITIONAL",
+    "B2": "CONDITIONAL_PROXY",
+    "B3": "UNVERIFIED"
+   },
+   "target_buildings": {
+    "B1": 14,
+    "B2": 18,
+    "B3": 28
+   },
+   "units": {
+    "B1": 14,
+    "B2": 18,
+    "B3": 40
+   },
+   "units_total": 72
+  }
+ },
+ "planning_direction": "OPTION_B_ENVELOPE",
+ "polygon_revision": 2,
+ "regions": {
+  "B1": {
+   "audit": {
+    "A_direct": 134557.0,
+    "C_conditional": 21,
+    "C_direct": 5
+   },
+   "bounds_internal": [
+    -10,
+    830,
+    490,
+    1330
+   ],
+   "bounds_spec": [
+    -10,
+    490,
+    830,
+    1330
+   ],
+   "gross_area_m2": 250000.0
+  },
+  "B2": {
+   "audit": {
+    "A_direct": 213525.0,
+    "C_conditional": 67,
+    "C_direct": 0
+   },
+   "bounds_internal": [
+    -1000,
+    720,
+    -400,
+    1170
+   ],
+   "bounds_spec": [
+    -1000,
+    -400,
+    720,
+    1170
+   ],
+   "gross_area_m2": 270000.0
+  },
+  "B3": {
+   "audit": {
+    "A_direct": 53187.0,
+    "C_conditional": 25,
+    "C_direct": 25
+   },
+   "bounds_internal": [
+    -740,
+    -910,
+    -240,
+    -510
+   ],
+   "bounds_spec": [
+    -740,
+    -240,
+    -910,
+    -510
+   ],
+   "gross_area_m2": 200000.0
+  }
+ },
+ "reserved_parcels": [],
+ "schema_version": 1,
+ "site_a_protection": {
+  "area_m2": 9360,
+  "bounds_internal": [
+   -561,
+   -831,
+   -441,
+   -753
+  ]
+ },
+ "street_choice_phase2": {
+  "candidates": [
+   {
+    "added_cells_vs_c02_only": 1728,
+    "meets_b1_phase2": true,
+    "street_id": "ENVELOPE_B1_ST_0085"
+   },
+   {
+    "added_cells_vs_c02_only": 1728,
+    "meets_b1_phase2": true,
+    "street_id": "ENVELOPE_B1_ST_0115"
+   }
+  ],
+  "chosen": "ENVELOPE_B1_ST_0085",
+  "rule": "fewer added raster cells, then lexicographic street_id"
+ },
+ "task": "T-017",
+ "total_gross_area_m2": 720000.0,
+ "we01_reproduction_control": {
+  "B1": {
+   "raster": 8013,
+   "we01_A_new_road": 8013.0
+  },
+  "B2": {
+   "raster": 10555,
+   "we01_A_new_road": 10555.0
+  },
+  "B3": {
+   "raster": 0,
+   "we01_A_new_road": 0.0
+  }
+ }
+}
