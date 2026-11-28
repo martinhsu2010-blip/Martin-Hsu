@@ -475,7 +475,7 @@
    "replace": "geometry+texture resident peak >= 20 % lower",
    "source_class": "PROPOSED_LIMIT",
    "with": [
-    "active collision bodies P95 >= 20 % lower than all-resident at the radius chosen by A2 (see by_radius; the 56 % figure is the peak-grid saving at 217 m for 57 buildings, not a replay P95)",
+    "active collision bodies P95 >= 20 % lower than all-resident at the radius chosen by D/E1 (see by_radius; the 56 % figure is the peak-grid saving at 217 m for 57 buildings, not a replay P95)",
     "visual object instances alive P95 reported (no ratio gate)",
     "draw calls P95 +<=5 %",
     "frame-time ratio only with a valid control; otherwise INCONCLUSIVE",

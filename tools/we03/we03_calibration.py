@@ -359,7 +359,7 @@ def benefit_block(fx, scs):
         row["unique_asset_model_all_resident_triangles"] = sum(sum(TRI[objs[i]["proto"]]) for i in fx["sets"][n]); row["shared_prototype_model_resident_triangles"] = sum(sum(v) for v in TRI.values()); out["sets"][n] = row
     out["finding"] = ("Four shared prototypes: resident geometry and the shared atlas do not depend on the number of buildings, so geometry/texture savings from streaming are structurally ~0 under Control A with the same LOD strategy; "
                       "collision bodies are the only large saving, and it is conditional on 1 body per building and on the active radius (see by_radius: peak-grid maximum and replay P95 differ, and the saving falls as the radius grows).")
-    out["recommended_gate_revision"] = {"source_class": "PROPOSED_LIMIT", "replace": "geometry+texture resident peak >= 20 % lower", "with": ["active collision bodies P95 >= 20 % lower than all-resident at the radius chosen by A2 (see by_radius; the 56 % figure is the peak-grid saving at 217 m for 57 buildings, not a replay P95)",
+    out["recommended_gate_revision"] = {"source_class": "PROPOSED_LIMIT", "replace": "geometry+texture resident peak >= 20 % lower", "with": ["active collision bodies P95 >= 20 % lower than all-resident at the radius chosen by D/E1 (see by_radius; the 56 % figure is the peak-grid saving at 217 m for 57 buildings, not a replay P95)",
         "visual object instances alive P95 reported (no ratio gate)", "draw calls P95 +<=5 %", "frame-time ratio only with a valid control; otherwise INCONCLUSIVE", "geometry/texture savings evaluated on the unique-asset model for WE-06 and reported, not gated"]}
     return out
 
