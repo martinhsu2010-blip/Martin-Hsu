@@ -1,5 +1,6 @@
 # Release log (newest first). Game releases need version + commit SHA.
 
+- 2026-11-29 | (docs only, no game release) | Claude | main 9538c29 | T-018A2 (device frame-time diagnostics) registered and WE-03 budget governance adopted (D-068/D-069): spec v1.0 + ChatGPT draft + Claude G0 review stored; Codex may start; no game change, no CACHE bump, no budget value approved, T-018B not authorized
 - 2026-11-29 | (docs only, no game release) | Claude | main eeec550 | T-018A1 accepted by Martin (D-067); Done; no budget approved, A2 and later not authorized, no game change, no CACHE bump
 - 2026-11-29 | (tooling and reports only, no game release) | Claude | base e8d5250 | T-018A1 revision 1.1 merged (PR #133): last ChatGPT correction R1-F03a (radius selection owned by D/E1) applied, check 33/33 red, CI green; awaiting Martin's acceptance; no budget approved, no CACHE bump, A2 not authorized
 - 2026-11-29 | (docs only, no game release) | Claude | base e8d5250 | D-066: Martin approved the T-018A1 B3 GLOBAL_STRESS_ONLY exception and the check ceiling 450 (is 446); no acceptance, no budget, no A2; PR #133 awaits ChatGPT's final confirmation
